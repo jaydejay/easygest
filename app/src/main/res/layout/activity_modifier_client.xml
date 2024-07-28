@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_marginStart="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    tools:context=".vue.ModifierClientActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/editmodifierclientnom"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:autofillHints="@string/nom"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/nom"
+                android:inputType="textPersonName"
+                android:maxLength="25"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/editmodifierclientprenoms"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/prenoms"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/prenoms"
+                android:inputType="textPersonName"
+                android:maxLength="50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientnom" />
+
+            <EditText
+                android:id="@+id/editmodifierclienttelephone"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/telephone"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/telephone"
+                android:inputType="phone"
+                android:maxLength="15"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientprenoms" />
+
+            <EditText
+                android:id="@+id/editmodifierclientemail"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/email"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:maxLength="60"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclienttelephone" />
+
+            <EditText
+                android:id="@+id/editmodifierclientresidence"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/residence"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/residence"
+                android:inputType="textPersonName"
+                android:maxLength="30"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientemail" />
+
+            <EditText
+                android:id="@+id/editmodifierclientcni"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/cni"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/cni"
+                android:inputType="textPersonName"
+                android:maxLength="20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientresidence" />
+
+
+            <EditText
+                android:id="@+id/editmodifierclientpermis"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/permis"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/permis"
+                android:inputType="textPersonName"
+                android:maxLength="19"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientcni" />
+
+            <EditText
+                android:id="@+id/editmodifierclientpassport"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/passport"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/passport"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientpermis" />
+
+            <EditText
+                android:id="@+id/editmodifierclientsociete"
+                android:layout_width="228dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:autofillHints="@string/societe"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/societe"
+                android:inputType="textPersonName"
+                android:maxLength="25"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientpassport" />
+
+            <Button
+                android:id="@+id/btnmodifierclient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/modifier" />
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

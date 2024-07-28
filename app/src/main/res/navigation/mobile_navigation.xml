@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_listecredit">
+
+    <fragment
+        android:id="@+id/nav_versement"
+        android:name="com.jay.easygest.vue.ui.versement.VersementFragment"
+        android:label="@string/menu_versement"
+        tools:layout="@layout/fragment_versement" />
+    <fragment
+        android:id="@+id/nav_clients"
+        android:name="com.jay.easygest.vue.ui.clients.ClientsFragment"
+        android:label="@string/clients"
+        tools:layout="@layout/fragment_client" />
+
+    <fragment
+        android:id="@+id/nav_credit"
+        android:name="com.jay.easygest.vue.ui.credit.CreditFragment"
+        android:label="@string/menu_credit"
+        tools:layout="@layout/fragment_credit" />
+
+    <fragment
+        android:id="@+id/nav_listecredit"
+        android:name="com.jay.easygest.vue.ui.listecredit.ListecreditFragment"
+        android:label="@string/menu_listecredit"
+        tools:layout="@layout/fragment_listecredit" />
+
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.jay.easygest.vue.ui.account.AccountFragment"
+        android:label="@string/menu_account"
+        tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/nav_listeversement"
+        android:name="com.jay.easygest.vue.ui.listeversement.ListeversementFragment"
+        android:label="@string/menu_listeversement"
+        tools:layout="@layout/fragment_listeversement" />
+
+    <fragment
+        android:id="@+id/nav_changeusername"
+        android:name="com.jay.easygest.vue.ui.changeusername.ChangeUsernameFragment"
+        android:label="@string/menu_changeusername"
+        tools:layout="@layout/fragment_change_username" />
+
+    <fragment
+        android:id="@+id/nav_changepsssword"
+        android:name="com.jay.easygest.vue.ui.changepassword.ChangePaswordFragment"
+        android:label="@string/menu_changepasword"
+        tools:layout="@layout/fragment_change_pasword" />
+
+    <fragment
+        android:id="@+id/nav_a_propos"
+        android:name="com.jay.easygest.vue.ui.propos.AproposFragment"
+        android:label="@string/menu_a_propos"
+        tools:layout="@layout/fragment_apropos" />
+</navigation>

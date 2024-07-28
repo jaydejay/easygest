@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_clients"
+            android:icon="@drawable/ic_baseline_person_24"
+            android:title="@string/clients" />
+
+        <item
+            android:id="@+id/nav_credit"
+            android:icon="@drawable/ic_menu_addchart"
+            android:title="@string/menu_credit" />
+        <item
+            android:id="@+id/nav_listecredit"
+            android:icon="@drawable/ic_inventory"
+            android:title="@string/menu_listecredit" />
+
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_menu_addchart"
+            android:title="@string/menu_account" />
+        <item
+            android:id="@+id/nav_listeversement"
+            android:icon="@drawable/ic_menu_card_travel"
+            android:title="@string/menu_listeversement" />
+        <item
+            android:id="@+id/nav_changepsssword"
+            android:icon="@drawable/ic_join_full_black_24dp"
+            android:title="@string/menu_changepasword" />
+        <item
+            android:id="@+id/nav_changeusername"
+            android:icon="@drawable/ic_webhook_black_24dp"
+            android:title="@string/menu_changeusername" />
+         <item
+            android:id="@+id/nav_import_export"
+            android:icon="@drawable/ic_baseline_save_24"
+            android:title="@string/menu_import_export" />
+
+    </group>
+    <group>
+        <item
+            android:id="@+id/nav_a_propos"
+            android:icon="@drawable/ic_baseline_info_24"
+            android:title="@string/menu_a_propos" />
+
+    </group>
+</menu>
