@@ -457,7 +457,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/teal_700"
+            android:textColor="@color/cardview_dark_background"
             android:textStyle="bold|italic"
             android:layout_weight="1"
             android:padding="3dp" />
@@ -467,7 +467,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/teal_200"
+            android:textColor="@color/design_default_color_error"
             android:textStyle="bold|italic"
             android:layout_weight="1" />
     </LinearLayout>
@@ -514,7 +514,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
-            android:text="@string/Mes_versements_credit"
+            android:text="@string/voir_versements"
             android:textSize="13sp" />
 
         <TextView
@@ -560,7 +560,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="@string/mes_accounts"
+                android:text="@string/voir_versements"
                 android:textSize="13sp"/>
 
             <TextView

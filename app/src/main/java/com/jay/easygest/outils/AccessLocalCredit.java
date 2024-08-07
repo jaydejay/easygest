@@ -5,18 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
-
-import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.vue.ui.credit.CreditViewModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class AccessLocalCredit {
@@ -25,7 +20,7 @@ public class AccessLocalCredit {
     public static final String CODECLIENT = "codeclient";
     public static final String CLIENTID = "clientid";
     public static final String VERSEMENTS = "versements";
-    public static final String TABLE_CLIENT = "client";
+//    public static final String TABLE_CLIENT = CLIENT;
 
     public static final String NOM = "nom";
     public static final String ARTICLE_1 = "article1";
@@ -50,6 +45,7 @@ public class AccessLocalCredit {
     public static final String SOCIETE = "societe";
     public static final String NBRACCOUNT = "nbraccount";
     public static final String TOTALACCOUNT = "totalaccount";
+    public static final String TABLE_CLIENT = "client";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
     private Creditcontrolleur creditcontrolleur;
@@ -107,8 +103,8 @@ public class AccessLocalCredit {
     }
 
     /**
-     *
      * @param credit le credit a ajouter
+     * @param client le client proprietaire du credit
      * @return boolean
      */
     public boolean ajouterCredit(CreditModel credit,ClientModel client){
@@ -163,8 +159,8 @@ public class AccessLocalCredit {
      * @return le credit modifié
      */
     public boolean modifierCredit(int id,ClientModel client, String article1, String article2, Integer nouvelle_sommecredit, Integer versement, Integer reste,  Long datecredit,long ancienne_sommecredit) {
-//        accessLocalVersement = new AccessLocalVersement(contexte);
-        accessLocalClient = new AccessLocalClient(contexte);
+
+//        accessLocalClient = new AccessLocalClient(contexte);
         bd = accessBD.getWritableDatabase();
         bd.beginTransaction();
             boolean success ;
@@ -172,6 +168,7 @@ public class AccessLocalCredit {
             int ancien_total_credit_du_client =  Integer.parseInt(String.valueOf(client.getTotalcredit())) ;
             int ancienne_somme_credit = Integer.parseInt(String.valueOf(ancienne_sommecredit)) ;
             int nouveau_total_credit_du_client = ( ancien_total_credit_du_client - ancienne_somme_credit) + nouvelle_sommecredit;
+
             ContentValues credit_cv = new ContentValues();
             ContentValues client_cv = new ContentValues();
 
@@ -185,8 +182,8 @@ public class AccessLocalCredit {
             client_cv.put("totalcredit",nouveau_total_credit_du_client);
 
             CreditModel credit;
-            bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=" +id,null,bd.CONFLICT_ROLLBACK);
-            bd.updateWithOnConflict("client", client_cv, "id = ?", new String[] {String.valueOf(client.getId())},bd.CONFLICT_ROLLBACK);
+            bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=" +id,null,1);
+            bd.updateWithOnConflict(TABLE_CLIENT, client_cv, "id = ?", new String[] {String.valueOf(client.getId())},1);
             bd.setTransactionSuccessful();
 
             credit = new CreditModel(id,client,article1,article2,nouvelle_sommecredit,versement,reste,datecredit,creditcontrolleur.getCredit().getNumerocredit());
@@ -277,8 +274,6 @@ public class AccessLocalCredit {
             while (cursor.moveToNext());
 
             cursor.close();
-            creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(contexte);
-            creditcontrolleur.setCredits(credits);
 
         }catch(Exception e){
             //  do nothing
@@ -309,12 +304,10 @@ public class AccessLocalCredit {
             while (cursor.moveToNext());
 
             cursor.close();
-            creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(null);
-            creditcontrolleur.setCredits(credits);
 
         }catch(Exception e){
             //  do nothing
-            return null;
+            return credits;
         }
         return credits;
     }
@@ -339,15 +332,10 @@ public class AccessLocalCredit {
             while (cursor.moveToNext());
 
             cursor.close();
-            creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(null);
-            creditcontrolleur.setCredits(credits);
-
         }catch(Exception e){
             //  do nothing
         }
         return credits;
-
-
     }
 
 
@@ -385,6 +373,7 @@ public class AccessLocalCredit {
 
         }catch (Exception e){
             //do nothing
+            return credit;
         }
         return credit;
 
@@ -425,7 +414,7 @@ public class AccessLocalCredit {
         }
 
 
-    public int getRecapTcreditCient(ClientModel client){
+    public int getRecapTcreditClient(ClientModel client){
         bd = accessBD.getReadableDatabase();
 //        String req  = "select SUM(sommecredit) AS t_credit from credit where reste != 0 and clientid = "+client.getId();
         String req = "select SUM(sommecredit) AS t_credit from credit where  reste != 0 and clientid ='" + client.getId()+"'";

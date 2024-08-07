@@ -13,13 +13,16 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.jay.easygest.R;
+import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding;
+import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.vue.ui.account.ListeAccountsClientFragment;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.listecredit.ListecreditsclientFragment;
@@ -33,6 +36,7 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
     private Clientcontrolleur clientcontrolleur;
     private Versementcontrolleur versementcontrolleur;
     private Creditcontrolleur creditcontrolleur;
+    private Accountcontroller accountcontroller;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
     private CreditViewModel creditViewModel;
@@ -53,6 +57,7 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
 
+        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
        int fragmentid =  getIntent().getIntExtra("fragmentid",R.id.af_client_liste_credits);
        String titre = getIntent().getStringExtra("titre");
        String identite_de_client = client.getNom()+" "+client.getPrenoms()+" "+client.getCodeclient();
@@ -77,7 +82,20 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
         } else if (id == R.id.af_client_liste_versements) {
             fragment = new ListeversementFragment();
-        }else {
+        }
+        else if (id == R.id.af_client_liste_accounts) {
+            fragment = new ListeAccountsClientFragment();
+        }
+        else if (id == R.id.af_client_liste_histo_accounts) {
+            fragment = new ListeAccountsClientFragment();
+        }
+        else if (id == R.id.af_client_text_accounts) {
+            fragment = null;
+        }
+        else if (id == R.id.af_client_liste_versm_accounts) {
+            fragment = null;
+        }
+        else {
             fragment = new ListecreditsclientFragment();
 
         }
@@ -136,5 +154,10 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         }
     }
 
+    public void redirectToAfficherAccountActivity(AccountModel accountModel) {
+        accountcontroller.setAccount(accountModel);
+        Intent intent = new Intent(this, AfficherAccountActivity.class);
+        startActivity(intent);
+    }
 }
 

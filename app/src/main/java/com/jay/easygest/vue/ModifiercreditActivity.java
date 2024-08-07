@@ -132,8 +132,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
 
         binding.btnmodification.setOnClickListener(v -> {
 
-            String nomclient = binding.editmodificationnomclient.getText().toString().trim();
-            String prenomsclient = binding.editmodificationprenomclient.getText().toString().trim();
+//            String nomclient = binding.editmodificationnomclient.getText().toString().trim();
+//            String prenomsclient = binding.editmodificationprenomclient.getText().toString().trim();
             String designationarticle1 = binding.editmodificationarticle1designation.getText().toString().trim();
             String article1somme = binding.editmodificationarticle1somme.getText().toString().trim();
             String article1qte = binding.editTextNbrarticle1.getText().toString().trim();

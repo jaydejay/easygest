@@ -12,32 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
-
         <activity
-        android:name=".vue.ActiverProduitActivity"
-        android:label="@string/activer_produit"
-        android:parentActivityName=".vue.MainActivity" />
-
+            android:name=".vue.ActiverProduitActivity"
+            android:label="@string/activer_produit"
+            android:parentActivityName=".vue.MainActivity" />
         <activity
-        android:name=".vue.ParametresActivity"
-        android:label="@string/parametre"
-        android:parentActivityName=".vue.MainActivity" />
+            android:name=".vue.ParametresActivity"
+            android:label="@string/parametre"
+            android:parentActivityName=".vue.MainActivity" />
         <activity
             android:name=".vue.AfficherCreditsClientActivity"
             android:exported="false"
-            android:parentActivityName=".vue.AfficherclientActivity"/>
-
+            android:parentActivityName=".vue.AfficherclientActivity" />
         <activity
             android:name=".vue.AffichercreditActivity"
             android:label="@string/recap_credit"
-            android:parentActivityName=".vue.GestionActivity" />
-
+            android:parentActivityName=".vue.AfficherclientActivity" />
+        <activity
+            android:name=".vue.AfficherAccountActivity"
+            android:label="@string/recap_account"
+            android:parentActivityName=".vue.AfficherclientActivity" />
         <activity
             android:name=".vue.ModifierClientActivity"
             android:parentActivityName=".vue.AfficherclientActivity" />
         <activity
-            android:label="@string/Afficher_client"
             android:name=".vue.AfficherclientActivity"
+            android:label="@string/Afficher_client"
             android:parentActivityName=".vue.GestionActivity" />
         <activity
             android:name=".vue.ModifierVersementActivity"
@@ -66,7 +66,7 @@
             android:name=".vue.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.EasyGest.NoActionBar"></activity>
+            android:theme="@style/Theme.EasyGest.NoActionBar" />
     </application>
 
 </manifest>

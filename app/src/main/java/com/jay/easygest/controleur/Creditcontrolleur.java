@@ -151,7 +151,10 @@ public final class Creditcontrolleur {
      * @return la liste de tous les credits soldés ou pas
      */
     public ArrayList<CreditModel> listeDEScredits(){
-        return  accessLocalcredit.listeDEScredits();
+
+        ArrayList<CreditModel> listeDesCredits = accessLocalcredit.listeDEScredits();
+        this.setCredits(listeDesCredits);
+        return  listeDesCredits;
     }
 
     /**
@@ -190,7 +193,7 @@ public final class Creditcontrolleur {
 
 
     public  void setRecapTcreditClient(ClientModel client){
-        int totalcredit   = accessLocalcredit.getRecapTcreditCient(client);
+        int totalcredit   = accessLocalcredit.getRecapTcreditClient(client);
         mtotalcreditClient.setValue(totalcredit);
 
     }

@@ -11,12 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
+import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherclientBinding;
+import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -27,8 +30,10 @@ public class AfficherclientActivity extends AppCompatActivity {
     private ActivityAfficherclientBinding binding;
     private Clientcontrolleur clientcontrolleur;
     private  Creditcontrolleur creditcontrolleur;
+    private Accountcontroller accountcontroller;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
+    private AccountViewModel accountViewModel;
     private CreditViewModel creditViewModel;
     private ClientModel client;
     private int id ;
@@ -40,15 +45,21 @@ public class AfficherclientActivity extends AppCompatActivity {
         binding = ActivityAfficherclientBinding.inflate(getLayoutInflater());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
+        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
 
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
         client = clientViewModel.getClient().getValue();
+
         creditcontrolleur.setRecapTresteClient(client);
         creditcontrolleur.setRecapTversementClient(client);
         creditcontrolleur.setRecapTcreditClient(client);
+
+        accountcontroller.setRecapTaccountClient(client);
+        accountcontroller.setRecapTresteClient(client);
         int TresteCreditClient = 0;
         int TcreditClient = 0;
 
@@ -63,11 +74,23 @@ public class AfficherclientActivity extends AppCompatActivity {
         int TaccountClient = 0;
         int TresteAccClient =0;
 
+        if (accountViewModel.getTotalaccountsclient() != null){
+            TaccountClient = accountViewModel.getTotalaccountsclient().getValue();
+        }
+
+        if (accountViewModel.getTotalrestesclient().getValue() != null){
+            TresteAccClient = accountViewModel.getTotalrestesclient().getValue();
+        }
+
         setContentView(binding.getRoot());
 
         clientMenuDisabledAndRecpShow(TcreditClient,TresteCreditClient,TaccountClient,TresteAccClient);
         redirectToModifierClient();
         afficherclient();
+        afficherListeVersementacc();
+        afficherAjouterVersementacc();
+        afficherListeAccounts();
+        afficherListeAccountsoldes();
         afficherAjouterVersement();
         afficherListeVersement();
         afficherListeCredits();
@@ -86,15 +109,15 @@ public class AfficherclientActivity extends AppCompatActivity {
         if (client.getNbrcredit() == 0){
             binding.afficherClientMenuCredit.setVisibility(View.GONE);
         }
-//        if (TresteAccClient == 0){
-//            binding.afClientListeAccounts.setVisibility(View.GONE);
-//            binding.afClientListeVersmAccounts.setVisibility(View.GONE);
-//            binding.afClientTextAccounts.setVisibility(View.GONE);
-//        }
-//
-//        if (client.getNbraccount() == 0){
-//            binding.afficherClientMenuAccount.setVisibility(View.GONE);
-//        }
+        if (TresteAccClient == 0){
+            binding.afClientListeAccounts.setVisibility(View.GONE);
+            binding.afClientListeVersmAccounts.setVisibility(View.GONE);
+            binding.afClientTextAccounts.setVisibility(View.GONE);
+        }
+
+        if (client.getNbraccount() == 0){
+            binding.afficherClientMenuAccount.setVisibility(View.GONE);
+        }
 
         String text_Totalcredit= "credit en cours : "+TcreditClient ;
         String text_Totalreste =  "reste à payer : "+TresteCreditClient ;
@@ -228,6 +251,78 @@ public class AfficherclientActivity extends AppCompatActivity {
 
 
     /**
+     * affiche la liste des accounts en cours d'un client
+     */
+    public void afficherListeAccounts(){
+
+        binding.afClientListeAccounts.setOnClickListener(view -> {
+
+            id = R.id.af_client_liste_accounts;
+            accountcontroller.listeAccountsClient(client);
+//            creditViewModel.getCreditsClients();
+            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
+            intent.putExtra("fragmentid",id);
+            intent.putExtra("titre","accounts en cour");
+            startActivity(intent);
+
+        });
+    }
+
+    public void afficherListeAccountsoldes(){
+
+        binding.afClientListeHistoAccounts.setOnClickListener(view -> {
+
+            id = R.id.af_client_liste_histo_accounts;
+            accountcontroller.listeAccountsoldeClient(client);
+            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
+            intent.putExtra("fragmentid",id);
+            intent.putExtra("titre","accounts soldés");
+            startActivity(intent);
+
+        });
+    }
+
+
+    /**
+     * affiche le formulaire pour faire un versement account
+     */
+    public void afficherAjouterVersementacc(){
+
+        binding.afClientTextAccounts.setOnClickListener(view -> {
+
+            id = R.id.af_client_text_accounts;
+
+            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
+            intent.putExtra("fragmentid",id);
+            intent.putExtra("titre","versement d'account");
+            startActivity(intent);
+        });
+
+    }
+
+
+    /**
+     * affiche la liste des versements des accounts d'un client
+     */
+    public void afficherListeVersementacc(){
+
+        binding.afClientListeVersmAccounts.setOnClickListener(view -> {
+
+            ArrayList<VersementsModel> liste_versements =  versementViewModel.getVersementsClient(client);
+            versementViewModel.getMversements().setValue(liste_versements);
+            id = R.id.af_client_liste_versm_accounts;
+
+            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
+            intent.putExtra("fragmentid",id);
+            intent.putExtra("titre","versements accounts");
+            startActivity(intent);
+
+        });
+
+    }
+
+
+    /**
      * affiche la liste des credits d'un client
      */
     public void afficherListeCredits(){
@@ -243,8 +338,6 @@ public class AfficherclientActivity extends AppCompatActivity {
             startActivity(intent);
 
         });
-
-
     }
 
     public void afficherListeCreditsoldes(){
@@ -260,8 +353,6 @@ public class AfficherclientActivity extends AppCompatActivity {
             startActivity(intent);
 
         });
-
-
     }
 
 
@@ -283,8 +374,9 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
 
-
-    //affiche la liste des versements d'un client
+    /**
+     * affiche la liste des versements des credits d'un client
+     */
     public void afficherListeVersement(){
 
         binding.afClientListeVersements.setOnClickListener(view -> {
@@ -346,10 +438,13 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
 //       clientcontrolleur.setClient(null);
        binding = null;
     }
+
+
 }

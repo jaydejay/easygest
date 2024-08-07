@@ -29,7 +29,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/linearLayoutnom"
+                android:id="@+id/linearLayoutaccnom"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
@@ -60,14 +60,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayoutprenoms"
+                android:id="@+id/linearLayoutaccprenoms"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutnom">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccnom">
 
                 <EditText
                     android:id="@+id/edittxtcreeraccprenoms"
@@ -84,14 +84,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayoutarticle1"
+                android:id="@+id/linearLayoutaccarticle1"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccprenoms">
 
                 <EditText
                     android:id="@+id/edittxtcreeraccarticle1"
@@ -131,14 +131,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout4"
+                android:id="@+id/linearLayoutaccarticle2"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutarticle1">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccarticle1">
 
                 <EditText
                     android:id="@+id/edittxtcreeraccarticle2"
@@ -175,14 +175,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout5"
+                android:id="@+id/linearLayoutacc5"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccarticle2">
 
                 <EditText
                     android:id="@+id/editTextaccDate"
@@ -209,17 +209,17 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayouttelephone"
+                android:id="@+id/linearLayoutacctelephone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutacc5">
 
                 <EditText
-                    android:id="@+id/edittxtcreertelephone"
+                    android:id="@+id/edittxtcreeracctelephone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -241,7 +241,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayouttelephone">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutacctelephone">
 
                 <Button
                     android:id="@+id/btncreeraccount"

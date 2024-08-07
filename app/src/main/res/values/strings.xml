@@ -122,5 +122,8 @@
     <string name="histo_accounts">histo accounts</string>
     <string name="menu_account">Account</string>
     <string name="date_account">date account</string>
+    <string name="voir_versements">voir versements</string>
+    <string name="account">account</string>
+    <string name="recap_account">Recap Account\t\t</string>
 
 </resources>

@@ -23,15 +23,13 @@ import com.jay.easygest.vue.GestionActivity;
 
 import java.util.Date;
 
-public class AccountFragment extends Fragment {
+public class  AccountFragment extends Fragment {
 
     private AccountViewModel mViewModel;
     private Accountcontroller accountcontroller;
     private FragmentAccountBinding binding;
 
-    public static AccountFragment newInstance() {
-        return new AccountFragment();
-    }
+//    public static AccountFragment newInstance() { return new AccountFragment();}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -62,7 +60,7 @@ public class AccountFragment extends Fragment {
             String article1somme = binding.edittxtcreeraccarticle1somme.getText().toString().trim();
             String article1qte = binding.edittxtcreeraccNbrarticle1.getText().toString().trim();
 
-            String telephone =  binding.edittxtcreertelephone.getText().toString().trim();
+            String telephone =  binding.edittxtcreeracctelephone.getText().toString().trim();
             String versement = binding.edittxtcreeraccversement.getText().toString().trim();
             String date = binding.editTextaccDate.getText().toString().trim();
             Date date_ouverture = MesOutils.convertStringToDate(date);
