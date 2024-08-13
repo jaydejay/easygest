@@ -18,6 +18,7 @@ import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.GestionActivity;
 import com.jay.easygest.vue.ModifiercreditActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -43,6 +44,7 @@ public class CreditFragment extends Fragment {
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+
         binding = FragmentCreditBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -132,13 +134,12 @@ public class CreditFragment extends Fragment {
 
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                if (Integer.parseInt(versement) < sommecredit){
+                   CreditModel creditModel =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
 
-                   boolean success;
-                       success =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
-
-                   if (success) {
-                       Intent intent = new Intent(getActivity(), GestionActivity.class);
-                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                   if (creditModel != null) {
+                       ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
+                        clientViewModel.getClient().setValue(client);
+                       Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
                        startActivity(intent);
                    }else {
                        Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();

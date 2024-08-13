@@ -77,28 +77,31 @@ public class AccessLocalCredit {
        return cv;
     }
 
-    public boolean creerCompteCredit(CreditModel premiercredit, String codeclt,String nom,String prenoms,String telephone, String sommeversee ){
+    public CreditModel creerCompteCredit(CreditModel premiercredit, String codeclt,String nom,String prenoms,String telephone, String sommeversee ){
         bd = accessBD.getWritableDatabase();
         accessLocalVersement = new AccessLocalVersement(contexte);
         accessLocalClient = new AccessLocalClient(contexte);
 
         bd.beginTransaction();
-        boolean success=false;
+//        boolean success=false;
+        CreditModel creditModel;
         try {
 
             long client_reslt = bd.insertOrThrow(TABLE_CLIENT,null,accessLocalClient.ajouterClient(codeclt, nom, prenoms,telephone,1,premiercredit.getSommecredit(),0,0));
             long credit_rslt = bd.insertOrThrow(TABLE_CREDIT,null,this.creerCredit(premiercredit,client_reslt));
             bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt(sommeversee), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()));
+             creditModel = this.recupCreditById((int) credit_rslt);
             bd.setTransactionSuccessful();
-            success = true;
+//            success = true;
 
         }catch (Exception e){
-            return success;
+//            return success;
+            creditModel = null;
         }finally {
             bd.endTransaction();
 
         }
-        return success;
+        return creditModel;
 
     }
 
@@ -146,56 +149,44 @@ public class AccessLocalCredit {
 
     }
 
-    /**
-     * modifie un credit exitant
-     * @param id identifiant unique du credit
-     * @param client le client
-     * @param article1 premier  article
-     * @param article2 deuxieme article
-     * @param nouvelle_sommecredit somme du credit
-     * @param versement versements effectués
-     * @param reste reste du credit à payer
-     * @param datecredit date du credit
-     * @return le credit modifié
-     */
-    public boolean modifierCredit(int id,ClientModel client, String article1, String article2, Integer nouvelle_sommecredit, Integer versement, Integer reste,  Long datecredit,long ancienne_sommecredit) {
 
-//        accessLocalClient = new AccessLocalClient(contexte);
+    public CreditModel modifierCredit(CreditModel creditModel,ClientModel client,int ancienne_sommecredit) {
+
         bd = accessBD.getWritableDatabase();
         bd.beginTransaction();
-            boolean success ;
+//            boolean success ;
+        CreditModel credit;
         try{
             int ancien_total_credit_du_client =  Integer.parseInt(String.valueOf(client.getTotalcredit())) ;
             int ancienne_somme_credit = Integer.parseInt(String.valueOf(ancienne_sommecredit)) ;
-            int nouveau_total_credit_du_client = ( ancien_total_credit_du_client - ancienne_somme_credit) + nouvelle_sommecredit;
+            int nouveau_total_credit_du_client = ( ancien_total_credit_du_client - ancienne_somme_credit) + creditModel.getSommecredit();
 
             ContentValues credit_cv = new ContentValues();
             ContentValues client_cv = new ContentValues();
 
-            credit_cv.put(ARTICLE_1,article1);
-            credit_cv.put(ARTICLE_2,article2);
-            credit_cv.put(SOMMECREDIT,nouvelle_sommecredit);
-            credit_cv.put(VERSEMENTS,versement);
-            credit_cv.put(RESTE,reste);
-            credit_cv.put(DATECREDIT,datecredit);
+            credit_cv.put(ARTICLE_1,creditModel.getArticle1());
+            credit_cv.put(ARTICLE_2,creditModel.getArticle2());
+            credit_cv.put(SOMMECREDIT,creditModel.getSommecredit());
+            credit_cv.put(VERSEMENTS,creditModel.getVersement());
+            credit_cv.put(RESTE,creditModel.getReste());
+            credit_cv.put(DATECREDIT,creditModel.getDatecredit());
 
-            client_cv.put("totalcredit",nouveau_total_credit_du_client);
+            client_cv.put(TOTALCREDIT,nouveau_total_credit_du_client);
 
-            CreditModel credit;
-            bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=" +id,null,1);
+            bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=" +creditModel.getId(),null,1);
             bd.updateWithOnConflict(TABLE_CLIENT, client_cv, "id = ?", new String[] {String.valueOf(client.getId())},1);
+             credit = this.recupCreditById(creditModel.getId());
             bd.setTransactionSuccessful();
 
-            credit = new CreditModel(id,client,article1,article2,nouvelle_sommecredit,versement,reste,datecredit,creditcontrolleur.getCredit().getNumerocredit());
-            creditcontrolleur.setCredit(credit);
-            success = true;
+//            success = true;
         }catch (Exception e){
-            success=false;
+//            success=false;
+            credit = null;
         }
         finally {
             bd.endTransaction();
         }
-        return success;
+        return credit;
     }
 
 

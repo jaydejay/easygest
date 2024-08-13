@@ -8,12 +8,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
+import com.jay.easygest.controleur.Accountcontroller;
+import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAffichercreditBinding;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.vue.ui.account.AccountViewModel;
+import com.jay.easygest.vue.ui.clients.ClientViewModel;
+import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
 
 public class AffichercreditActivity extends AppCompatActivity {
@@ -25,8 +31,11 @@ public class AffichercreditActivity extends AppCompatActivity {
     TextView cardaffichercreditcredit;
     TextView cardaffichercreditversement;
     TextView cardaffichercreditreste;
-    private    CreditModel credit;
+    private  CreditModel credit;
     private ActivityAffichercreditBinding binding;
+    private Clientcontrolleur clientcontrolleur;
+    private ClientViewModel clientViewModel;
+    private CreditViewModel creditViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +43,23 @@ public class AffichercreditActivity extends AppCompatActivity {
         binding = ActivityAffichercreditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
-         credit = creditcontrolleur.getCredit();
+        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
+
+        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        credit = creditViewModel.getCredit().getValue();
+        creditcontrolleur.listecredits();
         cardaffichercredittitle = findViewById(R.id.cardaffichercredittitle);
         cardaffichercreditarticle1 = findViewById(R.id.cardaffichercreditarticle1);
         cardaffichercreditarticle2 = findViewById(R.id.cardaffichercreditarticle2);
         cardaffichercreditcredit = findViewById(R.id.cardaffichercreditcredit);
         cardaffichercreditreste = findViewById(R.id.cardaffichercreditreste);
         cardaffichercreditversement = findViewById(R.id.cardaffichercreditverement);
+
         affichercredit();
         annullerCredit();
         redirectModifierActivity();
+        redirectListeCredits();
     }
 
 
@@ -74,9 +90,17 @@ public class AffichercreditActivity extends AppCompatActivity {
 
         });
 
-
     }
 
+    public void redirectListeCredits(){
+
+        binding.recapListecredits.setOnClickListener(v -> {
+            Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
+            startActivity(intent);
+
+        });
+
+    }
     public void annullerCredit(){
 
         binding.supCredit.setOnClickListener(view -> {

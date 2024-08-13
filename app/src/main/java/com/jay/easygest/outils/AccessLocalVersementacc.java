@@ -1,22 +1,60 @@
 package com.jay.easygest.outils;
 
+import static com.jay.easygest.outils.AccessLocalCredit.ARTICLE_1;
+import static com.jay.easygest.outils.AccessLocalCredit.ARTICLE_2;
+import static com.jay.easygest.outils.AccessLocalCredit.DATECREDIT;
+import static com.jay.easygest.outils.AccessLocalCredit.ID;
+import static com.jay.easygest.outils.AccessLocalCredit.NUMEROCREDIT;
+import static com.jay.easygest.outils.AccessLocalCredit.SOMMECREDIT;
+import static com.jay.easygest.outils.AccessLocalCredit.TABLE_CREDIT;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.jay.easygest.controleur.Accountcontroller;
+import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.model.VersementsaccModel;
+
+import java.util.ArrayList;
 
 public class AccessLocalVersementacc {
 
     public static final String SOMMEVERSE = "sommeverse";
+    public static final String SOMMEACCOUNT = "sommeaccount";
     public static final String ACCOUNTID = "accountid";
     public static final String CLIENTID = "clientid";
     public static final String DATEVERSEMENT = "dateversement";
-    private MySqliteOpenHelper accessBD;
+    public static final String VERSEMENTS = "versements";
+    public static final String RESTE = "reste";
+    public static final String TABLE_VERSEMENTACC = "versementacc";
+    public static final String TABLE_ACCOUNT = "account";
+    public static final String ARTICLE_1 = "article1";
+    public static final String ARTICLE_2 = "article2";
+    public static final String NUMEROACCOUNT = "numeroaccount";
+    public static final String DATEACCOUNT = "dateaccount";
+    public static final String ID = "id";
+    public static final String CODECLIENT = "codeclient";
+    private final AccessLocalAccount accessLocalAccount;
+    private final AccessLocalClient accessLocalClient;
+    private Accountcontroller accountcontroller;
+    private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
     private Context contexte;
 
     public AccessLocalVersementacc(Context contexte) {
         this.contexte = contexte;
         this.accessBD = new MySqliteOpenHelper(contexte,null);
+        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(contexte);
+        accessLocalClient = new AccessLocalClient(contexte);
+        accessLocalAccount = new AccessLocalAccount(contexte);
+
+
     }
 
     public ContentValues creerVersement(int sommeverse, int account_id, int client_id, Long dateversement) {
@@ -26,5 +64,158 @@ public class AccessLocalVersementacc {
         cv.put(CLIENTID, client_id);
         cv.put(DATEVERSEMENT, dateversement);
         return cv;
+    }
+
+    public boolean ajouterversement(ClientModel client, long sommeverse, String dateversement)  {
+
+        bd = accessBD.getWritableDatabase();
+        boolean succes = false;
+        long date = MesOutils.convertStringToDate(dateversement).getTime();
+
+        ArrayList<AccountModel> accountsunclient =  accessLocalAccount.listeAccountsClient(client);
+
+        if (accountsunclient.size() > 0){
+            for (AccountModel account : accountsunclient) {
+
+                bd.beginTransaction();
+                try{
+                    if (sommeverse > 0){
+                        int somme_a_verse;
+                        if (sommeverse >= account.getReste()){
+                            somme_a_verse = account.getReste();
+                        }else {
+                            somme_a_verse = (int)sommeverse;
+                        }
+                        int reste = account.getReste() - somme_a_verse;
+                        int versements = account.getVersement() + somme_a_verse;
+
+                        ContentValues account_cv = new ContentValues();
+                        account_cv.put(ID,account.getId());
+                        account_cv.put(CLIENTID,client.getId());
+                        account_cv.put(ARTICLE_1,account.getArticle1());
+                        account_cv.put(ARTICLE_2,account.getArticle2());
+                        account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
+                        account_cv.put(VERSEMENTS,versements);
+                        account_cv.put(RESTE,reste);
+                        account_cv.put(DATEACCOUNT,date);
+                        account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
+
+                        bd.insertOrThrow(TABLE_VERSEMENTACC,null,creerVersement( somme_a_verse,account.getId(),client.getId(),date));
+                        bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
+                        sommeverse = sommeverse - somme_a_verse;
+                        bd.setTransactionSuccessful();
+                        succes =true;
+                    }
+                }finally {
+                    bd.endTransaction();
+                }
+
+            }
+
+        }
+        return succes;
+    }
+
+
+    public boolean modifierVersement(AccountModel account, VersementsaccModel versement_a_modifier, int nouveau_total_versement, int nouvellesommeverse, long dateversement) {
+        boolean success = false ;
+        bd = accessBD.getWritableDatabase();
+        ContentValues cv_versementacc = new ContentValues();
+        ContentValues account_cv = new ContentValues();
+
+        bd.beginTransaction();
+        try{
+            cv_versementacc.put(ID,versement_a_modifier.getId());
+            cv_versementacc.put(SOMMEVERSE,nouvellesommeverse);
+            cv_versementacc.put(ACCOUNTID,account.getId());
+            cv_versementacc.put(CLIENTID,versement_a_modifier.getClient().getId());
+            cv_versementacc.put(DATEVERSEMENT,dateversement);
+
+            int reste = account.getSommeaccount() - nouveau_total_versement;
+            account_cv.put(ID,account.getId());
+            account_cv.put(CLIENTID,account.getClientid());
+            account_cv.put(ARTICLE_1,account.getArticle1());
+            account_cv.put(ARTICLE_2,account.getArticle2());
+            account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
+            account_cv.put(VERSEMENTS,nouveau_total_versement);
+
+            account_cv.put(RESTE,reste);
+            account_cv.put(DATEACCOUNT,account.getDateaccount());
+            account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
+            bd.replaceOrThrow(TABLE_VERSEMENTACC, null, cv_versementacc);
+            bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
+            bd.setTransactionSuccessful();
+            success= true;
+        }finally {
+            bd.endTransaction();
+        }
+        return success;
+
+    }
+
+
+
+    public boolean annullerversement(VersementsaccModel versementacc,AccountModel account){
+
+        bd = accessBD.getWritableDatabase();
+        long ancienne_sommeversee = versementacc.getSommeverse();
+        boolean success;
+
+        long nouveau_versement_du_account = account.getVersement() - ancienne_sommeversee;
+        long reste = account.getSommeaccount() - nouveau_versement_du_account;
+
+        ContentValues account_cv = new ContentValues();
+        account_cv.put(ID,account.getId());
+        account_cv.put(CLIENTID,account.getClientid());
+        account_cv.put(ARTICLE_1,account.getArticle1());
+        account_cv.put(ARTICLE_2,account.getArticle2());
+        account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
+        account_cv.put(VERSEMENTS,nouveau_versement_du_account);
+        account_cv.put(RESTE,reste);
+        account_cv.put(DATEACCOUNT,account.getDateaccount());
+        account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
+
+        bd.beginTransaction();
+        try {
+            bd.delete(TABLE_VERSEMENTACC,ID+"=?",new String[]{String.valueOf(versementacc.getId())});
+            bd.replaceOrThrow(TABLE_CREDIT,null,account_cv);
+            bd.setTransactionSuccessful();
+            success = true;
+        }catch (Exception e){
+            success = false;
+        }finally {
+            bd.endTransaction();
+        }
+        return success;
+    }
+
+    public void supprimerversement(VersementsaccModel versementsaccModel) {
+        bd = accessBD.getWritableDatabase();
+        bd.delete(TABLE_VERSEMENTACC, ID +"=?",new String[]{String.valueOf(versementsaccModel.getId())});
+    }
+
+    public ArrayList<VersementsaccModel> listeVersementsClient(ClientModel client){
+        ArrayList<VersementsaccModel> versements = new ArrayList<>();
+        try {
+            bd = accessBD.getReadableDatabase();
+//            String req = "select * from versementacc where " + CLIENTID + "='" +client.getId()+"'";
+            String req = "select * from versementacc where clientid ='" + client.getId()+"'";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToFirst();
+            do {
+               AccountModel account = accessLocalAccount.recupAccountById(cursor.getInt(2));
+                VersementsaccModel versement = new VersementsaccModel(cursor.getInt(0),client,account, cursor.getLong(1), cursor.getLong(4) );
+                versements.add(versement);
+
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+
+
+        }catch(Exception e){
+//            do nothing
+        }
+        return  versements;
+
     }
 }

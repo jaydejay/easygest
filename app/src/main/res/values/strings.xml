@@ -125,5 +125,10 @@
     <string name="voir_versements">voir versements</string>
     <string name="account">account</string>
     <string name="recap_account">Recap Account\t\t</string>
+    <string name="modif_account">modifier account</string>
+    <string name="ajouter_account">ajouter account</string>
+    <string name="ajouter">ajouter</string>
+    <string name="liste_credits">liste credits</string>
+    <string name="num_account">num account</string>
 
 </resources>

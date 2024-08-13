@@ -127,26 +127,15 @@ public class GestionActivity extends AppCompatActivity {
 
     public void redirectToModifiercreditActivity(CreditModel credit){
         creditcontrolleur.setCredit(credit);
-        creditcontrolleur.setTagx(1);
+        clientViewModel.getClient().setValue(credit.getClient());
         Intent intent = new Intent(this, ModifiercreditActivity.class);
-        intent.putExtra("Tagx",1);
         startActivity(intent);
     }
 
-//    public void redirectToModifierActivity(CreditModel credit){
-//        creditcontrolleur.setCredit(credit);
-//        creditcontrolleur.setTagx(1);
-//        Intent intent = new Intent(this, ModifiercreditActivity.class);
-//        intent.putExtra("Tagx",1);
-//        startActivity(intent);
-//    }
 
     public void redirectToNouveauCreditActivity(ClientModel client) {
-
-        creditcontrolleur.setTagx(2);
         clientcontrolleur.setClient(client);
-        Intent intent = new Intent(this, ModifiercreditActivity.class);
-        intent.putExtra("Tagx",2);
+        Intent intent = new Intent(this, AjouterCreditActivity.class);
 
         startActivity(intent);
     }
@@ -244,4 +233,6 @@ public class GestionActivity extends AppCompatActivity {
 
         }
     }
+
+
 }

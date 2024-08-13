@@ -29,6 +29,8 @@ import com.jay.easygest.vue.ui.listecredit.ListecreditsclientFragment;
 import com.jay.easygest.vue.ui.listeversement.ListeversementFragment;
 import com.jay.easygest.vue.ui.versement.VersementFragment;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
+import com.jay.easygest.vue.ui.versementacc.AjouterVersementaccFragment;
+import com.jay.easygest.vue.ui.versementacc.ListeVersementaccFragment;
 
 public class AfficherCreditsClientActivity extends AppCompatActivity {
 
@@ -58,12 +60,14 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         client = clientViewModel.getClient().getValue();
 
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
-       int fragmentid =  getIntent().getIntExtra("fragmentid",R.id.af_client_liste_credits);
+
+        int fragmentid =  getIntent().getIntExtra("fragmentid",R.id.af_client_liste_credits);
        String titre = getIntent().getStringExtra("titre");
        String identite_de_client = client.getNom()+" "+client.getPrenoms()+" "+client.getCodeclient();
        binding.textViewCredClitVers.setText(identite_de_client);
 
-
+        Object af_client_liste_histo_credits;
+//        af_client_liste_histo_credits
        ActionBar actionBar =  getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(titre);
@@ -90,10 +94,10 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
             fragment = new ListeAccountsClientFragment();
         }
         else if (id == R.id.af_client_text_accounts) {
-            fragment = null;
+            fragment = AjouterVersementaccFragment.newInstance();
         }
         else if (id == R.id.af_client_liste_versm_accounts) {
-            fragment = null;
+            fragment = ListeVersementaccFragment.newInstance();
         }
         else {
             fragment = new ListecreditsclientFragment();
@@ -129,17 +133,23 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
     }
 
     public void annullerCredit(CreditModel credit){
+        Log.i("affichercreditclientactivity", "annullerCredit: le client "+credit.getClient());
 
         if (credit.getReste() > 0) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("anuller un credit");
-            builder.setMessage("etes vous sûre de vouloir annuller le credit, tous les versements associes seront egalement supprimés");
+            builder.setMessage("etes vous sûre de vouloir annuller le credit, tous les versements associes seront egalement supprimés"+"\n"
+                    +"l'annullation d'un credit est soumise a une pénalité allant de 1000 F à 10%"+"\n"
+                    +"de la somme du credit");
 
             builder.setPositiveButton("oui", (dialog, which) -> {
                 boolean success = creditcontrolleur.annullerCredit(credit);
+
                 if (success){
-                    Intent intent = new Intent(AfficherCreditsClientActivity.this, GestionActivity.class);
+                    ClientModel client = clientcontrolleur.recupererClient(credit.getClient().getId());
+                    clientViewModel.getClient().setValue(client);
+                    Intent intent = new Intent(AfficherCreditsClientActivity.this, AfficherclientActivity.class);
                     startActivity(intent);
                 }
 

@@ -86,6 +86,7 @@ public class ModifierClientActivity extends AppCompatActivity {
                        boolean success =  clientcontrolleur.modifierclient(clientModel);
 
                        if(success ) {
+
                            Intent intent = new Intent(ModifierClientActivity.this, AfficherclientActivity.class);
                            startActivity(intent);
                            finish();

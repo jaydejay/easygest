@@ -9,7 +9,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
+import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
@@ -17,6 +19,7 @@ import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifiercreditBinding;
+import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
@@ -36,109 +39,53 @@ public class ModifiercreditActivity extends AppCompatActivity {
     private ActivityModifiercreditBinding binding;
     private CreditModel credit;
     private ActionBar ab;
+    private ClientModel client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityModifiercreditBinding.inflate(getLayoutInflater());
-        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
-        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
-        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
-        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        creditViewModel= new ViewModelProvider(this).get(CreditViewModel.class);
+        clientViewModel= new ViewModelProvider(this).get(ClientViewModel.class);
 
+        client = clientViewModel.getClient().getValue();
         credit = creditViewModel.getCredit().getValue();
+
+        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
+        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
+        afficherCredit();
         setContentView(binding.getRoot());
          ab = getSupportActionBar();
-        recupCreditOuClient();
         modifierCredit();
 
     }
 
+    public void afficherCredit(){
+        Articles article1 = new Genson().deserialize(credit.getArticle1(), Articles.class);
+        Articles article2 = new Genson().deserialize(credit.getArticle2(), Articles.class);
+        binding.modifcredrnom.setText(client.getNom());
+        binding.modifcredprenoms.setText(client.getPrenoms());
+        binding.modifcredcodeclt.setText(client.getCodeclient());
 
+        binding.modifcredarticle1.setText(article1.getDesignation());
+        binding.modifcredarticle1somme.setText(String.valueOf(article1.getPrix()));
+        binding.modifcredNbrarticle1.setText(String.valueOf(article1.getNbrarticle()));
 
-    public void recupCreditOuClient(){
-            //Tagx=1 modification du credit
-            //Tagx=2 octroie d'un autre credit
-            if (getIntent().getIntExtra("Tagx",1) == 1){
+        binding.modifaccarticle2.setText(article2.getDesignation());
+        binding.modifcredarticle2somme.setText(String.valueOf(article2.getPrix()));
+        binding.modifcredNbrarticle2.setText(String.valueOf(article2.getNbrarticle()));
 
-                if ( credit != null){
-                    String nomclient = credit.getClient().getNom().trim();
-                    String prenomsclient = credit.getClient().getPrenoms().trim();
-                    String codeclient = credit.getClient().getCodeclient().trim();
-                    String nbrcredit ="credit "+ credit.getNumerocredit();
-                    String article_1 = credit.getArticle1();
-                    String article_2 = credit.getArticle2();
-
-
-                    binding.textViewCodeClient.setText(codeclient);
-                    binding.textViewNbrCredit.setText(nbrcredit);
-                    binding.editmodificationnomclient.setText(nomclient);
-                    binding.editmodificationprenomclient.setText(prenomsclient);
-                try {
-
-
-                    Articles article1 = new Genson().deserialize(article_1, Articles.class);
-                    Articles article2 = new Genson().deserialize(article_2, Articles.class);
-                    String article1designation = article1.getDesignation();
-                    String article1somme = String.valueOf(article1.getPrix()).trim();
-
-                    String article2designation = article2.getDesignation().trim();
-                    String article2somme = String.valueOf(article2.getPrix()).trim() ;
-
-                    String qte1 = String.valueOf(article1.getNbrarticle()).trim() ;
-                    String qte2 = String.valueOf(article2.getNbrarticle()).trim() ;
-
-                    binding.editmodificationarticle1designation.setText(article1designation);
-                    binding.editmodificationarticle1somme.setText(article1somme);
-                    binding.editmodificationarticle2designation.setText(article2designation);
-                    binding.editmodificationarticle2somme.setText(article2somme);
-                    binding.editmodificationversement.setText(String.valueOf(credit.getVersement()).trim());
-                    binding.editmodificationversement.setEnabled(false);
-                    binding.datemodification.setText( MesOutils.convertDateToString(new Date(credit.getDatecredit())).trim());
-                    binding.editTextNbrarticle1.setText(qte1);
-                    binding.editTextNbrarticle2.setText(qte2);
-                }catch (Exception e){
-                     //do nothing
-                }
-                if (ab != null) {
-                    ab.setTitle("modifier credit");
-                }
-
-            }
-
-        }else {
-                ClientModel client = clientViewModel.getClient().getValue();
-//                ClientModel client = clientcontrolleur.getClient();
-                String nomclient = client.getNom().trim();
-                String prenomsclient = client.getPrenoms().trim();
-                String codeclient = client.getCodeclient().trim();
-
-                binding.textViewCodeClient.setText(codeclient);
-                binding.editmodificationnomclient.setText(nomclient);
-                binding.editmodificationprenomclient.setText(prenomsclient);
-                try {
-                    binding.btnmodification.setText(R.string.nouveau_credit);
-                    if (ab != null) {
-                        ab.setTitle("nouveau credit");
-                    }
-                }catch (Exception e){
-                    //do nothing
-                }
-        }
+        binding.modifcredDate.setText(MesOutils.convertDateToString(new Date(credit.getDatecredit())));
     }
 
     public void modifierCredit(){
+        binding.btnmodifcredit.setOnClickListener(view -> {
 
-        binding.btnmodification.setOnClickListener(v -> {
-
-//            String nomclient = binding.editmodificationnomclient.getText().toString().trim();
-//            String prenomsclient = binding.editmodificationprenomclient.getText().toString().trim();
-            String designationarticle1 = binding.editmodificationarticle1designation.getText().toString().trim();
-            String article1somme = binding.editmodificationarticle1somme.getText().toString().trim();
-            String article1qte = binding.editTextNbrarticle1.getText().toString().trim();
-            String versement = binding.editmodificationversement.getText().toString().trim();
-            String date = binding.datemodification.getText().toString().trim();
+            String designationarticle1 = binding.modifcredarticle1.getText().toString().trim();
+            String article1somme = binding.modifcredarticle1somme.getText().toString().trim();
+            String article1qte = binding.modifcredNbrarticle1.getText().toString().trim();
+            String date = binding.modifcredDate.getText().toString().trim();
             Date date_credit = MesOutils.convertStringToDate(date);
 
             if ( designationarticle1.isEmpty() || article1somme.isEmpty() ||article1qte.isEmpty()
@@ -147,84 +94,72 @@ public class ModifiercreditActivity extends AppCompatActivity {
                 Toast.makeText(ModifiercreditActivity.this, "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
 
             } else if (date_credit == null) {
-                Toast.makeText(ModifiercreditActivity.this, "format de date incorect", Toast.LENGTH_SHORT).show();
-            }else if (binding.editmodificationarticle2designation.getText().toString().trim().length() != 0 && binding.editmodificationarticle2somme.getText().toString().trim().isEmpty() ||
-                    binding.editmodificationarticle2designation.getText().toString().trim().length() != 0 & binding.editTextNbrarticle2.getText().toString().trim().isEmpty()) {
-                Toast.makeText(ModifiercreditActivity.this, "renseigner le nombre et le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(ModifiercreditActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
+            }else if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifcredarticle2somme.getText().toString().trim().isEmpty() ||
+                    binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifcredNbrarticle2.getText().toString().trim().isEmpty()) {
+                Toast.makeText(ModifiercreditActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
             } else {
-                    int sommearticle1 =Integer.parseInt(article1somme) ;
-                    int nbrarticle1 = Integer.parseInt(article1qte);
+                int sommearticle1 =Integer.parseInt(article1somme) ;
+                int nbrarticle1 = Integer.parseInt(article1qte);
 
-                    String designation_article2 ;
-                    String designationarticle2 ;
-                    int sommearticle2 ;
-                    int nbrarticle2 ;
-                    String somme_article2 ;
-                    String nbr_article2 ;
+                String designation_article2 ;
+                String designationarticle2 ;
+                int sommearticle2 ;
+                int nbrarticle2 ;
+                String somme_article2 ;
+                String nbr_article2 ;
 
-                    if (binding.editmodificationarticle2designation.getText().toString().trim().length() != 0 && binding.editmodificationarticle2somme.getText().toString().trim().equals("0") ||
-                            binding.editmodificationarticle2designation.getText().toString().trim().length() != 0 & binding.editTextNbrarticle2.getText().toString().trim().equals("0")){
-                        designation_article2 = "";
-                        somme_article2 = "0";
-                        nbr_article2 = "0";
-                    }else if (binding.editmodificationarticle2designation.getText().toString().trim().isEmpty()){
-                        designation_article2 = binding.editmodificationarticle2designation.getText().toString().trim();
-                        somme_article2 = "0";
-                        nbr_article2 = "0";
-                    }else {
-                        designation_article2 = binding.editmodificationarticle2designation.getText().toString().trim();;
-                        somme_article2 = binding.editmodificationarticle2somme.getText().toString().trim();
-                        nbr_article2 = binding.editTextNbrarticle2.getText().toString().trim();
-                    }
-                    designationarticle2 = designation_article2;
-                    sommearticle2 = Integer.parseInt(somme_article2);
-                    nbrarticle2 = Integer.parseInt(nbr_article2);
-                    long datecredit = date_credit.getTime();
+                if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifcredarticle2somme.getText().toString().trim().equals("0") ||
+                        binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifcredNbrarticle2.getText().toString().trim().equals("0")){
+                    designation_article2 = "";
+                    somme_article2 = "0";
+                    nbr_article2 = "0";
+                }else if (binding.modifaccarticle2.getText().toString().trim().isEmpty()){
+                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();
+                    somme_article2 = "0";
+                    nbr_article2 = "0";
+                }else {
+                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();;
+                    somme_article2 = binding.modifcredarticle2somme.getText().toString().trim();
+                    nbr_article2 = binding.modifcredNbrarticle2.getText().toString().trim();
+                }
+                designationarticle2 = designation_article2;
+                sommearticle2 = Integer.parseInt(somme_article2);
+                nbrarticle2 = Integer.parseInt(nbr_article2);
+                long datecredit = date_credit.getTime();
 
-                    Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
-                    Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
-                    int sommecredit = c_article1.getSomme() + c_article2.getSomme();
+                Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
+                Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                int sommecredit = c_article1.getSomme() + c_article2.getSomme();
+                int reste = sommecredit - credit.getVersement();
+                int versement;
+                if (credit.getVersement() < sommecredit){
+                    versement = credit.getVersement();
+                }else {
+                    versement = sommecredit;
+                }
 
-                    if (Integer.parseInt(versement) < sommecredit){
-                        if(getIntent().getIntExtra("Tagx",1) == 1){
-                            if ( credit != null ){
-                                ClientModel client = credit.getClient();
-                                long ancienne_sommecredit = credit.getSommecredit();
-                                boolean success = creditcontrolleur.modifierCredit(credit.getId(), client,  c_article1, c_article2, versement, datecredit,ancienne_sommecredit);
-                                if (success) {
-                                    Intent intent = new Intent(ModifiercreditActivity.this, GestionActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
-                                }
-                            }else {Toast.makeText(this, "credit inexistant", Toast.LENGTH_SHORT).show();}
-                        }
+                String article1 = new Genson().serialize(c_article1);
+                String article2 = new Genson().serialize(c_article2);
 
-                        if (getIntent().getIntExtra("Tagx",1) == 2){
-
-                            ClientModel client = clientcontrolleur.getClient();
-                            if ( client != null){
-                                boolean success =  this.creditcontrolleur.ajouterCredit(client, c_article1, c_article2, versement, datecredit);
-                                if (success) {
-                                    Intent intent = new Intent(ModifiercreditActivity.this, GestionActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(this, "un probleme est survenu 2 : modification avortée", Toast.LENGTH_SHORT).show();
-                                }
-                            }else {Toast.makeText(this, "client inexistant", Toast.LENGTH_SHORT).show();}
-
-                        }
-
-                    }else {Toast.makeText(this, "versement superieur au credit", Toast.LENGTH_SHORT).show();}
-
-
-
+                CreditModel nouveau_credit = new CreditModel(credit.getId(),client.getId(),article1,article2,sommecredit,versement,reste,datecredit,credit.getNumerocredit());
+                int ancienne_somme_credit = credit.getSommecredit();
+                boolean success = creditcontrolleur.modifierCredit(nouveau_credit, client,ancienne_somme_credit);
+                if (success) {
+                    ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
+                    CreditModel credit_modifier = creditViewModel.getCredit().getValue();
+                    CreditModel creditModel = new CreditModel(credit_modifier.getId(),clientModel,credit_modifier.getArticle1(),credit_modifier.getArticle2(),credit_modifier.getSommecredit(),credit_modifier.getVersement(),credit_modifier.getReste(),credit_modifier.getDatecredit(),credit_modifier.getNumerocredit());
+                    creditViewModel.getCredit().setValue(creditModel);
+                    clientViewModel.getClient().setValue(clientModel);
+                    Intent intent = new Intent(ModifiercreditActivity.this, AffichercreditActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
     }
 
 

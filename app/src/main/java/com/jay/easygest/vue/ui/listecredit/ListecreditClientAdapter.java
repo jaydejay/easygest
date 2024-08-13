@@ -73,13 +73,12 @@ public class ListecreditClientAdapter extends BaseAdapter {
                 holder.btnlisteviewmodif.setVisibility(convertView.GONE);
             }
 
-            String content = "credit du "+"\n"+ MesOutils.convertDateToString(new Date(credits.get(position).getDatecredit())) ;
+            String content = "credit"+"\n"+" du "+"\n"+ MesOutils.convertDateToString(new Date(credits.get(position).getDatecredit())) ;
             holder.txtlisteviewdate.setText(content);
             holder.txtlisteviewsommecredit.setText(String.valueOf(credits.get(position).getSommecredit()));
             holder.txtlisteviewreste.setText(String.valueOf(credits.get(position).getReste()));
             holder.btnlisteviewmodif.setTag(position);
             holder.btnlisteviewannuller.setTag(position);
-//        holder.txtlisteviewcodeclient.setTag(position);
 
         holder.btnlisteviewmodif.setOnClickListener(v -> {
             int position1 = (int)v.getTag();

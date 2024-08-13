@@ -85,7 +85,6 @@ public class ModifierVersementActivity extends AppCompatActivity {
             String edt_somme = EDTsomme.getText().toString().trim();
             String dateversement = EDTdatecredit.getText().toString().trim();
             Date date = MesOutils.convertStringToDate(dateversement);
-            Log.i("modifierVersementactivity", "modifierVersement la date: "+date);
 
             if ( edt_somme.isEmpty() || dateversement.isEmpty()){
                 Toast.makeText(this, "champs obligatoires", Toast.LENGTH_SHORT).show();

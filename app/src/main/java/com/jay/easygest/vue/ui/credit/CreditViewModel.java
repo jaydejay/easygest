@@ -125,7 +125,7 @@ public class  CreditViewModel extends ViewModel {
 
     public Integer getSommeCreditsUnClient(ClientModel client){
         int total_somme_credit_client = 0;
-        ArrayList<CreditModel> liste_credits_client = getCreditsClients(client.getId());
+        ArrayList<CreditModel> liste_credits_client = this.getCreditsClients(client.getId());
 
         for (CreditModel credit : liste_credits_client) {
 

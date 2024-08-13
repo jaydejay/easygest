@@ -1,9 +1,12 @@
 package com.jay.easygest.outils;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Creditcontrolleur;
@@ -29,7 +32,7 @@ public class AccessLocalAccount {
     public static final String ID = "id";
     public static final String SOMMEACCOUNT = "sommeaccount";
     public static final String TABLE_ACCOUNT ="account" ;
-    public static final String NBREACCOUNT = "nbreaccount";
+    public static final String NBRACCOUNT = "nbraccount";
 //    public static final String TOTALCREDIT = "totalcredit";
     public static final String TOTALACCOUNT = "totalaccount";
     public static final String ACCOUNTID = "accountid";
@@ -44,7 +47,7 @@ public class AccessLocalAccount {
     public AccessLocalAccount(Context contexte) {
         this.contexte = contexte;
         this.accessBD = new MySqliteOpenHelper(contexte,null);
-        accessLocalVersementacc = new AccessLocalVersementacc(contexte);
+//        accessLocalVersementacc = new AccessLocalVersementacc(contexte);
         accessLocalClient = new AccessLocalClient(contexte);
 
     }
@@ -63,83 +66,72 @@ public class AccessLocalAccount {
     }
 
 
-    public boolean creerCompteAccount(AccountModel premieraccount, String codeclt, String nomclient, String prenomsclient, String telephone, String sommeversee) {
+    public AccountModel creerCompteAccount(AccountModel premieraccount, String codeclt, String nomclient, String prenomsclient, String telephone, String sommeversee) {
         bd = accessBD.getWritableDatabase();
-        AccessLocalVersementacc accessLocalVersementacc = new AccessLocalVersementacc(contexte);
-        AccessLocalClient accessLocalClient = new AccessLocalClient(contexte);
+         accessLocalVersementacc = new AccessLocalVersementacc(contexte);
         bd.beginTransaction();
-        boolean success;
+        AccountModel accountModel;
         try {
 
             long client_reslt = bd.insertOrThrow(TABLE_CLIENT,null,accessLocalClient.ajouterClient(codeclt, nomclient, prenomsclient,telephone,0,0,1,premieraccount.getSommeaccount()));
             long account_rslt = bd.insertOrThrow(TABLE_ACCOUNT,null,this.creerAccount(premieraccount,client_reslt));
             bd.insertOrThrow(TABLE_VERSEMENTACC,null,accessLocalVersementacc.creerVersement(Integer.parseInt(sommeversee), (int) account_rslt,(int) client_reslt,premieraccount.getDateaccount()));
+            accountModel = this.recupAccountById((int) account_rslt);
             bd.setTransactionSuccessful();
-            success = true;
 
         }catch (Exception e){
-             success = false;
+            accountModel = null;
         }finally {
             bd.endTransaction();
-
         }
-        return success;
+
+        return accountModel;
     }
 
-    public boolean ajouterAccount(AccountModel account, ClientModel client) {
+    public AccountModel ajouterAccount(AccountModel account, ClientModel client) {
 
         bd = accessBD.getWritableDatabase();
         accessLocalVersementacc = new AccessLocalVersementacc(contexte);
         ContentValues client_cv= new ContentValues();
-//        client_cv.put(ID,client.getId());
-//        client_cv.put(CODECLIENT,client.getCodeclient());
-//        client_cv.put(NOM,client.getNom());
-//        client_cv.put(PRENOMS,client.getPrenoms());
-//        client_cv.put(TELEPHONE,client.getTelephone());
-//        client_cv.put(ADRESSEELECTRO,client.getEmail());
-//        client_cv.put(RESIDENCE,client.getResidence());
-//        client_cv.put(CNI,client.getCni());
-//        client_cv.put(PERMIS,client.getPermis());
-//        client_cv.put(PASSPORT,client.getPassport());
-//        client_cv.put(SOCIETE,client.getSociete());
-        client_cv.put(NBREACCOUNT,client.getNbraccount() + 1);
+
+        client_cv.put(NBRACCOUNT,client.getNbraccount() + 1);
         client_cv.put(TOTALACCOUNT,client.getTotalaccount() + account.getSommeaccount());
         bd.beginTransaction();
-        boolean success ;
+//        long account_rslt;
+        AccountModel accountModel;
         try {
             long account_rslt =  bd.insertOrThrow(TABLE_ACCOUNT,null,this.creerAccount(account,client.getId()));
             bd.updateWithOnConflict(TABLE_CLIENT,client_cv, ID + "=?",new String[] {String.valueOf(client.getId())},1);
             bd.insertOrThrow(TABLE_VERSEMENTACC,null,accessLocalVersementacc.creerVersement(account.getVersement(), (int) account_rslt, client.getId(),account.getDateaccount()));
+             accountModel = this.recupAccountById((int) account_rslt);
             bd.setTransactionSuccessful();
-            success = true;
 
         }catch (Exception e){
-            success = false;
+//            account_rslt = -1;
+            accountModel = null;
         }finally {
             bd.endTransaction();
 
         }
 
-        return success;
+        return accountModel;
     }
 
 
-    public boolean modifierAccount(AccountModel account, ClientModel client,int ancienne_somme_account ) {
+    public AccountModel modifierAccount(AccountModel account, ClientModel client,int ancienne_somme_account ) {
 
         bd = accessBD.getWritableDatabase();
         bd.beginTransaction();
-        boolean success ;
+        AccountModel accountModel;
         try{
             int ancien_total_account_du_client =  Integer.parseInt(String.valueOf(client.getTotalaccount())) ;
-            int nouvelle_sommecredit = account.getSommeaccount();
-
-            int nouveau_total_account_du_client = ( ancien_total_account_du_client - ancienne_somme_account) + nouvelle_sommecredit;
+            int nouveau_total_account_du_client = ( ancien_total_account_du_client - ancienne_somme_account) + account.getSommeaccount();
             ContentValues account_cv = new ContentValues();
             ContentValues client_cv = new ContentValues();
 
             account_cv.put(ARTICLE_1,account.getArticle1());
             account_cv.put(ARTICLE_2,account.getArticle2());
-            account_cv.put(SOMMEACCOUNT,nouvelle_sommecredit);
+            account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
             account_cv.put(VERSEMENTS,account.getVersement());
             account_cv.put(RESTE,account.getReste());
             account_cv.put(DATEACCOUNT,account.getDateaccount());
@@ -148,16 +140,15 @@ public class AccessLocalAccount {
 
             bd.updateWithOnConflict(TABLE_ACCOUNT,account_cv, ID + "=" +account.getId(),null,1);
             bd.updateWithOnConflict(TABLE_CLIENT, client_cv, "id = ?", new String[] {String.valueOf(client.getId())},1);
+             accountModel = this.recupAccountById(account.getId());
             bd.setTransactionSuccessful();
-
-            success = true;
         }catch (Exception e){
-            success = false;
+            accountModel = null;
         }
         finally {
             bd.endTransaction();
         }
-        return success;
+        return accountModel;
     }
 
 
@@ -166,18 +157,20 @@ public class AccessLocalAccount {
         bd.beginTransaction();
         try {
             bd = accessBD.getWritableDatabase();
-
             ContentValues cvclient = new ContentValues();
-            cvclient.put(NBREACCOUNT,account.getClient().getNbrcredit() - 1);
+
+            cvclient.put(NBRACCOUNT,account.getClient().getNbraccount() - 1);
             cvclient.put(TOTALACCOUNT,account.getClient().getTotalaccount() - account.getSommeaccount());
 
             bd.delete(TABLE_ACCOUNT,ID +"=?",new String[]{String.valueOf(account.getId())});
             bd.delete(TABLE_VERSEMENTACC, ACCOUNTID +"=?",new String[]{String.valueOf(account.getId())});
             bd.updateWithOnConflict(TABLE_CLIENT,cvclient, ID + "=" +account.getClient().getId(),null,1);
+
             bd.setTransactionSuccessful();
             success = true;
         }catch (Exception e){
             success = false;
+
         }finally {
             bd.endTransaction();
         }
@@ -189,7 +182,7 @@ public class AccessLocalAccount {
 
         try {
             bd = accessBD.getReadableDatabase();
-            String req = "select * from accout where " + ID + "="+accountId+"";
+            String req = "select * from account where " + ID + "="+accountId+"";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {
@@ -201,6 +194,8 @@ public class AccessLocalAccount {
                 int reste = cursor.getInt(6);
                 long dateaccount = cursor.getLong(7);
                 Integer nbraccount = cursor.getInt(8);
+
+//                ClientModel client = accessLocalClient.recupUnClient(clientid);
                 account = new AccountModel(accountId, clientid, article1, article2, sommeaccount, versement, reste, dateaccount,nbraccount);
 
             }

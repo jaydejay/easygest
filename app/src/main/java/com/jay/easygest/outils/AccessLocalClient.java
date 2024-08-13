@@ -185,7 +185,6 @@ public class AccessLocalClient {
 
         try {
             bd = accessBD.getReadableDatabase();
-//            String req = "select * from client where " + ID + "='"+clientid+"'";
             String req = "select * from client where " + ID + "='"+clientid+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();

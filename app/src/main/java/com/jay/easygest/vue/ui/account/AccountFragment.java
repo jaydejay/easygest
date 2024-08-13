@@ -14,19 +14,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
+import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.FragmentAccountBinding;
+import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.vue.GestionActivity;
+import com.jay.easygest.vue.AfficherAccountActivity;
+import com.jay.easygest.vue.AfficherclientActivity;
+import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.Date;
 
 public class  AccountFragment extends Fragment {
 
-    private AccountViewModel mViewModel;
+    private AccountViewModel accountViewModel;
+    private ClientViewModel clientViewModel;
     private Accountcontroller accountcontroller;
+    private Clientcontrolleur clientcontrolleur;
     private FragmentAccountBinding binding;
 
 //    public static AccountFragment newInstance() { return new AccountFragment();}
@@ -36,9 +42,12 @@ public class  AccountFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater,container,false);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(getContext());
-        mViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
+
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         initFragment();
-        ajouterAccount();
+        creerAccount();
         return binding.getRoot();
     }
 
@@ -48,7 +57,7 @@ public class  AccountFragment extends Fragment {
     }
 
 
-    public void ajouterAccount(){
+    public void creerAccount(){
 
 
         binding.btncreeraccount.setOnClickListener(v -> {
@@ -75,12 +84,11 @@ public class  AccountFragment extends Fragment {
 
             } else if  (binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreeraccarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().isEmpty()) {
-                Toast.makeText(getActivity(), "renseigner le nombre et le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
             } else if (telephone.length() < 10) {
                 Toast.makeText(getContext(), "numero doit étre de 10 chiffres", Toast.LENGTH_SHORT).show();
 
             } else {
-//                    try {
 
                 int sommearticle1 =Integer.parseInt(article1somme);
                 int nbrarticle1 = Integer.parseInt(article1qte);
@@ -120,12 +128,16 @@ public class  AccountFragment extends Fragment {
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                 if (Integer.parseInt(versement) < sommecredit){
 
-                    boolean success;
-                    success =  this.accountcontroller.creerAccount(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
+                    AccountModel account =  this.accountcontroller.creerAccount(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
 
-                    if (success) {
-                        Intent intent = new Intent(getActivity(), GestionActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    if (account != null) {
+
+                        ClientModel clientModel = clientcontrolleur.recupererClient(account.getClientid());
+                        AccountModel account_ajoute = accountViewModel.getAccount().getValue();
+                        AccountModel accountModel = new AccountModel(account_ajoute.getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+                        accountViewModel.getAccount().setValue(accountModel);
+                        clientViewModel.getClient().setValue(clientModel);
+                        Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
                         startActivity(intent);
                     }else {
                         Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();

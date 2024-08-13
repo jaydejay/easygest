@@ -2,6 +2,7 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,11 +15,13 @@ import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherclientBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
@@ -31,6 +34,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     private Clientcontrolleur clientcontrolleur;
     private  Creditcontrolleur creditcontrolleur;
     private Accountcontroller accountcontroller;
+    private Versementacccontrolleur versementacccontrolleur;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
     private AccountViewModel accountViewModel;
@@ -46,6 +50,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
+        versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
 
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
@@ -95,6 +100,8 @@ public class AfficherclientActivity extends AppCompatActivity {
         afficherListeVersement();
         afficherListeCredits();
         supprimerClient();
+        ajouterAcount();
+        ajouterCredit();
         afficherListeCreditsoldes();
     }
 
@@ -188,10 +195,11 @@ public class AfficherclientActivity extends AppCompatActivity {
                         binding.layoutAfClientTotalcredit.setVisibility(View.GONE);
                     }else { binding.layoutAfClientTotalcredit.setVisibility(View.VISIBLE);}
 
-                    binding.textViewAfClientNbraccount.setText(client.getNbraccount());
+                    binding.textViewAfClientNbraccount.setText(String.valueOf(client.getNbraccount()));
                     if ( binding.textViewAfClientNbraccount.length() == 0){
                         binding.layoutAfClientNbraccount.setVisibility(View.GONE);
                     }else { binding.layoutAfClientNbraccount.setVisibility(View.VISIBLE);}
+
 
                     binding.textViewAfClientTotalaccount.setText(String.valueOf(client.getTotalaccount()));
                     if ( binding.textViewAfClientTotalaccount.length() == 0){
@@ -204,6 +212,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         }
 
     }
+
 
 
     /**
@@ -259,24 +268,9 @@ public class AfficherclientActivity extends AppCompatActivity {
 
             id = R.id.af_client_liste_accounts;
             accountcontroller.listeAccountsClient(client);
-//            creditViewModel.getCreditsClients();
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","accounts en cour");
-            startActivity(intent);
-
-        });
-    }
-
-    public void afficherListeAccountsoldes(){
-
-        binding.afClientListeHistoAccounts.setOnClickListener(view -> {
-
-            id = R.id.af_client_liste_histo_accounts;
-            accountcontroller.listeAccountsoldeClient(client);
-            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
-            intent.putExtra("fragmentid",id);
-            intent.putExtra("titre","accounts soldés");
             startActivity(intent);
 
         });
@@ -300,25 +294,45 @@ public class AfficherclientActivity extends AppCompatActivity {
 
     }
 
-
     /**
      * affiche la liste des versements des accounts d'un client
      */
     public void afficherListeVersementacc(){
 
         binding.afClientListeVersmAccounts.setOnClickListener(view -> {
-
-            ArrayList<VersementsModel> liste_versements =  versementViewModel.getVersementsClient(client);
-            versementViewModel.getMversements().setValue(liste_versements);
+                    versementacccontrolleur.listeversementsClient(client);
             id = R.id.af_client_liste_versm_accounts;
-
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
-            intent.putExtra("titre","versements accounts");
+            intent.putExtra("titre","versements d'accounts");
             startActivity(intent);
 
         });
 
+    }
+
+    public void afficherListeAccountsoldes(){
+
+        binding.afClientListeHistoAccounts.setOnClickListener(view -> {
+
+            id = R.id.af_client_liste_histo_accounts;
+            accountcontroller.listeAccountsoldeClient(client);
+            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
+            intent.putExtra("fragmentid",id);
+            intent.putExtra("titre","accounts soldés");
+            startActivity(intent);
+
+        });
+    }
+
+
+
+    public void ajouterAcount(){
+        binding.afClientAjouterAccount.setOnClickListener(view -> {
+
+            Intent intent = new Intent(AfficherclientActivity.this,AjouterAccountActivity.class);
+            startActivity(intent);
+        });
     }
 
 
@@ -340,24 +354,9 @@ public class AfficherclientActivity extends AppCompatActivity {
         });
     }
 
-    public void afficherListeCreditsoldes(){
-
-        binding.afClientListeHistoCredits.setOnClickListener(view -> {
-
-            id = R.id.af_client_liste_histo_credits;
-            creditcontrolleur.listecreditsSoldesclient(client);
-            creditViewModel.getCreditsSoldesClient(client.getId());
-            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
-            intent.putExtra("fragmentid",id);
-            intent.putExtra("titre","liste de credits soldés");
-            startActivity(intent);
-
-        });
-    }
-
 
     /**
-     * affiche le formulaire pour faire un versement
+     * affiche le formulaire pour faire un versement d'un credit
      */
     public void afficherAjouterVersement(){
 
@@ -367,7 +366,7 @@ public class AfficherclientActivity extends AppCompatActivity {
 
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
-            intent.putExtra("titre","faire un versement");
+            intent.putExtra("titre","versement credit");
             startActivity(intent);
         });
 
@@ -393,6 +392,30 @@ public class AfficherclientActivity extends AppCompatActivity {
         });
 
     }
+
+    public void afficherListeCreditsoldes(){
+
+        binding.afClientListeHistoCredits.setOnClickListener(view -> {
+
+            id = R.id.af_client_liste_histo_credits;
+            creditcontrolleur.listecreditsSoldesclient(client);
+            creditViewModel.getCreditsSoldesClient(client.getId());
+            Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
+            intent.putExtra("fragmentid",id);
+            intent.putExtra("titre","liste de credits soldés");
+            startActivity(intent);
+
+        });
+    }
+
+    public void ajouterCredit(){
+        binding.afClientAjouterCredit.setOnClickListener(view -> {
+
+            Intent intent = new Intent(AfficherclientActivity.this,AjouterCreditActivity.class);
+            startActivity(intent);
+        });
+    }
+
 
     public void redirectToModifiercreditActivity(CreditModel credit){
         creditcontrolleur.setCredit(credit);

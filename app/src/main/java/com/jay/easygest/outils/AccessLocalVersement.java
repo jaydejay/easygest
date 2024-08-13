@@ -29,8 +29,11 @@ public class AccessLocalVersement {
     public static final String VERSEMENTS = "versements";
     public static final String CODECLIENT = "codeclient";
     public static final String SOMMEVERSE = "sommeverse";
-    public static final String CREDIT = "credit";
     public static final String RESTE = "reste";
+    public static final String CREDIT = "credit";
+    public static final String CREDITID = "creditid";
+    public static final String CLIENTID = "clientid";
+    public static final String DATEVERSEMENT = "dateversement";
 
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
@@ -56,26 +59,14 @@ public class AccessLocalVersement {
 
         ContentValues cv = new ContentValues();
         cv.put(SOMMEVERSE,sommeverse);
-        cv.put("creditid", creditid);
-        cv.put("clientid", clientid);
-        cv.put("dateversement", dateversement);
+        cv.put(CREDITID, creditid);
+        cv.put(CLIENTID, clientid);
+        cv.put(DATEVERSEMENT, dateversement);
         return cv;
     }
 
-    public ContentValues ajoutversementnouveaucredit(String versement){
 
-        ContentValues cv = new ContentValues();
-        cv.put(SOMMEVERSE, versement);
-        return  cv;
-    }
 
-//    /**
-//     * ajoute le nnieme versement
-//     * @param codeclt code client
-//     * @param versement versement
-//     * @param sommeverse somme versée
-//     * @return boolean
-//     */
     public boolean ajouterversement(ClientModel client, long sommeverse,String dateversement)  {
 
            bd = accessBD.getWritableDatabase();
@@ -107,10 +98,11 @@ public class AccessLocalVersement {
                         credit_cv.put(SOMMECREDIT,credit.getSommecredit());
                         credit_cv.put(VERSEMENTS,versements);
                         credit_cv.put(RESTE,reste);
-                        credit_cv.put(DATECREDIT,date);
+                        credit_cv.put(DATECREDIT,credit.getDatecredit());
                         credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
+
                         bd.insertOrThrow(TABLE_VERSEMENT,null,creerVersement( somme_a_verse,credit.getId(),client.getId(),date));
-                        bd.replaceOrThrow("credit",null,credit_cv);
+                        bd.replaceOrThrow(CREDIT,null,credit_cv);
                         sommeverse = sommeverse - somme_a_verse;
                         bd.setTransactionSuccessful();
                         succes =true;
@@ -140,13 +132,13 @@ public class AccessLocalVersement {
         try{
             cv_versement.put("id",versement_a_modifier.getId());
             cv_versement.put("sommeverse",nouvellesommeverse);
-            cv_versement.put("creditid",credit.getId());
-            cv_versement.put("clientid",versement_a_modifier.getClient().getId());
-            cv_versement.put("dateversement",dateversement);
+            cv_versement.put(CREDITID,credit.getId());
+            cv_versement.put(CLIENTID,versement_a_modifier.getClient().getId());
+            cv_versement.put(DATEVERSEMENT,dateversement);
 
             int reste = credit.getSommecredit() - nouveau_total_versement;
             credit_cv.put("id",credit.getId());
-            credit_cv.put("clientid",credit.getClientid());
+            credit_cv.put(CLIENTID,credit.getClientid());
             credit_cv.put("article1",credit.getArticle1());
             credit_cv.put("article2",credit.getArticle2());
             credit_cv.put("sommecredit",credit.getSommecredit());

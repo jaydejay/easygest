@@ -13,6 +13,21 @@
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
         <activity
+            android:name=".vue.AjouterCreditActivity"
+            android:exported="false"
+            android:label="@string/nouveau_credit"
+            android:parentActivityName=".vue.AfficherclientActivity"/>
+        <activity
+            android:name=".vue.AjouterAccountActivity"
+            android:exported="false"
+            android:label="@string/ajouter_account"
+            android:parentActivityName=".vue.AfficherclientActivity" />
+        <activity
+            android:name=".vue.ModifierAccountActivity"
+            android:exported="false"
+            android:label="@string/modif_account"
+            android:parentActivityName=".vue.AfficherclientActivity" />
+        <activity
             android:name=".vue.ActiverProduitActivity"
             android:label="@string/activer_produit"
             android:parentActivityName=".vue.MainActivity" />

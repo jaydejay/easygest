@@ -4,15 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal|center_vertical"
-    android:layout_marginStart="3dp"
-    android:layout_marginTop="3dp"
-    android:layout_marginEnd="3dp"
-    android:paddingLeft="1dp"
-    android:paddingTop="1dp"
-    android:paddingRight="1dp"
-    android:paddingBottom="0dp"
-    tools:context=".vue.ModifiercreditActivity">
+    tools:context=".vue.ModifierAccountActivity">
+
 
     <ScrollView
         android:layout_width="0dp"
@@ -31,7 +24,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/llayoutmodifcrednom"
+                android:id="@+id/llayoutmodifaccnom"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
@@ -41,7 +34,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/modifcredrnom"
+                    android:id="@+id/modifaccrnom"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -49,7 +42,7 @@
                     android:gravity="center_horizontal|center_vertical"/>
 
                 <TextView
-                    android:id="@+id/modifcredcodeclt"
+                    android:id="@+id/modifacccodeclt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -58,7 +51,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llayoutmodifcredprenoms"
+                android:id="@+id/llayoutmodifaccprenoms"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
@@ -68,7 +61,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/llayoutaccnom">
 
                 <TextView
-                    android:id="@+id/modifcredprenoms"
+                    android:id="@+id/modifaccprenoms"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -78,7 +71,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llayoutmodifcredarticle1"
+                android:id="@+id/llayoutmodifaccarticle1"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
@@ -88,7 +81,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/llayoutmodifaccprenoms">
 
                 <EditText
-                    android:id="@+id/modifcredarticle1"
+                    android:id="@+id/modifaccarticle1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
@@ -100,7 +93,7 @@
                     android:inputType="textPersonName" />
 
                 <EditText
-                    android:id="@+id/modifcredarticle1somme"
+                    android:id="@+id/modifaccarticle1somme"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
@@ -113,7 +106,7 @@
                     android:text="@string/zero" />
 
                 <EditText
-                    android:id="@+id/modifcredNbrarticle1"
+                    android:id="@+id/modifaccNbrarticle1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -125,7 +118,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llayoutmodifcredarticle2"
+                android:id="@+id/llayoutmodifaccarticle2"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
@@ -146,7 +139,7 @@
                     android:inputType="textPersonName" />
 
                 <EditText
-                    android:id="@+id/modifcredarticle2somme"
+                    android:id="@+id/modifaccarticle2somme"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
@@ -158,7 +151,7 @@
                     android:text="@string/zero" />
 
                 <EditText
-                    android:id="@+id/modifcredNbrarticle2"
+                    android:id="@+id/modifaccNbrarticle2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -169,7 +162,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llayoutmodifcreddate"
+                android:id="@+id/llayoutmodifaccdate"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
@@ -179,7 +172,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/llayoutmodifaccarticle2">
 
                 <EditText
-                    android:id="@+id/modifcredDate"
+                    android:id="@+id/modifaccDate"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -203,7 +196,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/llayoutmodifaccdate">
 
                 <Button
-                    android:id="@+id/btnmodifcredit"
+                    android:id="@+id/btnmodifaccount"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
@@ -212,6 +205,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

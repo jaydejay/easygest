@@ -6,9 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".vue.AfficherclientActivity">
 
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:layout_margin="1dp"
@@ -324,7 +338,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_af_client_nbraccount">
 
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -359,8 +372,7 @@
                     android:textAllCaps="true"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:layout_weight="1"
-                   />
+                    android:layout_weight="1"/>
                 <TextView
                     android:id="@+id/textView_af_client_email"
                     android:layout_width="wrap_content"
@@ -372,7 +384,7 @@
 
     <LinearLayout
         android:id="@+id/layout_af_client_btn"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
         android:orientation="horizontal"
@@ -473,7 +485,7 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/afficher_client_menu"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="3dp"
@@ -526,6 +538,15 @@
             android:textSize="13sp" />
 
 
+        <TextView
+            android:id="@+id/af_client_ajouter_credit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/ajouter_credit"
+            android:textSize="13sp" />
+
+
     </LinearLayout>
 
         <LinearLayout
@@ -545,7 +566,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/mes_accounts"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/af_client_text_accounts"
@@ -570,13 +591,16 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/histo_accounts"
                 android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/af_client_ajouter_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/ajouter_account"
+                android:textSize="13sp" />
         </LinearLayout>
-
+        </LinearLayout>
     </LinearLayout>
-
-
-
-
-
-
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

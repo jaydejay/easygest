@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    tools:context=".vue.ui.versement.VersementFragment">
+    tools:context=".vue.ui.versementacc.AjouterVersementaccFragment">
 
 
     <LinearLayout
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/loyout_versement"
+            android:id="@+id/loyoutajoutervrsmntacc"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="5dp"
@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
-                android:id="@+id/editversementcodeclt"
+                android:id="@+id/ajoutervrsmtacccodeclt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -38,7 +38,7 @@
                 android:inputType="textPersonName" />
 
             <EditText
-                android:id="@+id/editversementsomme"
+                android:id="@+id/ajoutervrsmntaccsomme"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -49,7 +49,7 @@
                 android:inputType="number" />
 
             <EditText
-                android:id="@+id/editversementdate"
+                android:id="@+id/ajoutervrsmntaccdate"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -67,10 +67,10 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/loyout_versement">
+            app:layout_constraintTop_toBottomOf="@+id/loyoutajoutervrsmntacc">
 
             <Button
-                android:id="@+id/btnversement"
+                android:id="@+id/btnversementacc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class AccountViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<AccountModel>> account_solde_ou_non ;
-    private MutableLiveData<AccountModel> account;
+    private  MutableLiveData<AccountModel> account;
     private Accountcontroller accountcontroller;
     private final MutableLiveData<Integer> totalaccountsclient ;
     private final MutableLiveData<Integer> totalversementsclient ;
@@ -22,6 +22,7 @@ public class AccountViewModel extends ViewModel {
         this.account_solde_ou_non = new MutableLiveData<>();
         this.account = new MutableLiveData<>();
         this.account = accountcontroller.getMaccount();
+
         this.account_solde_ou_non = accountcontroller.getMaccounts();
 
         totalaccountsclient = accountcontroller.getRecapTaccounttClient();

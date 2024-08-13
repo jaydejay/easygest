@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
@@ -23,7 +24,7 @@ public final class Creditcontrolleur {
     private final MutableLiveData<Integer> mtotalcredit = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversement = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalreste = new MutableLiveData<>();
-    private  final  MutableLiveData<CreditModel> mcredit =new MutableLiveData<>();
+    private  final  MutableLiveData<CreditModel> mcredit = new MutableLiveData<>();
     private  final  MutableLiveData<ArrayList<CreditModel>> mcredits = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalresteclient = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversementclient = new MutableLiveData<>();
@@ -82,7 +83,7 @@ public final class Creditcontrolleur {
     }
 
 
-    public boolean creerCredit(String codeclt, String nomclient,String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long datecredit){
+    public CreditModel creerCredit(String codeclt, String nomclient,String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long datecredit){
 
         String article1 = new Genson().serialize(c_article1);
         String article2 = new Genson().serialize(c_article2);
@@ -91,12 +92,13 @@ public final class Creditcontrolleur {
         int reste = sommecredit - Integer.parseInt(versement);
 
         CreditModel premiercredit = new CreditModel( codeclt,nomclient,prenomsclient,article1, article2,sommecredit, Integer.parseInt(versement), reste,datecredit,1);
-        boolean success = accessLocalcredit.creerCompteCredit(premiercredit,codeclt,nomclient,prenomsclient,telephone,versement);
-        if (success){
+        CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,codeclt,nomclient,prenomsclient,telephone,versement);
+        if (credit != null){
             credits.add(premiercredit);
             this.setCredits(credits);
+            this.setCredit(credit);
         }
-        return  success;
+        return  credit;
     }
 
     public boolean ajouterCredit( ClientModel client,Articles c_article1, Articles c_article2, String versement, long datecredit) {
@@ -112,23 +114,32 @@ public final class Creditcontrolleur {
         if (success){
             credits.add(credit);
             this.setCredits(credits);
+            this.setCredit(credit);
         }
         return  success;
 
     }
 
 
-    public boolean modifierCredit(int id,ClientModel client,Articles c_article1, Articles c_article2,String versement, long datecredit,long ancienne_sommecredit){
-        String article1 = new Genson().serialize(c_article1);
-        String article2 = new Genson().serialize(c_article2);
+    public boolean modifierCredit(CreditModel creditModel, ClientModel client, int ancienne_somme_credit){
 
-        int sommecredit = c_article1.getSomme() + c_article2.getSomme();
-        int reste = sommecredit - Integer.parseInt(versement);
+        boolean success = false;
+        CreditModel credit = accessLocalcredit.modifierCredit(creditModel,client,ancienne_somme_credit);
+        if (credit != null ){
+            this.setCredit(credit);
+            this.listecredits();
+            success = true;
+        }
 
-       return  accessLocalcredit.modifierCredit(id,client,article1,article2,sommecredit,Integer.parseInt(versement),reste,datecredit,ancienne_sommecredit);
+        return success;
     }
+
     public boolean annullerCredit(CreditModel credit){
-        return accessLocalcredit.anullerCredit(credit);
+      boolean success = accessLocalcredit.anullerCredit(credit);
+        if (success){
+            this.listecredits();
+        }
+      return success;
     }
     public boolean isClientOwnCredit(ClientModel client){
         return accessLocalcredit.isClientOwnCredit(client);
