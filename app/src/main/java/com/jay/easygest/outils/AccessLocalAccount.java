@@ -13,8 +13,10 @@ import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.VersementsaccModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class AccessLocalAccount {
@@ -31,12 +33,11 @@ public class AccessLocalAccount {
     public static final String NUMEROACCOUNT = "numeroaccount";
     public static final String ID = "id";
     public static final String SOMMEACCOUNT = "sommeaccount";
-    public static final String TABLE_ACCOUNT ="account" ;
+    public static final String TABLE_ACCOUNT = "account";
     public static final String NBRACCOUNT = "nbraccount";
-//    public static final String TOTALCREDIT = "totalcredit";
     public static final String TOTALACCOUNT = "totalaccount";
     public static final String ACCOUNTID = "accountid";
-
+    public static final String SOLDEDAT = "soldedat";
     private MySqliteOpenHelper accessBD;
     private final Context contexte;
     private SQLiteDatabase bd;
@@ -47,13 +48,17 @@ public class AccessLocalAccount {
     public AccessLocalAccount(Context contexte) {
         this.contexte = contexte;
         this.accessBD = new MySqliteOpenHelper(contexte,null);
-//        accessLocalVersementacc = new AccessLocalVersementacc(contexte);
         accessLocalClient = new AccessLocalClient(contexte);
 
     }
 
     private ContentValues creerAccount(AccountModel account, long client_id) {
         ContentValues cv = new ContentValues();
+        long date_de_solde;
+        if (account.getReste() == 0){
+            date_de_solde = account.getDateaccount();
+        }else {date_de_solde = 0L;}
+        account.setSoldedat(date_de_solde);
         cv.put(CLIENTID,client_id);
         cv.put(ARTICLE_1,account.getArticle1());
         cv.put(ARTICLE_2,account.getArticle2());
@@ -62,10 +67,21 @@ public class AccessLocalAccount {
         cv.put(RESTE,account.getReste());
         cv.put(DATEACCOUNT,account.getDateaccount());
         cv.put(NUMEROACCOUNT,account.getNumeroaccount());
+        cv.put(SOLDEDAT,date_de_solde);
         return cv;
     }
 
 
+    /**
+     * cree l'account si le client n'existe pas encore
+     * @param premieraccount premier account du client
+     * @param codeclt code du client fraichement crée
+     * @param nomclient le nom du client fraichement crée
+     * @param prenomsclient les prenoms du client fraichement crée
+     * @param telephone le numero de téléphone du client fraichement crée
+     * @param sommeversee la somme de l'account
+     * @return l'account fraichement crée
+     */
     public AccountModel creerCompteAccount(AccountModel premieraccount, String codeclt, String nomclient, String prenomsclient, String telephone, String sommeversee) {
         bd = accessBD.getWritableDatabase();
          accessLocalVersementacc = new AccessLocalVersementacc(contexte);
@@ -88,6 +104,12 @@ public class AccessLocalAccount {
         return accountModel;
     }
 
+    /**
+     * ajoute un account au compte d'un client
+     * @param account l'account ajouté
+     * @param client le client
+     * @return l'account ajouté
+     */
     public AccountModel ajouterAccount(AccountModel account, ClientModel client) {
 
         bd = accessBD.getWritableDatabase();
@@ -97,7 +119,7 @@ public class AccessLocalAccount {
         client_cv.put(NBRACCOUNT,client.getNbraccount() + 1);
         client_cv.put(TOTALACCOUNT,client.getTotalaccount() + account.getSommeaccount());
         bd.beginTransaction();
-//        long account_rslt;
+
         AccountModel accountModel;
         try {
             long account_rslt =  bd.insertOrThrow(TABLE_ACCOUNT,null,this.creerAccount(account,client.getId()));
@@ -107,7 +129,7 @@ public class AccessLocalAccount {
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
-//            account_rslt = -1;
+
             accountModel = null;
         }finally {
             bd.endTransaction();
@@ -118,16 +140,34 @@ public class AccessLocalAccount {
     }
 
 
+    /**
+     *
+     * @param account l'account
+     * @param client le client
+     * @param ancienne_somme_account ancien account versé
+     * @return l'account modifier
+     */
     public AccountModel modifierAccount(AccountModel account, ClientModel client,int ancienne_somme_account ) {
 
         bd = accessBD.getWritableDatabase();
         bd.beginTransaction();
+
         AccountModel accountModel;
         try{
             int ancien_total_account_du_client =  Integer.parseInt(String.valueOf(client.getTotalaccount())) ;
             int nouveau_total_account_du_client = ( ancien_total_account_du_client - ancienne_somme_account) + account.getSommeaccount();
             ContentValues account_cv = new ContentValues();
             ContentValues client_cv = new ContentValues();
+            long date_de_solde;
+            if (account.getReste() == 0){
+                ArrayList<VersementsaccModel> liste_versements = accessLocalVersementacc.listeVersementsAccount(account);
+                Log.i("accesslocalaccount", "modifierAccount: "+liste_versements);
+                int last_index  = liste_versements.size() -1;
+                VersementsaccModel dernier_versemt = liste_versements.get(last_index);
+                 date_de_solde = dernier_versemt.getDateversement();
+            }else {date_de_solde = 0L;}
+
+            account.setSoldedat(date_de_solde);
 
             account_cv.put(ARTICLE_1,account.getArticle1());
             account_cv.put(ARTICLE_2,account.getArticle2());
@@ -135,6 +175,8 @@ public class AccessLocalAccount {
             account_cv.put(VERSEMENTS,account.getVersement());
             account_cv.put(RESTE,account.getReste());
             account_cv.put(DATEACCOUNT,account.getDateaccount());
+            account_cv.put(SOLDEDAT,date_de_solde);
+
 
             client_cv.put(TOTALACCOUNT,nouveau_total_account_du_client);
 
@@ -152,6 +194,11 @@ public class AccessLocalAccount {
     }
 
 
+    /**
+     * annulation d'un account
+     * @param account l'account à annuller
+     * @return vrai si l'account à été annulé sinon faux
+     */
     public boolean anullerAccount(AccountModel account){
         boolean success ;
         bd.beginTransaction();
@@ -177,6 +224,29 @@ public class AccessLocalAccount {
         return  success;
     }
 
+    /**
+     * suppression d'un account
+     * @param client le client
+     * @return vrai si l'account à été supprimé sinon faux
+     */
+    public boolean supprimerAccountSoldeClient(ClientModel client) {
+        bd = accessBD.getReadableDatabase();
+        boolean success;
+        try {
+            bd.delete(TABLE_ACCOUNT,ID+"=?",new String[]{String.valueOf(client.getId())});
+
+            success=true;
+        }catch (Exception e){
+            success = false;
+        }
+        return success;
+    }
+
+    /**
+     * recupere un account par son id
+     * @param accountId l'id de l'account à récupérer
+     * @return l'account
+     */
     public AccountModel recupAccountById(int accountId) {
         AccountModel account = null;
 
@@ -195,9 +265,8 @@ public class AccessLocalAccount {
                 long dateaccount = cursor.getLong(7);
                 Integer nbraccount = cursor.getInt(8);
 
-//                ClientModel client = accessLocalClient.recupUnClient(clientid);
                 account = new AccountModel(accountId, clientid, article1, article2, sommeaccount, versement, reste, dateaccount,nbraccount);
-
+                account.setSoldedat(cursor.getLong(9));
             }
             cursor.close();
 
@@ -211,7 +280,7 @@ public class AccessLocalAccount {
 
     /**
      *
-     * @return la liste des accounts en cours
+     * @return la liste de tous les accounts en cours
      */
 
     public ArrayList<AccountModel> listeAccounts(){
@@ -226,6 +295,7 @@ public class AccessLocalAccount {
             do {
                 ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
                 AccountModel account = new AccountModel(cursor.getInt(0),client,cursor.getString(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5),cursor.getInt(6),cursor.getLong(7),cursor.getInt(8));
+                account.setSoldedat(cursor.getLong(9));
                 accounts.add(account);
             }
             while (cursor.moveToNext());
@@ -257,6 +327,7 @@ public class AccessLocalAccount {
             cursor.moveToFirst();
             do {
                 AccountModel account = new AccountModel(cursor.getInt(0),client,cursor.getString(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5),cursor.getInt(6),cursor.getLong(7),cursor.getInt(8));
+                account.setSoldedat(cursor.getLong(9));
                 accounts.add(account);
             }
             while (cursor.moveToNext());
@@ -272,7 +343,7 @@ public class AccessLocalAccount {
     /**
      *
      * @param client le client
-     * @return retourne la liste des accounts soldé du client
+     * @return retourne la liste des accounts soldés du client
      */
 
     public ArrayList<AccountModel> listeDESAccountsSoldesClient(ClientModel client) {
@@ -285,6 +356,7 @@ public class AccessLocalAccount {
             cursor.moveToFirst();
             do {
                 AccountModel account = new AccountModel(cursor.getInt(0),client,cursor.getString(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5),cursor.getInt(6),cursor.getLong(7),cursor.getInt(8));
+                account.setSoldedat(cursor.getLong(9));
                 accounts.add(account);
             }
             while (cursor.moveToNext());
@@ -297,9 +369,13 @@ public class AccessLocalAccount {
     }
 
 
+    /**
+     *
+     * @param client le client
+     * @return le total des accounts du client
+     */
     public int getRecapTaccountClient(ClientModel client){
         bd = accessBD.getReadableDatabase();
-//        String req  = "select SUM(sommecredit) AS t_credit from credit where reste != 0 and clientid = "+client.getId();
         String req = "select SUM(sommeaccount) AS t_account from account where  reste != 0 and clientid ='" + client.getId()+"'";
         Cursor cursor = bd.rawQuery(req,null);
         cursor.moveToFirst();
@@ -308,6 +384,11 @@ public class AccessLocalAccount {
         return totalaccount;
     }
 
+    /**
+     *
+     * @param client le client
+     * @return le total des versements des accounts du client
+     */
     public int getRecapTversementClient(ClientModel client){
         bd = accessBD.getReadableDatabase();
 //        String req  = "select SUM(versements) AS t_versement from credit where reste != 0 and clientid = "+client.getId();
@@ -319,6 +400,11 @@ public class AccessLocalAccount {
         return totalversement;
     }
 
+    /**
+     *
+     * @param client le clent
+     * @return le total du reste des accounts du client à payer
+     */
     public int getRecapTresteClient(ClientModel client){
         bd = accessBD.getReadableDatabase();
 //        String req  = "select SUM(reste) AS t_reste from credit where reste != 0 and clientid = "+client.getId();
@@ -330,4 +416,6 @@ public class AccessLocalAccount {
 
         return totalreste;
     }
+
+
 }

@@ -117,14 +117,14 @@ public class ModifierAccountActivity extends AppCompatActivity {
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
                 int sommeaccount = c_article1.getSomme() + c_article2.getSomme();
-                int reste = sommeaccount - account.getVersement();
+
                 int versement;
                 if (account.getVersement() < sommeaccount){
                     versement = account.getVersement();
                 }else {
                     versement = sommeaccount;
                 }
-
+                int reste = sommeaccount - versement;
                 String article1 = new Genson().serialize(c_article1);
                 String article2 = new Genson().serialize(c_article2);
 

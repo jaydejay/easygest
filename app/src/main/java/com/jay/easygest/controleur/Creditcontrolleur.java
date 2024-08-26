@@ -2,6 +2,7 @@ package com.jay.easygest.controleur;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -93,6 +94,7 @@ public final class Creditcontrolleur {
 
         CreditModel premiercredit = new CreditModel( codeclt,nomclient,prenomsclient,article1, article2,sommecredit, Integer.parseInt(versement), reste,datecredit,1);
         CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,codeclt,nomclient,prenomsclient,telephone,versement);
+
         if (credit != null){
             credits.add(premiercredit);
             this.setCredits(credits);
@@ -110,11 +112,13 @@ public final class Creditcontrolleur {
         int reste = sommecredit - Integer.parseInt(versement);
         int numerocredit = client.getNbrcredit()+1;
         CreditModel credit = new CreditModel(client.getCodeclient(), client.getNom(), client.getPrenoms(), article1, article2,sommecredit, Integer.parseInt(versement), reste,datecredit,numerocredit);
-        boolean success = accessLocalcredit.ajouterCredit(credit,client);
-        if (success){
-            credits.add(credit);
+        boolean success = false;
+          CreditModel le_credit_ajoute = accessLocalcredit.ajouterCredit(credit,client);
+        if (le_credit_ajoute != null){
+            credits.add(le_credit_ajoute);
             this.setCredits(credits);
-            this.setCredit(credit);
+            this.setCredit(le_credit_ajoute);
+            success = true;
         }
         return  success;
 
@@ -268,4 +272,11 @@ public final class Creditcontrolleur {
     }
 
 
+    public boolean supprimeCreditSoldes(CreditModel credit) {
+        boolean success = accessLocalcredit.supprimerUncredit(credit);
+        if (success){
+            this.listecreditsSoldesclient(credit.getClient());
+        }
+        return success;
+    }
 }

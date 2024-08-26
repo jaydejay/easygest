@@ -60,7 +60,6 @@ public class AjouterVersementaccFragment extends Fragment {
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(getActivity());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
-
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
     }
 

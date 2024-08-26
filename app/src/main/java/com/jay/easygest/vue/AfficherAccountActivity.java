@@ -42,6 +42,8 @@ public class AfficherAccountActivity extends AppCompatActivity {
         afficheraccount();
         redirectToModifierAccount();
         annullerAccount();
+        redirectAfficherClient();
+        redirectListeCredits();
         setContentView(binding.getRoot());
 
     }
@@ -70,6 +72,29 @@ public class AfficherAccountActivity extends AppCompatActivity {
             Intent intent = new Intent(this,ModifierAccountActivity.class);
             startActivity(intent);
         });
+    }
+
+    public void redirectListeCredits(){
+
+        binding.recapaccListecredits.setOnClickListener(v -> {
+
+            Intent intent = new Intent(AfficherAccountActivity.this, GestionActivity.class);
+            startActivity(intent);
+
+        });
+
+    }
+
+    public void redirectAfficherClient(){
+
+        binding.recapaccClient.setOnClickListener(v -> {
+            ClientModel client = this.account.getClient();
+            this.clientViewModel.getClient().setValue(client);
+            Intent intent = new Intent(AfficherAccountActivity.this, AfficherclientActivity.class);
+            startActivity(intent);
+
+        });
+
     }
 
     public void annullerAccount(){

@@ -1,8 +1,11 @@
 package com.jay.easygest.outils;
 
+import android.util.Log;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -32,6 +35,7 @@ public abstract  class MesOutils {
         return date.format(ladate);
 
     }
+
 
 
 
@@ -90,6 +94,23 @@ public abstract  class MesOutils {
             stringBuilder.append(str.charAt(index));
         }
         return stringBuilder.toString();
+    }
+
+    public  static long getSppressionDate(long value){
+        SimpleDateFormat anneef = new SimpleDateFormat("yyyy",Locale.FRANCE);
+        SimpleDateFormat moisf = new SimpleDateFormat("MM",Locale.FRANCE);
+        SimpleDateFormat jourf = new SimpleDateFormat("dd",Locale.FRANCE);
+        SimpleDateFormat datef = new SimpleDateFormat("dd-MM-yyyy",Locale.FRANCE);
+        Date date = new Date(value);
+        String annee = anneef.format(date);
+        String mois = moisf.format(date);
+        String jour = jourf.format(date);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Integer.parseInt(annee),Integer.parseInt(mois),Integer.parseInt(jour));
+        calendar.add(Calendar.MONTH,6);
+        long date_de_suppression = convertStringToDate(datef.format(calendar.getTime())).getTime();
+        return date_de_suppression;
     }
 
 }

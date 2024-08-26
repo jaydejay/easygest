@@ -19,6 +19,7 @@ public class CreditModel {
     private Integer versement;
     private Integer reste;
     private Long datecredit;
+    private Long soldedat;
     private Integer numerocredit;
 
 
@@ -32,6 +33,7 @@ public class CreditModel {
         this.reste = reste;
         this.datecredit = datecredit;
         this.numerocredit = numerocredit;
+//        this.setSoldedat();
     }
 
     public CreditModel(String codeclient,String nomclient,String prenomsclient,String article1, String article2, Integer sommecredit, Integer versement, Integer reste, Long datecredit, Integer numerocredit) {
@@ -46,6 +48,7 @@ public class CreditModel {
         this.reste = reste;
         this.datecredit = datecredit;
         this.numerocredit = numerocredit;
+//        this.setSoldedat();
     }
 
     public CreditModel(Integer id,ClientModel client, String article1, String article2, int sommecredit, int versement, int reste, long datecredit, int numerocredit) {
@@ -58,6 +61,7 @@ public class CreditModel {
         this.reste = reste;
         this.datecredit = datecredit;
         this.numerocredit = numerocredit;
+//        this.setSoldedat();
     }
 
     public Integer getId() {
@@ -108,9 +112,17 @@ public class CreditModel {
         return datecredit;
     }
 
-//    public void setId(Integer id) {
-//        this.id = id;
-//    }
+    public Long getSoldedat() {
+        return soldedat;
+    }
+
+    public void setSoldedat(long value) {
+//        if (getReste() == 0){
+//            this.soldedat = new Date().getTime();
+//        }else {this.soldedat = 0L;}
+        this.soldedat = value;
+
+    }
 
     public Integer getNumerocredit() {
         return numerocredit;
@@ -118,6 +130,7 @@ public class CreditModel {
 
 
 
+    @NonNull
     public String toString() {
         return getCodeclient()+" "+getNomclient()+" "+getPrenomsclient()+"\n"
                 +"credit du "+ MesOutils.convertDateToString(new Date(datecredit));

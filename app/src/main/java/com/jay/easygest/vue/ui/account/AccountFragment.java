@@ -80,7 +80,7 @@ public class  AccountFragment extends Fragment {
                 Toast.makeText(getContext(), "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
 
             } else if (date_ouverture == null) {
-                Toast.makeText(getActivity(), "format de date incorect", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_SHORT).show();
 
             } else if  (binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreeraccarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().isEmpty()) {

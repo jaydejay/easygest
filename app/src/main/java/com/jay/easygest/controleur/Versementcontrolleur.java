@@ -18,9 +18,9 @@ public class Versementcontrolleur {
 
     private static Versementcontrolleur versementcontrolleurInstance = null;
     private static AccessLocalVersement accessLocalVersement;
-    private static AccessLocalCredit accessLocalCredit;
+//    private static AccessLocalCredit accessLocalCredit;
     private VersementsModel versement;
-    private final MutableLiveData Mversement = new MutableLiveData<>();
+    private final MutableLiveData<VersementsModel> Mversement = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<VersementsModel>> Mversements = new MutableLiveData<>();
     private int versementNumber;
 
@@ -32,7 +32,7 @@ public class Versementcontrolleur {
         if(Versementcontrolleur.versementcontrolleurInstance == null){
             Versementcontrolleur.versementcontrolleurInstance = new Versementcontrolleur();
             accessLocalVersement = new AccessLocalVersement(contexte);
-            accessLocalCredit = new AccessLocalCredit(contexte);
+//            accessLocalCredit = new AccessLocalCredit(contexte);
 
         }
 
@@ -48,12 +48,12 @@ public class Versementcontrolleur {
         this.versement = versement;
     }
 
-    public MutableLiveData getMversement() {
+    public MutableLiveData<VersementsModel> getMversement() {
         return Mversement;
     }
 
     public void setMversement(VersementsModel versement) {
-        Mversement.setValue(versement); ;
+        Mversement.setValue(versement);
     }
 
     public MutableLiveData<ArrayList<VersementsModel>> getMversements() {
@@ -80,6 +80,11 @@ public class Versementcontrolleur {
 
     }
 
+    public VersementsModel recupVersementById(int versementid){
+        VersementsModel versement = accessLocalVersement.recupVersementById(versementid);
+        this.setMversement(versement);
+        return versement;
+    }
 
 
     public ArrayList<VersementsModel> listeversements() {
@@ -90,13 +95,19 @@ public class Versementcontrolleur {
 
     public boolean modifierVersement(CreditModel credit,VersementsModel versement_a_modifier,int nouveau_total_versement, int nouvellesommeverse, String date) {
        long dateversement =  MesOutils.convertStringToDate(date).getTime();
-        boolean resultat = accessLocalVersement.modifierVersement(credit,versement_a_modifier,nouveau_total_versement,nouvellesommeverse,dateversement);
-        return resultat;
+
+        boolean succes  = accessLocalVersement.modifierVersement(credit,versement_a_modifier,nouveau_total_versement,nouvellesommeverse,dateversement);
+        if (succes){
+            VersementsModel versement = accessLocalVersement.recupVersementById(versement_a_modifier.getId());
+            this.setMversement(versement);
+            this.listeversements();
+        }
+        return succes;
     }
 
-    public void supprimerversement(String codeclient) {
-        accessLocalVersement.supprimerversement(codeclient);
-    }
+//    public void supprimerversement(String codeclient) {
+//        accessLocalVersement.supprimerversement(codeclient);
+//    }
 
     public boolean annullerversement(VersementsModel versement,CreditModel credit){
 

@@ -16,11 +16,15 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAffichercreditBinding;
 import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
+
+import java.util.Date;
 
 public class AffichercreditActivity extends AppCompatActivity {
 
@@ -47,6 +51,7 @@ public class AffichercreditActivity extends AppCompatActivity {
 
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+
         credit = creditViewModel.getCredit().getValue();
         creditcontrolleur.listecredits();
         cardaffichercredittitle = findViewById(R.id.cardaffichercredittitle);
@@ -56,10 +61,12 @@ public class AffichercreditActivity extends AppCompatActivity {
         cardaffichercreditreste = findViewById(R.id.cardaffichercreditreste);
         cardaffichercreditversement = findViewById(R.id.cardaffichercreditverement);
 
+//        MesOutils.getSppressionDate(credit.getDatecredit());
         affichercredit();
         annullerCredit();
-        redirectModifierActivity();
+        redirectModifierCreditActivity();
         redirectListeCredits();
+        redirectAfficherClient();
     }
 
 
@@ -80,12 +87,14 @@ public class AffichercreditActivity extends AppCompatActivity {
         cardaffichercreditversement.setText(versement);
     }
 
-    public void redirectModifierActivity(){
+    public void redirectModifierCreditActivity(){
 
         binding.modifierCredit.setOnClickListener(v -> {
-            creditcontrolleur.setTagx(1);
+
+            ClientModel client = this.credit.getClient();
+            this.clientViewModel.getClient().setValue(client);
             Intent intent = new Intent(AffichercreditActivity.this, ModifiercreditActivity.class);
-            intent.putExtra("Tagx",1);
+
             startActivity(intent);
 
         });
@@ -95,7 +104,20 @@ public class AffichercreditActivity extends AppCompatActivity {
     public void redirectListeCredits(){
 
         binding.recapListecredits.setOnClickListener(v -> {
+
             Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
+            startActivity(intent);
+
+        });
+
+    }
+
+    public void redirectAfficherClient(){
+
+        binding.recapClient.setOnClickListener(v -> {
+            ClientModel client = this.credit.getClient();
+            this.clientViewModel.getClient().setValue(client);
+            Intent intent = new Intent(AffichercreditActivity.this, AfficherclientActivity.class);
             startActivity(intent);
 
         });
@@ -115,8 +137,8 @@ public class AffichercreditActivity extends AppCompatActivity {
                         +"de la somme du credit");
 
                 builder.setPositiveButton("oui", (dialog, which) -> {
-                   boolean credit_updte_rslt = creditcontrolleur.annullerCredit(credit);
-                   if (credit_updte_rslt){
+                   boolean success = creditcontrolleur.annullerCredit(credit);
+                   if (success){
                        Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
                        startActivity(intent);
                    }

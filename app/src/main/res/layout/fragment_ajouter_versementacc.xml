@@ -20,17 +20,16 @@
 
         <LinearLayout
             android:id="@+id/loyoutajoutervrsmntacc"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="2dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/ajoutervrsmtacccodeclt"
-                android:layout_width="0dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:autofillHints="@string/code_client"
                 android:ems="10"
                 android:gravity="center_horizontal|center_vertical"
@@ -39,9 +38,8 @@
 
             <EditText
                 android:id="@+id/ajoutervrsmntaccsomme"
-                android:layout_width="0dp"
+                android:layout_width="105dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:autofillHints="@string/versement"
                 android:ems="10"
                 android:gravity="center_horizontal|center_vertical"
@@ -50,9 +48,8 @@
 
             <EditText
                 android:id="@+id/ajoutervrsmntaccdate"
-                android:layout_width="0dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:autofillHints="@string/date"
                 android:ems="10"
                 android:gravity="center_horizontal|center_vertical"

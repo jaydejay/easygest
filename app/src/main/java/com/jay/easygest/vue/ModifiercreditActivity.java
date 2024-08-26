@@ -132,13 +132,16 @@ public class ModifiercreditActivity extends AppCompatActivity {
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
                 int sommecredit = c_article1.getSomme() + c_article2.getSomme();
-                int reste = sommecredit - credit.getVersement();
+
                 int versement;
+
                 if (credit.getVersement() < sommecredit){
                     versement = credit.getVersement();
                 }else {
                     versement = sommecredit;
                 }
+
+                int reste = sommecredit - versement;
 
                 String article1 = new Genson().serialize(c_article1);
                 String article2 = new Genson().serialize(c_article2);

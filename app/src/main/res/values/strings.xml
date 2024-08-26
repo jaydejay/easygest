@@ -22,7 +22,7 @@
     <string name="creer">creer</string>
     <string name="debloque_cmpt">debloquer votre compte</string>
     <string name="enreg_credit">enregitrer</string>
-    <string name="modif_credit">modifier</string>
+    <string name="modif_credit">modifier credit</string>
     <string name="modif">Modif</string>
     <string name="consulter_credit">consulter</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -112,7 +112,7 @@
     <string name="Afficher_client">client infos</string>
     <string name="quantite1">qte</string>
     <string name="quantite2">qte</string>
-    <string name="num_cresdit">num cresdit</string>
+    <string name="num_cresdit">num credit</string>
     <string name="mes_accounts">mes accounts</string>
     <string name="Mes_versements_credit">versements credits</string>
     <string name="Mes_versements_account">versements accounts</string>
@@ -130,5 +130,9 @@
     <string name="ajouter">ajouter</string>
     <string name="liste_credits">liste credits</string>
     <string name="num_account">num account</string>
+    <string name="modif_versement">modifier versement</string>
+    <string name="info_versement">infos versement</string>
+    <string name="le_client">le client</string>
+    <string name="liste_credit">liste credits</string>
 
 </resources>

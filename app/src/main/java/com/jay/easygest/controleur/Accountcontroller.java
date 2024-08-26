@@ -93,7 +93,6 @@ public class Accountcontroller {
         int reste = sommeaccoount - Integer.parseInt(versement);
 
         AccountModel premieraccount = new AccountModel( codeclt,nomclient,prenomsclient,article1, article2,sommeaccoount, Integer.parseInt(versement), reste,dateaccount,1);
-
         AccountModel account  = accessLocalAccount.creerCompteAccount(premieraccount,codeclt,nomclient,prenomsclient,telephone,versement);
         if (account != null){
             this.listeDesAccounts();
@@ -124,8 +123,8 @@ public class Accountcontroller {
         AccountModel accountModel = accessLocalAccount.ajouterAccount(account,client);
         boolean success = false ;
         if (accountModel != null){
-//               AccountModel accountModel = accessLocalAccount.recupAccountById((int) account_id);
-            this.listeDesAccounts();
+//            this.listeDesAccounts();
+            this.listeaccounts();
             this.setAccount(accountModel);
             success = true;
         }
@@ -146,7 +145,8 @@ public class Accountcontroller {
         AccountModel account = accessLocalAccount.modifierAccount(accountModel,client,ancienne_somme_account);
         if (account != null ){
             this.setAccount(account);
-            this.listeDesAccounts();
+            this.listeaccounts();
+//            this.listeDesAccounts();
             success = true;
         }
 
@@ -164,8 +164,7 @@ public class Accountcontroller {
     public boolean annullerAccount(AccountModel account){
         boolean  success = accessLocalAccount.anullerAccount(account);
         if (success){
-            this.listeDesAccounts();
-
+            this.listeaccounts();
         }
         return success;
     }
@@ -214,7 +213,6 @@ public class Accountcontroller {
     }
 
     public void  listeAccountsoldeClient(ClientModel client) {
-
         ArrayList<AccountModel> accounts = accessLocalAccount.listeDESAccountsSoldesClient(client);
         this.setAccounts(accounts);
 
@@ -249,7 +247,11 @@ public class Accountcontroller {
     }
 
 
-
-
-
+    public boolean supprimerAccountsSoldes(AccountModel account) {
+        boolean success = accessLocalAccount.supprimerAccountSoldeClient(account.getClient());
+        if (success){
+            this.listeAccountsoldeClient(account.getClient());
+        }
+        return success;
+    }
 }

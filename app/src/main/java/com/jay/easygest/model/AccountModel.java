@@ -20,6 +20,7 @@ public class AccountModel {
     private Integer versement;
     private Integer reste;
     private Long dateaccount;
+    private Long soldedat;
     private Integer numeroaccount;
 
     public AccountModel() {
@@ -37,6 +38,7 @@ public class AccountModel {
         this.reste = reste;
         this.dateaccount = dateaccount;
         this.numeroaccount = numeroaccount;
+//        this.setSoldedat();
     }
     public AccountModel(Integer id,ClientModel client, String article1, String article2, int sommeaccount, int versement, int reste, long dateaccount, int numeroaccount) {
         this.id = id;
@@ -48,6 +50,7 @@ public class AccountModel {
         this.reste = reste;
         this.dateaccount = dateaccount;
         this.numeroaccount = numeroaccount;
+//        this.setSoldedat();
     }
 
     public AccountModel(Integer id,int clientid, String article1, String article2, int sommeaccount, int versement, int reste, long dateaccount, int numeroaccount) {
@@ -60,6 +63,7 @@ public class AccountModel {
         this.reste = reste;
         this.dateaccount = dateaccount;
         this.numeroaccount = numeroaccount;
+//        this.setSoldedat();
     }
 
 
@@ -115,6 +119,19 @@ public class AccountModel {
         return numeroaccount;
     }
 
+
+    public Long getSoldedat() {
+        return soldedat;
+    }
+
+    public void setSoldedat(long value) {
+//        if (getReste() == 0){
+//            this.soldedat = new Date().getTime();
+//        }else {this.soldedat = 0L;}
+        this.soldedat = value;
+
+    }
+
     public String toString() {
         return getCodeclient()+" "+getNomclient()+" "+getPrenomsclient()+"\n"
                 +"accompte du "+ MesOutils.convertDateToString(new Date(dateaccount));
@@ -132,4 +149,8 @@ public class AccountModel {
                 +"accompte du "+ MesOutils.convertDateToString(new Date(dateaccount))+"\n"
                 +"accompte no "+ numeroaccount;
     }
+
+
+
+
 }

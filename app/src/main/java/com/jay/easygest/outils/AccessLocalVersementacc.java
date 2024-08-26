@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Creditcontrolleur;
@@ -22,6 +23,7 @@ import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.model.VersementsaccModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AccessLocalVersementacc {
 
@@ -40,6 +42,7 @@ public class AccessLocalVersementacc {
     public static final String DATEACCOUNT = "dateaccount";
     public static final String ID = "id";
     public static final String CODECLIENT = "codeclient";
+    public static final String SOLDEDAT = "soldedat";
     private final AccessLocalAccount accessLocalAccount;
     private final AccessLocalClient accessLocalClient;
     private Accountcontroller accountcontroller;
@@ -86,8 +89,15 @@ public class AccessLocalVersementacc {
                         }else {
                             somme_a_verse = (int)sommeverse;
                         }
+
                         int reste = account.getReste() - somme_a_verse;
                         int versements = account.getVersement() + somme_a_verse;
+
+                        long date_de_solde;
+                        if (reste == 0){
+                            date_de_solde = date;
+                        }else {date_de_solde = 0L;}
+                        account.setSoldedat(date_de_solde);
 
                         ContentValues account_cv = new ContentValues();
                         account_cv.put(ID,account.getId());
@@ -99,6 +109,7 @@ public class AccessLocalVersementacc {
                         account_cv.put(RESTE,reste);
                         account_cv.put(DATEACCOUNT,date);
                         account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
+                        account_cv.put(SOLDEDAT,date_de_solde);
 
                         bd.insertOrThrow(TABLE_VERSEMENTACC,null,creerVersement( somme_a_verse,account.getId(),client.getId(),date));
                         bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
@@ -106,7 +117,8 @@ public class AccessLocalVersementacc {
                         bd.setTransactionSuccessful();
                         succes =true;
                     }
-                }finally {
+                }catch (Exception e){succes=false;}
+                finally {
                     bd.endTransaction();
                 }
 
@@ -118,7 +130,7 @@ public class AccessLocalVersementacc {
 
 
     public boolean modifierVersement(AccountModel account, VersementsaccModel versement_a_modifier, int nouveau_total_versement, int nouvellesommeverse, long dateversement) {
-        boolean success = false ;
+        boolean success;
         bd = accessBD.getWritableDatabase();
         ContentValues cv_versementacc = new ContentValues();
         ContentValues account_cv = new ContentValues();
@@ -132,21 +144,29 @@ public class AccessLocalVersementacc {
             cv_versementacc.put(DATEVERSEMENT,dateversement);
 
             int reste = account.getSommeaccount() - nouveau_total_versement;
+            long date_de_solde;
+            if (reste == 0){
+               date_de_solde = dateversement;
+            }else {date_de_solde = 0L;}
+            account.setSoldedat(date_de_solde);
+
             account_cv.put(ID,account.getId());
             account_cv.put(CLIENTID,account.getClientid());
             account_cv.put(ARTICLE_1,account.getArticle1());
             account_cv.put(ARTICLE_2,account.getArticle2());
             account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
             account_cv.put(VERSEMENTS,nouveau_total_versement);
-
             account_cv.put(RESTE,reste);
             account_cv.put(DATEACCOUNT,account.getDateaccount());
             account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
+            account_cv.put(SOLDEDAT,date_de_solde);
+
             bd.replaceOrThrow(TABLE_VERSEMENTACC, null, cv_versementacc);
             bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
             bd.setTransactionSuccessful();
             success= true;
-        }finally {
+        }catch (Exception e){success=false;}
+        finally {
             bd.endTransaction();
         }
         return success;
@@ -164,6 +184,8 @@ public class AccessLocalVersementacc {
         long nouveau_versement_du_account = account.getVersement() - ancienne_sommeversee;
         long reste = account.getSommeaccount() - nouveau_versement_du_account;
 
+        account.setSoldedat(0L);
+
         ContentValues account_cv = new ContentValues();
         account_cv.put(ID,account.getId());
         account_cv.put(CLIENTID,account.getClientid());
@@ -174,11 +196,11 @@ public class AccessLocalVersementacc {
         account_cv.put(RESTE,reste);
         account_cv.put(DATEACCOUNT,account.getDateaccount());
         account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
-
+        account_cv.put(SOLDEDAT,0L);
         bd.beginTransaction();
         try {
             bd.delete(TABLE_VERSEMENTACC,ID+"=?",new String[]{String.valueOf(versementacc.getId())});
-            bd.replaceOrThrow(TABLE_CREDIT,null,account_cv);
+            bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
             bd.setTransactionSuccessful();
             success = true;
         }catch (Exception e){
@@ -189,16 +211,11 @@ public class AccessLocalVersementacc {
         return success;
     }
 
-    public void supprimerversement(VersementsaccModel versementsaccModel) {
-        bd = accessBD.getWritableDatabase();
-        bd.delete(TABLE_VERSEMENTACC, ID +"=?",new String[]{String.valueOf(versementsaccModel.getId())});
-    }
 
     public ArrayList<VersementsaccModel> listeVersementsClient(ClientModel client){
         ArrayList<VersementsaccModel> versements = new ArrayList<>();
         try {
             bd = accessBD.getReadableDatabase();
-//            String req = "select * from versementacc where " + CLIENTID + "='" +client.getId()+"'";
             String req = "select * from versementacc where clientid ='" + client.getId()+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -218,4 +235,64 @@ public class AccessLocalVersementacc {
         return  versements;
 
     }
+
+    public VersementsaccModel recupVersementaccById(Integer versementaccid){
+        VersementsaccModel versement = null;
+        try {
+            bd = accessBD.getReadableDatabase();
+            String req = "select * from versementacc where " + ID + "="+versementaccid+"";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToLast();
+            if (!cursor.isAfterLast()) {
+                int id = cursor.getInt(0);
+                int sommeverse = cursor.getInt(1);
+                int accountid = cursor.getInt(2);
+                int clientid = cursor.getInt(3);
+                long dateversement = cursor.getLong(4);
+
+                ClientModel client = accessLocalClient.recupUnClient(clientid);
+                AccountModel account = accessLocalAccount.recupAccountById(accountid);
+                versement = new VersementsaccModel(id,client,account, (long) sommeverse,dateversement);
+
+            }
+            cursor.close();
+
+        }catch (Exception e){
+            return versement;
+        }
+        return versement;
+
+    }
+
+    /**
+     *
+     * @param account l'account
+     * @return la lite des versements de l'account
+     */
+
+    public ArrayList<VersementsaccModel> listeVersementsAccount(AccountModel account) {
+
+        ArrayList<VersementsaccModel> versements = new ArrayList<>();
+        try {
+            bd = accessBD.getReadableDatabase();
+            String req = "select * from versementacc where " + ACCOUNTID + "='" +account.getId()+"'";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToFirst();
+            do {
+                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(3));
+                VersementsaccModel versement = new VersementsaccModel(cursor.getInt(0),client,account, cursor.getLong(1), cursor.getLong(4) );
+                versements.add(versement);
+
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+
+
+        }catch(Exception e){
+            versements = null;
+        }
+        return  versements;
+    }
+
+
 }

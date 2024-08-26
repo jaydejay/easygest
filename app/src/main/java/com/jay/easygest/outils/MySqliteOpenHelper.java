@@ -78,6 +78,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             +"reste Integer not null,"
             +"dateaccount Long not null ,"
             +"numeroaccount Integer,"
+            +"soldedat Long,"
             +"foreign key(clientid) references client(id) on delete cascade )";
 
 
@@ -91,6 +92,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             +"reste Integer not null,"
             +"datecredit Long not null ,"
             +"numerocredit Integer,"
+            +"soldedat Long,"
             +"foreign key(clientid) references client(id) on delete cascade )";
 
     private final String createTable5 = "create table "+TABLE_VERSEMENTACC+"("

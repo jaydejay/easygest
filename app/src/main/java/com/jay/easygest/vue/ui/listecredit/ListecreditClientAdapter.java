@@ -77,6 +77,7 @@ public class ListecreditClientAdapter extends BaseAdapter {
             holder.txtlisteviewdate.setText(content);
             holder.txtlisteviewsommecredit.setText(String.valueOf(credits.get(position).getSommecredit()));
             holder.txtlisteviewreste.setText(String.valueOf(credits.get(position).getReste()));
+
             holder.btnlisteviewmodif.setTag(position);
             holder.btnlisteviewannuller.setTag(position);
 

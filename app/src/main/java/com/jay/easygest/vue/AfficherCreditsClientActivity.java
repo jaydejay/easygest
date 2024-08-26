@@ -16,12 +16,14 @@ import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.vue.ui.account.ListeAccountsClientFragment;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
@@ -31,6 +33,7 @@ import com.jay.easygest.vue.ui.versement.VersementFragment;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 import com.jay.easygest.vue.ui.versementacc.AjouterVersementaccFragment;
 import com.jay.easygest.vue.ui.versementacc.ListeVersementaccFragment;
+import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
 
 public class AfficherCreditsClientActivity extends AppCompatActivity {
 
@@ -42,6 +45,7 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
     private CreditViewModel creditViewModel;
+    private  VersementaccViewModel versementaccViewModel;
     private ClientModel client;
 
     @Override
@@ -61,13 +65,14 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
 
+         versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
+
         int fragmentid =  getIntent().getIntExtra("fragmentid",R.id.af_client_liste_credits);
        String titre = getIntent().getStringExtra("titre");
        String identite_de_client = client.getNom()+" "+client.getPrenoms()+" "+client.getCodeclient();
        binding.textViewCredClitVers.setText(identite_de_client);
 
-        Object af_client_liste_histo_credits;
-//        af_client_liste_histo_credits
+
        ActionBar actionBar =  getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(titre);
@@ -115,23 +120,6 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         return fragment;
     }
 
-
-    public void redirectToAfficheversementActivity(VersementsModel versement) {
-      versementViewModel.getMversement().setValue(versement);
-        CreditModel credit = creditcontrolleur.recupUnCreditById(versement.getCredit_id());
-        creditViewModel.getCredit().setValue(credit);
-        Intent intent = new Intent(this, AfficheversementActivity.class);
-        startActivity(intent);
-    }
-
-    public void redirectToModifiercreditActivity(CreditModel credit){
-        creditcontrolleur.setCredit(credit);
-        creditcontrolleur.setTagx(1);
-        Intent intent = new Intent(this, ModifiercreditActivity.class);
-        intent.putExtra("Tagx",1);
-        startActivity(intent);
-    }
-
     public void annullerCredit(CreditModel credit){
         Log.i("affichercreditclientactivity", "annullerCredit: le client "+credit.getClient());
 
@@ -167,6 +155,33 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
     public void redirectToAfficherAccountActivity(AccountModel accountModel) {
         accountcontroller.setAccount(accountModel);
         Intent intent = new Intent(this, AfficherAccountActivity.class);
+        startActivity(intent);
+    }
+
+    public void redirectToAfficheversementaccActivity(VersementsaccModel versementacc, int position, int nbrversement) {
+
+        versementaccViewModel.getMversementacc().setValue(versementacc);
+        Intent intent = new Intent(this, AfficherversementaccActivity.class);
+        intent.putExtra("versementaccposition",position);
+        intent.putExtra("nbrversementacc",nbrversement);
+        startActivity(intent);
+    }
+
+    public void redirectToAfficheversementActivity(VersementsModel versement,int position, int nbrversement) {
+        versementViewModel.getMversement().setValue(versement);
+        CreditModel credit = creditcontrolleur.recupUnCreditById(versement.getCredit_id());
+        creditViewModel.getCredit().setValue(credit);
+        Intent intent = new Intent(this, AfficheversementActivity.class);
+        intent.putExtra("versementposition",position);
+        intent.putExtra("nbrversement",nbrversement);
+        startActivity(intent);
+    }
+
+    public void redirectToModifiercreditActivity(CreditModel credit){
+        creditcontrolleur.setCredit(credit);
+        creditcontrolleur.setTagx(1);
+        Intent intent = new Intent(this, ModifiercreditActivity.class);
+        intent.putExtra("Tagx",1);
         startActivity(intent);
     }
 }

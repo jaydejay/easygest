@@ -57,11 +57,11 @@ public class ModifierVersementActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
          versement = versementViewModel.getMversement().getValue();
          client = versement.getClient();
+
          EDTcodeclient =  findViewById(R.id.editversementcodeclt);
          EDTsomme =  findViewById(R.id.editversementsomme);
-         EDTdatecredit =  findViewById(R.id.editversementdate);
+         EDTdatecredit = findViewById(R.id.editversementdate);
          bouton_modifier =  findViewById(R.id.btnversement);
-//         boutonannuller =  findViewById(R.id.btnmodifversementannuller);
          title =  findViewById(R.id.txtmodifversementtitle);
          versementNumber = versementcontrolleur.getVersementNumber();
         init();
@@ -71,10 +71,9 @@ public class ModifierVersementActivity extends AppCompatActivity {
     }
 
     public void init(){
-//         client = versement.getClient();
+
         String texte = client.getNom()+" "+client.getPrenoms()+" "+client.getCodeclient();
         title.setText(texte);
-//        EDTcodeclient.setText(client.getCodeclient());
         EDTcodeclient.setVisibility(View.GONE);
         EDTsomme.setText(String.valueOf(versement.getSommeverse()));
         EDTdatecredit.setText(MesOutils.convertDateToString(new Date(versement.getDateversement())));
@@ -90,7 +89,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
                 Toast.makeText(this, "champs obligatoires", Toast.LENGTH_SHORT).show();
 
             } else if (date == null) {
-                Toast.makeText(ModifierVersementActivity.this, "format de date incorect", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ModifierVersementActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
             } else {
                 if (Integer.parseInt(edt_somme) >= 1000) {
 
@@ -109,8 +108,8 @@ public class ModifierVersementActivity extends AppCompatActivity {
 
                                 boolean success = versementcontrolleur.modifierVersement(credit,versement,nouveau_total_versement,nouvellesommeverse,dateversement);
                                 if (success) {
-                                    Intent intent = new Intent(this, GestionActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    Intent intent = new Intent(this, AfficheversementActivity.class);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                 } else { Toast.makeText(this, "revoyez le versement ", Toast.LENGTH_SHORT).show();}
                             }else { Toast.makeText(this, "versement elevé", Toast.LENGTH_SHORT).show(); }

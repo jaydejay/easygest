@@ -47,8 +47,7 @@ public class ListecreditsclientFragment extends Fragment {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         listecredits = creditViewModel.getCredits_client_soldes_ou_non().getValue();
         creerListe();
-        desactiverboutonModif();
-
+//        desactiverboutonModif();
         return root;
     }
 
@@ -64,17 +63,17 @@ public class ListecreditsclientFragment extends Fragment {
 
     }
 
-    public void desactiverboutonModif(){
-        for ( CreditModel credit: listecredits) {
-
-            if (credit.getReste() == 0){
-                binding.textView7.setVisibility(View.GONE);
-                binding.textView8.setVisibility(View.GONE);
-            }
-
-        }
-
-    }
+//    public void desactiverboutonModif(){
+//        for ( CreditModel credit: listecredits) {
+//
+//            if (credit.getReste() == 0){
+//                binding.textView7.setVisibility(View.GONE);
+//                binding.textView8.setVisibility(View.GONE);
+//            }
+//
+//        }
+//
+//    }
 
     @Override
     public void onResume() {

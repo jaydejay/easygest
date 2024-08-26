@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".vue.AfficheversementActivity">
+    tools:context=".vue.AfficherversementaccActivity">
 
     <LinearLayout
-        android:id="@+id/layourt_versement1"
+        android:id="@+id/layourt_versementacc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -20,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView_af_versm_client"
+            android:id="@+id/textView_af_versmacc_client"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -30,7 +29,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layourt_versement2"
+        android:id="@+id/layourt_versementacc2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -38,27 +37,27 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layourt_versement1">
+        app:layout_constraintTop_toBottomOf="@+id/layourt_versementacc">
 
         <TextView
-            android:id="@+id/textView_af_versm_date"
+            android:id="@+id/textView_af_versmacc_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gris_peu_fonce"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView_af_versm_somme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/gris_peu_fonce"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textAlignment="textStart"/>
+        <TextView
+            android:id="@+id/textView_af_versmacc_somme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gris_peu_fonce"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="textStart"/>
 
         <TextView
-            android:id="@+id/textView_af_versm_numero_credit"
+            android:id="@+id/textView_af_versmacc_numero_credit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gris_peu_fonce"
@@ -68,7 +67,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layourt_versement4"
+        android:id="@+id/layourt_versementacc3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -76,11 +75,11 @@
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layourt_versement2"
+        app:layout_constraintTop_toBottomOf="@+id/layourt_versementacc2"
         style="?android:attr/buttonBarStyle">
 
         <Button
-            android:id="@+id/affiche_vers_modif_button"
+            android:id="@+id/affiche_versacc_modif_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="50dp"
@@ -88,7 +87,7 @@
             style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"/>
 
         <Button
-            android:id="@+id/affiche_vers_cancel_button"
+            android:id="@+id/affiche_versacc_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/annuller"
@@ -102,28 +101,26 @@
         android:layout_gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layourt_versement4">
+        app:layout_constraintTop_toBottomOf="@+id/layourt_versementacc3">
 
 
         <TextView
-            android:id="@+id/af_versm_to_credits"
+            android:id="@+id/af_versmacc_to_credits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:textColor="@color/gris_peu_fonce"
+            android:textColor="@color/bleu_clair"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/af_versm_to_client"
+            android:id="@+id/af_versmacc_to_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gris_peu_fonce"
+            android:textColor="@color/bleu_clair"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textAlignment="textStart"/>
     </LinearLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

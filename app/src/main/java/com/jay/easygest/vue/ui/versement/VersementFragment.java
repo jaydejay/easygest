@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
+import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentVersementBinding;
 import com.jay.easygest.model.ClientModel;
@@ -32,6 +33,7 @@ public class VersementFragment extends Fragment {
     private Versementcontrolleur versementcontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
+    private Creditcontrolleur creditcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientModel client;
 
@@ -43,11 +45,12 @@ public class VersementFragment extends Fragment {
 
         this.versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
         this.clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
+        this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
 
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         client = clientViewModel.getClient().getValue();
-
+        creditcontrolleur.setRecapTcreditClient(client);
 
         ajouterversement();
         desactiverEditextCodeclient();
@@ -75,7 +78,8 @@ public class VersementFragment extends Fragment {
                             Integer sommeverse = Integer.parseInt(somme_versee);
                             if (Objects.equals(client.getCodeclient(), codeclient)){
 
-                                int somme_total_credit = creditViewModel.getSommeCreditsUnClient(client);
+                                int somme_total_credit = creditViewModel.getTotalcreditsclient().getValue();
+
                                 if (  sommeverse > 0 & sommeverse <= somme_total_credit){
 
                                     boolean success = versementcontrolleur.ajouterversement(client,sommeverse,dateversement );

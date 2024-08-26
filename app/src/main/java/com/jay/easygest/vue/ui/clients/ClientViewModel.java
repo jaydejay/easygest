@@ -15,9 +15,6 @@ public class ClientViewModel extends ViewModel {
 
     public ClientViewModel() {
         Clientcontrolleur clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(null);
-//        unclient = new MutableLiveData<>();
-//        unclient = new MutableLiveData<>(clientcontrolleur.getClient());
-//        lalisteClients = new MutableLiveData<>();
         mclient= clientcontrolleur.getMclient();
         mlisteClients = clientcontrolleur.getMlisteClients();
     }

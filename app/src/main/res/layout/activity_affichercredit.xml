@@ -9,7 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:id="@+id/card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 android:gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/holo_orange_light"
                         android:orientation="vertical"
-                        android:padding="10dp">
+                        android:padding="16dp">
 
                         <TextView
                             android:id="@+id/cardaffichercreditcredit"
@@ -112,9 +112,10 @@
             <!-- Buttons -->
             <LinearLayout
                 style="@style/ShapeAppearance.Material3.Corner.Small"
+                android:id="@+id/llayoutmodifier_credit_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:baselineAligned="false"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
@@ -140,11 +141,37 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/recap_listecredits"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/liste_credits"  />
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llayoutmodifier_credit_btn">
+
+
+                <TextView
+                    android:id="@+id/recap_listecredits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="@color/bleu_clair"
+                    android:textSize="16sp"
+                    android:linksClickable="true"
+                    android:text="@string/liste_credit"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/recap_client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bleu_clair"
+                    android:text="@string/le_client"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textAlignment="textStart"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.AccessLocalClient;
+import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class Clientcontrolleur {
     private final MutableLiveData<ArrayList<ClientModel>> mlisteClients = new MutableLiveData<>() ;
     private  ClientModel client;
    private ArrayList<ClientModel> clients;
+
 
     public static Clientcontrolleur getClientcontrolleurInstance(Context contexte){
         if (clientcontrolleurInstance == null){
@@ -53,7 +55,6 @@ public class Clientcontrolleur {
 
     public ArrayList<ClientModel> listeClients() {
         ArrayList<ClientModel> clients = accessLocalClient.listeClients();
-        setClients(clients);
         setMlisteClients(clients);
         return clients;
     }
@@ -61,7 +62,15 @@ public class Clientcontrolleur {
 
     public ClientModel recupererClient(Integer clientid){ return accessLocalClient.recupUnClient(clientid); }
 
-    public boolean modifierclient(ClientModel clientModel) {return accessLocalClient.modifierclient(clientModel);}
+    public boolean modifierclient(ClientModel clientModel) {
+       boolean success = accessLocalClient.modifierclient(clientModel);
+       if (success){
+           ClientModel client = this.recupererClient(clientModel.getId());
+           this.setMclient(client);
+           this.listeClients();
+       }
+        return success;
+    }
 
     public boolean supprimerclient(ClientModel client) {return  accessLocalClient.supprimerclient(client);  }
 

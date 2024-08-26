@@ -41,16 +41,6 @@ public class ListecreditFragment extends Fragment {
         return root;
     }
 
-//    public void creerListe() {
-//        try {
-//            listecredits = creditViewModel.getCredits().getValue();
-//            adapter = new ListecreditAdapter(getContext(), listecredits);
-//            adapter.notifyDataSetChanged();
-//            binding.lstviewcredits.setAdapter(adapter);
-//        }catch (Exception e){}
-//
-//
-//    }
 
     public void creerListe() {
         try {
@@ -64,10 +54,7 @@ public class ListecreditFragment extends Fragment {
     }
 
     public  ArrayList<CreditModel> getFilter(String mtext){
-
         ArrayList<CreditModel> filterliste = new ArrayList<>();
-//        ArrayList<CreditModel> listecredits = creditcontrolleur.listecredits();
-
         try {
 
             for (CreditModel credit : listecredits) {

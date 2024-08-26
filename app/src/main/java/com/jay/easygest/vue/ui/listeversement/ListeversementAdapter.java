@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -57,7 +58,8 @@ public class ListeversementAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.layout_liste_versement,null);
             holder.txtlisteversementdate = convertView.findViewById(R.id.txtlisteversementdate);
             holder.txtlisteversementsomme = convertView.findViewById(R.id.txtlisteversementsomme);
-            holder.txtlisteversementcodeclt = convertView.findViewById(R.id.txtlisteversementcodeclt);
+            holder.txtlisteversementnum = convertView.findViewById(R.id.txtlisteversementnum);
+            holder.llayouteversement = convertView.findViewById(R.id.llayouteversement);
             convertView.setTag(holder);
         }else {
 
@@ -67,41 +69,16 @@ public class ListeversementAdapter extends BaseAdapter {
 
             holder.txtlisteversementdate.setText(MesOutils.convertDateToString(new Date(versements.get(position).getDateversement()))  );
             holder.txtlisteversementsomme.setText(String.valueOf(versements.get(position).getSommeverse()));
-            holder.txtlisteversementcodeclt.setText(String.valueOf(versements.get(position).getCredit().getNumerocredit()));
-//            holder.txtlisteversementcodeclt.setText(versements.get(position).getClient().getCodeclient());
-            holder.txtlisteversementcodeclt.setTag(position);
-            holder.txtlisteversementsomme.setTag(position);
-            holder.txtlisteversementdate.setTag(position);
+            holder.txtlisteversementnum.setText(String.valueOf(versements.get(position).getCredit().getNumerocredit()));
+            holder.llayouteversement.setTag(position);
         }catch (Exception e){
 //        do nothing
         }
 
 
-        holder.txtlisteversementdate.setOnClickListener(v -> {
+        holder.llayouteversement.setOnClickListener(v -> {
             int position1 = (int) v.getTag();
-            String activity = v.getContext().getClass().getName();
-
-            if (activity.contains("GestionActivity")){
-                ((GestionActivity)contexte).redirectToAfficheversementActivity(versements.get(position1));
-            }else {((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1));}
-
-
-
-        });
-
-        holder.txtlisteversementsomme.setOnClickListener(v -> {
-            int position1 = (int)v.getTag();
-            String activity = v.getContext().getClass().getName();
-
-            if (activity.contains("GestionActivity")){
-                ((GestionActivity)contexte).redirectToAfficheversementActivity(versements.get(position1));
-            }else {((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1));}
-
-        });
-
-        holder.txtlisteversementcodeclt.setOnClickListener(v -> {
-//            int position1 = (int)v.getTag();
-//            ((GestionActivity)contexte).redirectToAfficheversementActivity(versements.get(position1));
+            ((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());
         });
 
         return convertView;
@@ -110,9 +87,9 @@ public class ListeversementAdapter extends BaseAdapter {
     private static class ViewHolder{
 
         TextView txtlisteversementdate;
-        TextView txtlisteversementcodeclt;
+        TextView txtlisteversementnum;
         TextView txtlisteversementsomme;
-//        TextView txtlisteversementnumcredit;
+        LinearLayout llayouteversement;
 
     }
 }

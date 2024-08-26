@@ -13,10 +13,33 @@
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
         <activity
+            android:name=".vue.ModifierVersementaccActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vue.AfficherversementaccActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vue.AfficherclientActivity"
+            android:label="@string/Afficher_client"
+            android:parentActivityName=".vue.GestionActivity" />
+        <activity
+            android:name=".vue.ModifierClientActivity"
+            android:parentActivityName=".vue.AfficherclientActivity" />
+        <activity
             android:name=".vue.AjouterCreditActivity"
             android:exported="false"
             android:label="@string/nouveau_credit"
-            android:parentActivityName=".vue.AfficherclientActivity"/>
+            android:parentActivityName=".vue.AfficherclientActivity" />
+        <activity
+            android:name=".vue.ModifiercreditActivity"
+            android:label="@string/modif_credit" />
+        <activity
+            android:name=".vue.AffichercreditActivity"
+            android:label="@string/recap_credit" />
+        <activity
+            android:name=".vue.AfficherCreditsClientActivity"
+            android:exported="false"
+            android:parentActivityName=".vue.AfficherclientActivity" />
         <activity
             android:name=".vue.AjouterAccountActivity"
             android:exported="false"
@@ -28,6 +51,18 @@
             android:label="@string/modif_account"
             android:parentActivityName=".vue.AfficherclientActivity" />
         <activity
+            android:name=".vue.AfficherAccountActivity"
+            android:label="@string/recap_account"
+            android:parentActivityName=".vue.AfficherclientActivity" />
+        <activity
+            android:name=".vue.ModifierVersementActivity"
+            android:label="@string/modif_versement"
+            android:parentActivityName=".vue.AfficheversementActivity" />
+        <activity
+            android:name=".vue.AfficheversementActivity"
+            android:label="@string/info_versement"
+            android:parentActivityName=".vue.GestionActivity" />
+        <activity
             android:name=".vue.ActiverProduitActivity"
             android:label="@string/activer_produit"
             android:parentActivityName=".vue.MainActivity" />
@@ -35,34 +70,6 @@
             android:name=".vue.ParametresActivity"
             android:label="@string/parametre"
             android:parentActivityName=".vue.MainActivity" />
-        <activity
-            android:name=".vue.AfficherCreditsClientActivity"
-            android:exported="false"
-            android:parentActivityName=".vue.AfficherclientActivity" />
-        <activity
-            android:name=".vue.AffichercreditActivity"
-            android:label="@string/recap_credit"
-            android:parentActivityName=".vue.AfficherclientActivity" />
-        <activity
-            android:name=".vue.AfficherAccountActivity"
-            android:label="@string/recap_account"
-            android:parentActivityName=".vue.AfficherclientActivity" />
-        <activity
-            android:name=".vue.ModifierClientActivity"
-            android:parentActivityName=".vue.AfficherclientActivity" />
-        <activity
-            android:name=".vue.AfficherclientActivity"
-            android:label="@string/Afficher_client"
-            android:parentActivityName=".vue.GestionActivity" />
-        <activity
-            android:name=".vue.ModifierVersementActivity"
-            android:parentActivityName=".vue.AfficheversementActivity" />
-        <activity
-            android:name=".vue.AfficheversementActivity"
-            android:parentActivityName=".vue.GestionActivity" />
-        <activity
-            android:name=".vue.ModifiercreditActivity"
-            android:parentActivityName=".vue.GestionActivity" />
         <activity
             android:name=".vue.CreercompteActivity"
             android:parentActivityName=".vue.MainActivity" />
@@ -80,7 +87,6 @@
         <activity
             android:name=".vue.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.EasyGest.NoActionBar" />
     </application>
 

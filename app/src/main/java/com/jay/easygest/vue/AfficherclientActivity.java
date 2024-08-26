@@ -22,12 +22,14 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.model.VersementsaccModel;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AfficherclientActivity extends AppCompatActivity {
     private ActivityAfficherclientBinding binding;
@@ -103,27 +105,39 @@ public class AfficherclientActivity extends AppCompatActivity {
         ajouterAcount();
         ajouterCredit();
         afficherListeCreditsoldes();
+        supprimerCreditSoldes();
+        supprimerAccountSoldes();
     }
 
 
     public void clientMenuDisabledAndRecpShow(Integer TcreditClient, Integer TresteCreditClient,Integer TaccountClient, Integer TresteAccClient){
 
         if (TresteCreditClient == 0){
+
+            binding.afClientTextVersements.setVisibility(View.GONE);
+            binding.afClientListeCredits.setVisibility(View.GONE);
+
+        }
+        if (client.getNbrcredit() == 0){
+//
             binding.afClientListeCredits.setVisibility(View.GONE);
             binding.afClientTextVersements.setVisibility(View.GONE);
             binding.afClientListeVersements.setVisibility(View.GONE);
-        }
-        if (client.getNbrcredit() == 0){
-            binding.afficherClientMenuCredit.setVisibility(View.GONE);
+            binding.afClientListeHistoCredits.setVisibility(View.GONE);
+
         }
         if (TresteAccClient == 0){
             binding.afClientListeAccounts.setVisibility(View.GONE);
-            binding.afClientListeVersmAccounts.setVisibility(View.GONE);
+//            binding.afClientListeVersmAccounts.setVisibility(View.GONE);
             binding.afClientTextAccounts.setVisibility(View.GONE);
         }
 
         if (client.getNbraccount() == 0){
-            binding.afficherClientMenuAccount.setVisibility(View.GONE);
+//            binding.afficherClientMenuAccount.setVisibility(View.GONE);
+            binding.afClientListeAccounts.setVisibility(View.GONE);
+            binding.afClientTextAccounts.setVisibility(View.GONE);
+            binding.afClientListeVersmAccounts.setVisibility(View.GONE);
+            binding.afClientListeHistoAccounts.setVisibility(View.GONE);
         }
 
         String text_Totalcredit= "credit en cours : "+TcreditClient ;
@@ -458,6 +472,35 @@ public class AfficherclientActivity extends AppCompatActivity {
         creditcontrolleur.setCredit(credit);
         Intent intent = new Intent(this, AffichercreditActivity.class);
         startActivity(intent);
+    }
+
+    public void supprimerCreditSoldes(){
+       ArrayList<CreditModel> listeCreditsSoldes = creditcontrolleur.listecreditsSoldesclient(client);
+         long now = new Date().getTime();
+       if (listeCreditsSoldes.size() != 0){
+           for (CreditModel credit : listeCreditsSoldes) {
+               if (MesOutils.getSppressionDate(credit.getSoldedat()) <= now){
+                   creditcontrolleur.supprimeCreditSoldes(credit);
+               }
+           }
+       }
+
+    }
+
+    public void supprimerAccountSoldes(){
+
+        accountcontroller.listeAccountsoldeClient(client);
+        ArrayList<AccountModel> listeAccountsSoldes = accountViewModel.getAccount_solde_ou_non().getValue();
+        long now = new Date().getTime();
+        if (listeAccountsSoldes.size() != 0){
+            for (AccountModel account : listeAccountsSoldes) {
+                if (MesOutils.getSppressionDate(account.getSoldedat()) <= now ){
+                    accountcontroller.supprimerAccountsSoldes(account);
+                }
+            }
+        }
+
+
     }
 
 

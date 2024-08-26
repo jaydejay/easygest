@@ -55,9 +55,7 @@ public class Versementacccontrolleur {
     }
 
     public boolean ajouterversement(ClientModel client, long sommeverse, String dateversement) {
-
-        boolean success = accessLocalVersementacc.ajouterversement(client,sommeverse,dateversement);
-        return success;
+        return accessLocalVersementacc.ajouterversement(client,sommeverse,dateversement);
 
     }
 
@@ -70,8 +68,14 @@ public class Versementacccontrolleur {
 
     public boolean modifierVersement(AccountModel account, VersementsaccModel versement_a_modifier, int nouveau_total_versement, int nouvellesommeverse, String date) {
         long dateversement =  MesOutils.convertStringToDate(date).getTime();
-        boolean resultat = accessLocalVersementacc.modifierVersement(account,versement_a_modifier,nouveau_total_versement,nouvellesommeverse,dateversement);
-        return resultat;
+        boolean success = accessLocalVersementacc.modifierVersement(account,versement_a_modifier,nouveau_total_versement,nouvellesommeverse,dateversement);
+        if (success){
+            VersementsaccModel versementacc = accessLocalVersementacc.recupVersementaccById(versement_a_modifier.getId());
+            this.setMversementacc(versementacc);
+            this.listeversementsClient(versementacc.getClient());
+
+        }
+        return success;
     }
 
     public boolean annullerversement(VersementsaccModel versement,AccountModel accountModel){
@@ -79,9 +83,9 @@ public class Versementacccontrolleur {
         return  accessLocalVersementacc.annullerversement(versement,accountModel);
     }
 
-    public void supprimerversement(VersementsaccModel versementsaccModel) {
-        accessLocalVersementacc.supprimerversement(versementsaccModel);
-    }
+//    public void supprimerversement(VersementsaccModel versementsaccModel) {
+//        accessLocalVersementacc.supprimerversement(versementsaccModel);
+//    }
 
 
 

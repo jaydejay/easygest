@@ -17,7 +17,7 @@ public class VersementViewModel extends ViewModel {
 
    private final MutableLiveData<VersementsModel> mversement ;
     private final MutableLiveData<ArrayList<VersementsModel>> mversements;
-    private Context context;
+//    private Context context;
 
     public VersementViewModel() {
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(null);

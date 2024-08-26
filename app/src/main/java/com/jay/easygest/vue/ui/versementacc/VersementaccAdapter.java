@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.jay.easygest.R;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.vue.AfficherCreditsClientActivity;
 import com.jay.easygest.vue.ui.listeversement.ListeversementAdapter;
 
 import java.util.ArrayList;
@@ -73,6 +74,12 @@ public class VersementaccAdapter extends BaseAdapter{
         }catch (Exception e){
 //        do nothing
         }
+
+        holder.llayoutlistevsmtacc.setOnClickListener(v -> {
+
+            int position1 = (int) v.getTag();
+            ((AfficherCreditsClientActivity)contexte).redirectToAfficheversementaccActivity(versements.get(position1),position1,this.getCount());
+        });
 
         return view;
     }
