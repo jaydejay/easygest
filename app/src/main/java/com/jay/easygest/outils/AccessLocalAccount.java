@@ -1,22 +1,15 @@
 package com.jay.easygest.outils;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.jay.easygest.controleur.Accountcontroller;
-import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
-import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.model.VersementsaccModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class AccessLocalAccount {
@@ -38,11 +31,11 @@ public class AccessLocalAccount {
     public static final String TOTALACCOUNT = "totalaccount";
     public static final String ACCOUNTID = "accountid";
     public static final String SOLDEDAT = "soldedat";
-    private MySqliteOpenHelper accessBD;
+    private final MySqliteOpenHelper accessBD;
     private final Context contexte;
     private SQLiteDatabase bd;
     private AccessLocalVersementacc accessLocalVersementacc;
-    private AccessLocalClient accessLocalClient;
+    private final AccessLocalClient accessLocalClient;
 
 
     public AccessLocalAccount(Context contexte) {
@@ -151,23 +144,12 @@ public class AccessLocalAccount {
 
         bd = accessBD.getWritableDatabase();
         bd.beginTransaction();
-
         AccountModel accountModel;
         try{
             int ancien_total_account_du_client =  Integer.parseInt(String.valueOf(client.getTotalaccount())) ;
             int nouveau_total_account_du_client = ( ancien_total_account_du_client - ancienne_somme_account) + account.getSommeaccount();
             ContentValues account_cv = new ContentValues();
             ContentValues client_cv = new ContentValues();
-            long date_de_solde;
-            if (account.getReste() == 0){
-                ArrayList<VersementsaccModel> liste_versements = accessLocalVersementacc.listeVersementsAccount(account);
-                Log.i("accesslocalaccount", "modifierAccount: "+liste_versements);
-                int last_index  = liste_versements.size() -1;
-                VersementsaccModel dernier_versemt = liste_versements.get(last_index);
-                 date_de_solde = dernier_versemt.getDateversement();
-            }else {date_de_solde = 0L;}
-
-            account.setSoldedat(date_de_solde);
 
             account_cv.put(ARTICLE_1,account.getArticle1());
             account_cv.put(ARTICLE_2,account.getArticle2());
@@ -175,11 +157,9 @@ public class AccessLocalAccount {
             account_cv.put(VERSEMENTS,account.getVersement());
             account_cv.put(RESTE,account.getReste());
             account_cv.put(DATEACCOUNT,account.getDateaccount());
-            account_cv.put(SOLDEDAT,date_de_solde);
-
+            account_cv.put(SOLDEDAT,account.getSoldedat());
 
             client_cv.put(TOTALACCOUNT,nouveau_total_account_du_client);
-
             bd.updateWithOnConflict(TABLE_ACCOUNT,account_cv, ID + "=" +account.getId(),null,1);
             bd.updateWithOnConflict(TABLE_CLIENT, client_cv, "id = ?", new String[] {String.valueOf(client.getId())},1);
              accountModel = this.recupAccountById(account.getId());
@@ -263,7 +243,7 @@ public class AccessLocalAccount {
                 int versement = cursor.getInt(5);
                 int reste = cursor.getInt(6);
                 long dateaccount = cursor.getLong(7);
-                Integer nbraccount = cursor.getInt(8);
+                int nbraccount = cursor.getInt(8);
 
                 account = new AccountModel(accountId, clientid, article1, article2, sommeaccount, versement, reste, dateaccount,nbraccount);
                 account.setSoldedat(cursor.getLong(9));
@@ -382,22 +362,6 @@ public class AccessLocalAccount {
         int totalaccount = cursor.getInt(cursor.getColumnIndexOrThrow("t_account"));
         cursor.close();
         return totalaccount;
-    }
-
-    /**
-     *
-     * @param client le client
-     * @return le total des versements des accounts du client
-     */
-    public int getRecapTversementClient(ClientModel client){
-        bd = accessBD.getReadableDatabase();
-//        String req  = "select SUM(versements) AS t_versement from credit where reste != 0 and clientid = "+client.getId();
-        String req = "select SUM(versements) AS t_versement from account where  reste != 0 and clientid ='" + client.getId()+"'";
-        Cursor cursor = bd.rawQuery(req,null);
-        cursor.moveToFirst();
-        int totalversement = cursor.getInt(cursor.getColumnIndexOrThrow("t_versement"));
-        cursor.close();
-        return totalversement;
     }
 
     /**

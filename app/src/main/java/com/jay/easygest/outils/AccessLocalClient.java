@@ -90,14 +90,17 @@ public class AccessLocalClient {
     public boolean supprimerclient(ClientModel client) {
         bd = accessBD.getReadableDatabase();
         bd.beginTransaction();
-        boolean success = false;
+        boolean success ;
         try{
             bd.delete(CLIENT,CODECLIENT +"=?",new String[]{client.getCodeclient()});
             bd.delete(CREDIT,"clientid =?", new String[]{String.valueOf(client.getId())});
             bd.delete(VERSEMENT,"clientid =?", new String[]{String.valueOf(client.getId())});
             bd.setTransactionSuccessful();
             success = true;
-        }finally {
+        }catch (Exception e){
+             success = false;
+        }
+            finally {
             bd.endTransaction();
         }
 
@@ -141,44 +144,6 @@ public class AccessLocalClient {
         return clients;
     }
 
-    public ClientModel recupClient(String codeclt){
-        ClientModel client = null;
-
-        try {
-            bd = accessBD.getReadableDatabase();
-            String req = "select * from client where " + CODECLIENT + "='"+codeclt+"'";
-
-            Cursor cursor = bd.rawQuery(req, null);
-            cursor.moveToLast();
-            if (!cursor.isAfterLast()) {
-
-                int id = cursor.getInt(0);
-                String code = cursor.getString(1);
-                String nom = cursor.getString(2);
-                String prenoms = cursor.getString(3);
-                String telephone = cursor.getString(4);
-                String email = cursor.getString(5);
-                String residence = cursor.getString(6);
-                String cni = cursor.getString(7);
-                String permis = cursor.getString(8);
-                String passport = cursor.getString(9);
-                String societe = cursor.getString(10);
-                Integer nbrcredit = cursor.getInt(11);
-                Long totalcredit = cursor.getLong(12);
-                Integer nbraccount = cursor.getInt(13);
-                Long totalaccount = cursor.getLong(14);
-
-                client = new ClientModel(id, code, nom,prenoms, telephone, email, residence, cni, permis,passport,societe,nbrcredit,totalcredit,nbraccount,totalaccount);
-
-            }
-            cursor.close();
-
-        }catch (Exception e){
-            //do nothing
-        }
-        return client;
-
-    }
 
     public ClientModel recupUnClient(Integer clientid){
         ClientModel client = null;

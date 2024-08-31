@@ -5,17 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
 
-import com.jay.easygest.controleur.Clientcontrolleur;
-import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.model.VersementsModel;
-import com.jay.easygest.model.VersementsaccModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class AccessLocalCredit {
@@ -53,8 +47,6 @@ public class AccessLocalCredit {
     public static final String SOLDEDAT = "soldedat";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
-    private Creditcontrolleur creditcontrolleur;
-    private Clientcontrolleur clientcontrolleur;
     private AccessLocalClient accessLocalClient;
     private AccessLocalVersement accessLocalVersement;
     private final Context contexte;
@@ -63,7 +55,7 @@ public class AccessLocalCredit {
         this.contexte = contexte;
         this.accessBD = new MySqliteOpenHelper(contexte, null);
         accessLocalClient = new AccessLocalClient(contexte);
-        clientcontrolleur =  Clientcontrolleur.getClientcontrolleurInstance(contexte);
+//        clientcontrolleur =  Clientcontrolleur.getClientcontrolleurInstance(contexte);
 
 
     }
@@ -163,30 +155,24 @@ public class AccessLocalCredit {
     public CreditModel modifierCredit(CreditModel creditModel,ClientModel client,int ancienne_sommecredit) {
 
         bd = accessBD.getWritableDatabase();
+
         bd.beginTransaction();
         CreditModel credit;
-        try{
+//        try{
             int ancien_total_credit_du_client =  Integer.parseInt(String.valueOf(client.getTotalcredit())) ;
             int ancienne_somme_credit = Integer.parseInt(String.valueOf(ancienne_sommecredit)) ;
             int nouveau_total_credit_du_client = ( ancien_total_credit_du_client - ancienne_somme_credit) + creditModel.getSommecredit();
 
             ContentValues credit_cv = new ContentValues();
             ContentValues client_cv = new ContentValues();
-            long date_de_solde;
-            if (creditModel.getReste() == 0){
-                ArrayList<VersementsModel> liste_versements = accessLocalVersement.listeVersementsCredit(creditModel);
-                int last_index  = liste_versements.size() -1;
-                VersementsModel dernier_versemt = liste_versements.get(last_index);
-                date_de_solde = dernier_versemt.getDateversement();
-            }else {date_de_solde = 0L;}
-            creditModel.setSoldedat(date_de_solde);
+
             credit_cv.put(ARTICLE_1,creditModel.getArticle1());
             credit_cv.put(ARTICLE_2,creditModel.getArticle2());
             credit_cv.put(SOMMECREDIT,creditModel.getSommecredit());
             credit_cv.put(VERSEMENTS,creditModel.getVersement());
             credit_cv.put(RESTE,creditModel.getReste());
             credit_cv.put(DATECREDIT,creditModel.getDatecredit());
-            credit_cv.put(SOLDEDAT,date_de_solde);
+            credit_cv.put(SOLDEDAT,creditModel.getSoldedat());
 
             client_cv.put(TOTALCREDIT,nouveau_total_credit_du_client);
 
@@ -195,12 +181,12 @@ public class AccessLocalCredit {
              credit = this.recupCreditById(creditModel.getId());
             bd.setTransactionSuccessful();
 
-        }catch (Exception e){
-            credit = null;
-        }
-        finally {
+//        }catch (Exception e){
+//            credit = null;
+//        }
+//        finally {
             bd.endTransaction();
-        }
+//        }
         return credit;
     }
 
@@ -249,13 +235,10 @@ public class AccessLocalCredit {
                 credits.add(credit);
             }
             while (cursor.moveToNext());
-
             cursor.close();
-            creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(null);
-            creditcontrolleur.setCredits(credits);
 
         }catch(Exception e){
-            //  do nothing
+            return credits;
         }
         return credits;
 
@@ -284,41 +267,10 @@ public class AccessLocalCredit {
             cursor.close();
 
         }catch(Exception e){
-            //  do nothing
-        }
-        return credits;
-
-    }
-
-    /**
-     *
-     * @return la liste de tous les credits soldés ou pas
-     */
-
-    public ArrayList<CreditModel> listeDEScredits() {
-        ArrayList<CreditModel> credits = new ArrayList<>();
-
-        try {
-            bd = accessBD.getReadableDatabase();
-
-            String req = "select * from credit";
-            Cursor cursor = bd.rawQuery(req, null);
-            cursor.moveToFirst();
-            do {
-                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-                CreditModel credit = new CreditModel(cursor.getInt(0),client,cursor.getString(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5),cursor.getInt(6),cursor.getLong(7),cursor.getInt(8));
-                credit.setSoldedat(cursor.getLong(9));
-                credits.add(credit);
-            }
-            while (cursor.moveToNext());
-
-            cursor.close();
-
-        }catch(Exception e){
-            //  do nothing
             return credits;
         }
         return credits;
+
     }
 
     /**
@@ -343,7 +295,7 @@ public class AccessLocalCredit {
 
             cursor.close();
         }catch(Exception e){
-            //  do nothing
+            return credits;
         }
         return credits;
     }
@@ -357,7 +309,6 @@ public class AccessLocalCredit {
              return false;
          }
             return true;
-
         }
 
     /**
@@ -489,16 +440,6 @@ public class AccessLocalCredit {
         return totalreste;
     }
 
-
-    public int supprimercreditsClient(int clientId) {
-        int rows = 0;
-       try{
-          rows = accessBD.getWritableDatabase().delete(TABLE_CREDIT,CLIENTID +"=?",new String[]{String.valueOf(clientId)});
-       }catch( SQLiteException e) {
-            rows = 0;
-       }
-        return rows;
-    }
 
     // cette fonction doit etre appeler automatiquement pour supprimer un crdit
     // 6 mois apres que le credit est ete solder

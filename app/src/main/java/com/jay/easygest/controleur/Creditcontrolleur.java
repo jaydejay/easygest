@@ -5,12 +5,12 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
-
-import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.AccessLocalCredit;
+import com.jay.easygest.outils.AccessLocalVersement;
 import com.owlike.genson.Genson;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public final class Creditcontrolleur {
     private static Creditcontrolleur creditcontrolleurInstance = null;
     private CreditModel credit;
     private ArrayList<CreditModel> credits = new ArrayList<>();
-    private int tagx = 0;
     private static AccessLocalCredit accessLocalcredit;
+    private static AccessLocalVersement accessLocalVersement;
     private final MutableLiveData<Integer> mtotalcredit = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversement = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalreste = new MutableLiveData<>();
@@ -36,13 +36,14 @@ public final class Creditcontrolleur {
      */
     private Creditcontrolleur(){
         super();
+
     }
 
     public static Creditcontrolleur getCreditcontrolleurInstance(Context contexte){
         if(Creditcontrolleur.creditcontrolleurInstance == null){
             Creditcontrolleur.creditcontrolleurInstance = new Creditcontrolleur();
             accessLocalcredit = new AccessLocalCredit(contexte);
-
+             accessLocalVersement = new AccessLocalVersement(contexte);
         }
 
         return creditcontrolleurInstance;
@@ -75,14 +76,6 @@ public final class Creditcontrolleur {
     public MutableLiveData<ArrayList<CreditModel>> getMCredits() {return mcredits;}
 
     public void setMCredits(ArrayList<CreditModel> credits) {this.mcredits.setValue(credits); }
-
-    public int getTagx() {
-        return tagx;
-    }
-    public void setTagx(int tag) {
-        this.tagx = tag;
-    }
-
 
     public CreditModel creerCredit(String codeclt, String nomclient,String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long datecredit){
 
@@ -128,6 +121,14 @@ public final class Creditcontrolleur {
     public boolean modifierCredit(CreditModel creditModel, ClientModel client, int ancienne_somme_credit){
 
         boolean success = false;
+        Long date_de_solde;
+        if (creditModel.getReste() == 0){
+            ArrayList<VersementsModel> liste_versements = accessLocalVersement.listeVersementsCredit(creditModel);
+            int last_index  = liste_versements.size()-1;
+            VersementsModel dernier_versemt = liste_versements.get(last_index);
+            date_de_solde = dernier_versemt.getDateversement();
+        }else {date_de_solde = 0L;}
+        creditModel.setSoldedat(date_de_solde);
         CreditModel credit = accessLocalcredit.modifierCredit(creditModel,client,ancienne_somme_credit);
         if (credit != null ){
             this.setCredit(credit);
@@ -160,17 +161,6 @@ public final class Creditcontrolleur {
 
     }
 
-
-    /**
-     *
-     * @return la liste de tous les credits soldés ou pas
-     */
-    public ArrayList<CreditModel> listeDEScredits(){
-
-        ArrayList<CreditModel> listeDesCredits = accessLocalcredit.listeDEScredits();
-        this.setCredits(listeDesCredits);
-        return  listeDesCredits;
-    }
 
     /**
      *
@@ -266,17 +256,10 @@ public final class Creditcontrolleur {
     }
 
 
-    public int supprimercreditsClient(int clientid) {
-        return accessLocalcredit.supprimercreditsClient(clientid);
-
-    }
-
-
-    public boolean supprimeCreditSoldes(CreditModel credit) {
+    public void supprimeCreditSoldes(CreditModel credit) {
         boolean success = accessLocalcredit.supprimerUncredit(credit);
         if (success){
             this.listecreditsSoldesclient(credit.getClient());
         }
-        return success;
     }
 }

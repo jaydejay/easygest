@@ -5,23 +5,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
-import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class AccessLocalVersement {
 
     public static final String TABLE_VERSEMENT = "versement";
     public static final String VERSEMENTS = "versements";
-    public static final String CODECLIENT = "codeclient";
     public static final String SOMMEVERSE = "sommeverse";
     public static final String RESTE = "reste";
     public static final String CREDIT = "credit";
@@ -40,7 +35,7 @@ public class AccessLocalVersement {
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
     private AccessLocalCredit accessLocalCredit;
-    private AccessLocalClient accessLocalClient;
+    private final AccessLocalClient accessLocalClient;
     private Creditcontrolleur creditcontrolleur;
     private Context contexte;
 
@@ -232,30 +227,6 @@ public class AccessLocalVersement {
 
         }catch(Exception e){
 //            do nothing
-        }
-        return  versements;
-
-    }
-
-    public ArrayList<VersementsModel> listeVersementsClient(ClientModel client){
-        ArrayList<VersementsModel> versements = new ArrayList<>();
-        try {
-            bd = accessBD.getReadableDatabase();
-            String req = "select * from versement where " + CLIENTID + "='" +client.getId()+"'";
-            Cursor cursor = bd.rawQuery(req, null);
-            cursor.moveToFirst();
-            do {
-                CreditModel credit = accessLocalCredit.recupCreditById(cursor.getInt(2));
-                VersementsModel versement = new VersementsModel(cursor.getInt(0),client,credit,cursor.getLong(1),cursor.getInt(2),cursor.getLong(4));
-                versements.add(versement);
-
-            }
-            while (cursor.moveToNext());
-            cursor.close();
-
-
-        }catch(Exception e){
-            versements = null;
         }
         return  versements;
 

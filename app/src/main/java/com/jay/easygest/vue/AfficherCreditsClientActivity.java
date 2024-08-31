@@ -1,5 +1,9 @@
 package com.jay.easygest.vue;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,17 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
-import com.jay.easygest.controleur.Versementacccontrolleur;
-import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
@@ -37,23 +34,19 @@ import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
 
 public class AfficherCreditsClientActivity extends AppCompatActivity {
 
-    private  ActivityAfficherCreditsClientBinding binding;
     private Clientcontrolleur clientcontrolleur;
-    private Versementcontrolleur versementcontrolleur;
     private Creditcontrolleur creditcontrolleur;
     private Accountcontroller accountcontroller;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
     private CreditViewModel creditViewModel;
     private  VersementaccViewModel versementaccViewModel;
-    private ClientModel client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAfficherCreditsClientBinding.inflate(getLayoutInflater());
+        com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding binding = ActivityAfficherCreditsClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
 
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
@@ -61,7 +54,7 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        client = clientViewModel.getClient().getValue();
+        ClientModel client = clientViewModel.getClient().getValue();
 
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
 
@@ -69,7 +62,8 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
         int fragmentid =  getIntent().getIntExtra("fragmentid",R.id.af_client_liste_credits);
        String titre = getIntent().getStringExtra("titre");
-       String identite_de_client = client.getNom()+" "+client.getPrenoms()+" "+client.getCodeclient();
+        assert client != null;
+        String identite_de_client = client.getNom()+" "+ client.getPrenoms()+" "+ client.getCodeclient();
        binding.textViewCredClitVers.setText(identite_de_client);
 
 
@@ -179,7 +173,6 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
     public void redirectToModifiercreditActivity(CreditModel credit){
         creditcontrolleur.setCredit(credit);
-        creditcontrolleur.setTagx(1);
         Intent intent = new Intent(this, ModifiercreditActivity.class);
         intent.putExtra("Tagx",1);
         startActivity(intent);

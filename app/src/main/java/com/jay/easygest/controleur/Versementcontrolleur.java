@@ -1,28 +1,20 @@
 package com.jay.easygest.controleur;
-
 import android.content.Context;
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
-
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
-import com.jay.easygest.outils.AccessLocalCredit;
 import com.jay.easygest.outils.AccessLocalVersement;
 import com.jay.easygest.outils.MesOutils;
-
 import java.util.ArrayList;
 
 public class Versementcontrolleur {
 
     private static Versementcontrolleur versementcontrolleurInstance = null;
     private static AccessLocalVersement accessLocalVersement;
-//    private static AccessLocalCredit accessLocalCredit;
     private VersementsModel versement;
     private final MutableLiveData<VersementsModel> Mversement = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<VersementsModel>> Mversements = new MutableLiveData<>();
-    private int versementNumber;
 
     public Versementcontrolleur(){
         super();
@@ -64,26 +56,8 @@ public class Versementcontrolleur {
         Mversements.setValue(versements);
     }
 
-    public int getVersementNumber() {
-        return versementNumber;
-    }
-
-    public void setVersementNumber(int versementNumber) {
-        this.versementNumber = versementNumber;
-    }
-
-
     public boolean ajouterversement(ClientModel client, long sommeverse,String dateversement) {
-
-        boolean success = accessLocalVersement.ajouterversement(client,sommeverse,dateversement);
-        return success;
-
-    }
-
-    public VersementsModel recupVersementById(int versementid){
-        VersementsModel versement = accessLocalVersement.recupVersementById(versementid);
-        this.setMversement(versement);
-        return versement;
+        return  accessLocalVersement.ajouterversement(client,sommeverse,dateversement);
     }
 
 
@@ -104,10 +78,6 @@ public class Versementcontrolleur {
         }
         return succes;
     }
-
-//    public void supprimerversement(String codeclient) {
-//        accessLocalVersement.supprimerversement(codeclient);
-//    }
 
     public boolean annullerversement(VersementsModel versement,CreditModel credit){
 

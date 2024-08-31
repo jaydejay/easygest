@@ -433,7 +433,6 @@ public class AfficherclientActivity extends AppCompatActivity {
 
     public void redirectToModifiercreditActivity(CreditModel credit){
         creditcontrolleur.setCredit(credit);
-        creditcontrolleur.setTagx(1);
         Intent intent = new Intent(this, ModifiercreditActivity.class);
         intent.putExtra("Tagx",1);
         startActivity(intent);

@@ -1,18 +1,13 @@
 package com.jay.easygest.controleur;
 
 import android.content.Context;
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
-
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
-//import com.jay.easygest.outils.AccessLocalAccount;
-import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.AccessLocalAccount;
-import com.jay.easygest.outils.AccessLocalClient;
-import com.jay.easygest.vue.ui.clients.ClientViewModel;
+import com.jay.easygest.outils.AccessLocalVersementacc;
 import com.owlike.genson.Genson;
 
 import java.util.ArrayList;
@@ -33,6 +28,8 @@ public class Accountcontroller {
      * la liste de tous les accounts
      */
     private MutableLiveData<ArrayList<AccountModel>> mlisteaccounts = new MutableLiveData<>();
+    private static AccessLocalVersementacc accessLocalVersementacc;
+
     public Accountcontroller() {
         super();
     }
@@ -41,7 +38,7 @@ public class Accountcontroller {
         if(Accountcontroller.accountcontrolleurInstance == null){
             Accountcontroller.accountcontrolleurInstance = new Accountcontroller();
             accessLocalAccount = new AccessLocalAccount(contexte);
-
+            accessLocalVersementacc = new AccessLocalVersementacc(contexte);
 
         }
         return accountcontrolleurInstance;
@@ -64,9 +61,7 @@ public class Accountcontroller {
         return maccounts;
     }
 
-    public MutableLiveData<ArrayList<AccountModel>> getMlisteaccounts() {
-        return mlisteaccounts;
-    }
+
 
     public void setMlisteaccounts(ArrayList<AccountModel> listeaccounts) {
         this.mlisteaccounts.setValue(listeaccounts);
@@ -82,7 +77,7 @@ public class Accountcontroller {
      * @param c_article2 deuxieme article
      * @param versement le prmier versement
      * @param dateaccount la date de l'account
-     * @return
+     * @return cree un account si le client n'existe pas
      */
     public AccountModel creerAccount(String codeclt, String nomclient, String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long dateaccount){
 
@@ -140,13 +135,20 @@ public class Accountcontroller {
      * @return vraie si la requette reussie sinon faux
      */
     public boolean modifierAccount(AccountModel accountModel,ClientModel client, int ancienne_somme_account){
+        long date_de_solde;
+        if (accountModel.getReste() == 0){
+            ArrayList<VersementsaccModel> liste_versements = accessLocalVersementacc.listeVersementsAccount(accountModel);
+            int last_index  = liste_versements.size() -1;
+            VersementsaccModel dernier_versemt = liste_versements.get(last_index);
+            date_de_solde = dernier_versemt.getDateversement();
+        }else {date_de_solde = 0L;}
 
+        accountModel.setSoldedat(date_de_solde);
         boolean success = false;
         AccountModel account = accessLocalAccount.modifierAccount(accountModel,client,ancienne_somme_account);
         if (account != null ){
             this.setAccount(account);
             this.listeaccounts();
-//            this.listeDesAccounts();
             success = true;
         }
 
@@ -169,20 +171,10 @@ public class Accountcontroller {
         return success;
     }
 
-    /**
-     *
-     * @param accountId id de l'account à recuperer
-     * @return retourne l'account
-     */
 
-    public AccountModel getAccountById(int accountId){
-        AccountModel account = accessLocalAccount.recupAccountById(accountId);
-        return account;
-    }
 
     /**
-     *
-     * @return la liste de tous les accounts
+     * la liste de tous les accounts
      */
     public void listeDesAccounts(){
         ArrayList<AccountModel> accounts = new ArrayList<>();
@@ -191,25 +183,20 @@ public class Accountcontroller {
 
     /**
      *
-     * @return la liste des accounts en cours
      */
-    public ArrayList<AccountModel> listeaccounts(){
+    public void listeaccounts(){
         ArrayList<AccountModel> listeAccounts = accessLocalAccount.listeAccounts();
         this.setAccounts(listeAccounts);
-        return listeAccounts;
     }
 
 
     /**
-     *
      * @param client le client
-     * @return retourne la liste des accounts d'un client
      */
-    public  ArrayList<AccountModel> listeAccountsClient(ClientModel client) {
+    public void listeAccountsClient(ClientModel client) {
 
         ArrayList<AccountModel> accounts = accessLocalAccount.listeAccountsClient(client);
         this.setAccounts(accounts);
-        return accounts;
     }
 
     public void  listeAccountsoldeClient(ClientModel client) {
@@ -224,10 +211,7 @@ public class Accountcontroller {
 
     }
 
-    public  void setRecapTversementClient(ClientModel client ){
-        int totalversementclient = accessLocalAccount.getRecapTversementClient(client);
-        mtotalversementaccountclient.setValue(totalversementclient);
-    }
+
 
     public  void setRecapTresteClient(ClientModel client){
         int totalresteaccountclient = accessLocalAccount.getRecapTresteClient(client);
@@ -247,11 +231,10 @@ public class Accountcontroller {
     }
 
 
-    public boolean supprimerAccountsSoldes(AccountModel account) {
+    public void supprimerAccountsSoldes(AccountModel account) {
         boolean success = accessLocalAccount.supprimerAccountSoldeClient(account.getClient());
         if (success){
             this.listeAccountsoldeClient(account.getClient());
         }
-        return success;
     }
 }

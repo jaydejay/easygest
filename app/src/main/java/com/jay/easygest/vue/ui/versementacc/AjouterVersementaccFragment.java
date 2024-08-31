@@ -2,20 +2,18 @@ package com.jay.easygest.vue.ui.versementacc;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.jay.easygest.R;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.databinding.FragmentAjouterVersementaccBinding;
 import com.jay.easygest.model.ClientModel;
-import com.jay.easygest.outils.AccessLocalVersementacc;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
@@ -44,14 +42,11 @@ public class AjouterVersementaccFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     *
      * @return A new instance of fragment AjouterVersementaccFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static AjouterVersementaccFragment newInstance() {
-        AjouterVersementaccFragment fragment = new AjouterVersementaccFragment();
-        return fragment;
+        return  new AjouterVersementaccFragment();
     }
 
     @Override
@@ -64,7 +59,7 @@ public class AjouterVersementaccFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
        binding = FragmentAjouterVersementaccBinding.inflate(inflater,container,false);
        ajouterversement();
@@ -90,7 +85,7 @@ public class AjouterVersementaccFragment extends Fragment {
                     try {
                         String codeclient = binding.ajoutervrsmtacccodeclt.getText().toString();
                         String dateversement = binding.ajoutervrsmntaccdate.getText().toString();
-                        Integer sommeverse = Integer.parseInt(somme_versee);
+                        int sommeverse = Integer.parseInt(somme_versee);
                         if (Objects.equals(client.getCodeclient(), codeclient)){
 
                             int somme_total_account = accountViewModel.getTotalaccountsclient().getValue();
@@ -104,6 +99,8 @@ public class AjouterVersementaccFragment extends Fragment {
                                 } else {
                                     Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
                                 }
+                            }else {
+                                Toast.makeText(getContext(), "versement elevé", Toast.LENGTH_SHORT).show();
                             }
 
                         }else {Toast.makeText(getContext(), "le model n'est pas a jour", Toast.LENGTH_SHORT).show();}

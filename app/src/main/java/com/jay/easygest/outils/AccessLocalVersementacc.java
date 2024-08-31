@@ -1,29 +1,15 @@
 package com.jay.easygest.outils;
 
-import static com.jay.easygest.outils.AccessLocalCredit.ARTICLE_1;
-import static com.jay.easygest.outils.AccessLocalCredit.ARTICLE_2;
-import static com.jay.easygest.outils.AccessLocalCredit.DATECREDIT;
-import static com.jay.easygest.outils.AccessLocalCredit.ID;
-import static com.jay.easygest.outils.AccessLocalCredit.NUMEROCREDIT;
-import static com.jay.easygest.outils.AccessLocalCredit.SOMMECREDIT;
-import static com.jay.easygest.outils.AccessLocalCredit.TABLE_CREDIT;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.jay.easygest.controleur.Accountcontroller;
-import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
-import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.model.VersementsaccModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class AccessLocalVersementacc {
 
@@ -41,19 +27,16 @@ public class AccessLocalVersementacc {
     public static final String NUMEROACCOUNT = "numeroaccount";
     public static final String DATEACCOUNT = "dateaccount";
     public static final String ID = "id";
-    public static final String CODECLIENT = "codeclient";
     public static final String SOLDEDAT = "soldedat";
     private final AccessLocalAccount accessLocalAccount;
     private final AccessLocalClient accessLocalClient;
-    private Accountcontroller accountcontroller;
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
-    private Context contexte;
+    private  Context contexte;
 
     public AccessLocalVersementacc(Context contexte) {
         this.contexte = contexte;
         this.accessBD = new MySqliteOpenHelper(contexte,null);
-        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(contexte);
         accessLocalClient = new AccessLocalClient(contexte);
         accessLocalAccount = new AccessLocalAccount(contexte);
 

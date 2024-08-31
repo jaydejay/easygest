@@ -1,13 +1,8 @@
 package com.jay.easygest.controleur;
-
 import android.content.Context;
-
 import androidx.lifecycle.MutableLiveData;
-
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.AccessLocalClient;
-import com.jay.easygest.vue.ui.clients.ClientViewModel;
-
 import java.util.ArrayList;
 
 public class Clientcontrolleur {
@@ -58,7 +53,6 @@ public class Clientcontrolleur {
         setMlisteClients(clients);
         return clients;
     }
-    public ClientModel recupererUnClient(String codeclient){ return accessLocalClient.recupClient(codeclient); }
 
     public ClientModel recupererClient(Integer clientid){ return accessLocalClient.recupUnClient(clientid); }
 

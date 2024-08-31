@@ -26,9 +26,7 @@ public final class Usercontrolleur {
         if(Usercontrolleur.usercontrolleurInstance == null){
             Usercontrolleur.usercontrolleurInstance = new Usercontrolleur();
             accessLocal = new AccessLocal(contexte);
-
         }
-
         return usercontrolleurInstance;
     }
 
@@ -53,11 +51,7 @@ public final class Usercontrolleur {
         accessLocal.ajouterUtilisateur(user);
     }
 
-    public void modifierUser(UserModel user){
-        this.accessLocal.modifierUtilisateur(user);
-
-    }
-
+    public void modifierUser(UserModel user){accessLocal.modifierUtilisateur(user);}
 
     public UserModel recupProprietaire(){
         return  accessLocal.recupProprietaire();

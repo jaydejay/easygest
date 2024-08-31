@@ -1,21 +1,17 @@
 package com.jay.easygest.vue;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.jay.easygest.R;
-import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierVersementBinding;
 import com.jay.easygest.model.ClientModel;
@@ -26,11 +22,9 @@ import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
 import java.util.Date;
-import java.util.Objects;
 
 public class ModifierVersementActivity extends AppCompatActivity {
     Button bouton_modifier;
-    Button boutonannuller;
     EditText EDTcodeclient ;
     EditText EDTsomme ;
     EditText EDTdatecredit;
@@ -39,11 +33,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
     VersementViewModel versementViewModel;
    private VersementsModel versement;
    private ClientModel client;
-   private Creditcontrolleur creditcontrolleur;
-   private CreditViewModel creditViewModel;
-    private  ActivityModifierVersementBinding binding;
-    private int versementNumber;
-
+    private CreditViewModel creditViewModel;
 
 
     @Override
@@ -51,22 +41,20 @@ public class ModifierVersementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
-         binding = ActivityModifierVersementBinding.inflate(getLayoutInflater());
+        com.jay.easygest.databinding.ActivityModifierVersementBinding binding = ActivityModifierVersementBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
          versement = versementViewModel.getMversement().getValue();
-         client = versement.getClient();
+        assert versement != null;
+        client = versement.getClient();
 
          EDTcodeclient =  findViewById(R.id.editversementcodeclt);
          EDTsomme =  findViewById(R.id.editversementsomme);
          EDTdatecredit = findViewById(R.id.editversementdate);
          bouton_modifier =  findViewById(R.id.btnversement);
          title =  findViewById(R.id.txtmodifversementtitle);
-         versementNumber = versementcontrolleur.getVersementNumber();
         init();
         modifierVersement();
-//        annullerversement();
 
     }
 
@@ -94,13 +82,15 @@ public class ModifierVersementActivity extends AppCompatActivity {
                 if (Integer.parseInt(edt_somme) >= 1000) {
 
                     try {
-//                        String dateversement = EDTdatecredit.getText().toString();
-                        Integer nouvellesommeverse = Integer.parseInt(edt_somme);
+                        int nouvellesommeverse = Integer.parseInt(edt_somme);
 
                         CreditModel credit = creditViewModel.getCredit().getValue();
-                            int somme_du_credit = credit.getSommecredit();
+                        int somme_du_credit = 0;
+                        if (credit != null) {
+                            somme_du_credit = credit.getSommecredit();
+                        }
 
-                            int anncien_total_versement = creditViewModel.getCredit().getValue().getVersement();
+                        int anncien_total_versement = creditViewModel.getCredit().getValue().getVersement();
                             int annciennesommeverse = Integer.parseInt(String.valueOf(versement.getSommeverse())) ;
                             int nouveau_total_versement = (anncien_total_versement-annciennesommeverse)+nouvellesommeverse;
 

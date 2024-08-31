@@ -1,10 +1,7 @@
 package com.jay.easygest.outils;
 
-import android.util.Log;
-import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -20,12 +17,11 @@ public abstract  class MesOutils {
 
         String dateFormat = "dd-MM-yyyy";
         SimpleDateFormat dateFormater = new SimpleDateFormat(dateFormat, Locale.FRANCE);
-        Date date = null;
+        Date date ;
         try {
           date = dateFormater.parse(ladate);
         } catch (ParseException e) {
-
-           return date ;
+            date = null ;
         }
         return date;
     }
@@ -109,8 +105,7 @@ public abstract  class MesOutils {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Integer.parseInt(annee),Integer.parseInt(mois),Integer.parseInt(jour));
         calendar.add(Calendar.MONTH,6);
-        long date_de_suppression = convertStringToDate(datef.format(calendar.getTime())).getTime();
-        return date_de_suppression;
+        return convertStringToDate(datef.format(calendar.getTime())).getTime();
     }
 
 }

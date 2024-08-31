@@ -1,37 +1,24 @@
 package com.jay.easygest.controleur;
-
 import android.content.Context;
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
-
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
-import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.model.VersementsaccModel;
-import com.jay.easygest.outils.AccessLocalAccount;
-
-//import com.jay.easygest.outils.AccessLocalVersementacc;
 import com.jay.easygest.outils.AccessLocalVersementacc;
 import com.jay.easygest.outils.MesOutils;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Versementacccontrolleur {
 
     private static Versementacccontrolleur versementacccontrolleurInstance = null;
     private static AccessLocalVersementacc accessLocalVersementacc;
-    private static AccessLocalAccount accessLocalAccount;
-    private MutableLiveData<ArrayList<VersementsaccModel>> mlisteversementacc = new MutableLiveData<>();
-    private MutableLiveData<VersementsaccModel> mversementacc = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<VersementsaccModel>> mlisteversementacc = new MutableLiveData<>();
+    private final MutableLiveData<VersementsaccModel> mversementacc = new MutableLiveData<>();
 
     public static Versementacccontrolleur getVersementacccontrolleurInstance(Context contexte) {
         if(Versementacccontrolleur.versementacccontrolleurInstance == null){
             Versementacccontrolleur.versementacccontrolleurInstance = new Versementacccontrolleur();
             accessLocalVersementacc = new AccessLocalVersementacc(contexte);
-           accessLocalAccount = new AccessLocalAccount(contexte);
 
         }
 
@@ -60,10 +47,9 @@ public class Versementacccontrolleur {
     }
 
 
-    public ArrayList<VersementsaccModel> listeversementsClient(ClientModel client) {
+    public void listeversementsClient(ClientModel client) {
         ArrayList<VersementsaccModel> liste_versements = accessLocalVersementacc.listeVersementsClient(client);
         setMlisteversementacc(liste_versements);
-        return liste_versements ;
     }
 
     public boolean modifierVersement(AccountModel account, VersementsaccModel versement_a_modifier, int nouveau_total_versement, int nouvellesommeverse, String date) {
@@ -82,11 +68,5 @@ public class Versementacccontrolleur {
 
         return  accessLocalVersementacc.annullerversement(versement,accountModel);
     }
-
-//    public void supprimerversement(VersementsaccModel versementsaccModel) {
-//        accessLocalVersementacc.supprimerversement(versementsaccModel);
-//    }
-
-
 
 }
