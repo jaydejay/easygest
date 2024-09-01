@@ -1,15 +1,13 @@
 package com.jay.easygest.vue.ui.versementacc;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jay.easygest.R;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import com.jay.easygest.databinding.FragmentListeVersementaccBinding;
 import com.jay.easygest.model.VersementsaccModel;
 
@@ -20,10 +18,8 @@ import java.util.ArrayList;
  * Use the {@link ListeVersementaccFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ListeVersementaccFragment extends Fragment {
+public class  ListeVersementaccFragment extends Fragment {
     private FragmentListeVersementaccBinding binding;
-    private VersementaccAdapter adapter;
-    private VersementaccViewModel versementaccViewModel;
 
     private ArrayList<VersementsaccModel> versements;
 
@@ -38,20 +34,19 @@ public class ListeVersementaccFragment extends Fragment {
      * @return A new instance of fragment ListeVersementaccFragment.
      */
     public static ListeVersementaccFragment newInstance() {
-        ListeVersementaccFragment fragment = new ListeVersementaccFragment();
-        return fragment;
+        return new ListeVersementaccFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
+        VersementaccViewModel versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
         versements = new ArrayList<>();
         versements = versementaccViewModel.getMlisteversementacc().getValue();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentListeVersementaccBinding.inflate(getLayoutInflater());
         creerliste();
@@ -59,7 +54,7 @@ public class ListeVersementaccFragment extends Fragment {
     }
 
     public void creerliste(){
-        adapter = new VersementaccAdapter(versements,getContext());
+        VersementaccAdapter adapter = new VersementaccAdapter(versements, getContext());
         binding.lstviewversementacc.setAdapter(adapter);
 
     }

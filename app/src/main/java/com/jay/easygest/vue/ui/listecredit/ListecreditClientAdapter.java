@@ -1,8 +1,6 @@
 package com.jay.easygest.vue.ui.listecredit;
 
 import android.content.Context;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import com.jay.easygest.R;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherCreditsClientActivity;
-import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.GestionActivity;
 
 import java.util.ArrayList;
@@ -98,15 +95,6 @@ public class ListecreditClientAdapter extends BaseAdapter {
             }else {((AfficherCreditsClientActivity)context).annullerCredit(credits.get(position12));}
 
         });
-
-//        holder.txtlisteviewcodeclient.setOnClickListener(v -> {
-//            int position3 = (int)v.getTag();
-//            String activity = v.getContext().getClass().getName();
-//            if (activity.contains("GestionActivity")){
-//                ((GestionActivity)context).redirectToAfficherCreditActivity(credits.get(position3));
-//            }else {((AfficherclientActivity)context).redirectToAfficherCreditActivity(credits.get(position3));}
-//
-//        });
 
 
         return convertView;

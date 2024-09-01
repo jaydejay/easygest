@@ -1,13 +1,10 @@
 package com.jay.easygest.vue;
 
+import android.content.Intent;
+import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Intent;
-import android.os.Bundle;
-
-import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherAccountBinding;
@@ -23,7 +20,6 @@ public class AfficherAccountActivity extends AppCompatActivity {
     private ActivityAfficherAccountBinding binding;
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
-    private AccountViewModel accountViewModel;
     private ClientViewModel clientViewModel;
     private  AccountModel account;
 
@@ -35,7 +31,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
-        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        AccountViewModel accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         account = accountViewModel.getAccount().getValue();
 

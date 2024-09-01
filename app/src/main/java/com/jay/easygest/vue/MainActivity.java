@@ -13,6 +13,7 @@ import com.jay.easygest.model.UserModel;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityMainBinding;
 
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
                 if (binding.editTextUsername.length() != 0 & binding.editTextTextPassword.length() != 0 ) {
 
                     if (binding.editTextUsername.length() >= 6 & binding.editTextTextPassword.length() >= 8) {
-                        String username = binding.editTextUsername.getText().toString();
-                        String password = binding.editTextTextPassword.getText().toString();
+                        String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString();
+                        String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString();
                         user = usercontrolleur.recupProprietaire();
                         if (usercontrolleur.isAuthenticated(username, password)) {
                             UserModel userModel = new UserModel(user.getId(), user.getUsername(), user.getPassword(), user.getDateInscription(), user.getStatus(), user.isActif(), 0);
@@ -89,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
                 if ( binding.editTextUsername.length() != 0 & binding.editTextTextPassword.length() != 0) {
                     if (binding.editTextUsername.length() >= 6 & binding.editTextTextPassword.length() >= 8) {
 
-                        String username = binding.editTextUsername.getText().toString();
-                        String password = binding.editTextTextPassword.getText().toString();
+                        String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString();
+                        String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString();
                         user = usercontrolleur.recupAdministrateur();
                         if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
                             usercontrolleur.activerProprietaire();

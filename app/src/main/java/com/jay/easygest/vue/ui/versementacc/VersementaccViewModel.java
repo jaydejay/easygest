@@ -10,12 +10,11 @@ import java.util.ArrayList;
 
 public class VersementaccViewModel extends ViewModel {
 
-    private Versementacccontrolleur versementacccontrolleur;
     private MutableLiveData<ArrayList<VersementsaccModel>> mlisteversementacc;
     private MutableLiveData<VersementsaccModel> mversementacc;
 
     public VersementaccViewModel() {
-        versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(null);
+        Versementacccontrolleur versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(null);
         this.mlisteversementacc = versementacccontrolleur.getMlisteversementacc();
         this.mversementacc = versementacccontrolleur.getMversementacc();
     }

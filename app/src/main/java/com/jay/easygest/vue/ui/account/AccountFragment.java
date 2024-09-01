@@ -1,18 +1,16 @@
 package com.jay.easygest.vue.ui.account;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
@@ -21,11 +19,11 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.vue.AfficherAccountActivity;
 import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class  AccountFragment extends Fragment {
 
@@ -34,8 +32,6 @@ public class  AccountFragment extends Fragment {
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
     private FragmentAccountBinding binding;
-
-//    public static AccountFragment newInstance() { return new AccountFragment();}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -134,7 +130,7 @@ public class  AccountFragment extends Fragment {
 
                         ClientModel clientModel = clientcontrolleur.recupererClient(account.getClientid());
                         AccountModel account_ajoute = accountViewModel.getAccount().getValue();
-                        AccountModel accountModel = new AccountModel(account_ajoute.getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+                        AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
                         accountViewModel.getAccount().setValue(accountModel);
                         clientViewModel.getClient().setValue(clientModel);
                         Intent intent = new Intent(getActivity(), AfficherclientActivity.class);

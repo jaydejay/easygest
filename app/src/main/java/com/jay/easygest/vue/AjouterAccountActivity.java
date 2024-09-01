@@ -1,13 +1,12 @@
 package com.jay.easygest.vue;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.jay.easygest.R;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityAjouterAccountBinding;
@@ -17,9 +16,9 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.owlike.genson.Genson;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class AjouterAccountActivity extends AppCompatActivity {
 
@@ -28,7 +27,7 @@ public class AjouterAccountActivity extends AppCompatActivity {
     private AccountViewModel accountViewModel;
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
-    private AccountModel account;
+//    private AccountModel account;
     private ClientModel client;
 
     @Override
@@ -41,7 +40,7 @@ public class AjouterAccountActivity extends AppCompatActivity {
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
          client = clientViewModel.getClient().getValue();
-         account = accountViewModel.getAccount().getValue();
+//         account = accountViewModel.getAccount().getValue();
          init();
          ajouterAccount();
         setContentView(binding.getRoot());
@@ -97,7 +96,7 @@ public class AjouterAccountActivity extends AppCompatActivity {
                     somme_article2 = "0";
                     nbr_article2 = "0";
                 }else {
-                    designation_article2 = binding.ajoutaccarticle2.getText().toString().trim();;
+                    designation_article2 = binding.ajoutaccarticle2.getText().toString().trim();
                     somme_article2 = binding.ajoutaccarticle2somme.getText().toString().trim();
                     nbr_article2 = binding.ajoutaccNbrarticle2.getText().toString().trim();
                 }
@@ -113,7 +112,7 @@ public class AjouterAccountActivity extends AppCompatActivity {
                 if (success) {
                     ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                     AccountModel account_ajoute = accountViewModel.getAccount().getValue();
-                    AccountModel accountModel = new AccountModel(account_ajoute.getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account_ajoute.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+                    AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account_ajoute.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
                     accountViewModel.getAccount().setValue(accountModel);
                     clientViewModel.getClient().setValue(clientModel);
                     Intent intent = new Intent(AjouterAccountActivity.this, AfficherAccountActivity.class);

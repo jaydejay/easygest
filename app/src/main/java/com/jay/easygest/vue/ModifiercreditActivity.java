@@ -2,34 +2,24 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
-import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.databinding.ActivityModifiercreditBinding;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.R;
-import com.jay.easygest.controleur.Creditcontrolleur;
-import com.jay.easygest.databinding.ActivityModifiercreditBinding;
-import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
-import com.owlike.genson.annotation.JsonCreator;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class ModifiercreditActivity extends AppCompatActivity {
     private Creditcontrolleur creditcontrolleur;
@@ -38,7 +28,6 @@ public class ModifiercreditActivity extends AppCompatActivity {
     private ClientViewModel clientViewModel;
     private ActivityModifiercreditBinding binding;
     private CreditModel credit;
-    private ActionBar ab;
     private ClientModel client;
 
     @Override
@@ -56,7 +45,6 @@ public class ModifiercreditActivity extends AppCompatActivity {
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         afficherCredit();
         setContentView(binding.getRoot());
-         ab = getSupportActionBar();
         modifierCredit();
 
     }
@@ -120,7 +108,7 @@ public class ModifiercreditActivity extends AppCompatActivity {
                     somme_article2 = "0";
                     nbr_article2 = "0";
                 }else {
-                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();;
+                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();
                     somme_article2 = binding.modifcredarticle2somme.getText().toString().trim();
                     nbr_article2 = binding.modifcredNbrarticle2.getText().toString().trim();
                 }
@@ -152,7 +140,7 @@ public class ModifiercreditActivity extends AppCompatActivity {
                 if (success) {
                     ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                     CreditModel credit_modifier = creditViewModel.getCredit().getValue();
-                    CreditModel creditModel = new CreditModel(credit_modifier.getId(),clientModel,credit_modifier.getArticle1(),credit_modifier.getArticle2(),credit_modifier.getSommecredit(),credit_modifier.getVersement(),credit_modifier.getReste(),credit_modifier.getDatecredit(),credit_modifier.getNumerocredit());
+                    CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_modifier).getId(),clientModel,credit_modifier.getArticle1(),credit_modifier.getArticle2(),credit_modifier.getSommecredit(),credit_modifier.getVersement(),credit_modifier.getReste(),credit_modifier.getDatecredit(),credit_modifier.getNumerocredit());
                     creditViewModel.getCredit().setValue(creditModel);
                     clientViewModel.getClient().setValue(clientModel);
                     Intent intent = new Intent(ModifiercreditActivity.this, AffichercreditActivity.class);

@@ -1,43 +1,33 @@
 package com.jay.easygest.vue;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.jay.easygest.R;
-import com.jay.easygest.controleur.Accountcontroller;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.jay.easygest.controleur.Clientcontrolleur;
-import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementacccontrolleur;
-import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherversementaccBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
-import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.jay.easygest.vue.ui.credit.CreditViewModel;
-import com.jay.easygest.vue.ui.versement.VersementViewModel;
 import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class AfficherversementaccActivity extends AppCompatActivity {
 
     private ActivityAfficherversementaccBinding binding;
     private Versementacccontrolleur versementacccontrolleur;
-    private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
-    private AccountViewModel accountViewModel;
     private ClientViewModel clientViewModel;
     private VersementsaccModel versement;
-    private VersementaccViewModel versementaccViewModel;
     private int position_versement;
     private int nbr_versement;
     private AccountModel account;
@@ -47,18 +37,17 @@ public class AfficherversementaccActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherversementaccBinding.inflate(getLayoutInflater());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
-        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
+//        Accountcontroller  accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
-        versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
-        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        VersementaccViewModel versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
+//        AccountViewModel accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
         setContentView(binding.getRoot());
-//        account = accountViewModel.getAccount().getValue();
 
         versement = versementaccViewModel.getMversementacc().getValue();
-        account = versement.getAccount();
+        account = Objects.requireNonNull(versement).getAccount();
         position_versement = getIntent().getIntExtra("versementaccposition",0);
         nbr_versement = getIntent().getIntExtra("nbrversementacc",1);
         setContentView(binding.getRoot());

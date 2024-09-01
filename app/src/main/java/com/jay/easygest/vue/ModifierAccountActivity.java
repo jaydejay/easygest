@@ -1,14 +1,12 @@
 package com.jay.easygest.vue;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierAccountBinding;
@@ -21,6 +19,7 @@ import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.owlike.genson.Genson;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class ModifierAccountActivity extends AppCompatActivity {
 
@@ -105,7 +104,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
                     somme_article2 = "0";
                     nbr_article2 = "0";
                 }else {
-                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();;
+                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();
                     somme_article2 = binding.modifaccarticle2somme.getText().toString().trim();
                     nbr_article2 = binding.modifaccNbrarticle2.getText().toString().trim();
                 }
@@ -134,7 +133,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
                     if (success) {
                         ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                         AccountModel account_modifier = accountViewModel.getAccount().getValue();
-                        AccountModel accountModel = new AccountModel(account_modifier.getId(),clientModel,account_modifier.getArticle1(),account_modifier.getArticle2(),account_modifier.getSommeaccount(),account_modifier.getVersement(),account_modifier.getReste(),account_modifier.getDateaccount(),account_modifier.getNumeroaccount());
+                        AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_modifier).getId(),clientModel,account_modifier.getArticle1(),account_modifier.getArticle2(),account_modifier.getSommeaccount(),account_modifier.getVersement(),account_modifier.getReste(),account_modifier.getDateaccount(),account_modifier.getNumeroaccount());
                         accountViewModel.getAccount().setValue(accountModel);
                         clientViewModel.getClient().setValue(clientModel);
                         Intent intent = new Intent(ModifierAccountActivity.this, AfficherAccountActivity.class);

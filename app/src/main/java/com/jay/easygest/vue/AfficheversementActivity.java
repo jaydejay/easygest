@@ -1,26 +1,21 @@
 package com.jay.easygest.vue;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
 import com.jay.easygest.controleur.Clientcontrolleur;
-import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficheversementBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.vue.ModifierVersementActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.jay.easygest.vue.ui.clients.ClientsFragment;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
@@ -30,10 +25,7 @@ public class AfficheversementActivity extends AppCompatActivity {
 
     private ActivityAfficheversementBinding binding;
     private Versementcontrolleur versementcontrolleur;
-    private VersementViewModel versementViewModel;
-    private Creditcontrolleur creditcontrolleur;
     private Clientcontrolleur clientcontrolleur;
-    private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
     private  VersementsModel versement;
     private CreditModel credit;
@@ -45,10 +37,10 @@ public class AfficheversementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficheversementBinding.inflate(getLayoutInflater());
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
-        versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
+        VersementViewModel versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
+//        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         clientcontrolleur =Clientcontrolleur.getClientcontrolleurInstance(this);
-        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+        CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         setContentView(binding.getRoot());
         credit = creditViewModel.getCredit().getValue();
@@ -79,7 +71,6 @@ public class AfficheversementActivity extends AppCompatActivity {
         binding.textViewAfVersmNumeroCredit.setText(texte3);
 
         binding.afVersmToCredits.setText("liste credits");
-//        binding.afVersmToClients.setText("liste clients");
         binding.afVersmToClient.setText("le client");
 
         ActionBar ab = getSupportActionBar();

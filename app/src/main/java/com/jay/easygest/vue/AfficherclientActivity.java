@@ -2,7 +2,6 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
-import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -40,7 +38,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
     private AccountViewModel accountViewModel;
-    private CreditViewModel creditViewModel;
     private ClientModel client;
     private int id ;
 
@@ -56,11 +53,9 @@ public class AfficherclientActivity extends AppCompatActivity {
 
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+        CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-
         client = clientViewModel.getClient().getValue();
-
         creditcontrolleur.setRecapTresteClient(client);
         creditcontrolleur.setRecapTversementClient(client);
         creditcontrolleur.setRecapTcreditClient(client);
@@ -343,7 +338,6 @@ public class AfficherclientActivity extends AppCompatActivity {
 
     public void ajouterAcount(){
         binding.afClientAjouterAccount.setOnClickListener(view -> {
-
             Intent intent = new Intent(AfficherclientActivity.this,AjouterAccountActivity.class);
             startActivity(intent);
         });
@@ -359,7 +353,6 @@ public class AfficherclientActivity extends AppCompatActivity {
 
             id = R.id.af_client_liste_credits;
             creditcontrolleur.listecredits();
-            creditViewModel.getCreditsClients(client.getId());
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","liste de credits en cour");
@@ -410,10 +403,8 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void afficherListeCreditsoldes(){
 
         binding.afClientListeHistoCredits.setOnClickListener(view -> {
-
             id = R.id.af_client_liste_histo_credits;
             creditcontrolleur.listecreditsSoldesclient(client);
-            creditViewModel.getCreditsSoldesClient(client.getId());
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","liste de credits soldés");
@@ -491,6 +482,8 @@ public class AfficherclientActivity extends AppCompatActivity {
         accountcontroller.listeAccountsoldeClient(client);
         ArrayList<AccountModel> listeAccountsSoldes = accountViewModel.getAccount_solde_ou_non().getValue();
         long now = new Date().getTime();
+
+        assert listeAccountsSoldes != null;
         if (listeAccountsSoldes.size() != 0){
             for (AccountModel account : listeAccountsSoldes) {
                 if (MesOutils.getSppressionDate(account.getSoldedat()) <= now ){

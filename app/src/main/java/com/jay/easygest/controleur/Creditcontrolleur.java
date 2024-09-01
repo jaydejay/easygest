@@ -2,9 +2,9 @@ package com.jay.easygest.controleur;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
@@ -217,9 +217,9 @@ public final class Creditcontrolleur {
         return mtotalcreditClient;
     }
 
-    public MutableLiveData<Integer> getRecapTversementClient(){
-        return mtotalversementclient;
-    }
+//    public MutableLiveData<Integer> getRecapTversementClient(){
+//        return mtotalversementclient;
+//    }
 
     public MutableLiveData<Integer> getRecapTresteClient(){
         return mtotalresteclient;

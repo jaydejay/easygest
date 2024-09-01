@@ -3,11 +3,9 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,12 +24,9 @@ import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityGestionBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
-import com.jay.easygest.vue.ui.versement.VersementFragment;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
-import com.owlike.genson.Genson;
 
 import java.util.ArrayList;
 
@@ -39,11 +34,9 @@ public class GestionActivity extends AppCompatActivity {
     private ActivityGestionBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private Creditcontrolleur creditcontrolleur;
-    private Versementcontrolleur versementcontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
-    private VersementViewModel versementViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +46,10 @@ public class GestionActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
-        versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
+        Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
-        versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
+        VersementViewModel versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
@@ -140,24 +133,6 @@ public class GestionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-//    public void redirectToAfficheversementActivity(VersementsModel versement) {
-//        versementcontrolleur.setVersement(versement);
-//        CreditModel credit = creditcontrolleur.recupUnCreditById(versement.getCredit_id());
-//        creditcontrolleur.setCredit(credit);
-//        Intent intent = new Intent(this, AfficheversementActivity.class);
-//        startActivity(intent);
-//    }
-
-    public void redirectToAfficheversementActivity(VersementsModel versement) {
-        versementcontrolleur.setMversement(versement);
-        CreditModel credit = creditcontrolleur.recupUnCreditById(versement.getCredit_id());
-        creditViewModel.getCredit().setValue(credit);
-        Intent intent = new Intent(this, AfficheversementActivity.class);
-        startActivity(intent);
-    }
-
-
-
     public void redirectToAfficherClientActivity(ClientModel client) {
         clientViewModel.getClient().setValue(client);
         Intent intent = new Intent(this, AfficherclientActivity.class);
@@ -171,13 +146,6 @@ public class GestionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AffichercreditActivity.class);
         startActivity(intent);
 
-    }
-
-    public void redirectToVersement(ClientModel client) {
-        Log.i("leclient", "redirectToVersement: "+client);
-        Intent intent = new Intent(this, VersementFragment.class);
-        intent.putExtra("clt",client.getCodeclient());
-        startActivity(intent);
     }
 
     public void supprimerClient(ClientModel client) {

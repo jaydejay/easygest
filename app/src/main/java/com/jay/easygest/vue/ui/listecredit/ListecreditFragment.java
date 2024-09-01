@@ -1,7 +1,6 @@
 package com.jay.easygest.vue.ui.listecredit;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ public class ListecreditFragment extends Fragment {
 
 
     private FragmentListecreditBinding binding;
-    private Creditcontrolleur creditcontrolleur;
     private  CreditViewModel creditViewModel;
     private ListecreditAdapter adapter;
     private  ArrayList<CreditModel> listecredits;
@@ -33,7 +31,7 @@ public class ListecreditFragment extends Fragment {
 
         binding = FragmentListecreditBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        creditcontrolleur =  Creditcontrolleur.getCreditcontrolleurInstance(getContext());
+        Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         creditcontrolleur.listecredits();
         creditViewModel = new  ViewModelProvider(this).get(CreditViewModel.class);
         creerListe();

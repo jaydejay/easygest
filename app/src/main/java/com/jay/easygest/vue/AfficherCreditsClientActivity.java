@@ -77,7 +77,7 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
     public Fragment onMenuItemSelected(int id){
 
-        Fragment fragment = null;
+        Fragment fragment ;
 
         if (id == R.id.af_client_text_versements ){
 

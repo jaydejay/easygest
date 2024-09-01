@@ -2,29 +2,21 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
-import com.jay.easygest.controleur.Accountcontroller;
-import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAffichercreditBinding;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
-
-import java.util.Date;
 
 public class AffichercreditActivity extends AppCompatActivity {
 
@@ -37,9 +29,7 @@ public class AffichercreditActivity extends AppCompatActivity {
     TextView cardaffichercreditreste;
     private  CreditModel credit;
     private ActivityAffichercreditBinding binding;
-    private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
-    private CreditViewModel creditViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +37,9 @@ public class AffichercreditActivity extends AppCompatActivity {
         binding = ActivityAffichercreditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
-        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
-        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+
+        CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
         credit = creditViewModel.getCredit().getValue();
@@ -61,7 +51,6 @@ public class AffichercreditActivity extends AppCompatActivity {
         cardaffichercreditreste = findViewById(R.id.cardaffichercreditreste);
         cardaffichercreditversement = findViewById(R.id.cardaffichercreditverement);
 
-//        MesOutils.getSppressionDate(credit.getDatecredit());
         affichercredit();
         annullerCredit();
         redirectModifierCreditActivity();

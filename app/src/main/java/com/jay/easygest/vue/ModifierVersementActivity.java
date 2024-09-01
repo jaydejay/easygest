@@ -99,7 +99,6 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                 boolean success = versementcontrolleur.modifierVersement(credit,versement,nouveau_total_versement,nouvellesommeverse,dateversement);
                                 if (success) {
                                     Intent intent = new Intent(this, AfficheversementActivity.class);
-//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                 } else { Toast.makeText(this, "revoyez le versement ", Toast.LENGTH_SHORT).show();}
                             }else { Toast.makeText(this, "versement elevé", Toast.LENGTH_SHORT).show(); }

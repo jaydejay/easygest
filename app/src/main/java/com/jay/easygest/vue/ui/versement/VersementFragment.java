@@ -2,7 +2,6 @@ package com.jay.easygest.vue.ui.versement;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentVersementBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherclientActivity;
-import com.jay.easygest.vue.GestionActivity;
-import com.jay.easygest.vue.ModifiercreditActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 
@@ -31,9 +27,7 @@ public class VersementFragment extends Fragment {
 
     private FragmentVersementBinding binding;
     private Versementcontrolleur versementcontrolleur;
-    private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
-    private Creditcontrolleur creditcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientModel client;
 
@@ -44,8 +38,8 @@ public class VersementFragment extends Fragment {
         binding = FragmentVersementBinding.inflate(inflater, container, false);
 
         this.versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
-        this.clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
-        this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
+//        this.clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
+        Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
 
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
@@ -75,7 +69,7 @@ public class VersementFragment extends Fragment {
                         try {
                             String codeclient = binding.editversementcodeclt.getText().toString();
                             String dateversement = binding.editversementdate.getText().toString();
-                            Integer sommeverse = Integer.parseInt(somme_versee);
+                            int sommeverse = Integer.parseInt(somme_versee);
                             if (Objects.equals(client.getCodeclient(), codeclient)){
 
                                 int somme_total_credit = creditViewModel.getTotalcreditsclient().getValue();
@@ -85,7 +79,6 @@ public class VersementFragment extends Fragment {
                                     boolean success = versementcontrolleur.ajouterversement(client,sommeverse,dateversement );
                                     if (success) {
                                         Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
-//                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                     } else {
                                         Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
@@ -118,6 +111,5 @@ public class VersementFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-//        clientcontrolleur.setClient(null);
     }
 }

@@ -2,11 +2,11 @@ package com.jay.easygest.vue.ui.credit;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,12 +19,8 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherclientActivity;
-import com.jay.easygest.vue.GestionActivity;
-import com.jay.easygest.vue.ModifiercreditActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.owlike.genson.Genson;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -33,7 +29,6 @@ public class CreditFragment extends Fragment {
 
     private FragmentCreditBinding binding;
     private Creditcontrolleur creditcontrolleur;
-    private CreditViewModel creditViewModel;
     private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
 
@@ -43,7 +38,7 @@ public class CreditFragment extends Fragment {
         this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+//        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
 
         binding = FragmentCreditBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -71,10 +66,6 @@ public class CreditFragment extends Fragment {
             String article1somme = binding.edittxtcreerarticle1somme.getText().toString().trim();
             String article1qte = binding.edittxtcreerNbrarticle1.getText().toString().trim();
 
-//            String designationarticle2 = binding.edittxtcreerarticle2.getText().toString().trim();
-//            String article2somme = binding.edittxtcreerarticle2somme.getText().toString().trim();
-//            String article2qte = binding.edittxtcreerNbrarticle2.getText().toString().trim();
-
             String telephone =  binding.edittxtcreertelephone.getText().toString().trim();
             String versement = binding.edittxtcreerversement.getText().toString().trim();
             String date = binding.editTextDate.getText().toString().trim();
@@ -86,7 +77,7 @@ public class CreditFragment extends Fragment {
                 Toast.makeText(getContext(), "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
 
             } else if (date_ouverture == null) {
-                Toast.makeText(getActivity(), "format de date incorect", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_SHORT).show();
 
             } else if  (binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreerarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreerNbrarticle2.getText().toString().trim().isEmpty()) {
@@ -95,10 +86,9 @@ public class CreditFragment extends Fragment {
                 Toast.makeText(getContext(), "numero doit étre de 10 chiffres", Toast.LENGTH_SHORT).show();
 
             } else {
-//                    try {
 
-                        int sommearticle1 =Integer.parseInt(article1somme);
-                        int nbrarticle1 = Integer.parseInt(article1qte);
+                int sommearticle1 =Integer.parseInt(article1somme);
+                int nbrarticle1 = Integer.parseInt(article1qte);
 
                 String designation_article2 ;
                 String designationarticle2 ;

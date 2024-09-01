@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityCreercompteBinding;
 
+import java.util.Objects;
+
 
 public class CreercompteActivity extends AppCompatActivity {
 
@@ -35,9 +37,9 @@ public class CreercompteActivity extends AppCompatActivity {
 
             if (binding.txtcreercompteusername.length() != 0 && binding.txtcreercomptepassword.length() != 0 && binding.txtcreercompterepeat.length() != 0){
 
-                String username = binding.txtcreercompteusername.getText().toString();
-                String password = binding.txtcreercomptepassword.getText().toString();
-                String repassword = binding.txtcreercompterepeat.getText().toString();
+                String username = Objects.requireNonNull(binding.txtcreercompteusername.getText()).toString();
+                String password = Objects.requireNonNull(binding.txtcreercomptepassword.getText()).toString();
+                String repassword = Objects.requireNonNull(binding.txtcreercompterepeat.getText()).toString();
                 if (binding.txtcreercompteusername.length() >= 6 & binding.txtcreercomptepassword.length() >= 8 & binding.txtcreercompterepeat.length() >= 8){
 
                     if (repassword.equals(password)){

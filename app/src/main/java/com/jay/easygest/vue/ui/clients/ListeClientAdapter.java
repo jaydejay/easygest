@@ -9,13 +9,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Clientcontrolleur;
-import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.model.ClientModel;
-import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.vue.GestionActivity;
 
 import java.util.ArrayList;
@@ -24,7 +21,6 @@ public class ListeClientAdapter extends BaseAdapter {
     private final ArrayList<ClientModel> clients;
     private final LayoutInflater inflater;
     private final Context contexte;
-    private Creditcontrolleur creditcontrolleur;
 
     public ListeClientAdapter( Context contexte,ArrayList<ClientModel> clients) {
         this.clients = clients;

@@ -1,9 +1,6 @@
 package com.jay.easygest.vue.ui.listeversement;
 
 import android.content.Context;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.jay.easygest.R;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherCreditsClientActivity;
-import com.jay.easygest.vue.AfficherclientActivity;
-import com.jay.easygest.vue.GestionActivity;
-
 
 import java.util.ArrayList;
 import java.util.Date;

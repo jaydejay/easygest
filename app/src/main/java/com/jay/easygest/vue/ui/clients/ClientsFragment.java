@@ -43,11 +43,12 @@ public class ClientsFragment extends Fragment {
 
     public void creerListe() {
         try {
-//            ArrayList<ClientModel> listeclients = clientcontrolleur.listeClients();
             ArrayList<ClientModel> listeclients = clientViewModel.getListeClients().getValue();
             adapter = new ListeClientAdapter(getContext(),listeclients);
             binding.lstviewclients.setAdapter(adapter);
-        }catch (Exception e){}
+        }catch (Exception e){
+            binding.lstviewclients.setAdapter(null);
+        }
 
 
     }

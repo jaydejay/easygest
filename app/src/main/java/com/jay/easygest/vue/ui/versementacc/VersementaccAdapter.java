@@ -12,8 +12,6 @@ import com.jay.easygest.R;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherCreditsClientActivity;
-import com.jay.easygest.vue.ui.listeversement.ListeversementAdapter;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -84,7 +82,7 @@ public class VersementaccAdapter extends BaseAdapter{
         return view;
     }
 
-    private class VersementaccHolder{
+    private static class VersementaccHolder{
         TextView listevsmtaccdate;
         TextView listevsmtaccsomme;
         TextView listevsmtaccnacc;
