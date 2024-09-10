@@ -29,7 +29,7 @@
     <EditText
                 android:id="@+id/editchangerusernameusername"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="48dp"
                 android:layout_gravity="center_horizontal|top"
                 android:layout_weight="1"
                 android:ems="10"
@@ -41,7 +41,7 @@
             <EditText
                 android:id="@+id/editchangerusernamenouveauusername"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="48dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
@@ -54,7 +54,7 @@
             <EditText
                 android:id="@+id/editchangerusernamepassword"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="48dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
@@ -67,12 +67,12 @@
             <Button
                 android:id="@+id/btnchangeusername"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:text="@string/modif_credit" />
+                android:text="@string/modifier"/>
     </LinearLayout>
 
     </ScrollView>

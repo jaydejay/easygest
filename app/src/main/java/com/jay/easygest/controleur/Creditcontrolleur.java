@@ -30,6 +30,7 @@ public final class Creditcontrolleur {
     private final MutableLiveData<Integer> mtotalresteclient = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversementclient = new MutableLiveData<>();
     private final  MutableLiveData<Integer> mtotalcreditClient = new MutableLiveData<>();
+    private Integer idmenu;
 
     /**
      * constructeur
@@ -47,6 +48,15 @@ public final class Creditcontrolleur {
         }
 
         return creditcontrolleurInstance;
+    }
+
+
+    public Integer getIdmenu() {
+        return idmenu;
+    }
+
+    public void setIdmenu(Integer idmenu) {
+        this.idmenu = idmenu;
     }
 
     public CreditModel getCredit() {

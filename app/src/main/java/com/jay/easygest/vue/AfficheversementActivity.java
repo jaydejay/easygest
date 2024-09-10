@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -98,11 +99,26 @@ public class AfficheversementActivity extends AppCompatActivity {
 
     public void annullerversement(){
         binding.afficheVersCancelButton.setOnClickListener(v->{
-            boolean success =  versementcontrolleur.annullerversement(versement,credit);
-            if (success){
-                Intent intent = new Intent(this,GestionActivity.class);
-                startActivity(intent);
-            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("annuller versement");
+            builder.setMessage("êtes vous sûre de vouloir annuller le versement"+"\n");
+           builder.setPositiveButton(
+                   "oui",(dialog,which)->{
+                       boolean success =  versementcontrolleur.annullerversement(versement,credit);
+                       if (success){
+                           Intent intent = new Intent(this,GestionActivity.class);
+                           startActivity(intent);
+                       }
+
+                   }
+           );
+
+            builder.setNegativeButton("non", (dialog, which) -> {
+
+            });
+
+            builder.create().show();
 
         });
 

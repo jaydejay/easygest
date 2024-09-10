@@ -24,6 +24,7 @@ import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityGestionBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -37,6 +38,7 @@ public class GestionActivity extends AppCompatActivity {
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
+    private VersementViewModel versementViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class GestionActivity extends AppCompatActivity {
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
-        VersementViewModel versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
+         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
@@ -203,4 +205,13 @@ public class GestionActivity extends AppCompatActivity {
     }
 
 
+    public void redirectToAfficheversementActivity(VersementsModel versement,int position, int nbrversement) {
+        versementViewModel.getMversement().setValue(versement);
+        CreditModel credit = creditcontrolleur.recupUnCreditById(versement.getCredit_id());
+        creditViewModel.getCredit().setValue(credit);
+        Intent intent = new Intent(this, AfficheversementActivity.class);
+        intent.putExtra("versementposition",position);
+        intent.putExtra("nbrversement",nbrversement);
+        startActivity(intent);
+    }
 }

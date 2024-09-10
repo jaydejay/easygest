@@ -12,6 +12,8 @@ import com.jay.easygest.R;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherCreditsClientActivity;
+import com.jay.easygest.vue.AfficherclientActivity;
+import com.jay.easygest.vue.GestionActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +73,13 @@ public class ListeversementAdapter extends BaseAdapter {
 
         holder.llayouteversement.setOnClickListener(v -> {
             int position1 = (int) v.getTag();
-            ((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());
+
+            String activity = v.getContext().getClass().getName();
+
+            if (activity.contains("GestionActivity")){
+                ((GestionActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());
+            }else {((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());}
+
         });
 
         return convertView;

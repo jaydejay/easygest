@@ -56,12 +56,13 @@ public class AfficherclientActivity extends AppCompatActivity {
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         client = clientViewModel.getClient().getValue();
+
         creditcontrolleur.setRecapTresteClient(client);
         creditcontrolleur.setRecapTversementClient(client);
         creditcontrolleur.setRecapTcreditClient(client);
-
         accountcontroller.setRecapTaccountClient(client);
         accountcontroller.setRecapTresteClient(client);
+
         int TresteCreditClient = 0;
         int TcreditClient = 0;
 
@@ -114,7 +115,6 @@ public class AfficherclientActivity extends AppCompatActivity {
 
         }
         if (client.getNbrcredit() == 0){
-//
             binding.afClientListeCredits.setVisibility(View.GONE);
             binding.afClientTextVersements.setVisibility(View.GONE);
             binding.afClientListeVersements.setVisibility(View.GONE);
@@ -123,12 +123,10 @@ public class AfficherclientActivity extends AppCompatActivity {
         }
         if (TresteAccClient == 0){
             binding.afClientListeAccounts.setVisibility(View.GONE);
-//            binding.afClientListeVersmAccounts.setVisibility(View.GONE);
             binding.afClientTextAccounts.setVisibility(View.GONE);
         }
 
         if (client.getNbraccount() == 0){
-//            binding.afficherClientMenuAccount.setVisibility(View.GONE);
             binding.afClientListeAccounts.setVisibility(View.GONE);
             binding.afClientTextAccounts.setVisibility(View.GONE);
             binding.afClientListeVersmAccounts.setVisibility(View.GONE);
@@ -241,7 +239,9 @@ public class AfficherclientActivity extends AppCompatActivity {
 
         binding.btnAfClientSup.setOnClickListener(view -> clientViewModel.getClient().observe(this, client->{
             ArrayList<CreditModel>  credits = creditcontrolleur.listecreditsclient(client);
-            if (credits.size() == 0) {
+             accountcontroller.listeAccountsClient(client);
+             ArrayList<AccountModel> accounts = accountViewModel.getAccount_solde_ou_non().getValue();
+            if (credits.size() == 0 && accounts.size() == 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("supprimer un client");
                 builder.setMessage("vous etes sur le point de supprimer le client, son compte seras supprimé");
@@ -345,14 +345,15 @@ public class AfficherclientActivity extends AppCompatActivity {
 
 
     /**
-     * affiche la liste des credits d'un client
+     * affiche la liste des credits en cours d'un client
      */
     public void afficherListeCredits(){
 
         binding.afClientListeCredits.setOnClickListener(view -> {
-
+            int admenu = 1;
+            creditcontrolleur.setIdmenu(admenu);
             id = R.id.af_client_liste_credits;
-            creditcontrolleur.listecredits();
+            creditcontrolleur.listecreditsclient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","liste de credits en cour");
@@ -403,11 +404,13 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void afficherListeCreditsoldes(){
 
         binding.afClientListeHistoCredits.setOnClickListener(view -> {
+            int admenu = 0;
+            creditcontrolleur.setIdmenu(admenu);
             id = R.id.af_client_liste_histo_credits;
             creditcontrolleur.listecreditsSoldesclient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
-            intent.putExtra("titre","liste de credits soldés");
+            intent.putExtra("titre","liste des credits soldés");
             startActivity(intent);
 
         });

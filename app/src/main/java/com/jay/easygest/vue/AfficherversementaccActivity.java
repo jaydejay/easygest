@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -37,11 +38,9 @@ public class AfficherversementaccActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherversementaccBinding.inflate(getLayoutInflater());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
-//        Accountcontroller  accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
         VersementaccViewModel versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
-//        AccountViewModel accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
         setContentView(binding.getRoot());
@@ -101,11 +100,26 @@ public class AfficherversementaccActivity extends AppCompatActivity {
 
     public void annullerversement(){
         binding.afficheVersaccCancelButton.setOnClickListener(v->{
-            boolean success =  versementacccontrolleur.annullerversement(versement,account);
-            if (success){
-                Intent intent = new Intent(this,GestionActivity.class);
-                startActivity(intent);
-            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("annuller versement");
+            builder.setMessage("êtes vous sûre de vouloir annuller le versement"+"\n");
+            builder.setPositiveButton(
+                    "oui",(dialog,which)->{
+                        boolean success =  versementacccontrolleur.annullerversement(versement,account);
+                        if (success){
+                            Intent intent = new Intent(this,GestionActivity.class);
+                            startActivity(intent);
+                        }
+
+                    }
+            );
+            builder.setNegativeButton("non", (dialog, which) -> {
+
+            });
+
+            builder.create().show();
+
 
         });
 

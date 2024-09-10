@@ -18,6 +18,7 @@ public class  CreditViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> totalcreditsclient ;
     private final MutableLiveData<Integer> totalrestesclient ;
+    public  MutableLiveData<Integer> idmenu = new MutableLiveData<>() ;
 
 
     public CreditViewModel() {
@@ -27,8 +28,8 @@ public class  CreditViewModel extends ViewModel {
         totalversements = creditcontrolleur.getRecapTversement();
         totalrestes = creditcontrolleur.getRecapTreste();
 
-         totalcreditsclient = creditcontrolleur.getRecapTcreditClient();
-         totalrestesclient = creditcontrolleur.getRecapTresteClient();
+        totalcreditsclient = creditcontrolleur.getRecapTcreditClient();
+        totalrestesclient = creditcontrolleur.getRecapTresteClient();
         credit = creditcontrolleur.getMCredit();
         credits = creditcontrolleur.getMCredits();
         credits_client_soldes_ou_non = creditcontrolleur.getMCredits();
@@ -61,4 +62,7 @@ public class  CreditViewModel extends ViewModel {
         return totalrestesclient;
     }
 
+    public MutableLiveData<Integer> getIdmenu() {
+        return idmenu;
+    }
 }

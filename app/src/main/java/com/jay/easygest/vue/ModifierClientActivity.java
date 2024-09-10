@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
+import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierClientBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -17,6 +18,7 @@ public class ModifierClientActivity extends AppCompatActivity {
     private ActivityModifierClientBinding binding;
 //    private MutableLiveData<ClientModel> client;
     private Clientcontrolleur clientcontrolleur;
+    private Creditcontrolleur creditcontrolleur;
     private ClientViewModel clientViewModel;
     private ClientModel client;
 
@@ -26,6 +28,7 @@ public class ModifierClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityModifierClientBinding.inflate(getLayoutInflater());
         clientcontrolleur= Clientcontrolleur.getClientcontrolleurInstance(this);
+        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         clientcontrolleur.listeClients();
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
@@ -83,7 +86,7 @@ public class ModifierClientActivity extends AppCompatActivity {
                        boolean success =  clientcontrolleur.modifierclient(clientModel);
 
                        if(success ) {
-
+                            creditcontrolleur.listecredits();
                            Intent intent = new Intent(ModifierClientActivity.this, AfficherclientActivity.class);
                            startActivity(intent);
                            finish();

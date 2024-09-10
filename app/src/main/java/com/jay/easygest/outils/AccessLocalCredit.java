@@ -254,7 +254,7 @@ public class AccessLocalCredit {
         ArrayList<CreditModel> credits = new ArrayList<>();
         try {
             bd = accessBD.getReadableDatabase();
-            String req = "select * from credit where  reste != 0 and clientid ='" + client.getId()+"'";
+            String req = "select * from credit where reste > 0 and clientid =" + client.getId();
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
             do {
