@@ -38,7 +38,6 @@ public class CreditFragment extends Fragment {
         this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-//        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
 
         binding = FragmentCreditBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

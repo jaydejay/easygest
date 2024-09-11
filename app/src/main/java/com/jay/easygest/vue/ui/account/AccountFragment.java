@@ -123,11 +123,8 @@ public class  AccountFragment extends Fragment {
 
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                 if (Integer.parseInt(versement) < sommecredit){
-
                     AccountModel account =  this.accountcontroller.creerAccount(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
-
                     if (account != null) {
-
                         ClientModel clientModel = clientcontrolleur.recupererClient(account.getClientid());
                         AccountModel account_ajoute = accountViewModel.getAccount().getValue();
                         AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
@@ -135,10 +132,7 @@ public class  AccountFragment extends Fragment {
                         clientViewModel.getClient().setValue(clientModel);
                         Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
                         startActivity(intent);
-                    }else {
-                        Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();
-
-                    }
+                    }else {Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();}
 
                 }else {Toast.makeText(getContext(), "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();}
 

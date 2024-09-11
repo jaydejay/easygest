@@ -64,7 +64,7 @@ public class VersementFragment extends Fragment {
                     Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_LONG).show();
 
                 } else {
-                    if (Integer.parseInt(somme_versee) >= 1000) {
+//                    if (Integer.parseInt(somme_versee) >= 1000) {
 
                         try {
                             String codeclient = binding.editversementcodeclt.getText().toString();
@@ -83,14 +83,14 @@ public class VersementFragment extends Fragment {
                                     } else {
                                         Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
                                     }
-                                }
+                                }else {Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();}
 
-                            }else {Toast.makeText(getContext(), "le model n'est pas a jour", Toast.LENGTH_SHORT).show();}
+                            }else {Toast.makeText(getContext(), "le client ne correspond pas", Toast.LENGTH_SHORT).show();}
 
                         } catch (Exception e) {
                             Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
                         }
-                    }else {Toast.makeText(getContext(), "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();}
+//                    }else {Toast.makeText(getContext(), "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();}
 
                 }
         });

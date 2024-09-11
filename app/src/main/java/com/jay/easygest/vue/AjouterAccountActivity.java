@@ -107,20 +107,21 @@ public class AjouterAccountActivity extends AppCompatActivity {
 
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
+                if (Integer.parseInt(versement) < sommecredit){
+                    boolean success = accountcontroller.ajouterAccount( client,c_article1,c_article2,versement, dateaccount);
+                    if (success) {
+                        ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
+                        AccountModel account_ajoute = accountViewModel.getAccount().getValue();
+                        AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account_ajoute.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+                        accountViewModel.getAccount().setValue(accountModel);
+                        clientViewModel.getClient().setValue(clientModel);
+                        Intent intent = new Intent(AjouterAccountActivity.this, AfficherAccountActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else { Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();}
+                }else {Toast.makeText(this, "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();}
 
-                boolean success = accountcontroller.ajouterAccount( client,c_article1,c_article2,versement, dateaccount);
-                if (success) {
-                    ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
-                    AccountModel account_ajoute = accountViewModel.getAccount().getValue();
-                    AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account_ajoute.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
-                    accountViewModel.getAccount().setValue(accountModel);
-                    clientViewModel.getClient().setValue(clientModel);
-                    Intent intent = new Intent(AjouterAccountActivity.this, AfficherAccountActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }

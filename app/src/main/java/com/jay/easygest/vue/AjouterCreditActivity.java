@@ -69,7 +69,6 @@ public class AjouterCreditActivity extends AppCompatActivity {
                 Toast.makeText(AjouterCreditActivity.this, "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
 
             } else if (date_account == null) {
-
                 Toast.makeText(AjouterCreditActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
             }else if (binding.ajoutcredarticle2.getText().toString().trim().length() != 0 && binding.ajoutcredarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.ajoutcredarticle2.getText().toString().trim().length() != 0 & binding.ajoutcredNbrarticle2.getText().toString().trim().isEmpty()) {
@@ -106,20 +105,21 @@ public class AjouterCreditActivity extends AppCompatActivity {
 
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
+                if (Integer.parseInt(versement) < sommecredit){
+                    boolean success = creditcontroller.ajouterCredit( client,c_article1,c_article2,versement, dateaccount);
+                    if (success) {
+                        ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
+                        CreditModel credit_ajoute = creditViewModel.getCredit().getValue();
+                        CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_ajoute).getId(),clientModel,credit_ajoute.getArticle1(),credit_ajoute.getArticle2(),credit_ajoute.getSommecredit(),credit_ajoute.getVersement(),credit_ajoute.getReste(),credit_ajoute.getDatecredit(),credit_ajoute.getNumerocredit());
+                        creditViewModel.getCredit().setValue(creditModel);
+                        clientViewModel.getClient().setValue(clientModel);
+                        Intent intent = new Intent(AjouterCreditActivity.this, AffichercreditActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else { Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();}
+                }else { Toast.makeText(this, "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();}
 
-                boolean success = creditcontroller.ajouterCredit( client,c_article1,c_article2,versement, dateaccount);
-                if (success) {
-                    ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
-                    CreditModel credit_ajoute = creditViewModel.getCredit().getValue();
-                    CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_ajoute).getId(),clientModel,credit_ajoute.getArticle1(),credit_ajoute.getArticle2(),credit_ajoute.getSommecredit(),credit_ajoute.getVersement(),credit_ajoute.getReste(),credit_ajoute.getDatecredit(),credit_ajoute.getNumerocredit());
-                    creditViewModel.getCredit().setValue(creditModel);
-                    clientViewModel.getClient().setValue(clientModel);
-                    Intent intent = new Intent(AjouterCreditActivity.this, AffichercreditActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }

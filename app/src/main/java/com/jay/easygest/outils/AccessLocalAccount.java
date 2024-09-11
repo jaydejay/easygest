@@ -84,7 +84,7 @@ public class AccessLocalAccount {
 
             long client_reslt = bd.insertOrThrow(TABLE_CLIENT,null,accessLocalClient.ajouterClient(codeclt, nomclient, prenomsclient,telephone,0,0,1,premieraccount.getSommeaccount()));
             long account_rslt = bd.insertOrThrow(TABLE_ACCOUNT,null,this.creerAccount(premieraccount,client_reslt));
-            bd.insertOrThrow(TABLE_VERSEMENTACC,null,accessLocalVersementacc.creerVersement(Integer.parseInt(sommeversee), (int) account_rslt,(int) client_reslt,premieraccount.getDateaccount()));
+            if (Integer.parseInt(sommeversee) != 0){bd.insertOrThrow(TABLE_VERSEMENTACC,null,accessLocalVersementacc.creerVersement(Integer.parseInt(sommeversee), (int) account_rslt,(int) client_reslt,premieraccount.getDateaccount()));}
             accountModel = this.recupAccountById((int) account_rslt);
             bd.setTransactionSuccessful();
 
@@ -117,8 +117,8 @@ public class AccessLocalAccount {
         try {
             long account_rslt =  bd.insertOrThrow(TABLE_ACCOUNT,null,this.creerAccount(account,client.getId()));
             bd.updateWithOnConflict(TABLE_CLIENT,client_cv, ID + "=?",new String[] {String.valueOf(client.getId())},1);
-            bd.insertOrThrow(TABLE_VERSEMENTACC,null,accessLocalVersementacc.creerVersement(account.getVersement(), (int) account_rslt, client.getId(),account.getDateaccount()));
-             accountModel = this.recupAccountById((int) account_rslt);
+            if (account.getVersement() != 0){bd.insertOrThrow(TABLE_VERSEMENTACC,null,accessLocalVersementacc.creerVersement(account.getVersement(), (int) account_rslt, client.getId(),account.getDateaccount()));}
+            accountModel = this.recupAccountById((int) account_rslt);
             bd.setTransactionSuccessful();
 
         }catch (Exception e){

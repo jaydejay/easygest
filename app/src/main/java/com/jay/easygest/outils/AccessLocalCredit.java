@@ -92,7 +92,9 @@ public class AccessLocalCredit {
 
             long client_reslt = bd.insertOrThrow(TABLE_CLIENT,null,accessLocalClient.ajouterClient(codeclt, nom, prenoms,telephone,1,premiercredit.getSommecredit(),0,0));
             long credit_rslt = bd.insertOrThrow(TABLE_CREDIT,null,this.creerCredit(premiercredit,client_reslt));
-            bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt(sommeversee), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()));
+            if (Integer.parseInt(sommeversee) != 0){
+                bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt(sommeversee), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()));
+            }
              creditModel = this.recupCreditById((int) credit_rslt);
             bd.setTransactionSuccessful();
 
@@ -136,7 +138,7 @@ public class AccessLocalCredit {
         try {
             long credit_rslt =  bd.insertOrThrow(TABLE_CREDIT,null,this.creerCredit(credit,client.getId()));
             bd.replaceOrThrow(TABLE_CLIENT,null,client_cv);
-            bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(credit.getVersement(), (int) credit_rslt, client.getId(),credit.getDatecredit()));
+            if (credit.getVersement() != 0){bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(credit.getVersement(), (int) credit_rslt, client.getId(),credit.getDatecredit()));}
              creditModel = this.recupCreditById((int) credit_rslt);
             bd.setTransactionSuccessful();
 
