@@ -413,66 +413,73 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_af_client_recap_credit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:padding="3dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_af_client_btn">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+          <LinearLayout
+              android:id="@+id/layout_af_client_recap_credit"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:layout_gravity="center_horizontal"
+              android:padding="3dp"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/layout_af_client_btn">
 
-        <TextView
-            android:id="@+id/textView_af_client_recap_credit_somme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/cardview_dark_background"
-            android:textStyle="bold|italic"
-            android:layout_weight="1"
-            android:padding="3dp"/>
+              <TextView
+                  android:id="@+id/textView_af_client_recap_credit_somme"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:textSize="12sp"
+                  android:textColor="@color/cardview_dark_background"
+                  android:textStyle="bold|italic"
+                  android:layout_weight="1"
+                  android:padding="3dp"/>
 
-        <TextView
-            android:id="@+id/textView_af_client_recap_credit_reste"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/design_default_color_error"
-            android:textStyle="bold|italic"
-            android:layout_weight="1" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/layout_af_client_recap_account"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:padding="3dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_af_client_recap_credit">
+              <TextView
+                  android:id="@+id/textView_af_client_recap_credit_reste"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:textSize="12sp"
+                  android:textColor="@color/design_default_color_error"
+                  android:textStyle="bold|italic"
+                  android:layout_weight="1" />
+          </LinearLayout>
+          <LinearLayout
+              android:id="@+id/layout_af_client_recap_account"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:layout_gravity="center_horizontal"
+              android:padding="3dp"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/layout_af_client_recap_credit">
 
-        <TextView
-            android:id="@+id/textView_af_client_recap_account_somme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/cardview_dark_background"
-            android:textStyle="bold|italic"
-            android:layout_weight="1"
-            android:padding="3dp" />
+              <TextView
+                  android:id="@+id/textView_af_client_recap_account_somme"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:textSize="12sp"
+                  android:textColor="@color/cardview_dark_background"
+                  android:textStyle="bold|italic"
+                  android:layout_weight="1"
+                  android:padding="3dp" />
 
-        <TextView
-            android:id="@+id/textView_af_client_recap_account_reste"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/design_default_color_error"
-            android:textStyle="bold|italic"
-            android:layout_weight="1" />
-    </LinearLayout>
+              <TextView
+                  android:id="@+id/textView_af_client_recap_account_reste"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:textSize="12sp"
+                  android:textColor="@color/design_default_color_error"
+                  android:textStyle="bold|italic"
+                  android:layout_weight="1" />
+          </LinearLayout>
+
+      </LinearLayout>
+
     <LinearLayout
         android:id="@+id/afficher_client_menu"
         android:layout_width="match_parent"

@@ -1,3 +1,4 @@
+#les fichiers gradel
 *.iml
 .gradle
 /local.properties
@@ -13,3 +14,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+#le dosier release
+app/release/
+
