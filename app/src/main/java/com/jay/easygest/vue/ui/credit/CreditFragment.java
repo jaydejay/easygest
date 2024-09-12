@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentCreditBinding;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
@@ -30,16 +31,19 @@ public class CreditFragment extends Fragment {
     private FragmentCreditBinding binding;
     private Creditcontrolleur creditcontrolleur;
     private Clientcontrolleur clientcontrolleur;
+    private Versementcontrolleur versementcontrolleur;
     private ClientViewModel clientViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        binding = FragmentCreditBinding.inflate(inflater, container, false);
         this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
+        versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
-        binding = FragmentCreditBinding.inflate(inflater, container, false);
+
         View root = binding.getRoot();
 
         this.initFragment();

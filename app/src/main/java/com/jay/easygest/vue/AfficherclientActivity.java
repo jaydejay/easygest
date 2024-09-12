@@ -15,6 +15,7 @@ import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementacccontrolleur;
+import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherclientBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
@@ -35,6 +36,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     private  Creditcontrolleur creditcontrolleur;
     private Accountcontroller accountcontroller;
     private Versementacccontrolleur versementacccontrolleur;
+    private Versementcontrolleur versementcontrolleur;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
     private AccountViewModel accountViewModel;
@@ -50,7 +52,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
-
+        versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
@@ -387,7 +389,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void afficherListeVersement(){
 
         binding.afClientListeVersements.setOnClickListener(view -> {
-
+            versementcontrolleur.listeversements();
             ArrayList<VersementsModel> liste_versements =  versementViewModel.getVersementsClient(client);
             versementViewModel.getMversements().setValue(liste_versements);
             id = R.id.af_client_liste_versements;

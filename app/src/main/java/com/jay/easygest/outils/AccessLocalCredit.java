@@ -160,7 +160,7 @@ public class AccessLocalCredit {
 
         bd.beginTransaction();
         CreditModel credit;
-//        try{
+        try{
             int ancien_total_credit_du_client =  Integer.parseInt(String.valueOf(client.getTotalcredit())) ;
             int ancienne_somme_credit = Integer.parseInt(String.valueOf(ancienne_sommecredit)) ;
             int nouveau_total_credit_du_client = ( ancien_total_credit_du_client - ancienne_somme_credit) + creditModel.getSommecredit();
@@ -183,12 +183,12 @@ public class AccessLocalCredit {
              credit = this.recupCreditById(creditModel.getId());
             bd.setTransactionSuccessful();
 
-//        }catch (Exception e){
-//            credit = null;
-//        }
-//        finally {
+        }catch (Exception e){
+            credit = null;
+        }
+        finally {
             bd.endTransaction();
-//        }
+        }
         return credit;
     }
 

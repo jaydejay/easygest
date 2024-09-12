@@ -44,8 +44,9 @@ public class ModifiercreditActivity extends AppCompatActivity {
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         afficherCredit();
-        setContentView(binding.getRoot());
         modifierCredit();
+        setContentView(binding.getRoot());
+
 
     }
 

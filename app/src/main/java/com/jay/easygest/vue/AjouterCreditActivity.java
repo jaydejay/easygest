@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAjouterCreditBinding;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
@@ -23,10 +24,11 @@ import java.util.Objects;
 public class AjouterCreditActivity extends AppCompatActivity {
 
     private ActivityAjouterCreditBinding binding;
-    private ClientViewModel clientViewModel;
+    private Versementcontrolleur versementcontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private Creditcontrolleur creditcontroller;
     private CreditViewModel creditViewModel;
+    private ClientViewModel clientViewModel;
     private ClientModel client;
 
     @Override
@@ -34,14 +36,13 @@ public class AjouterCreditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAjouterCreditBinding.inflate(getLayoutInflater());
 
-        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontroller = Creditcontrolleur.getCreditcontrolleurInstance(this);
 
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
-
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
-//        CreditModel credit = creditViewModel.getCredit().getValue();
         init();
         ajouterCredit();
         setContentView(binding.getRoot());
