@@ -33,11 +33,6 @@
         android:name="com.jay.easygest.vue.ui.account.AccountFragment"
         android:label="@string/menu_account"
         tools:layout="@layout/fragment_account" />
-    <fragment
-        android:id="@+id/nav_listeversement"
-        android:name="com.jay.easygest.vue.ui.listeversement.ListeversementFragment"
-        android:label="@string/menu_listeversement"
-        tools:layout="@layout/fragment_listeversement" />
 
     <fragment
         android:id="@+id/nav_changeusername"

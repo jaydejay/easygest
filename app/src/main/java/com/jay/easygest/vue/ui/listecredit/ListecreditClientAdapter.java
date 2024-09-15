@@ -79,20 +79,25 @@ public class ListecreditClientAdapter extends BaseAdapter {
             holder.btnlisteviewannuller.setTag(position);
 
         holder.btnlisteviewmodif.setOnClickListener(v -> {
-            int position1 = (int)v.getTag();
-             String activity = v.getContext().getClass().getName();
+            try {
+                int position1 = (int)v.getTag();
+                 String activity = v.getContext().getClass().getName();
 
-            if (activity.contains("GestionActivity")){
-                ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
-            }else {((AfficherCreditsClientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
+                if (activity.contains("GestionActivity")){
+                    ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
+                }else {((AfficherCreditsClientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
+            }catch (Exception e){}
         });
 
         holder.btnlisteviewannuller.setOnClickListener(v -> {
-            int position12 = (int)v.getTag();
-            String activity = v.getContext().getClass().getName();
-            if (activity.contains("GestionActivity")){
-                ((GestionActivity)context).annullerCredit(credits.get(position12));
-            }else {((AfficherCreditsClientActivity)context).annullerCredit(credits.get(position12));}
+            try{
+                int position12 = (int)v.getTag();
+                String activity = v.getContext().getClass().getName();
+                if (activity.contains("GestionActivity")){
+                    ((GestionActivity)context).annullerCredit(credits.get(position12));
+                }else {((AfficherCreditsClientActivity)context).annullerCredit(credits.get(position12));}
+            }catch (Exception e){}
+
 
         });
 

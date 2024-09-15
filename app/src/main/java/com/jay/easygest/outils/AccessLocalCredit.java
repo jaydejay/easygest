@@ -13,7 +13,11 @@ import java.util.ArrayList;
 
 
 public class AccessLocalCredit {
-
+    public static final String APPNUMBER = "appnumber";
+    public static final String NBR_CREDIT = "nbrcredit";
+    public static final String TOTAL_CREDIT = "totalcredit";
+    public static final String NBR_ACCOUNT = "nbraccount";
+    public static final String TOTAL_ACCOUNT = "totalaccount";
     public static final String TABLE_VERSEMENT = "versement";
     public static final String CODECLIENT = "codeclient";
     public static final String CLIENTID = "clientid";
@@ -58,6 +62,15 @@ public class AccessLocalCredit {
 //        clientcontrolleur =  Clientcontrolleur.getClientcontrolleurInstance(contexte);
 
 
+    }
+
+
+    public ContentValues updateinfo(int nbrcredit,int totalcreditint){
+        ContentValues cv = new ContentValues();
+        cv.put(NBR_CREDIT,nbrcredit);
+        cv.put(TOTAL_CREDIT,totalcreditint);
+
+        return cv;
     }
 
     public ContentValues creerCredit(CreditModel credit, long client_id) {
@@ -139,7 +152,7 @@ public class AccessLocalCredit {
             long credit_rslt =  bd.insertOrThrow(TABLE_CREDIT,null,this.creerCredit(credit,client.getId()));
             bd.replaceOrThrow(TABLE_CLIENT,null,client_cv);
             if (credit.getVersement() != 0){bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(credit.getVersement(), (int) credit_rslt, client.getId(),credit.getDatecredit()));}
-             creditModel = this.recupCreditById((int) credit_rslt);
+            creditModel = this.recupCreditById((int) credit_rslt);
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
@@ -157,7 +170,6 @@ public class AccessLocalCredit {
     public CreditModel modifierCredit(CreditModel creditModel,ClientModel client,int ancienne_sommecredit) {
 
         bd = accessBD.getWritableDatabase();
-
         bd.beginTransaction();
         CreditModel credit;
         try{

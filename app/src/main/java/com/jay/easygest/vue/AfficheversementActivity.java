@@ -39,7 +39,7 @@ public class AfficheversementActivity extends AppCompatActivity {
         binding = ActivityAfficheversementBinding.inflate(getLayoutInflater());
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         VersementViewModel versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-//        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
+
         clientcontrolleur =Clientcontrolleur.getClientcontrolleurInstance(this);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);

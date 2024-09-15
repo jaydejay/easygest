@@ -75,8 +75,10 @@ public class VersementaccAdapter extends BaseAdapter{
 
         holder.llayoutlistevsmtacc.setOnClickListener(v -> {
 
-            int position1 = (int) v.getTag();
-            ((AfficherCreditsClientActivity)contexte).redirectToAfficheversementaccActivity(versements.get(position1),position1,this.getCount());
+            try{
+                int position1 = (int) v.getTag();
+                ((AfficherCreditsClientActivity)contexte).redirectToAfficheversementaccActivity(versements.get(position1),position1,this.getCount());
+            } catch (Exception e){}
         });
 
         return view;

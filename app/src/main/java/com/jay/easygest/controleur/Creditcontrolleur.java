@@ -10,6 +10,7 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.AccessLocalCredit;
+import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersement;
 import com.owlike.genson.Genson;
 
@@ -21,6 +22,7 @@ public final class Creditcontrolleur {
     private CreditModel credit;
     private ArrayList<CreditModel> credits = new ArrayList<>();
     private static AccessLocalCredit accessLocalcredit;
+    private static AccessLocalInfo accessLocalInfo ;
     private static AccessLocalVersement accessLocalVersement;
     private final MutableLiveData<Integer> mtotalcredit = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversement = new MutableLiveData<>();
@@ -45,6 +47,7 @@ public final class Creditcontrolleur {
             Creditcontrolleur.creditcontrolleurInstance = new Creditcontrolleur();
             accessLocalcredit = new AccessLocalCredit(contexte);
             accessLocalVersement = new AccessLocalVersement(contexte);
+             accessLocalInfo = new AccessLocalInfo(contexte);
         }
 
         return creditcontrolleurInstance;
@@ -99,6 +102,7 @@ public final class Creditcontrolleur {
         CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,codeclt,nomclient,prenomsclient,telephone,versement);
 
         if (credit != null){
+             accessLocalInfo.updateCreditInfos(sommecredit);
             credits.add(premiercredit);
             this.setCredits(credits);
             this.setCredit(credit);
@@ -118,6 +122,7 @@ public final class Creditcontrolleur {
         boolean success = false;
           CreditModel le_credit_ajoute = accessLocalcredit.ajouterCredit(credit,client);
         if (le_credit_ajoute != null){
+            accessLocalInfo.updateCreditInfos(sommecredit);
             credits.add(le_credit_ajoute);
             this.setCredits(credits);
             this.setCredit(le_credit_ajoute);
@@ -141,6 +146,8 @@ public final class Creditcontrolleur {
         creditModel.setSoldedat(date_de_solde);
         CreditModel credit = accessLocalcredit.modifierCredit(creditModel,client,ancienne_somme_credit);
         if (credit != null ){
+            int somme_a_ajoute = creditModel.getSommecredit()-ancienne_somme_credit;
+           accessLocalInfo.modifierCreditInfos(somme_a_ajoute);
             this.setCredit(credit);
             this.listecredits();
             success = true;
@@ -152,6 +159,7 @@ public final class Creditcontrolleur {
     public boolean annullerCredit(CreditModel credit){
       boolean success = accessLocalcredit.anullerCredit(credit);
         if (success){
+            accessLocalInfo.annullerCreditInfos(credit);
             this.listecredits();
         }
       return success;
@@ -227,9 +235,6 @@ public final class Creditcontrolleur {
         return mtotalcreditClient;
     }
 
-//    public MutableLiveData<Integer> getRecapTversementClient(){
-//        return mtotalversementclient;
-//    }
 
     public MutableLiveData<Integer> getRecapTresteClient(){
         return mtotalresteclient;

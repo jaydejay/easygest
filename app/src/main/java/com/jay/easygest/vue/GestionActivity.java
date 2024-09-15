@@ -69,7 +69,7 @@ public class GestionActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_clients, R.id.nav_listecredit, R.id.nav_credit, R.id.nav_account,R.id.nav_listeversement,R.id.nav_changepsssword,R.id.nav_changeusername,R.id.nav_import_export, R.id.nav_a_propos )
+                R.id.nav_clients, R.id.nav_listecredit, R.id.nav_credit, R.id.nav_account,R.id.nav_changepsssword,R.id.nav_changeusername,R.id.nav_import_export, R.id.nav_a_propos )
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_gestion);

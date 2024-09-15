@@ -7,6 +7,7 @@ import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.AccessLocalAccount;
+import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersementacc;
 import com.owlike.genson.Genson;
 
@@ -16,6 +17,7 @@ public class Accountcontroller {
 
     private static Accountcontroller accountcontrolleurInstance = null;
     private static AccessLocalAccount accessLocalAccount;
+    private static AccessLocalInfo accessLocalInfo;
     private MutableLiveData<AccountModel>  maccount = new MutableLiveData<>();
     private MutableLiveData<ArrayList<AccountModel>> maccounts = new MutableLiveData<>();
 
@@ -39,7 +41,7 @@ public class Accountcontroller {
             Accountcontroller.accountcontrolleurInstance = new Accountcontroller();
             accessLocalAccount = new AccessLocalAccount(contexte);
             accessLocalVersementacc = new AccessLocalVersementacc(contexte);
-
+            accessLocalInfo = new AccessLocalInfo(contexte);
         }
         return accountcontrolleurInstance;
     }
@@ -90,6 +92,7 @@ public class Accountcontroller {
         AccountModel premieraccount = new AccountModel( codeclt,nomclient,prenomsclient,article1, article2,sommeaccoount, Integer.parseInt(versement), reste,dateaccount,1);
         AccountModel account  = accessLocalAccount.creerCompteAccount(premieraccount,codeclt,nomclient,prenomsclient,telephone,versement);
         if (account != null){
+            accessLocalInfo.updateAccountInfos(sommeaccoount);
             this.listeDesAccounts();
             this.setAccount(account);
         }
@@ -118,7 +121,7 @@ public class Accountcontroller {
         AccountModel accountModel = accessLocalAccount.ajouterAccount(account,client);
         boolean success = false ;
         if (accountModel != null){
-//            this.listeDesAccounts();
+            accessLocalInfo.updateAccountInfos(sommeaccount);
             this.listeaccounts();
             this.setAccount(accountModel);
             success = true;
@@ -147,6 +150,8 @@ public class Accountcontroller {
         boolean success = false;
         AccountModel account = accessLocalAccount.modifierAccount(accountModel,client,ancienne_somme_account);
         if (account != null ){
+            int somme_a_verse = accountModel.getSommeaccount()-ancienne_somme_account;
+            accessLocalInfo.modifierAccountInfos(somme_a_verse);
             this.setAccount(account);
             this.listeaccounts();
             success = true;
@@ -166,6 +171,7 @@ public class Accountcontroller {
     public boolean annullerAccount(AccountModel account){
         boolean  success = accessLocalAccount.anullerAccount(account);
         if (success){
+            accessLocalInfo.annullerAccountInfos(account);
             this.listeaccounts();
         }
         return success;
@@ -222,9 +228,9 @@ public class Accountcontroller {
         return mtotalaccountClient;
     }
 
-    public MutableLiveData<Integer> getRecapTversementClient(){
-        return mtotalversementaccountclient;
-    }
+//    public MutableLiveData<Integer> getRecapTversementClient(){
+//        return mtotalversementaccountclient;
+//    }
 
     public MutableLiveData<Integer> getRecapTresteClient(){
         return mtotalresteaccountclient;

@@ -81,12 +81,15 @@ public class ListecreditAdapter extends BaseAdapter {
         holder.txtlisteviewcodeclient.setTag(position);
 
         holder.btnlisteviewmodif.setOnClickListener(v -> {
-            int position1 = (int)v.getTag();
-             String activity = v.getContext().getClass().getName();
+            try{
+                int position1 = (int)v.getTag();
+                String activity = v.getContext().getClass().getName();
 
-            if (activity.contains("GestionActivity")){
-                ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
-            }else {((AfficherclientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
+                if (activity.contains("GestionActivity")){
+                    ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
+                }else {((AfficherclientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
+            }catch (Exception e){}
+
         });
 
         holder.btnlisteviewannuller.setOnClickListener(v -> {

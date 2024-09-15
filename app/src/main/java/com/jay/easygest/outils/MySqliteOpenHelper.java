@@ -21,7 +21,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_CLIENT = "client";
     public static final String TABLE_CREDIT = "credit";
     public static final String TABLE_ACCOUNT = "account";
-    public static final String TABLE_INFO = "infocredit";
+    public static final String TABLE_INFO = "infos";
     private static final String TABLE_VERSEMENTACC = "versementacc";
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
@@ -116,14 +116,14 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
 
 private final String createTable7 = "create table "+TABLE_APPPKES+" ("
-            +"appnumber Integer primary key ,"
+            +"appnumber Integer primary key,"
             +"apppkey Text not null unique,"
             +"owner Text not null,"
             +"telephone Text,"
             +"adresseelectro Text)";
 
 private final String createTable8 = "create table "+TABLE_INFO+" ("
-        +"appnumber Text primary key,"
+        +"appnumber Integer primary key,"
         +"nbrcredit Integer,"
         +"totalcredit Integer,"
         +"nbraccount Integer,"

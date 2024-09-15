@@ -66,19 +66,21 @@ public class ListeversementAdapter extends BaseAdapter {
             holder.txtlisteversementsomme.setText(String.valueOf(versements.get(position).getSommeverse()));
             holder.txtlisteversementnum.setText(String.valueOf(versements.get(position).getCredit().getNumerocredit()));
             holder.llayouteversement.setTag(position);
+
         }catch (Exception e){
 //        do nothing
         }
 
 
         holder.llayouteversement.setOnClickListener(v -> {
-            int position1 = (int) v.getTag();
+            try{
+                int position1 = (int) v.getTag();
+                String activity = v.getContext().getClass().getName();
+                if (activity.contains("GestionActivity")){
+                    ((GestionActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());
+                }else {((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());}
+            }catch (Exception e){}
 
-            String activity = v.getContext().getClass().getName();
-
-            if (activity.contains("GestionActivity")){
-                ((GestionActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());
-            }else {((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());}
 
         });
 

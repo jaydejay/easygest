@@ -65,7 +65,7 @@
             android:textStyle="bold"
             android:textAlignment="textStart"/>
     </LinearLayout>
-
+    <!-- Buttons -->
     <LinearLayout
         android:id="@+id/layourt_versementacc3"
         android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
             android:text="@string/annuller"
             style="@style/ShapeAppearanceOverlay.Material3.Button"/>
     </LinearLayout>
-
+    <!-- les liens -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

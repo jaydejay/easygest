@@ -32,6 +32,30 @@ public abstract  class MesOutils {
 
     }
 
+    public static String codeAgenceGenerator(){
+//        Random random = new Random();
+//        int n =5;
+        String str = "ABCDEFGH0IJKLMNOPQRSTUVWXYZ";
+        String num = "123456789";
+        String num2 = "0123456789";
+
+        StringBuilder stringBuilder1 = new StringBuilder(1);
+        StringBuilder stringBuilder2 = new StringBuilder(1);
+        StringBuilder stringBuilder3 = new StringBuilder(2);
+
+        int index = (int)(num.length() * Math.random());
+        stringBuilder1.append(num.charAt(index));
+
+        int index2 = (int)(str.length() * Math.random());
+        stringBuilder2.append(str.charAt(index2));
+
+        for (int i = 0; i < 2; i++) {
+            int index3 = (int)(num2.length() * Math.random());
+            stringBuilder3.append(num2.charAt(index3));
+        }
+
+        return stringBuilder1+""+stringBuilder2+""+stringBuilder2;
+    }
 
 
 
@@ -41,9 +65,10 @@ public abstract  class MesOutils {
         int chif2 = random.nextInt(10);
         int chif3 = random.nextInt(10);
         int chif4 = random.nextInt(10);
+
         String random_int = chif1+""+chif2+""+chif3+""+chif4;
 
-        return "clt1A"+random_int;
+        return "clt"+random_int;
     }
 
 

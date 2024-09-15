@@ -22,10 +22,7 @@
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_menu_addchart"
             android:title="@string/menu_account" />
-        <item
-            android:id="@+id/nav_listeversement"
-            android:icon="@drawable/ic_menu_card_travel"
-            android:title="@string/menu_listeversement" />
+
         <item
             android:id="@+id/nav_changepsssword"
             android:icon="@drawable/ic_join_full_black_24dp"
