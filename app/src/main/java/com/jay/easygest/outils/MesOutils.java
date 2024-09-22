@@ -59,7 +59,7 @@ public abstract  class MesOutils {
 
 
 
-    public static String generateurcodeclt(){
+    public static String generateurcodeclt(String base){
         Random random = new Random();
         int chif1 = random.nextInt(10);
         int chif2 = random.nextInt(10);
@@ -68,7 +68,7 @@ public abstract  class MesOutils {
 
         String random_int = chif1+""+chif2+""+chif3+""+chif4;
 
-        return "clt"+random_int;
+        return base+random_int;
     }
 
 

@@ -15,9 +15,11 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentCreditBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -33,6 +35,7 @@ public class CreditFragment extends Fragment {
     private Clientcontrolleur clientcontrolleur;
     private Versementcontrolleur versementcontrolleur;
     private ClientViewModel clientViewModel;
+    private AccessLocalAppKes accessLocalAppKes;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class CreditFragment extends Fragment {
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
-
+        accessLocalAppKes = new AccessLocalAppKes(getContext());
         View root = binding.getRoot();
 
         this.initFragment();
@@ -53,8 +56,12 @@ public class CreditFragment extends Fragment {
     }
 
     private void initFragment(){
-        binding.txtcreercodeclt.setText(MesOutils.generateurcodeclt());
-
+        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+        String base;
+        if (appKessModel.getBasecode() != null ){
+            base = appKessModel.getBasecode();
+        }else {base = "clt";}
+        binding.txtcreercodeclt.setText(MesOutils.generateurcodeclt(base));
     }
 
     public void ajouterCredit(){

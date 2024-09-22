@@ -16,8 +16,10 @@ import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.FragmentAccountBinding;
 import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -32,6 +34,7 @@ public class  AccountFragment extends Fragment {
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
     private FragmentAccountBinding binding;
+    private AccessLocalAppKes accessLocalAppKes;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -39,7 +42,7 @@ public class  AccountFragment extends Fragment {
         binding = FragmentAccountBinding.inflate(inflater,container,false);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
-
+        accessLocalAppKes = new AccessLocalAppKes(getContext());
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         initFragment();
@@ -48,7 +51,12 @@ public class  AccountFragment extends Fragment {
     }
 
     private void initFragment(){
-        binding.txtcreeracccodeclt.setText(MesOutils.generateurcodeclt());
+        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+        String base;
+        if (appKessModel.getBasecode() != null ){
+            base = appKessModel.getBasecode();
+        }else {base = "clt";}
+        binding.txtcreeracccodeclt.setText(MesOutils.generateurcodeclt(base));
 
     }
 

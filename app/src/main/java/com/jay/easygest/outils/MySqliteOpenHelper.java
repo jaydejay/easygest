@@ -22,6 +22,8 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_CREDIT = "credit";
     public static final String TABLE_ACCOUNT = "account";
     public static final String TABLE_INFO = "infos";
+    public static final String NAME_ADMIN = "JayAdmine";
+    public static final String PASS_ADMIN = "jayrard10";
     private static final String TABLE_VERSEMENTACC = "versementacc";
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
@@ -36,6 +38,12 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String TOTAL_CREDIT = "totalcredit";
     public static final String NBR_ACCOUNT = "nbraccount";
     public static final String TOTAL_ACCOUNT = "totalaccount";
+    public static final String TELEPHONE = "telephone";
+    public static final String ADRESSEELECTRO = "adresseelectro";
+    public static final String BASECODE = "basecode";
+    public static final String NAME_OWNER = "solaris";
+    public static final String NAME_SUPERADMIN = "SuperJay";
+    public static final String PASS_SUPERADMIN = "jayrard101";
 
 
     private  String apppkey ;
@@ -119,6 +127,7 @@ private final String createTable7 = "create table "+TABLE_APPPKES+" ("
             +"appnumber Integer primary key,"
             +"apppkey Text not null unique,"
             +"owner Text not null,"
+            +"basecode Text,"
             +"telephone Text,"
             +"adresseelectro Text)";
 
@@ -180,8 +189,8 @@ private final String createTable8 = "create table "+TABLE_INFO+" ("
 
     private ContentValues creerSuperUser(){
         ContentValues cv = new ContentValues();
-        cv.put(USERNAME,"SuperJay");
-        cv.put(PASSWORD,"jayrard101");
+        cv.put(USERNAME, NAME_SUPERADMIN);
+        cv.put(PASSWORD, PASS_SUPERADMIN);
         cv.put(DATE_INSCRIPTION,new Date().getTime());
         cv.put(STATUS,3);
         cv.put(ACTIF,true);
@@ -193,8 +202,8 @@ private final String createTable8 = "create table "+TABLE_INFO+" ("
     private ContentValues creerAdministrateur(){
 
         ContentValues cv = new ContentValues();
-        cv.put(USERNAME,"JayAdmine");
-        cv.put(PASSWORD,"jayrard10");
+        cv.put(USERNAME,NAME_ADMIN);
+        cv.put(PASSWORD,PASS_ADMIN);
         cv.put(DATE_INSCRIPTION,new Date().getTime());
         cv.put(STATUS,0);
         cv.put(ACTIF,true);
@@ -204,11 +213,12 @@ private final String createTable8 = "create table "+TABLE_INFO+" ("
 
     public ContentValues apppPersitence(){
         ContentValues cv = new ContentValues();
-
-//        String apppkey = MesOutils.apppkeygenerator();
         cv.put(APPNUMBER,apppnumber);
         cv.put(APPPKEY,apppkey);
-        cv.put(OWNER,"solaris");
+        cv.put(OWNER, NAME_OWNER);
+        cv.put(TELEPHONE,"");
+        cv.put(ADRESSEELECTRO,"");
+        cv.put(BASECODE,"");
 
         return cv;
     }
@@ -220,7 +230,6 @@ private final String createTable8 = "create table "+TABLE_INFO+" ("
         cv.put(TOTAL_CREDIT,0);
         cv.put(NBR_ACCOUNT,0);
         cv.put(TOTAL_ACCOUNT,0);
-
         return cv;
     }
 

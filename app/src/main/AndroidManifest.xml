@@ -13,6 +13,11 @@
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
         <activity
+            android:name=".vue.SettingsActivity"
+            android:label="@string/parametres"
+            android:exported="false"
+            android:parentActivityName=".vue.GestionActivity"/>
+        <activity
             android:name=".vue.ModifierVersementaccActivity"
             android:exported="false" />
         <activity
