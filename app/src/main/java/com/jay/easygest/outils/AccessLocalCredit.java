@@ -315,7 +315,11 @@ public class AccessLocalCredit {
     }
 
 
-
+    /**
+     *
+     * @param client le client
+     * @return vrai si le client possede un credit sinon faux
+     */
 
     public boolean isClientOwnCredit(ClientModel client){
         ArrayList<CreditModel> credits = this.listeCreditsclient(client);

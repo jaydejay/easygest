@@ -3,6 +3,7 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.jay.easygest.R;
+import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
@@ -36,6 +38,7 @@ public class GestionActivity extends AppCompatActivity {
     private ActivityGestionBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private Creditcontrolleur creditcontrolleur;
+    private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
@@ -51,7 +54,7 @@ public class GestionActivity extends AppCompatActivity {
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
-
+        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
@@ -163,9 +166,11 @@ public class GestionActivity extends AppCompatActivity {
     }
 
     public void supprimerClient(ClientModel client) {
-        boolean success = creditcontrolleur.isClientOwnCredit(client);
-        if (success) {
-            Toast.makeText(this, "impossible de supprimer le client il a un ou des credits en cours", Toast.LENGTH_LONG).show();
+        boolean success_credit = creditcontrolleur.isClientOwnCredit(client);
+        boolean success_account = accountcontroller.isClientOwnAccount(client);
+        Log.i("gestionactivity", "supprimerClient: "+success_account);
+        if (success_credit || success_account) {
+            Toast.makeText(this, "impossible de supprimer le client il a un credit ou un account en cours", Toast.LENGTH_LONG).show();
         }else {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

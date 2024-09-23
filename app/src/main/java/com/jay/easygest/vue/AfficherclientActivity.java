@@ -2,6 +2,7 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -243,7 +244,8 @@ public class AfficherclientActivity extends AppCompatActivity {
             ArrayList<CreditModel>  credits = creditcontrolleur.listecreditsclient(client);
              accountcontroller.listeAccountsClient(client);
              ArrayList<AccountModel> accounts = accountViewModel.getAccount_solde_ou_non().getValue();
-            if (credits.size() == 0 && accounts.size() == 0) {
+
+             if (credits.size() == 0 && accounts.size() == 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("supprimer un client");
                 builder.setMessage("vous etes sur le point de supprimer le client, son compte seras supprimé");
@@ -262,7 +264,7 @@ public class AfficherclientActivity extends AppCompatActivity {
                 });
 
                 builder.create().show();
-            }else {Toast.makeText(this, "impossible de supprimer le client il a un credit en cours", Toast.LENGTH_LONG).show();}
+            }else {Toast.makeText(this, "impossible de supprimer le client il a un credit ou un account en cours", Toast.LENGTH_LONG).show();}
 
         }));
 

@@ -382,4 +382,13 @@ public class AccessLocalAccount {
     }
 
 
+    public boolean isClientOwnAccount(ClientModel clientModel) {
+
+        ArrayList<AccountModel> accounts = this.listeAccountsClient(clientModel);
+
+        if (accounts.size() == 0){
+            return false;
+        }else {return true;}
+
+    }
 }

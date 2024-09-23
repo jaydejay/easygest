@@ -243,4 +243,8 @@ public class Accountcontroller {
             this.listeAccountsoldeClient(account.getClient());
         }
     }
+
+    public boolean isClientOwnAccount(ClientModel clientModel) {
+        return accessLocalAccount.isClientOwnAccount(clientModel);
+    }
 }

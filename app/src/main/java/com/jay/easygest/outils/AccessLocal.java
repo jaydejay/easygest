@@ -66,7 +66,6 @@ public class AccessLocal {
             cv.put(DATE_INSCRIPTION,user.getDateInscription().getTime());
             cv.put(ACTIF,user.isActif());
             cv.put(COMPTEUR,user.getCompteur());
-
             bd.update(UTILISATEUR,cv,STATUS+"="+user.getStatus(),null);
 
         }catch (Exception e){

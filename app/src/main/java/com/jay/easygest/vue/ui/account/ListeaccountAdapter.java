@@ -52,7 +52,6 @@ public class ListeaccountAdapter extends BaseAdapter {
 
             holder = new AccountViewHolder();
             view = inflater.inflate(R.layout.layout_liste_accounts,null);
-
             holder.layoutaccountadapter = view.findViewById(R.id.layoutaccountadapter);
             holder.textViewaccountdate = view.findViewById(R.id.textViewaccountdate);
             holder.textViewaccountsomme = view.findViewById(R.id.textViewaccountsomme);
@@ -62,16 +61,17 @@ public class ListeaccountAdapter extends BaseAdapter {
         }else {
             holder = (AccountViewHolder) view.getTag();
         }
-        String content = "account"+"\n"+ "du"+"\n"+ MesOutils.convertDateToString(new Date(accounts.get(position).getDateaccount())) ;
+        String content = "account"+"\n"
+                + "du"+"\n"
+                + MesOutils.convertDateToString(new Date(accounts.get(position).getDateaccount())) ;
         holder.textViewaccountdate.setText(content);
         holder.textViewaccountsomme.setText(String.valueOf(accounts.get(position).getSommeaccount()));
         holder.textViewaccountreste.setText(String.valueOf(accounts.get(position).getReste()));
-
-
+        holder.layoutaccountadapter.setTag(position);
         holder.layoutaccountadapter.setOnClickListener(v->{
 
-//            int pos = (int)v.getTag();
-            ((AfficherCreditsClientActivity)contexte).redirectToAfficherAccountActivity(accounts.get(position));
+            int pos = (int)v.getTag();
+            ((AfficherCreditsClientActivity)contexte).redirectToAfficherAccountActivity(accounts.get(pos));
 
         });
 
