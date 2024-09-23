@@ -2,6 +2,8 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -40,6 +42,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
         annullerAccount();
         redirectAfficherClient();
         redirectListeCredits();
+        desactiverButtum();
         setContentView(binding.getRoot());
 
     }
@@ -91,6 +94,16 @@ public class AfficherAccountActivity extends AppCompatActivity {
 
         });
 
+
+
+
+    }
+
+    public void desactiverButtum(){
+        if (account.getReste() == 0){
+            binding.supAccount.setVisibility(View.GONE);
+            binding.modifierAccount.setVisibility(View.GONE);
+        }
     }
 
     public void annullerAccount(){

@@ -39,7 +39,7 @@ public class AjouterAccountActivity extends AppCompatActivity {
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-         client = clientViewModel.getClient().getValue();
+        client = clientViewModel.getClient().getValue();
 //         account = accountViewModel.getAccount().getValue();
          init();
          ajouterAccount();
