@@ -18,18 +18,17 @@ public class Accountcontroller {
     private static Accountcontroller accountcontrolleurInstance = null;
     private static AccessLocalAccount accessLocalAccount;
     private static AccessLocalInfo accessLocalInfo;
-    private MutableLiveData<AccountModel>  maccount = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<AccountModel>> maccounts = new MutableLiveData<>();
+    private final MutableLiveData<AccountModel>  maccount = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<AccountModel>> maccounts = new MutableLiveData<>();
 
     private final MutableLiveData<Integer> mtotalresteaccountclient = new MutableLiveData<>();
-    private final MutableLiveData<Integer> mtotalversementaccountclient = new MutableLiveData<>();
     private final  MutableLiveData<Integer> mtotalaccountClient = new MutableLiveData<>();
 
 
     /**
      * la liste de tous les accounts
      */
-    private MutableLiveData<ArrayList<AccountModel>> mlisteaccounts = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<AccountModel>> mlisteaccounts = new MutableLiveData<>();
     private static AccessLocalVersementacc accessLocalVersementacc;
 
     public Accountcontroller() {
@@ -116,7 +115,7 @@ public class Accountcontroller {
 
         int sommeaccount = c_article1.getSomme() + c_article2.getSomme();
         int reste = sommeaccount - Integer.parseInt(versement);
-        int numeroaccount = client.getNbrcredit()+1;
+        int numeroaccount = client.getNbraccount()+1;
         AccountModel account = new AccountModel(client.getCodeclient(), client.getNom(), client.getPrenoms(), article1, article2,sommeaccount, Integer.parseInt(versement), reste,dateaccount,numeroaccount);
         AccountModel accountModel = accessLocalAccount.ajouterAccount(account,client);
         boolean success = false ;
@@ -227,10 +226,6 @@ public class Accountcontroller {
     public MutableLiveData<Integer> getRecapTaccounttClient(){
         return mtotalaccountClient;
     }
-
-//    public MutableLiveData<Integer> getRecapTversementClient(){
-//        return mtotalversementaccountclient;
-//    }
 
     public MutableLiveData<Integer> getRecapTresteClient(){
         return mtotalresteaccountclient;

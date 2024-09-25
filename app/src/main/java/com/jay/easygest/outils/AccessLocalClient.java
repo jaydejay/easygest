@@ -56,7 +56,6 @@ public class AccessLocalClient {
 
     public boolean modifierclient(ClientModel client) {
 
-//        AccessLocalCredit accessLocalCredit = new AccessLocalCredit(contexte);
         boolean success = false;
         try{
             bd = accessBD.getWritableDatabase();

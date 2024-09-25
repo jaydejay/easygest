@@ -155,6 +155,13 @@
     <string name="base_code">code pref</string>
     <string name="sauver">sauver</string>
     <string name="parametres">parametres</string>
-    <string name="helper_text">helper text</string>
+    <string name="helper_text">caracteres</string>
+    <string name="le_propritaire">le propritaire</string>
+    <string name="le_telephone">le telephone</string>
+    <string name="le_mail">le_mail</string>
+    <string name="helper_text_code">base code</string>
+    <string name="helper_text_telephone">numero tel</string>
+    <string name="helper_text_email">adresse electro</string>
+    <string name="ok">ok</string>
 
 </resources>

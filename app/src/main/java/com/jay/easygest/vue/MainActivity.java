@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         String apppkey = appcredentials[1];
         String apppowner = appcredentials[2];
 
-
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("cle d'activation");
             builder.setMessage("les donnees d'activations sont necessaires pour l'activation de votre produit, il est fortement recommendé de les noter." +"\n"
@@ -158,45 +157,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    private void messagePermissionObligatoire() {
-//        Snackbar.make(binding.layoutmain, "permission obligatoire", Snackbar.LENGTH_LONG)
-//                .setAction("Parametres", v -> {
-//                    final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                    final Uri uri = Uri.fromParts("package", MainActivity.this.getPackageName(), null);
-//                    intent.setData(uri);
-//                    startActivity(intent);
-//                }).show();
-//
-//    }
-
-//    public void envoieSms(String destinationAddress, String text) {
-//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED & ActivityCompat.checkSelfPermission(this, Manifest.permission.MODIFY_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//                // TODO: Consider calling
-//                //    ActivityCompat#requestPermissions
-//                // here to request the missing permissions, and then overriding
-//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                //                                          int[] grantResults)
-//                // to handle the case where the user grants the permission. See the documentation
-//                // for ActivityCompat#requestPermissions for more details.
-//                String[] permisions = {Manifest.permission.SEND_SMS, Manifest.permission.MODIFY_PHONE_STATE};
-//                this.requestPermissions(permisions, MY_PERMISSION_REQUEST_CODE_SEND_SMS);
-//
-//                return;
-//            }else {
-//
-//                messagePermissionObligatoire();
-//            }
-//            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//                this.getSystemService(SmsManager.class).sendTextMessageWithoutPersisting(destinationAddress, null, text, null, null);
-//            }else{ SmsManager.getDefault().sendTextMessage(destinationAddress,null,text,null,null);}
-//
-//       }else if( android.os.Build.VERSION.SDK_INT >=  Build.VERSION_CODES.KITKAT) {
-//            SmsManager.getDefault().sendTextMessage(destinationAddress,null,text,null,null);
-//        }
-//    }
-
-
     private void desactivatetxtCreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
         if (nbrutilisateur >= 3){
@@ -205,9 +165,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void activerbtn(Button btn){
-            btn.setVisibility(View.VISIBLE);
-            btn.setEnabled(true);
-
+        btn.setVisibility(View.VISIBLE);
+        btn.setEnabled(true);
     }
 
     private void desactiverbtnAuthInit(){
