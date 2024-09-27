@@ -49,7 +49,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     private  String apppkey ;
     private int apppnumber ;
 
-    private final String createTable1 = "create table "+TABLE_UTILISATEUR+"("
+    private final String createTable_utilisateur = "create table "+TABLE_UTILISATEUR+"("
             +"id Integer primary key autoincrement,"
             +"username Text not null unique,"
             +"password Text not null,"
@@ -59,7 +59,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             +"compteur Integer not null)";
 
 
-    private final String createTable2 = "create table "+TABLE_CLIENT+"("
+    private final String createTable_client = "create table "+TABLE_CLIENT+"("
             +"id Integer primary key autoincrement,"
             +"codeclient Text not null unique,"
             +"nom Text not null,"
@@ -76,7 +76,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             +"nbraccount Integer,"
             +"totalaccount Integer)";
 
-    private final String createTable3 = "create table "+TABLE_ACCOUNT+"("
+    private final String createTable_account = "create table "+TABLE_ACCOUNT+"("
             +"id Integer primary key autoincrement,"
             +"clientid Integer not null,"
             +"article1 Text,"
@@ -90,7 +90,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             +"foreign key(clientid) references client(id) on delete cascade )";
 
 
-    private final String createTable4 = "create table "+TABLE_CREDIT+"("
+    private final String createTable_credit = "create table "+TABLE_CREDIT+"("
             +"id Integer primary key autoincrement,"
             +"clientid Integer not null,"
             +"article1 Text,"
@@ -103,7 +103,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             +"soldedat Long,"
             +"foreign key(clientid) references client(id) on delete cascade )";
 
-    private final String createTable5 = "create table "+TABLE_VERSEMENTACC+"("
+    private final String createTable_versementacc = "create table "+TABLE_VERSEMENTACC+"("
             +"id Integer primary key autoincrement,"
             +"sommeverse Integer not null,"
             +"accountid Integer not null,"
@@ -112,7 +112,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             +"foreign key(accountid) references account(id) on delete cascade,"
             +"foreign key(clientid) references client(id) on delete cascade )";
 
-    private final String createTable6 = "create table "+TABLE_VERSEMENT+"("
+    private final String createTable_versement = "create table "+TABLE_VERSEMENT+"("
             +"id Integer primary key autoincrement,"
             +"sommeverse Integer not null,"
             +"creditid Integer not null,"
@@ -123,7 +123,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
 
 
-private final String createTable7 = "create table "+TABLE_APPPKES+" ("
+private final String createTable_apppkes = "create table "+TABLE_APPPKES+" ("
             +"appnumber Integer primary key,"
             +"apppkey Text not null unique,"
             +"owner Text not null,"
@@ -131,7 +131,7 @@ private final String createTable7 = "create table "+TABLE_APPPKES+" ("
             +"telephone Text,"
             +"adresseelectro Text)";
 
-private final String createTable8 = "create table "+TABLE_INFO+" ("
+private final String createTable_info = "create table "+TABLE_INFO+" ("
         +"appnumber Integer primary key,"
         +"nbrcredit Integer,"
         +"totalcredit Integer,"
@@ -154,14 +154,14 @@ private final String createTable8 = "create table "+TABLE_INFO+" ("
         sqLiteDatabase.beginTransaction();
 
         try {
-            sqLiteDatabase.execSQL(createTable1);
-            sqLiteDatabase.execSQL(createTable2);
-            sqLiteDatabase.execSQL(createTable3);
-            sqLiteDatabase.execSQL(createTable4);
-            sqLiteDatabase.execSQL(createTable5);
-            sqLiteDatabase.execSQL(createTable6);
-            sqLiteDatabase.execSQL(createTable7);
-            sqLiteDatabase.execSQL(createTable8);
+            sqLiteDatabase.execSQL(createTable_utilisateur);
+            sqLiteDatabase.execSQL(createTable_client);
+            sqLiteDatabase.execSQL(createTable_account);
+            sqLiteDatabase.execSQL(createTable_credit);
+            sqLiteDatabase.execSQL(createTable_versementacc);
+            sqLiteDatabase.execSQL(createTable_versement);
+            sqLiteDatabase.execSQL(createTable_apppkes);
+            sqLiteDatabase.execSQL(createTable_info);
 
             sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerSuperUser());
             sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerAdministrateur());
@@ -218,7 +218,7 @@ private final String createTable8 = "create table "+TABLE_INFO+" ("
         cv.put(OWNER, NAME_OWNER);
         cv.put(TELEPHONE,"");
         cv.put(ADRESSEELECTRO,"");
-        cv.put(BASECODE,"");
+        cv.put(BASECODE,"clt");
 
         return cv;
     }

@@ -68,7 +68,7 @@ public abstract  class MesOutils {
 
         String random_int = chif1+""+chif2+""+chif3+""+chif4;
 
-        return base+random_int;
+        return base+""+random_int;
     }
 
 

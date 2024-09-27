@@ -2,6 +2,7 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jay.easygest.R;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityMainBinding;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+        fillTxtVConnestion();
         desactivatetxtCreation();
         desactiverbtnAuthInit();
         desactiverbtnAuthAdmineInit();
@@ -49,12 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
         binding.btnauth.setOnClickListener(view -> {
             try {
+                String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString().trim();
+                String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString().trim();
 
-                if (binding.editTextUsername.length() != 0 & binding.editTextTextPassword.length() != 0 ) {
+                if (username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
 
-                    if (binding.editTextUsername.length() >= 6 & binding.editTextTextPassword.length() >= 8) {
-                        String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString();
-                        String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString();
+                } else {
+                    if (username.length() >= 6 & password.length() >= 8) {
+
                         user = usercontrolleur.recupProprietaire();
                         if (usercontrolleur.isAuthenticated(username, password)) {
                             UserModel userModel = new UserModel(user.getId(), user.getUsername(), user.getPassword(), user.getDateInscription(), user.getStatus(), user.isActif(), 0);
@@ -73,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
                         desactiverbtnAuth(user);
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
+
                 }
             } catch (Exception e) {
                 Toast.makeText(MainActivity.this, "compte inexistant creer un compte", Toast.LENGTH_SHORT).show();
@@ -87,18 +92,20 @@ public class MainActivity extends AppCompatActivity {
 
         binding.btnmaindeloqueadmine.setOnClickListener(view -> {
             try {
-                if ( binding.editTextUsername.length() != 0 & binding.editTextTextPassword.length() != 0) {
-                    if (binding.editTextUsername.length() >= 6 & binding.editTextTextPassword.length() >= 8) {
+                String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString().trim();
+                String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString().trim();
+                if ( username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (username.length() >= 6 && password.length() >= 8) {
 
-                        String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString();
-                        String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString();
                         user = usercontrolleur.recupAdministrateur();
                         if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
                             usercontrolleur.activerProprietaire();
                             usercontrolleur.activerAdministrateur();
                             initChamp();
                             activerbtn(binding.btnauth);
-                            binding.mainlayoutadmine.setVisibility(View.INVISIBLE);
+                            binding.mainlayoutadmine.setVisibility(View.GONE);
                             afficherAlerte();
                         } else {
                             Toast.makeText(MainActivity.this, "username ou mot de passe incorrecte", Toast.LENGTH_SHORT).show();
@@ -108,8 +115,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
                         desactiverbtnAuthAdmine(user);
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 Toast.makeText(MainActivity.this, "un probleme d'integrité est survenu contacter votre administrateur", Toast.LENGTH_SHORT).show();
@@ -160,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private void desactivatetxtCreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
         if (nbrutilisateur >= 3){
-            binding.txtCreateCompte.setVisibility(View.INVISIBLE);
+            binding.txtCreateCompte.setVisibility(View.GONE);
         }
     }
 
@@ -173,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             UserModel userModel = usercontrolleur.recupProprietaire();
             if (userModel.getCompteur()>=3){
-                binding.btnauth.setVisibility(View.INVISIBLE);
+                binding.btnauth.setVisibility(View.GONE);
                 binding.mainlayoutadmine.setVisibility(View.VISIBLE);
             }
         }catch (Exception e){
@@ -183,13 +188,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void desactiverbtnAuth(UserModel userModel){
-        int cmpteur = incrementCompteur(userModel);
-        if (cmpteur >= 3){
-            usercontrolleur.desactiverProprietaire();
-            initChamp();
-            binding.btnauth.setVisibility(View.INVISIBLE);
-            binding.mainlayoutadmine.setVisibility(View.VISIBLE);
+
+        if (userModel != null){
+            int cmpteur = incrementCompteur(userModel);
+            if (cmpteur >= 3){
+                usercontrolleur.desactiverProprietaire();
+                initChamp();
+//                fillTxtVConnestion();
+                binding.btnauth.setVisibility(View.GONE);
+                binding.mainlayoutadmine.setVisibility(View.VISIBLE);
+            }
         }
+
+    }
+
+    public void fillTxtVConnestion(){
+        user = usercontrolleur.recupProprietaire();
+        if (user.getCompteur() >=3){
+            String msg_texte = "débloquer votre compte"+"\n"
+                    +"vous êtes ici parce que"+"\n"
+                    + "vous avez fait 3 tentatives"+"\n"
+                    +"de fausse connection"+"\n"
+                    +"entrer l'username et le mot de passe administrateur"+"\n"
+                    +"pour debloquer votre compte utilisateur";
+            binding.textVConnection.setTextSize(12);
+            binding.textVConnection.setTextColor(getResources().getColor(R.color.red));
+            binding.textVConnection.setText(msg_texte);
+        }
+
 
     }
 
@@ -198,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             UserModel userModel = usercontrolleur.recupAdministrateur();
             if (userModel.getCompteur()>=3){
                 binding.txtParametres.setVisibility(View.VISIBLE);
-                binding.mainlayoutadmine.setVisibility(View.INVISIBLE);
+                binding.mainlayoutadmine.setVisibility(View.GONE);
 
             }
         }catch (Exception e){
@@ -213,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             usercontrolleur.desactiverAdministrateur();
             initChamp();
             binding.txtParametres.setVisibility(View.VISIBLE);
-            binding.mainlayoutadmine.setVisibility(View.INVISIBLE);
+            binding.mainlayoutadmine.setVisibility(View.GONE);
 
         }
 

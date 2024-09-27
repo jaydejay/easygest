@@ -24,6 +24,24 @@ public class UserModel {
         this.compteur = compteur;
     }
 
+    /**
+     * constructeur pour creer un nouvel utilisateur
+     * @param username le nom utilisteur
+     * @param password le mot de passe
+     * @param dateInscription la date d'inscription
+     * @param status le status de l'utilisateur (utillisateur,administrateur ou super administrateur)
+     * @param actif actif ou pas
+     * @param compteur le nombre de tentatifs de connection
+     */
+    public UserModel(  String username, String password, Date dateInscription, Integer status,boolean actif, Integer compteur) {
+        this.username = username;
+        this.password = password;
+        this.dateInscription = dateInscription;
+        this.status = status;
+        this.actif = actif;
+        this.compteur = compteur;
+    }
+
     
 
     public Integer getId() {

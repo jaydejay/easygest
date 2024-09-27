@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityCreercompteBinding;
+import com.jay.easygest.model.AppKessModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 
 import java.util.Objects;
 
@@ -18,39 +20,71 @@ public class CreercompteActivity extends AppCompatActivity {
 
    private ActivityCreercompteBinding binding;
    private Usercontrolleur usercontrolleur;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCreercompteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-        afficherMesage();
         creerCompte();
+        afficherMesage();
         desactivatebtncreation();
     }
 
     public void creerCompte(){
 
         binding.btncreercompte.setOnClickListener(view -> {
+            String username = Objects.requireNonNull(binding.txtcreercompteusername.getText()).toString().trim();
+            String password = Objects.requireNonNull(binding.txtcreercomptepassword.getText()).toString().trim();
+            String repassword = Objects.requireNonNull(binding.txtcreercompterepeat.getText()).toString().trim();
 
-            if (binding.txtcreercompteusername.length() != 0 && binding.txtcreercomptepassword.length() != 0 && binding.txtcreercompterepeat.length() != 0){
 
-                String username = Objects.requireNonNull(binding.txtcreercompteusername.getText()).toString();
-                String password = Objects.requireNonNull(binding.txtcreercomptepassword.getText()).toString();
-                String repassword = Objects.requireNonNull(binding.txtcreercompterepeat.getText()).toString();
-                if (binding.txtcreercompteusername.length() >= 6 & binding.txtcreercomptepassword.length() >= 8 & binding.txtcreercompterepeat.length() >= 8){
+            String owner = Objects.requireNonNull(binding.editcreerCompteOwner.getText()).toString().trim();
+            String code_base = Objects.requireNonNull(binding.editcreerCompteBaseCode.getText()).toString().trim();
+            String telephone = Objects.requireNonNull(binding.editcreerCompteTelephone.getText()).toString().trim();
+            String email = Objects.requireNonNull(binding.editcreerCompteMail.getText()).toString().trim();
+
+
+            if (username.isEmpty() || password.isEmpty() || repassword.isEmpty()){
+                Toast.makeText(CreercompteActivity.this, "champs sont obligatoires", Toast.LENGTH_SHORT).show();
+
+            } else if (owner.isEmpty()) {
+                binding.lleditcreerCompteOwner.setError("obligatoire");
+
+            }else if (owner.length() < 5 ) {
+                binding.lleditcreerCompteOwner.setError("5 minimum");
+
+            }else if (owner.length() > 16 ) {
+                binding.lleditcreerCompteOwner.setError("16 maximum");
+
+            }else if (code_base.isEmpty()){
+                binding.lleditcreerCompteBaseCode.setError("obligatoire");
+
+            } else if (code_base.length() != 4 ) {
+                binding.lleditcreerCompteBaseCode.setError("4 lettres attendus ");
+
+            }else if (telephone.isEmpty()){
+                binding.llcreerCompteTelephone.setError("obligatoire");
+
+            } else if (telephone.length() != 10) {
+                binding.llcreerCompteTelephone.setError("10 caracteres");
+
+            }else if (email.isEmpty()){
+                binding.llcreerCompteMail.setError("obligatoire");
+            } else{
+                if (username.length() >= 6 && password.length() >= 8 && repassword.length() >= 8){
 
                     if (repassword.equals(password)){
                         try {
                             int nbrutilisateur = usercontrolleur.nbrUtilisateur();
                             if (nbrutilisateur < 3){
-                                usercontrolleur.creerUser(username, password);
-
-                                Intent intent = new Intent(CreercompteActivity.this, MainActivity.class);
-                                startActivity(intent);
-
+                                AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);
+                                AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+                               boolean success = usercontrolleur.creerUser(username, password,appKessModel, owner,code_base,telephone,email);
+                               if (success){
+                                   Intent intent = new Intent(CreercompteActivity.this, MainActivity.class);
+                                   startActivity(intent);
+                               }
 
                             }else {
                                 Toast.makeText(CreercompteActivity.this, "action non autorisée", Toast.LENGTH_SHORT).show();
@@ -62,7 +96,7 @@ public class CreercompteActivity extends AppCompatActivity {
                     }else {Toast.makeText(CreercompteActivity.this, "mot de passes différents", Toast.LENGTH_SHORT).show();}
 
                 }else{ Toast.makeText(CreercompteActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show(); }
-            }else{ Toast.makeText(CreercompteActivity.this, "champs sont obligatoires", Toast.LENGTH_SHORT).show(); }
+            }
 
         });
     }
@@ -70,8 +104,8 @@ public class CreercompteActivity extends AppCompatActivity {
     public void desactivatebtncreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
         if(nbrutilisateur >=3){
-            binding.btncreercompte.setVisibility(View.INVISIBLE);
-            binding.btncreercompte.setEnabled(false);
+            binding.btncreercompte.setVisibility(View.GONE);
+//            binding.btncreercompte.setEnabled(false);
         }
     }
 

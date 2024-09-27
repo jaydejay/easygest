@@ -191,7 +191,7 @@ public class AccessLocalCredit {
             client_cv.put(TOTALCREDIT,nouveau_total_credit_du_client);
 
             bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=" +creditModel.getId(),null,1);
-            bd.updateWithOnConflict(TABLE_CLIENT, client_cv, "id = ?", new String[] {String.valueOf(client.getId())},1);
+            bd.updateWithOnConflict(TABLE_CLIENT, client_cv, ID+ "= ?", new String[] {String.valueOf(client.getId())},1);
              credit = this.recupCreditById(creditModel.getId());
             bd.setTransactionSuccessful();
 

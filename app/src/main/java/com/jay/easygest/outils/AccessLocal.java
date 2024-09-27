@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 
 import java.util.Date;
@@ -25,6 +26,7 @@ public class AccessLocal {
     public static final String OWNER = "owner";
     public static final String TELEPHONE = "telephone";
     public static final String ADRESSEELECTRO = "adresseelectro";
+    public static final String BASECODE = "basecode";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
 
@@ -38,26 +40,43 @@ public class AccessLocal {
 
 
 
-    public void ajouterUtilisateur(UserModel user){
+    public boolean ajouterUtilisateur(UserModel user, AppKessModel appKessModel){
+        bd.beginTransaction();
+        boolean success;
         try{
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
+            ContentValues appkess_cv = new ContentValues();
+
             cv.put(USERNAME,user.getUsername());
             cv.put(PASSWORD,user.getPassword());
             cv.put(DATE_INSCRIPTION,user.getDateInscription().getTime());
             cv.put(STATUS,user.getStatus());
             cv.put(ACTIF,user.isActif());
             cv.put(COMPTEUR,user.getCompteur());
-            bd.insert(UTILISATEUR,null,cv);
 
+            appkess_cv.put(OWNER,appKessModel.getOwner());
+            appkess_cv.put(BASECODE,appKessModel.getBasecode());
+            appkess_cv.put(TELEPHONE,appKessModel.getTelephone());
+            appkess_cv.put(ADRESSEELECTRO,appKessModel.getAdresseelectro());
+
+            bd.insertOrThrow(UTILISATEUR,null,cv);
+            bd.updateWithOnConflict("APPPKES",appkess_cv, APPNUMBER+"= ?", new String[] { String.valueOf(appKessModel.getAppnumber())},1);
+            bd.setTransactionSuccessful();
+            success = true;
         }catch (Exception e){
-            //do nothing
+            success = false;
 
+        }finally {
+            bd.endTransaction();
         }
+
+        return success;
 
     }
 
     public void modifierUtilisateur(UserModel user){
+
         try{
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();

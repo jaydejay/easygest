@@ -52,17 +52,14 @@ public class  AccountFragment extends Fragment {
 
     private void initFragment(){
         AppKessModel appKessModel = accessLocalAppKes.getAppkes();
-        String base;
         if (appKessModel.getBasecode() != null ){
-            base = appKessModel.getBasecode();
-        }else {base = "clt";}
-        binding.txtcreeracccodeclt.setText(MesOutils.generateurcodeclt(base));
+            binding.txtcreeracccodeclt.setText(MesOutils.generateurcodeclt(appKessModel.getBasecode()));
+        }
 
     }
 
 
     public void creerAccount(){
-
 
         binding.btncreeraccount.setOnClickListener(v -> {
 

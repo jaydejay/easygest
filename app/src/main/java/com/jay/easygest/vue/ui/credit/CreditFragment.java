@@ -57,11 +57,10 @@ public class CreditFragment extends Fragment {
 
     private void initFragment(){
         AppKessModel appKessModel = accessLocalAppKes.getAppkes();
-        String base;
         if (appKessModel.getBasecode() != null ){
-            base = appKessModel.getBasecode();
-        }else {base = "clt";}
-        binding.txtcreercodeclt.setText(MesOutils.generateurcodeclt(base));
+            binding.txtcreercodeclt.setText(MesOutils.generateurcodeclt(appKessModel.getBasecode()));
+        }
+
     }
 
     public void ajouterCredit(){

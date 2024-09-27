@@ -25,10 +25,10 @@ public class ActiverProduitActivity extends AppCompatActivity {
     public void activerproduit(){
         binding.btnactiverproduit.setOnClickListener(v -> {
            try {
-               String proprietaire = binding.editactiverproduitAppowner.getText().toString();
-               String cleproduit = binding.editactiverproduitAppKey.getText().toString();
-               String apppowner = getIntent().getExtras().get(APPPOWNER).toString();
-               String apppkey = getIntent().getExtras().get(APPPKEY).toString();
+               String proprietaire = binding.editactiverproduitAppowner.getText().toString().trim();
+               String cleproduit = binding.editactiverproduitAppKey.getText().toString().trim();
+               String apppowner = getIntent().getExtras().get(APPPOWNER).toString().trim();
+               String apppkey = getIntent().getExtras().get(APPPKEY).toString().trim();
 
                if (proprietaire.length() != 0 && cleproduit.length() != 0) {
                    if (apppowner.equals(proprietaire) && apppkey.equals(cleproduit)) {

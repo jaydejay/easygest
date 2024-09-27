@@ -2,8 +2,10 @@ package com.jay.easygest.controleur;
 
 import android.content.Context;
 
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccessLocal;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 
 import java.util.Date;
@@ -13,6 +15,7 @@ public final class Usercontrolleur {
     private static  Usercontrolleur usercontrolleurInstance = null;
     private UserModel user;
     private static AccessLocal accessLocal;
+
     private String proprietaireMdpInit;
 
     /**
@@ -46,9 +49,10 @@ public final class Usercontrolleur {
         this.proprietaireMdpInit = proprietaireMdpInit;
     }
 
-    public void creerUser(String username, String password){
-        user = new UserModel(-1,username,password,new Date(),1,true,0);
-        accessLocal.ajouterUtilisateur(user);
+    public boolean creerUser(String username, String password, AppKessModel appKess, String owner, String code_base, String telephone, String email){
+        user = new UserModel(username,password,new Date(),1,true,0);
+        AppKessModel appKessModel = new AppKessModel(appKess.getAppnumber(),appKess.getApppkey(),owner,code_base,telephone,email);
+       return accessLocal.ajouterUtilisateur(user,appKessModel);
     }
 
     public void modifierUser(UserModel user){accessLocal.modifierUtilisateur(user);}
