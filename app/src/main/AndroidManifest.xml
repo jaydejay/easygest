@@ -13,10 +13,13 @@
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
         <activity
+            android:name=".vue.InitMdpActivity"
+            android:exported="false" />
+        <activity
             android:name=".vue.SettingsActivity"
-            android:label="@string/parametres"
             android:exported="false"
-            android:parentActivityName=".vue.GestionActivity"/>
+            android:label="@string/parametres"
+            android:parentActivityName=".vue.GestionActivity" />
         <activity
             android:name=".vue.ModifierVersementaccActivity"
             android:exported="false" />
@@ -82,21 +85,17 @@
             android:name=".vue.GestionActivity"
             android:exported="true"
             android:label="@string/title_activity_gestion"
-            android:theme="@style/Theme.EasyGest.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.EasyGest.NoActionBar"></activity>
         <activity
             android:name=".vue.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.EasyGest.NoActionBar" >
-
+            android:theme="@style/Theme.EasyGest.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

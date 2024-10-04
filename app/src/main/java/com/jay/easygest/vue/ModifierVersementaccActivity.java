@@ -17,6 +17,7 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
 
 import java.util.Date;
@@ -24,6 +25,7 @@ import java.util.Objects;
 
 public class ModifierVersementaccActivity extends AppCompatActivity {
 
+    private SessionManagement sessionManagement ;
     private ActivityModifierVersementaccBinding binding;
     private Versementacccontrolleur versementacccontrolleur;
     private VersementsaccModel versement;
@@ -36,10 +38,14 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionManagement = new SessionManagement(this);
         binding = ActivityModifierVersementaccBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
         VersementaccViewModel versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
-        setContentView(binding.getRoot());
+
         versement = versementaccViewModel.getMversementacc().getValue();
         client = Objects.requireNonNull(versement).getClient();
 
@@ -48,10 +54,9 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
         EDTsomme =  findViewById(R.id.ajoutervrsmntaccsomme);
         EDTdateaccount =  findViewById(R.id.ajoutervrsmntaccdate);
         bouton_modifier =  findViewById(R.id.btnversementacc);
-//        versementNumber = versementacccontrolleur.getVersementNumber();
+
         init();
         modifierVersement();
-        setContentView(binding.getRoot());
     }
 
     public void init(){
@@ -75,7 +80,7 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
             } else if (date == null) {
                 Toast.makeText(ModifierVersementaccActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
             } else {
-                if (Integer.parseInt(edt_somme) >= 1000) {
+//                if (Integer.parseInt(edt_somme) >= 1000) {
 
                     try {
                         int nouvellesommeverse = Integer.parseInt(edt_somme);
@@ -97,10 +102,27 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         Toast.makeText(this, "erreur versement avorté", Toast.LENGTH_SHORT).show();
                     }
-                }else {Toast.makeText(this, "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();}
+//                }else {Toast.makeText(this, "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();}
 
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 
 }

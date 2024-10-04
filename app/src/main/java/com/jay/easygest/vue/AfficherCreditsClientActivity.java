@@ -21,6 +21,7 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.model.VersementsaccModel;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.account.ListeAccountsClientFragment;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
@@ -34,6 +35,8 @@ import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
 
 public class AfficherCreditsClientActivity extends AppCompatActivity {
 
+   private  SessionManagement sessionManagement;
+
     private Clientcontrolleur clientcontrolleur;
     private Creditcontrolleur creditcontrolleur;
     private Accountcontroller accountcontroller;
@@ -45,6 +48,8 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionManagement = new SessionManagement(this);
         com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding binding = ActivityAfficherCreditsClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
@@ -177,5 +182,23 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         intent.putExtra("Tagx",1);
         startActivity(intent);
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
+    }
+
+
 }
 

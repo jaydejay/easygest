@@ -1,5 +1,7 @@
 package com.jay.easygest.vue.ui.clients;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import android.widget.SearchView;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.FragmentClientBinding;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.vue.MainActivity;
 
 import java.util.ArrayList;
 
@@ -25,11 +30,13 @@ public class ClientsFragment extends Fragment {
     private ClientViewModel clientViewModel;
     private FragmentClientBinding binding;
     private ListeClientAdapter adapter;
+    private SessionManagement sessionManagement;
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        sessionManagement = new SessionManagement(requireContext());
        clientcontrolleur =Clientcontrolleur.getClientcontrolleurInstance(getContext());
        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
        clientcontrolleur.listeClients();
@@ -90,10 +97,20 @@ public class ClientsFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+
+    public void onStart() {
+        super.onStart();
+
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
 }

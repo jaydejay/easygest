@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
-import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAjouterCreditBinding;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 
@@ -23,8 +23,8 @@ import java.util.Objects;
 
 public class AjouterCreditActivity extends AppCompatActivity {
 
+   private SessionManagement sessionManagement;
     private ActivityAjouterCreditBinding binding;
-    private Versementcontrolleur versementcontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private Creditcontrolleur creditcontroller;
     private CreditViewModel creditViewModel;
@@ -34,9 +34,10 @@ public class AjouterCreditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAjouterCreditBinding.inflate(getLayoutInflater());
 
-        versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
+        sessionManagement = new SessionManagement(this);
+        binding = ActivityAjouterCreditBinding.inflate(getLayoutInflater());
+//        Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontroller = Creditcontrolleur.getCreditcontrolleurInstance(this);
 
@@ -123,5 +124,22 @@ public class AjouterCreditActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 }

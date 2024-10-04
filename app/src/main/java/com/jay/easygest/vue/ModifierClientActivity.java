@@ -12,11 +12,13 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierClientBinding;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 public class ModifierClientActivity extends AppCompatActivity {
+
+    private SessionManagement sessionManagement;
     private ActivityModifierClientBinding binding;
-//    private MutableLiveData<ClientModel> client;
     private Clientcontrolleur clientcontrolleur;
     private Creditcontrolleur creditcontrolleur;
     private ClientViewModel clientViewModel;
@@ -26,6 +28,8 @@ public class ModifierClientActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionManagement = new SessionManagement(this);
         binding = ActivityModifierClientBinding.inflate(getLayoutInflater());
         clientcontrolleur= Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
@@ -62,43 +66,57 @@ public class ModifierClientActivity extends AppCompatActivity {
 
         binding.btnmodifierclient.setOnClickListener(v -> {
 
-                       int id = client.getId();
+               int id = client.getId();
 
-                       String code = client.getCodeclient().trim();
-                       String nom = binding.editmodifierclientnom.getText().toString().trim();
-                       String prenoms = binding.editmodifierclientprenoms.getText().toString().trim();
-                       String telephone = binding.editmodifierclienttelephone.getText().toString().trim();
-                       String email = binding.editmodifierclientemail.getText().toString().trim();
-                       String residence = binding.editmodifierclientresidence.getText().toString().trim();
-                       String cni = binding.editmodifierclientcni.getText().toString().trim();
-                       String permis = binding.editmodifierclientpermis.getText().toString().trim();
-                       String passport = binding.editmodifierclientpassport.getText().toString().trim();
-                       String societe = binding.editmodifierclientsociete.getText().toString().trim();
-                       Integer nbrcredit = client.getNbrcredit();
-                       Long totalcredit = client.getTotalcredit();
-                       Integer nbraccount = client.getNbraccount();
-                       Long totalaccount = client.getTotalaccount();
+               String code = client.getCodeclient().trim();
+               String nom = binding.editmodifierclientnom.getText().toString().trim();
+               String prenoms = binding.editmodifierclientprenoms.getText().toString().trim();
+               String telephone = binding.editmodifierclienttelephone.getText().toString().trim();
+               String email = binding.editmodifierclientemail.getText().toString().trim();
+               String residence = binding.editmodifierclientresidence.getText().toString().trim();
+               String cni = binding.editmodifierclientcni.getText().toString().trim();
+               String permis = binding.editmodifierclientpermis.getText().toString().trim();
+               String passport = binding.editmodifierclientpassport.getText().toString().trim();
+               String societe = binding.editmodifierclientsociete.getText().toString().trim();
+               Integer nbrcredit = client.getNbrcredit();
+               Long totalcredit = client.getTotalcredit();
+               Integer nbraccount = client.getNbraccount();
+               Long totalaccount = client.getTotalaccount();
 
-                       if (nom.isEmpty() || prenoms.isEmpty() || telephone.isEmpty()){
-                           Toast.makeText(ModifierClientActivity.this, "nom,prenoms et telephone obligatoires", Toast.LENGTH_SHORT).show();
-                       }
-                       ClientModel clientModel = new ClientModel(id,code,nom,prenoms,telephone,email,residence,cni,permis,passport,societe,nbrcredit,totalcredit,nbraccount,totalaccount);
-                       boolean success =  clientcontrolleur.modifierclient(clientModel);
+               if (nom.isEmpty() || prenoms.isEmpty() || telephone.isEmpty()){
+                   Toast.makeText(ModifierClientActivity.this, "nom,prenoms et telephone obligatoires", Toast.LENGTH_SHORT).show();
+               }
+               ClientModel clientModel = new ClientModel(id,code,nom,prenoms,telephone,email,residence,cni,permis,passport,societe,nbrcredit,totalcredit,nbraccount,totalaccount);
+               boolean success =  clientcontrolleur.modifierclient(clientModel);
 
-                       if(success ) {
-                            creditcontrolleur.listecredits();
-                           Intent intent = new Intent(ModifierClientActivity.this, AfficherclientActivity.class);
-                           startActivity(intent);
-                           finish();
-                       }
+               if(success ) {
+                    creditcontrolleur.listecredits();
+                   Intent intent = new Intent(ModifierClientActivity.this, AfficherclientActivity.class);
+                   startActivity(intent);
+//                   finish();
+               }
 
-                       else {
-                           Toast.makeText(ModifierClientActivity.this,"erreur echec de la modification" , Toast.LENGTH_SHORT).show();
-                       }
-
-//                   });
-
+               else {
+                   Toast.makeText(ModifierClientActivity.this,"erreur echec de la modification" , Toast.LENGTH_SHORT).show();
+               }
 
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 }

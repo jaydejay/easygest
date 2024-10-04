@@ -14,6 +14,7 @@ import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
@@ -144,9 +145,11 @@ public class ModifiercreditActivity extends AppCompatActivity {
                     CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_modifier).getId(),clientModel,credit_modifier.getArticle1(),credit_modifier.getArticle2(),credit_modifier.getSommecredit(),credit_modifier.getVersement(),credit_modifier.getReste(),credit_modifier.getDatecredit(),credit_modifier.getNumerocredit());
                     creditViewModel.getCredit().setValue(creditModel);
                     clientViewModel.getClient().setValue(clientModel);
+//                    SessionManagement sessionManagement = new SessionManagement(ModifiercreditActivity.this);
+//                    sessionManagement.saveSession(true);
                     Intent intent = new Intent(ModifiercreditActivity.this, AffichercreditActivity.class);
                     startActivity(intent);
-                    finish();
+//                    finish();
                 } else {
                     Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
                 }

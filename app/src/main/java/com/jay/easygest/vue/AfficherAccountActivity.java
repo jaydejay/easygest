@@ -13,6 +13,7 @@ import com.jay.easygest.databinding.ActivityAfficherAccountBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.owlike.genson.Genson;
@@ -20,6 +21,7 @@ import com.owlike.genson.Genson;
 public class AfficherAccountActivity extends AppCompatActivity {
 
     private ActivityAfficherAccountBinding binding;
+    private SessionManagement sessionManagement;
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
@@ -29,6 +31,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherAccountBinding.inflate(getLayoutInflater());
+        sessionManagement = new SessionManagement(this);
 
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
@@ -67,7 +70,6 @@ public class AfficherAccountActivity extends AppCompatActivity {
 
     public void redirectToModifierAccount(){
         binding.modifierAccount.setOnClickListener(view -> {
-
             Intent intent = new Intent(this,ModifierAccountActivity.class);
             startActivity(intent);
         });
@@ -141,6 +143,27 @@ public class AfficherAccountActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 
 

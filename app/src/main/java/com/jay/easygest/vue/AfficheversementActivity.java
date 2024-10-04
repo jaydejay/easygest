@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jay.easygest.R;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficheversementBinding;
@@ -16,6 +17,7 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -24,6 +26,8 @@ import java.util.Date;
 
 public class AfficheversementActivity extends AppCompatActivity {
 
+
+    private SessionManagement sessionManagement;
     private ActivityAfficheversementBinding binding;
     private Versementcontrolleur versementcontrolleur;
     private Clientcontrolleur clientcontrolleur;
@@ -36,6 +40,8 @@ public class AfficheversementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sessionManagement= new SessionManagement(this);
+
         binding = ActivityAfficheversementBinding.inflate(getLayoutInflater());
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         VersementViewModel versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
@@ -71,8 +77,8 @@ public class AfficheversementActivity extends AppCompatActivity {
         binding.textViewAfVersmSomme.setText(texte2);
         binding.textViewAfVersmNumeroCredit.setText(texte3);
 
-        binding.afVersmToCredits.setText("liste credits");
-        binding.afVersmToClient.setText("le client");
+        binding.afVersmToCredits.setText(getResources().getString(R.string.liste_credits));
+        binding.afVersmToClient.setText(getResources().getString(R.string.le_client));
 
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
@@ -141,6 +147,21 @@ public class AfficheversementActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AfficherclientActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 
 

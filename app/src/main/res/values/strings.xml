@@ -165,5 +165,9 @@
     <string name="ok">ok</string>
     <string name="connection">connection</string>
     <string name="creer_votre_compte">creer votre compte</string>
+    <string name="mdp_oublie">mot de passe oublié?</string>
+    <string name="action_deconnection">deconnection</string>
+    <string name="reinitialiser">reinitialiser</string>
+    <string name="mdp_init">reinitialisation du mot de passe</string>
 
 </resources>

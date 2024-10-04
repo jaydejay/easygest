@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".vue.InitMdpActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView_init_mdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/mdp_init" />
+
+        <EditText
+            android:id="@+id/editText_init_mdp_username"
+            android:layout_width="221dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:autofillHints="@string/username"
+            android:layout_marginTop="25dp"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            />
+
+        <EditText
+            android:id="@+id/editText_init_mdp_owner"
+            android:layout_width="221dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:autofillHints="@string/owner"
+            android:layout_marginTop="25dp"
+            android:hint="@string/owner"
+            android:inputType="textPersonName"
+            />
+
+        <EditText
+            android:id="@+id/editText_init_mdp_owner_mail"
+            android:layout_width="221dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:autofillHints="@string/appkey"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
+
+        <Button
+            android:id="@+id/btn_init_mdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/reinitialiser" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

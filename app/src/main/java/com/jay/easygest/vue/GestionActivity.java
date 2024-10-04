@@ -1,7 +1,9 @@
 package com.jay.easygest.vue;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import com.jay.easygest.databinding.ActivityGestionBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -38,6 +41,7 @@ public class GestionActivity extends AppCompatActivity {
     private ActivityGestionBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private Creditcontrolleur creditcontrolleur;
+    private SessionManagement sessionManagement;
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
@@ -48,8 +52,10 @@ public class GestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         binding = ActivityGestionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        sessionManagement = new SessionManagement(this);
 
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
@@ -100,7 +106,12 @@ public class GestionActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
 
-        }else { return super.onOptionsItemSelected(item);}
+        } else if (item.getItemId() == R.id.action_deconnecter) {
+            sessionManagement.removeSession();
+            finish();
+            return true;
+
+        } else { return super.onOptionsItemSelected(item);}
     }
 
     @Override
@@ -157,6 +168,10 @@ public class GestionActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * affiche les détails d'un credit
+     * @param credit le credit à détaillé
+     */
     public void redirectToAfficherCreditActivity(CreditModel credit) {
 
         creditcontrolleur.setCredit(credit);
@@ -165,6 +180,10 @@ public class GestionActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * permet de supprimer un client
+     * @param client le client à supprimer
+     */
     public void supprimerClient(ClientModel client) {
         boolean success_credit = creditcontrolleur.isClientOwnCredit(client);
         boolean success_account = accountcontroller.isClientOwnAccount(client);
@@ -192,6 +211,11 @@ public class GestionActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * permet c'annuller un credit
+     * @param credit le credit à annuller
+     */
     public void annullerCredit(CreditModel credit){
 
         if (credit.getReste() > 0) {
@@ -221,7 +245,12 @@ public class GestionActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * afficher les details d'un versement
+     * @param versement le versement
+     * @param position sa position dans la liste
+     * @param nbrversement le nombre total de versement
+     */
     public void redirectToAfficheversementActivity(VersementsModel versement,int position, int nbrversement) {
         versementViewModel.getMversement().setValue(versement);
         CreditModel credit = creditcontrolleur.recupUnCreditById(versement.getCredit_id());
@@ -231,4 +260,26 @@ public class GestionActivity extends AppCompatActivity {
         intent.putExtra("nbrversement",nbrversement);
         startActivity(intent);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
+
 }

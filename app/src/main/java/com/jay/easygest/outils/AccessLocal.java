@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
@@ -86,7 +87,7 @@ public class AccessLocal {
             cv.put(ACTIF,user.isActif());
             cv.put(COMPTEUR,user.getCompteur());
             bd.update(UTILISATEUR,cv,STATUS+"="+user.getStatus(),null);
-
+            bd.close();
         }catch (Exception e){
 //            do nothing
 
@@ -104,7 +105,6 @@ public class AccessLocal {
         cursor.moveToLast();
 
         if(!cursor.isAfterLast()){
-
             int id = cursor.getInt(0);
             String username = cursor.getString(1);
             String password = cursor.getString(2);
@@ -115,6 +115,7 @@ public class AccessLocal {
             utilisateur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
         }
         cursor.close();
+        bd.close();
         return utilisateur;
     }
 
@@ -123,11 +124,10 @@ public class AccessLocal {
         bd = accessBD.getReadableDatabase();
         String req = "select * from utilisateur where status = 0";
 
-        UserModel utilisateur = null;
+        UserModel administrteur = null;
         Cursor cursor = bd.rawQuery(req,null);
         cursor.moveToLast();
         if(!cursor.isAfterLast()){
-
             int id = cursor.getInt(0);
             String username = cursor.getString(1);
             String password = cursor.getString(2);
@@ -135,10 +135,11 @@ public class AccessLocal {
             int status = cursor.getInt(4);
             boolean actif = cursor.getInt(5)==1?true:false;
             int compteur = cursor.getInt(6);
-            utilisateur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
+            administrteur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
         }
         cursor.close();
-        return utilisateur;
+        bd.close();
+        return administrteur;
     }
 
     public Integer nbrUtilisateurs(){
@@ -177,19 +178,29 @@ public class AccessLocal {
 
     }
 
-    public void activerProprietaire(String mdp){
+//    public void activerProprietaire(String mdp){
+//        try {
+//            bd = accessBD.getWritableDatabase();
+//            ContentValues cv = new ContentValues();
+//            cv.put(ACTIF, true);
+//            cv.put(COMPTEUR, 0);
+//            cv.put(PASSWORD, mdp);
+//            bd.update(UTILISATEUR, cv, STATUS + "=" + 1, null);
+//        }catch (Exception e){
+//            //do nothing
+//        }
+//    }
+
+    public void activerProprietaire(){
         try {
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(ACTIF, true);
             cv.put(COMPTEUR, 0);
-            cv.put(PASSWORD, mdp);
             bd.update(UTILISATEUR, cv, STATUS + "=" + 1, null);
         }catch (Exception e){
             //do nothing
         }
-
-
     }
 
     public void desactiverAdministrateur(){
@@ -209,7 +220,6 @@ public class AccessLocal {
         cv.put(COMPTEUR,0);
         bd.update(UTILISATEUR,cv,STATUS+"="+0,null);
 
-
     }
 
     public boolean authapp(String proprietaire, String cleproduit) {
@@ -220,12 +230,19 @@ public class AccessLocal {
         Cursor cursor = bd.rawQuery(req,null);
         cursor.moveToFirst();
         if (!cursor.isBeforeFirst()){
-                       if(cursor.getString(cursor.getColumnIndexOrThrow("owner")).equals(proprietaire) && cursor.getString(cursor.getColumnIndexOrThrow("apppkey")).equals(cleproduit) ){
+            String owner = cursor.getString(2);
+            String cle = cursor.getString(1);
+
+            if (owner.equals(proprietaire) && cle.equals(cleproduit)){
                 success = true;
             }
+
+//            if(cursor.getString(cursor.getColumnIndexOrThrow("owner")).equals(proprietaire) && cursor.getString(cursor.getColumnIndexOrThrow("apppkey")).equals(cleproduit) ){
+//                success = true;
+//            }
         }
         cursor.close();
-
+        bd.close();
         return success;
       }catch (Exception e){return false;}
     }

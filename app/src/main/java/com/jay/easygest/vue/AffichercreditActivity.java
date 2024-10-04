@@ -14,11 +14,14 @@ import com.jay.easygest.databinding.ActivityAffichercreditBinding;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
 
 public class AffichercreditActivity extends AppCompatActivity {
+
+   private SessionManagement sessionManagement;
 
    private Creditcontrolleur creditcontrolleur;
     TextView cardaffichercredittitle;
@@ -34,6 +37,7 @@ public class AffichercreditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sessionManagement = new SessionManagement(this);
         binding = ActivityAffichercreditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
@@ -146,6 +150,29 @@ public class AffichercreditActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
+
+
 
 
 }

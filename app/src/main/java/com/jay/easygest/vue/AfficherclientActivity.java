@@ -23,6 +23,7 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
@@ -33,6 +34,7 @@ import java.util.Date;
 
 public class AfficherclientActivity extends AppCompatActivity {
     private ActivityAfficherclientBinding binding;
+    private  SessionManagement sessionManagement;
     private Clientcontrolleur clientcontrolleur;
     private  Creditcontrolleur creditcontrolleur;
     private Accountcontroller accountcontroller;
@@ -49,6 +51,8 @@ public class AfficherclientActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherclientBinding.inflate(getLayoutInflater());
+         sessionManagement = new SessionManagement(this);
+
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
@@ -485,7 +489,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
     public void supprimerAccountSoldes(){
-
         accountcontroller.listeAccountsoldeClient(client);
         ArrayList<AccountModel> listeAccountsSoldes = accountViewModel.getAccount_solde_ou_non().getValue();
         long now = new Date().getTime();
@@ -499,16 +502,28 @@ public class AfficherclientActivity extends AppCompatActivity {
             }
         }
 
-
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//       clientcontrolleur.setClient(null);
-       binding = null;
+        binding = null;
     }
 
 

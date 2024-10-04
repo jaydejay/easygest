@@ -51,10 +51,10 @@
 
     <Button
         android:id="@+id/btnauth"
-        android:layout_width="83dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@android:string/ok"
+        android:text="@string/connection"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
@@ -114,8 +114,21 @@
             android:text="@string/valider"
             app:layout_constraintTop_toBottomOf="@+id/txtmainadmine" />
 
+
+
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/txt_main_mdp_oublie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:text="@string/mdp_oublie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainlayoutadmine" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,12 +18,15 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
 import java.util.Date;
 
 public class ModifierVersementActivity extends AppCompatActivity {
+
+    private SessionManagement sessionManagement;
     Button bouton_modifier;
     EditText EDTcodeclient ;
     EditText EDTsomme ;
@@ -33,12 +36,14 @@ public class ModifierVersementActivity extends AppCompatActivity {
     VersementViewModel versementViewModel;
    private VersementsModel versement;
    private ClientModel client;
-    private CreditViewModel creditViewModel;
+   private CreditViewModel creditViewModel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionManagement = new SessionManagement(this);
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
@@ -110,6 +115,23 @@ public class ModifierVersementActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 
 }

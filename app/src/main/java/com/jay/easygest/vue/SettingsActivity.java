@@ -1,30 +1,29 @@
 package com.jay.easygest.vue;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
-import com.jay.easygest.R;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.jay.easygest.databinding.ActivitySettingsBinding;
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.InfosModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
-import com.jay.easygest.outils.AccessLocalInfo;
+import com.jay.easygest.outils.SessionManagement;
 
 import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private SessionManagement sessionManagement;
     private ActivitySettingsBinding binding;
-  private AccessLocalAppKes accessLocalAppKes;
+    private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appkess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionManagement = new SessionManagement(this);
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         accessLocalAppKes = new AccessLocalAppKes(this);
         appkess = accessLocalAppKes.getAppkes();
@@ -56,7 +55,10 @@ public class SettingsActivity extends AppCompatActivity {
         binding.txtsettingBaseCode.setText(base_code);
         binding.txtsettingTelephone.setText(telephone);
         binding.txtsettingMail.setText(e_mail);
-        }catch (Exception e){}
+
+        }catch (Exception e){
+            //do nothings
+        }
 
     }
 
@@ -178,6 +180,24 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+//            finish();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 
 }

@@ -9,14 +9,13 @@
     <EditText
         android:id="@+id/editAppowner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="50dp"
         android:autofillHints="@string/app_owner"
         android:ems="10"
         android:gravity="center"
         android:hint="@string/app_owner"
         android:inputType="textPersonName"
-        android:maxLength="8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +23,7 @@
     <EditText
         android:id="@+id/editAppKey"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:autofillHints="@string/appkey"
         android:ems="10"
         android:gravity="center"

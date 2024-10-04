@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jay.easygest.databinding.ActivityActiverProduitBinding;
+import com.jay.easygest.outils.SessionManagement;
 
 public class ActiverProduitActivity extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class ActiverProduitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ActivityActiverProduitBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         activerproduit();
@@ -34,7 +36,9 @@ public class ActiverProduitActivity extends AppCompatActivity {
                    if (apppowner.equals(proprietaire) && apppkey.equals(cleproduit)) {
                        Intent intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
                        intent.putExtra("msgactivation","félicitation produit activé");
+                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                        startActivity(intent);
+                       finish();
                    } else {
                        Toast.makeText(ActiverProduitActivity.this, "produit non conforme", Toast.LENGTH_SHORT).show();
                    }
@@ -46,6 +50,7 @@ public class ActiverProduitActivity extends AppCompatActivity {
            }
         });
     }
+
 
 
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccessLocal;
-import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 
 import java.util.Date;
@@ -49,6 +48,13 @@ public final class Usercontrolleur {
         this.proprietaireMdpInit = proprietaireMdpInit;
     }
 
+    public void initMpdp(UserModel utilisateur){
+        String mdp = MesOutils.mdpgenerator();
+        UserModel user = new UserModel(utilisateur.getId(),utilisateur.getUsername(),mdp,utilisateur.getDateInscription(),utilisateur.getStatus(),true,0);
+        accessLocal.modifierUtilisateur(user);
+        this.setProprietaireMdpInit(mdp);
+    }
+
     public boolean creerUser(String username, String password, AppKessModel appKess, String owner, String code_base, String telephone, String email){
         user = new UserModel(username,password,new Date(),1,true,0);
         AppKessModel appKessModel = new AppKessModel(appKess.getAppnumber(),appKess.getApppkey(),owner,code_base,telephone,email);
@@ -79,9 +85,9 @@ public final class Usercontrolleur {
     }
 
     public void activerProprietaire(){
-        String mdp = MesOutils.mdpgenerator();
-        accessLocal.activerProprietaire(mdp);
-        this.setProprietaireMdpInit(mdp);
+//        String mdp = MesOutils.mdpgenerator();
+        accessLocal.activerProprietaire();
+//        this.setProprietaireMdpInit(mdp);
     }
 
     public void desactiverAdministrateur(){
@@ -92,13 +98,19 @@ public final class Usercontrolleur {
         accessLocal.activerAdministrateur();
     }
 
+    /**
+     * permet de d'authentifier l'application pour degele
+     * @param proprietaire le proprietaire
+     * @param cleproduit la cle du produit
+     * @return vrai si authentification reussi sinon faux
+     */
     public boolean authApp(String proprietaire, String cleproduit) {
 
            if (accessLocal.authapp(proprietaire,cleproduit)){
-               String mdp = MesOutils.mdpgenerator();
+//               String mdp = MesOutils.mdpgenerator();
                accessLocal.activerAdministrateur();
-               accessLocal.activerProprietaire(mdp);
-               this.setProprietaireMdpInit(mdp);
+               accessLocal.activerProprietaire();
+//               this.setProprietaireMdpInit(mdp);
            }
 
         return accessLocal.authapp(proprietaire,cleproduit);

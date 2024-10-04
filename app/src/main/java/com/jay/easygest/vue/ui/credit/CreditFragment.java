@@ -1,19 +1,21 @@
 package com.jay.easygest.vue.ui.credit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
-import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentCreditBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
@@ -21,7 +23,9 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.AfficherclientActivity;
+import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.Date;
@@ -29,21 +33,21 @@ import java.util.Date;
 
 public class CreditFragment extends Fragment {
 
-
+    private SessionManagement sessionManagement;
     private FragmentCreditBinding binding;
     private Creditcontrolleur creditcontrolleur;
     private Clientcontrolleur clientcontrolleur;
-    private Versementcontrolleur versementcontrolleur;
     private ClientViewModel clientViewModel;
     private AccessLocalAppKes accessLocalAppKes;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        sessionManagement = new SessionManagement(requireContext());
         binding = FragmentCreditBinding.inflate(inflater, container, false);
         this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
-        versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
+//        Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
         accessLocalAppKes = new AccessLocalAppKes(getContext());
@@ -152,10 +156,20 @@ public class CreditFragment extends Fragment {
     }
 
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        creditcontrolleur.setCredit(null);
-        binding = null;
+    public void onStart() {
+        super.onStart();
     }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+
 }

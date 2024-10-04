@@ -1,7 +1,9 @@
 package com.jay.easygest.vue.ui.account;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +23,17 @@ import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.AfficherclientActivity;
+import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.Date;
 import java.util.Objects;
 
 public class  AccountFragment extends Fragment {
+
+    private SessionManagement sessionManagement;
 
     private AccountViewModel accountViewModel;
     private ClientViewModel clientViewModel;
@@ -39,6 +45,8 @@ public class  AccountFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        sessionManagement = new SessionManagement(requireContext());
         binding = FragmentAccountBinding.inflate(inflater,container,false);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
@@ -146,5 +154,26 @@ public class  AccountFragment extends Fragment {
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+
+        }
+    }
 
 }

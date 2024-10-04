@@ -14,6 +14,7 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.owlike.genson.Genson;
@@ -23,6 +24,7 @@ import java.util.Objects;
 
 public class ModifierAccountActivity extends AppCompatActivity {
 
+    private SessionManagement sessionManagement;
     private ActivityModifierAccountBinding binding;
     private AccountViewModel accountViewModel;
     private Accountcontroller accountcontroller;
@@ -33,6 +35,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionManagement = new SessionManagement(this);
         binding = ActivityModifierAccountBinding.inflate(getLayoutInflater());
         accountViewModel= new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel= new ViewModelProvider(this).get(ClientViewModel.class);
@@ -138,12 +142,30 @@ public class ModifierAccountActivity extends AppCompatActivity {
                         clientViewModel.getClient().setValue(clientModel);
                         Intent intent = new Intent(ModifierAccountActivity.this, AfficherAccountActivity.class);
                         startActivity(intent);
-                        finish();
+//                        finish();
                     } else {
                         Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
                     }
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+//            finish();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 
 

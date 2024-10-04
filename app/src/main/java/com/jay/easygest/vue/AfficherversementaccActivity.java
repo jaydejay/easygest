@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jay.easygest.R;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherversementaccBinding;
@@ -16,6 +17,7 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
 
@@ -24,6 +26,7 @@ import java.util.Objects;
 
 public class AfficherversementaccActivity extends AppCompatActivity {
 
+    SessionManagement sessionManagement;
     private ActivityAfficherversementaccBinding binding;
     private Versementacccontrolleur versementacccontrolleur;
     private Clientcontrolleur clientcontrolleur;
@@ -36,6 +39,9 @@ public class AfficherversementaccActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionManagement = new SessionManagement(this);
+
         binding = ActivityAfficherversementaccBinding.inflate(getLayoutInflater());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
@@ -72,8 +78,8 @@ public class AfficherversementaccActivity extends AppCompatActivity {
         binding.textViewAfVersmaccSomme.setText(texte2);
         binding.textViewAfVersmaccNumeroCredit.setText(texte3);
 
-        binding.afVersmaccToCredits.setText("liste credits");
-        binding.afVersmaccToClient.setText("le client");
+        binding.afVersmaccToCredits.setText(getResources().getString(R.string.liste_credit));
+        binding.afVersmaccToClient.setText(R.string.le_client);
 
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
@@ -142,5 +148,27 @@ public class AfficherversementaccActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AfficherclientActivity.class);
             startActivity(intent);
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

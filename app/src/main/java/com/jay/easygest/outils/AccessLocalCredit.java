@@ -13,11 +13,9 @@ import java.util.ArrayList;
 
 
 public class AccessLocalCredit {
-    public static final String APPNUMBER = "appnumber";
+
     public static final String NBR_CREDIT = "nbrcredit";
     public static final String TOTAL_CREDIT = "totalcredit";
-    public static final String NBR_ACCOUNT = "nbraccount";
-    public static final String TOTAL_ACCOUNT = "totalaccount";
     public static final String TABLE_VERSEMENT = "versement";
     public static final String CODECLIENT = "codeclient";
     public static final String CLIENTID = "clientid";
@@ -59,9 +57,6 @@ public class AccessLocalCredit {
         this.contexte = contexte;
         this.accessBD = new MySqliteOpenHelper(contexte, null);
         accessLocalClient = new AccessLocalClient(contexte);
-//        clientcontrolleur =  Clientcontrolleur.getClientcontrolleurInstance(contexte);
-
-
     }
 
 
@@ -371,7 +366,6 @@ public class AccessLocalCredit {
         public int getRecapTcredit(){
             bd = accessBD.getReadableDatabase();
             String req  = "select SUM(sommecredit) AS t_credit from credit where reste != 0";
-
             Cursor cursor = bd.rawQuery(req,null);
             cursor.moveToFirst();
             int totalcredit = cursor.getInt(cursor.getColumnIndexOrThrow("t_credit"));
@@ -386,7 +380,6 @@ public class AccessLocalCredit {
     public int getRecapTversement(){
             bd = accessBD.getReadableDatabase();
             String req  = "select SUM(versements) AS t_versement from credit where reste != 0";
-
             Cursor cursor = bd.rawQuery(req,null);
             cursor.moveToFirst();
             int totalversement = cursor.getInt(cursor.getColumnIndexOrThrow("t_versement"));
@@ -401,7 +394,6 @@ public class AccessLocalCredit {
     public int getRecapTreste(){
             bd = accessBD.getReadableDatabase();
             String req  = "select SUM(reste) AS t_reste from credit where reste != 0";
-
             Cursor cursor = bd.rawQuery(req,null);
             cursor.moveToFirst();
             int totalreste = cursor.getInt(cursor.getColumnIndexOrThrow("t_reste"));

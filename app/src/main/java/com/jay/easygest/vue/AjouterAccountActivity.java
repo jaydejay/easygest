@@ -14,6 +14,7 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
@@ -22,6 +23,7 @@ import java.util.Objects;
 
 public class AjouterAccountActivity extends AppCompatActivity {
 
+    private SessionManagement sessionManagement;
     private ActivityAjouterAccountBinding binding;
     private ClientViewModel clientViewModel;
     private AccountViewModel accountViewModel;
@@ -34,13 +36,14 @@ public class AjouterAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sessionManagement = new SessionManagement(this);
+
         binding = ActivityAjouterAccountBinding.inflate(getLayoutInflater());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         client = clientViewModel.getClient().getValue();
-//         account = accountViewModel.getAccount().getValue();
          init();
          ajouterAccount();
         setContentView(binding.getRoot());
@@ -124,6 +127,23 @@ public class AjouterAccountActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sessionManagement.removeSession();
     }
 
 

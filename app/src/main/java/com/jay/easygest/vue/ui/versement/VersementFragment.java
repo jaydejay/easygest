@@ -1,13 +1,16 @@
 package com.jay.easygest.vue.ui.versement;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,7 +19,9 @@ import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentVersementBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.AfficherclientActivity;
+import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 
@@ -25,6 +30,7 @@ import java.util.Objects;
 
 public class VersementFragment extends Fragment {
 
+    private SessionManagement sessionManagement;
     private FragmentVersementBinding binding;
     private Versementcontrolleur versementcontrolleur;
     private ClientViewModel clientViewModel;
@@ -35,10 +41,10 @@ public class VersementFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentVersementBinding.inflate(inflater, container, false);
+        sessionManagement = new SessionManagement(requireContext());
 
+        binding = FragmentVersementBinding.inflate(inflater, container, false);
         this.versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
-//        this.clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
         Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
 
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
@@ -64,7 +70,6 @@ public class VersementFragment extends Fragment {
                     Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_LONG).show();
 
                 } else {
-//                    if (Integer.parseInt(somme_versee) >= 1000) {
 
                         try {
                             String codeclient = binding.editversementcodeclt.getText().toString();
@@ -90,7 +95,6 @@ public class VersementFragment extends Fragment {
                         } catch (Exception e) {
                             Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
                         }
-//                    }else {Toast.makeText(getContext(), "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();}
 
                 }
         });
@@ -107,9 +111,18 @@ public class VersementFragment extends Fragment {
     }
 
 
+
+    public void onStart() {
+        super.onStart();
+    }
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+
+        }
     }
 }

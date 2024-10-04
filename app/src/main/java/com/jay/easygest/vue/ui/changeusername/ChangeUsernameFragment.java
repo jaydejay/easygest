@@ -1,6 +1,7 @@
 package com.jay.easygest.vue.ui.changeusername;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,13 @@ import android.widget.Toast;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.FragmentChangeUsernameBinding;
 import com.jay.easygest.model.UserModel;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.GestionActivity;
 import com.jay.easygest.vue.MainActivity;
 
 public class ChangeUsernameFragment extends Fragment {
 
+    private SessionManagement sessionManagement;
     private FragmentChangeUsernameBinding binding;
     private Integer compteur;
     private UserModel user;
@@ -30,6 +34,8 @@ public class ChangeUsernameFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        sessionManagement = new SessionManagement(requireContext());
         binding = FragmentChangeUsernameBinding.inflate(inflater, container, false);
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(getContext());
         View root = binding.getRoot();
@@ -40,13 +46,14 @@ public class ChangeUsernameFragment extends Fragment {
     public void changerUsername(){
         binding.btnchangeusername.setOnClickListener(v -> {
 
-            if (binding.editchangerusernameusername.length() != 0 && binding.editchangerusernamenouveauusername.length() != 0 && binding.editchangerusernamepassword.length() != 0 ){
+            String username = binding.editchangerusernameusername.getText().toString().trim();
+            String nouveauusername = binding.editchangerusernamenouveauusername.getText().toString().trim();
+            String password = binding.editchangerusernamepassword.getText().toString().trim();
 
-                if (binding.editchangerusernameusername.length() >= 6 && binding.editchangerusernamenouveauusername.length() >= 6 && binding.editchangerusernamepassword.length() >= 8){
-
-                    String username = binding.editchangerusernameusername.getText().toString();
-                    String nouveauusername = binding.editchangerusernamenouveauusername.getText().toString();
-                    String password = binding.editchangerusernamepassword.getText().toString();
+            if (username.isEmpty() || nouveauusername.isEmpty() || password.isEmpty() ){
+                Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
+            }else {
+                if (username.length() >= 6 && nouveauusername.length() >= 6 && password.length() >= 8){
                     user = usercontrolleur.getUser();
                     if (username.equals(user.getUsername()) && password.equals(user.getPassword())){
                         UserModel userModel = new UserModel(user.getId(),nouveauusername,user.getPassword(),user.getDateInscription(),user.getStatus(),user.isActif(),0);
@@ -64,8 +71,7 @@ public class ChangeUsernameFragment extends Fragment {
                     Toast.makeText(getContext(), "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
                     desactiverbtnchangerusername(user);
                 }
-
-            }else { Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show(); }
+            }
         });
     }
 
@@ -98,11 +104,25 @@ public class ChangeUsernameFragment extends Fragment {
         return compteur;
 
     }
+    public void onStart() {
+        super.onStart();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+
+        }
+
+    }
+
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 
 
