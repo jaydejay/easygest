@@ -25,6 +25,7 @@ public class Accountcontroller {
     private final  MutableLiveData<Integer> mtotalaccountClient = new MutableLiveData<>();
 
 
+
     /**
      * la liste de tous les accounts
      */
@@ -50,13 +51,15 @@ public class Accountcontroller {
         this.maccount.setValue(accountModel);
     }
 
-    public void setAccounts(ArrayList<AccountModel> accountsmodel) {
-        this.maccounts.setValue(accountsmodel);
-    }
 
     public MutableLiveData<AccountModel> getMaccount() {
         return maccount;
     }
+
+    public void setAccounts(ArrayList<AccountModel> accountsmodel) {
+        this.maccounts.setValue(accountsmodel);
+    }
+
 
     public MutableLiveData<ArrayList<AccountModel>> getMaccounts() {
         return maccounts;
@@ -216,15 +219,13 @@ public class Accountcontroller {
 
     }
 
-
+    public MutableLiveData<Integer> getRecapTaccounttClient(){
+        return mtotalaccountClient;
+    }
 
     public  void setRecapTresteClient(ClientModel client){
         int totalresteaccountclient = accessLocalAccount.getRecapTresteClient(client);
         mtotalresteaccountclient.setValue(totalresteaccountclient);
-    }
-
-    public MutableLiveData<Integer> getRecapTaccounttClient(){
-        return mtotalaccountClient;
     }
 
     public MutableLiveData<Integer> getRecapTresteClient(){

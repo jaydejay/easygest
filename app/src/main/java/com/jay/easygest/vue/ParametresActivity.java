@@ -60,22 +60,22 @@ public class  ParametresActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void afficherAlerte2() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("mot de passe reinitialisé");
-        builder.setMessage("votre mot de passe a été reinitialisé, il est fortement recommender de le noter." +
-                "vous pouver le changer en accedant à modifier mot de passe dans le menu." +
-                "ceci est une alerte elle diparaitra lorsque vous aurez cliquer sur ok." +
-                "mot de passe : "+usercontrolleur.getProprietaireMdpInit()+"");
-
-        builder.setPositiveButton("ok", (dialog, which) -> {
-            Intent intent = new Intent(ParametresActivity.this,MainActivity.class);
-            startActivity(intent);
-        });
-
-        builder.create().show();
-    }
+//    private void afficherAlerte2() {
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("mot de passe reinitialisé");
+//        builder.setMessage("votre mot de passe a été reinitialisé, il est fortement recommender de le noter." +
+//                "vous pouver le changer en accedant à modifier mot de passe dans le menu." +
+//                "ceci est une alerte elle diparaitra lorsque vous aurez cliquer sur ok." +
+//                "mot de passe : "+usercontrolleur.getProprietaireMdpInit()+"");
+//
+//        builder.setPositiveButton("ok", (dialog, which) -> {
+//            Intent intent = new Intent(ParametresActivity.this,MainActivity.class);
+//            startActivity(intent);
+//        });
+//
+//        builder.create().show();
+//    }
 
 
 }

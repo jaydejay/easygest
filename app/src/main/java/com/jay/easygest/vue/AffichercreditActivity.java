@@ -11,13 +11,19 @@ import androidx.lifecycle.ViewModelProvider;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAffichercreditBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
+
+import java.util.Date;
 
 public class AffichercreditActivity extends AppCompatActivity {
 
@@ -33,6 +39,9 @@ public class AffichercreditActivity extends AppCompatActivity {
     private  CreditModel credit;
     private ActivityAffichercreditBinding binding;
     private ClientViewModel clientViewModel;
+    private SmsSender smsSender;
+    private AccessLocalAppKes accessLocalAppKes;
+    private AppKessModel appKessModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +49,17 @@ public class AffichercreditActivity extends AppCompatActivity {
         sessionManagement = new SessionManagement(this);
         binding = ActivityAffichercreditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        smsSender = new SmsSender(this,this);
+        accessLocalAppKes = new AccessLocalAppKes(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
-
-
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-
         credit = creditViewModel.getCredit().getValue();
         creditcontrolleur.listecredits();
+
+
+        appKessModel = accessLocalAppKes.getAppkes();
+
         cardaffichercredittitle = findViewById(R.id.cardaffichercredittitle);
         cardaffichercreditarticle1 = findViewById(R.id.cardaffichercreditarticle1);
         cardaffichercreditarticle2 = findViewById(R.id.cardaffichercreditarticle2);
@@ -119,7 +131,7 @@ public class AffichercreditActivity extends AppCompatActivity {
     public void annullerCredit(){
 
         binding.supCredit.setOnClickListener(view -> {
-
+            ClientModel client = this.credit.getClient();
             if (credit.getReste() > 0) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -132,9 +144,26 @@ public class AffichercreditActivity extends AppCompatActivity {
                 builder.setPositiveButton("oui", (dialog, which) -> {
                    boolean success = creditcontrolleur.annullerCredit(credit);
                    if (success){
-                       Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
-                       startActivity(intent);
-                   }
+                       creditcontrolleur.setRecapTresteClient(client);
+                       creditcontrolleur.setRecapTcreditClient(client);
+
+                       int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                       int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+
+                         String destinationAdress1 = "+225"+client.getTelephone();
+                       String destinationAdress = "5556";
+                       String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                               + client.getNom() + " "+client.getPrenoms() +"\n"
+                               +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
+                               +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                               +"total credit : "+total_credit_client+"\n"
+                               +"reste a payer : "+total_reste_client+"\n";
+
+                       smsSender.checkForSmsPermissionBeforeSend(client,credit.getVersement(),total_credit_client,total_reste_client,"credit",credit.getDatecredit(),messageBody,destinationAdress);
+//                       Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
+//                       startActivity(intent);
+                   }else{   Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
+                       startActivity(intent);}
 
                 });
 
@@ -158,6 +187,8 @@ public class AffichercreditActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+
+        smsSender.sentReiceiver();
     }
 
     @Override

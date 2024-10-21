@@ -11,10 +11,13 @@ import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityAjouterAccountBinding;
 import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
@@ -29,8 +32,10 @@ public class AjouterAccountActivity extends AppCompatActivity {
     private AccountViewModel accountViewModel;
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
-//    private AccountModel account;
     private ClientModel client;
+    private SmsSender smsSender;
+    private AccessLocalAppKes accessLocalAppKes;
+    private AppKessModel appKessModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,10 @@ public class AjouterAccountActivity extends AppCompatActivity {
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         client = clientViewModel.getClient().getValue();
-         init();
-         ajouterAccount();
+        accessLocalAppKes = new AccessLocalAppKes(this);
+        smsSender = new SmsSender(this,this);
+        init();
+        ajouterAccount();
         setContentView(binding.getRoot());
 
     }
@@ -114,14 +121,33 @@ public class AjouterAccountActivity extends AppCompatActivity {
                 if (Integer.parseInt(versement) < sommecredit){
                     boolean success = accountcontroller.ajouterAccount( client,c_article1,c_article2,versement, dateaccount);
                     if (success) {
+                        appKessModel = accessLocalAppKes.getAppkes();
                         ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                         AccountModel account_ajoute = accountViewModel.getAccount().getValue();
                         AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account_ajoute.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
                         accountViewModel.getAccount().setValue(accountModel);
                         clientViewModel.getClient().setValue(clientModel);
-                        Intent intent = new Intent(AjouterAccountActivity.this, AfficherAccountActivity.class);
-                        startActivity(intent);
-                        finish();
+
+                        accountcontroller.setRecapTresteClient(clientModel);
+                        accountcontroller.setRecapTaccountClient(clientModel);
+                        int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                        int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+
+                        String destinationAdress = "+225"+clientModel.getTelephone();
+//                        String destinationAdress = "5556";
+
+                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                +"vous avez pris un autre account de "+accountModel.getSommeaccount()+" FCFA"+"\n"
+                                +"le "+date+"\n"
+                                +"total account "+total_account_client+"\n"
+                                +"reste à payer : "+total_reste_client;
+
+                        smsSender.checkForSmsPermissionBeforeSend(clientModel,accountModel.getVersement(),total_account_client,total_reste_client,"account",accountModel.getDateaccount(),messageBody,destinationAdress);
+
+//                        Intent intent = new Intent(AjouterAccountActivity.this, AfficherAccountActivity.class);
+//                        startActivity(intent);
+//                        finish();
                     } else { Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();}
                 }else {Toast.makeText(this, "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();}
 

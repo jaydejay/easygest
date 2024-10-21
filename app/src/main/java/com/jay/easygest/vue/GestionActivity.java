@@ -1,11 +1,8 @@
 package com.jay.easygest.vue;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -27,27 +24,34 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityGestionBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class GestionActivity extends AppCompatActivity {
     private ActivityGestionBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private Creditcontrolleur creditcontrolleur;
     private SessionManagement sessionManagement;
-    private Accountcontroller accountcontroller;
+    private Accountcontroller accountcontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
-
+    private AccessLocalAppKes accessLocalAppKes;
+    private AppKessModel appKessModel;
+    private SmsSender smsSender;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +60,18 @@ public class GestionActivity extends AppCompatActivity {
         binding = ActivityGestionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         sessionManagement = new SessionManagement(this);
-
+        smsSender = new SmsSender(this,this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
-        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
+        accountcontrolleur = Accountcontroller.getAccountcontrolleurInstance(this);
+
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+
+        accessLocalAppKes = new AccessLocalAppKes(this);
+        appKessModel = accessLocalAppKes.getAppkes();
 
         try {
             ArrayList<ClientModel> listeClients = clientcontrolleur.listeClients();
@@ -79,7 +87,7 @@ public class GestionActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_clients, R.id.nav_listecredit, R.id.nav_credit, R.id.nav_account,R.id.nav_changepsssword,R.id.nav_changeusername,R.id.nav_import_export, R.id.nav_a_propos )
+                R.id.nav_clients, R.id.nav_listecredit, R.id.nav_credit, R.id.nav_account,R.id.nav_sms_resent,R.id.nav_changepsssword,R.id.nav_changeusername,R.id.nav_import_export, R.id.nav_a_propos )
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_gestion);
@@ -186,8 +194,7 @@ public class GestionActivity extends AppCompatActivity {
      */
     public void supprimerClient(ClientModel client) {
         boolean success_credit = creditcontrolleur.isClientOwnCredit(client);
-        boolean success_account = accountcontroller.isClientOwnAccount(client);
-        Log.i("gestionactivity", "supprimerClient: "+success_account);
+        boolean success_account = accountcontrolleur.isClientOwnAccount(client);
         if (success_credit || success_account) {
             Toast.makeText(this, "impossible de supprimer le client il a un credit ou un account en cours", Toast.LENGTH_LONG).show();
         }else {
@@ -213,7 +220,7 @@ public class GestionActivity extends AppCompatActivity {
 
 
     /**
-     * permet c'annuller un credit
+     * permet d'annuller un credit
      * @param credit le credit à annuller
      */
     public void annullerCredit(CreditModel credit){
@@ -228,10 +235,28 @@ public class GestionActivity extends AppCompatActivity {
                     +"de la somme du credit");
 
             builder.setPositiveButton("oui", (dialog, which) -> {
+                ClientModel client = credit.getClient();
                  boolean success = creditcontrolleur.annullerCredit(credit);
+
                if (success){
-                   Intent intent = new Intent(GestionActivity.this, GestionActivity.class);
-                   startActivity(intent);
+                   ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
+                   clientViewModel.getClient().setValue(clientModel);
+                   creditcontrolleur.setRecapTresteClient(clientModel);
+                   creditcontrolleur.setRecapTcreditClient(clientModel);
+
+                   int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                   int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+
+                     String destinationAdress = "+225"+clientModel.getTelephone();
+//                   String destinationAdress = "5556";
+                   String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                           + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                           +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
+                           +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                           +"total credit : "+total_credit_client+"\n"
+                           +"reste a payer : "+total_reste_client+"\n";
+
+                   smsSender.checkForSmsPermissionBeforeSend(clientModel,credit.getVersement(),total_credit_client,total_reste_client,"credit",credit.getDatecredit(),messageBody,destinationAdress);
                }
 
             });
@@ -268,6 +293,7 @@ public class GestionActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+        smsSender.sentReiceiver();
     }
 
     @Override

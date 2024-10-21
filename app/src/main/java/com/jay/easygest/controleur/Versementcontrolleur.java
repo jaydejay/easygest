@@ -57,6 +57,7 @@ public class Versementcontrolleur {
     }
 
     public boolean ajouterversement(ClientModel client, long sommeverse,String dateversement) {
+
         return  accessLocalVersement.ajouterversement(client,sommeverse,dateversement);
     }
 

@@ -54,9 +54,7 @@ public class  CreditViewModel extends ViewModel {
     public MutableLiveData<ArrayList<CreditModel>> getCredits_client_soldes_ou_non() {
         return credits_client_soldes_ou_non;
     }
-    public MutableLiveData<Integer> getTotalcreditsclient() {
-        return totalcreditsclient;
-    }
+    public MutableLiveData<Integer> getTotalcreditsclient() { return totalcreditsclient; }
 
     public MutableLiveData<Integer> getTotalrestesclient() {
         return totalrestesclient;

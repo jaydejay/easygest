@@ -11,20 +11,32 @@ import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherAccountBinding;
 import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.owlike.genson.Genson;
+
+import java.util.Date;
+import java.util.Objects;
 
 public class AfficherAccountActivity extends AppCompatActivity {
 
     private ActivityAfficherAccountBinding binding;
     private SessionManagement sessionManagement;
+    private SmsSender smsSender;
+    private AccessLocalAppKes accessLocalAppKes;
+    private AppKessModel appKessModel;
     private Accountcontroller accountcontroller;
     private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
+    private  AccountViewModel accountViewModel;
     private  AccountModel account;
 
     @Override
@@ -32,12 +44,15 @@ public class AfficherAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherAccountBinding.inflate(getLayoutInflater());
         sessionManagement = new SessionManagement(this);
+        smsSender = new SmsSender(this,this);
 
+        accessLocalAppKes = new AccessLocalAppKes(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
-        AccountViewModel accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+
         account = accountViewModel.getAccount().getValue();
 
         afficheraccount();
@@ -67,13 +82,6 @@ public class AfficherAccountActivity extends AppCompatActivity {
         binding.cardafficheraccountverement.setText(versement);
     }
 
-
-    public void redirectToModifierAccount(){
-        binding.modifierAccount.setOnClickListener(view -> {
-            Intent intent = new Intent(this,ModifierAccountActivity.class);
-            startActivity(intent);
-        });
-    }
 
     public void redirectListeCredits(){
 
@@ -108,6 +116,14 @@ public class AfficherAccountActivity extends AppCompatActivity {
         }
     }
 
+
+    public void redirectToModifierAccount(){
+        binding.modifierAccount.setOnClickListener(view -> {
+            Intent intent = new Intent(this,ModifierAccountActivity.class);
+            startActivity(intent);
+        });
+    }
+
     public void annullerAccount(){
 
         binding.supAccount.setOnClickListener(view -> {
@@ -126,8 +142,27 @@ public class AfficherAccountActivity extends AppCompatActivity {
                     if (success){
                         ClientModel clientModel = clientcontrolleur.recupererClient(account.getClient().getId());
                         clientViewModel.getClient().setValue(clientModel);
-                        Intent intent = new Intent(AfficherAccountActivity.this, AfficherclientActivity.class);
-                        startActivity(intent);
+
+                        appKessModel = accessLocalAppKes.getAppkes();
+
+                        accountcontroller.setRecapTresteClient(clientModel);
+                        accountcontroller.setRecapTaccountClient(clientModel);
+                        int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                        int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+
+                        String destinationAdress1 = "+225"+clientModel.getTelephone();
+//                        String destinationAdress1 = "+225"+VariablesStatique.CLIENT_TELEPHONE;
+                        String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+
+                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                +"vous avez annullé l'account  "+account.getNumeroaccount()+"\n"
+                                +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                +"total account "+total_account_client+"\n"
+                                +"reste à payer : "+total_reste_client;
+
+                        smsSender.checkForSmsPermissionBeforeSend(clientModel,account.getVersement(),total_account_client,total_reste_client,"account",account.getDateaccount(),messageBody,destinationAdress);
+
                     }
 
                 });
@@ -152,6 +187,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+        smsSender.sentReiceiver();
     }
 
     @Override

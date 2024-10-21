@@ -9,9 +9,11 @@ import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.outils.AccessLocalClient;
 import com.jay.easygest.outils.AccessLocalCredit;
 import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersement;
+import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.owlike.genson.Genson;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public final class Creditcontrolleur {
     private static AccessLocalCredit accessLocalcredit;
     private static AccessLocalInfo accessLocalInfo ;
     private static AccessLocalVersement accessLocalVersement;
+    private static AccessLocalClient accessLocalClient;
     private final MutableLiveData<Integer> mtotalcredit = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversement = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalreste = new MutableLiveData<>();
@@ -48,6 +51,7 @@ public final class Creditcontrolleur {
             accessLocalcredit = new AccessLocalCredit(contexte);
             accessLocalVersement = new AccessLocalVersement(contexte);
              accessLocalInfo = new AccessLocalInfo(contexte);
+             accessLocalClient = new AccessLocalClient(contexte);
         }
 
         return creditcontrolleurInstance;
@@ -229,6 +233,7 @@ public final class Creditcontrolleur {
     public  void setRecapTresteClient(ClientModel client){
         int totalresteclient = accessLocalcredit.getRecapTresteClient(client);
         mtotalresteclient.setValue(totalresteclient);
+        mtotalresteclient.postValue(totalresteclient);
     }
 
     public MutableLiveData<Integer> getRecapTcreditClient(){

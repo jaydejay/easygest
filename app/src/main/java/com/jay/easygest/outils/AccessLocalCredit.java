@@ -103,7 +103,7 @@ public class AccessLocalCredit {
             if (Integer.parseInt(sommeversee) != 0){
                 bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt(sommeversee), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()));
             }
-             creditModel = this.recupCreditById((int) credit_rslt);
+            creditModel = this.recupCreditById((int) credit_rslt);
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
@@ -187,7 +187,7 @@ public class AccessLocalCredit {
 
             bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=" +creditModel.getId(),null,1);
             bd.updateWithOnConflict(TABLE_CLIENT, client_cv, ID+ "= ?", new String[] {String.valueOf(client.getId())},1);
-             credit = this.recupCreditById(creditModel.getId());
+            credit = this.recupCreditById(creditModel.getId());
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
@@ -245,7 +245,6 @@ public class AccessLocalCredit {
             }
             while (cursor.moveToNext());
             cursor.close();
-
         }catch(Exception e){
             return credits;
         }
@@ -272,9 +271,8 @@ public class AccessLocalCredit {
                 credits.add(credit);
             }
             while (cursor.moveToNext());
-
             cursor.close();
-
+//            bd.close();
         }catch(Exception e){
             return credits;
         }
@@ -301,8 +299,8 @@ public class AccessLocalCredit {
                 credits.add(credit);
             }
             while (cursor.moveToNext());
-
             cursor.close();
+//            bd.close();
         }catch(Exception e){
             return credits;
         }
@@ -350,7 +348,7 @@ public class AccessLocalCredit {
                 credit.setSoldedat(cursor.getLong(9));
             }
             cursor.close();
-
+//            bd.close();
         }catch (Exception e){
             //do nothing
             return credit;
@@ -370,6 +368,7 @@ public class AccessLocalCredit {
             cursor.moveToFirst();
             int totalcredit = cursor.getInt(cursor.getColumnIndexOrThrow("t_credit"));
             cursor.close();
+//            bd.close();
             return totalcredit;
         }
 
@@ -378,14 +377,15 @@ public class AccessLocalCredit {
      * @return retourne le total des versements des credits en cour
      */
     public int getRecapTversement(){
-            bd = accessBD.getReadableDatabase();
-            String req  = "select SUM(versements) AS t_versement from credit where reste != 0";
-            Cursor cursor = bd.rawQuery(req,null);
-            cursor.moveToFirst();
-            int totalversement = cursor.getInt(cursor.getColumnIndexOrThrow("t_versement"));
-            cursor.close();
-            return totalversement;
-        }
+        bd = accessBD.getReadableDatabase();
+        String req  = "select SUM(versements) AS t_versement from credit where reste != 0";
+        Cursor cursor = bd.rawQuery(req,null);
+        cursor.moveToFirst();
+        int totalversement = cursor.getInt(cursor.getColumnIndexOrThrow("t_versement"));
+        cursor.close();
+//        bd.close();
+        return totalversement;
+    }
 
     /**
      *
@@ -398,7 +398,7 @@ public class AccessLocalCredit {
             cursor.moveToFirst();
             int totalreste = cursor.getInt(cursor.getColumnIndexOrThrow("t_reste"));
             cursor.close();
-
+//            bd.close();
             return totalreste;
         }
 
@@ -415,6 +415,7 @@ public class AccessLocalCredit {
         cursor.moveToFirst();
         int totalcredit = cursor.getInt(cursor.getColumnIndexOrThrow("t_credit"));
         cursor.close();
+//        bd.close();
         return totalcredit;
     }
 
@@ -430,6 +431,7 @@ public class AccessLocalCredit {
         cursor.moveToFirst();
         int totalversement = cursor.getInt(cursor.getColumnIndexOrThrow("t_versement"));
         cursor.close();
+//        bd.close();
         return totalversement;
     }
 
@@ -446,7 +448,7 @@ public class AccessLocalCredit {
         cursor.moveToFirst();
         int totalreste = cursor.getInt(cursor.getColumnIndexOrThrow("t_reste"));
         cursor.close();
-
+//        bd.close();
         return totalreste;
     }
 

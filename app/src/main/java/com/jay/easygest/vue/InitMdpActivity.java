@@ -58,10 +58,10 @@ public class InitMdpActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("reinitialisation du mot de passe ");
-        builder.setMessage("en cliquant sur ok "+"\n"
+        builder.setMessage("en cliquant sur OK "+"\n"
                 + "votre mot de passe sera reinitialisé");
 
-        builder.setPositiveButton("ok", (dialog, which) -> {
+        builder.setPositiveButton("OK", (dialog, which) -> {
             usercontrolleur.initMpdp(utilisateur);
             afficherMdpAlerte();
         });

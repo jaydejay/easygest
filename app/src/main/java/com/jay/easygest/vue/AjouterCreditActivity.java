@@ -10,11 +10,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAjouterCreditBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 
@@ -30,6 +33,9 @@ public class AjouterCreditActivity extends AppCompatActivity {
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
     private ClientModel client;
+    private AccessLocalAppKes accessLocalAppKes;
+    private   SmsSender smsSender;
+    private AppKessModel appKessModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +43,16 @@ public class AjouterCreditActivity extends AppCompatActivity {
 
         sessionManagement = new SessionManagement(this);
         binding = ActivityAjouterCreditBinding.inflate(getLayoutInflater());
-//        Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
+
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontroller = Creditcontrolleur.getCreditcontrolleurInstance(this);
 
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
+        smsSender = new SmsSender(this,this);
+        accessLocalAppKes = new AccessLocalAppKes(this);
+         appKessModel = accessLocalAppKes.getAppkes();
         init();
         ajouterCredit();
         setContentView(binding.getRoot());
@@ -114,11 +123,30 @@ public class AjouterCreditActivity extends AppCompatActivity {
                         ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                         CreditModel credit_ajoute = creditViewModel.getCredit().getValue();
                         CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_ajoute).getId(),clientModel,credit_ajoute.getArticle1(),credit_ajoute.getArticle2(),credit_ajoute.getSommecredit(),credit_ajoute.getVersement(),credit_ajoute.getReste(),credit_ajoute.getDatecredit(),credit_ajoute.getNumerocredit());
+
                         creditViewModel.getCredit().setValue(creditModel);
                         clientViewModel.getClient().setValue(clientModel);
-                        Intent intent = new Intent(AjouterCreditActivity.this, AffichercreditActivity.class);
-                        startActivity(intent);
-                        finish();
+
+                        creditcontroller.setRecapTresteClient(clientModel);
+                        creditcontroller.setRecapTcreditClient(clientModel);
+
+
+                        int total_credit_client = creditcontroller.getRecapTcreditClient().getValue();
+                        int total_reste_client = creditcontroller.getRecapTresteClient().getValue();
+
+                          String destinationAdress = "+225"+clientModel.getTelephone();
+//                        String destinationAdress = "5556";
+
+                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                +"vous avez pris un autre credit de "+creditModel.getSommecredit()+" FCFA"+"\n"
+                                +"le "+date+"\n"
+                                +"total credit "+total_credit_client+"\n"
+                                +"reste à payer : "+total_reste_client;
+
+
+                        smsSender.checkForSmsPermissionBeforeSend(client,creditModel.getVersement(),total_credit_client,total_reste_client,"credit",creditModel.getDatecredit(),messageBody,destinationAdress);
+
                     } else { Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();}
                 }else { Toast.makeText(this, "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();}
 

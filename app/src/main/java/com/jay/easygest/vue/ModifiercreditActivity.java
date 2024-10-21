@@ -2,6 +2,7 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,11 +11,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifiercreditBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
@@ -30,6 +34,9 @@ public class ModifiercreditActivity extends AppCompatActivity {
     private ActivityModifiercreditBinding binding;
     private CreditModel credit;
     private ClientModel client;
+    private AccessLocalAppKes accessLocalAppKes;
+    private SmsSender smsSender;
+    private AppKessModel appKessModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,10 @@ public class ModifiercreditActivity extends AppCompatActivity {
 
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
+
+        accessLocalAppKes = new AccessLocalAppKes(this);
+        smsSender = new SmsSender(this,this);
+        appKessModel = accessLocalAppKes.getAppkes();
         afficherCredit();
         modifierCredit();
         setContentView(binding.getRoot());
@@ -145,11 +156,29 @@ public class ModifiercreditActivity extends AppCompatActivity {
                     CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_modifier).getId(),clientModel,credit_modifier.getArticle1(),credit_modifier.getArticle2(),credit_modifier.getSommecredit(),credit_modifier.getVersement(),credit_modifier.getReste(),credit_modifier.getDatecredit(),credit_modifier.getNumerocredit());
                     creditViewModel.getCredit().setValue(creditModel);
                     clientViewModel.getClient().setValue(clientModel);
-//                    SessionManagement sessionManagement = new SessionManagement(ModifiercreditActivity.this);
-//                    sessionManagement.saveSession(true);
-                    Intent intent = new Intent(ModifiercreditActivity.this, AffichercreditActivity.class);
-                    startActivity(intent);
-//                    finish();
+
+                    if (sommecredit != ancienne_somme_credit){
+                        creditcontrolleur.setRecapTresteClient(clientModel);
+                        creditcontrolleur.setRecapTcreditClient(clientModel);
+
+                        int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                        int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+
+                          String destinationAdress = "+225"+clientModel.getTelephone();
+//                        String destinationAdress = "5556";
+                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                            + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                            +"vous avez modifier le credit "+creditModel.getNumerocredit()+"\n"
+                            +"le "+MesOutils.convertDateToString(new Date())+"\n"
+                            +"ancien credit : "+credit.getSommecredit()+"\n"
+                            +"nouveau credit : "+credit_modifier.getSommecredit()+"\n";
+
+                        smsSender.checkForSmsPermissionBeforeSend(clientModel,creditModel.getVersement(),total_credit_client,total_reste_client,"credit",new Date().getTime(),messageBody,destinationAdress);
+                    }else {
+                        Intent intent = new Intent(ModifiercreditActivity.this, AffichercreditActivity.class);
+                        startActivity(intent);
+                    }
+
                 } else {
                     Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
                 }
@@ -158,4 +187,9 @@ public class ModifiercreditActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        smsSender.sentReiceiver();
+    }
 }

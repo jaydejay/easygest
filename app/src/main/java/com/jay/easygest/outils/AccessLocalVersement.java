@@ -116,6 +116,7 @@ public class AccessLocalVersement {
             }
 
         }
+         creditcontrolleur.setRecapTresteClient(client);
         return succes;
     }
 

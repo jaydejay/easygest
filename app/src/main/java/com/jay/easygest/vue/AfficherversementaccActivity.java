@@ -10,14 +10,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
+import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherversementaccBinding;
 import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.VersementsaccModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
+import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
 
@@ -27,10 +32,15 @@ import java.util.Objects;
 public class AfficherversementaccActivity extends AppCompatActivity {
 
     SessionManagement sessionManagement;
+    private AccessLocalAppKes accessLocalAppKes;
+    private SmsSender smsSender;
     private ActivityAfficherversementaccBinding binding;
     private Versementacccontrolleur versementacccontrolleur;
     private Clientcontrolleur clientcontrolleur;
+    private Accountcontroller accountcontroller;
     private ClientViewModel clientViewModel;
+    private AccountViewModel accountViewModel;
+    private AppKessModel appKessModel;
     private VersementsaccModel versement;
     private int position_versement;
     private int nbr_versement;
@@ -41,13 +51,16 @@ public class AfficherversementaccActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         sessionManagement = new SessionManagement(this);
-
+        smsSender = new SmsSender(this,this);
+        accessLocalAppKes = new AccessLocalAppKes(this);
         binding = ActivityAfficherversementaccBinding.inflate(getLayoutInflater());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
+        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
 
         VersementaccViewModel versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
         setContentView(binding.getRoot());
 
@@ -114,8 +127,27 @@ public class AfficherversementaccActivity extends AppCompatActivity {
                     "oui",(dialog,which)->{
                         boolean success =  versementacccontrolleur.annullerversement(versement,account);
                         if (success){
-                            Intent intent = new Intent(this,GestionActivity.class);
-                            startActivity(intent);
+
+                            ClientModel clientModel = clientcontrolleur.recupererClient(versement.getClient().getId());
+                            appKessModel = accessLocalAppKes.getAppkes();
+                            clientViewModel.getClient().setValue(clientModel);
+                            accountcontroller.setRecapTresteClient(clientModel);
+                            accountcontroller.setRecapTaccountClient(clientModel);
+
+                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                            int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+
+                              String destinationAdress1 = "+225"+clientModel.getTelephone();
+                            String destinationAdress = "5556";
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                +"vous avez annuller le versement de "+versement.getSommeverse()+" de votre account"+"\n"
+                                +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                +"total account : "+total_account_client+"\n"
+                                +"reste a payer : "+total_reste_client+"\n";
+
+                            smsSender.checkForSmsPermissionBeforeSend(clientModel,Integer.parseInt(String.valueOf(versement.getSommeverse())),total_account_client,total_reste_client,"accmount",account.getDateaccount(),messageBody,destinationAdress);
+
                         }
 
                     }
@@ -158,6 +190,7 @@ public class AfficherversementaccActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+        smsSender.sentReiceiver();
     }
 
     @Override

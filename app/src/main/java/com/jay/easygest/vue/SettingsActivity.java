@@ -1,7 +1,11 @@
 package com.jay.easygest.vue;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.TextKeyListener;
+import android.text.style.StyleSpan;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +16,7 @@ import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.SessionManagement;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -63,8 +68,21 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void afficherOwnerForm(){
+        AtomicBoolean hiden = new AtomicBoolean(false);
 
-        binding.txtsettingToggleOwnerEdit.setOnClickListener(view -> binding.llsettingOwnerEdit.setVisibility(View.VISIBLE));
+        binding.txtsettingToggleOwnerEdit.setOnClickListener(view ->{
+           if (hiden.get()){
+               hiden.set(false);
+               binding.txtsettingToggleOwnerEdit.setText("modifier");
+               binding.llsettingOwnerEdit.setVisibility(View.GONE);
+           }else {
+               hiden.set(true);
+               binding.txtsettingToggleOwnerEdit.setText("annuller");
+               binding.llsettingOwnerEdit.setVisibility(View.VISIBLE);
+           }
+
+
+        } );
     }
 
     public void updateSettingOwner(){
@@ -81,11 +99,11 @@ public class SettingsActivity extends AppCompatActivity {
                 binding.lleditsettingOwner.setError("16 maximum");
 
             }else {
-                AppKessModel _appkes = new AppKessModel(appkess.getAppnumber(),appkess.getApppkey(),setting_owner,appkess.getBasecode(),appkess.getTelephone(),appkess.getAdresseelectro());
+
+                AppKessModel _appkes = new AppKessModel(appkess.getAppnumber(),appkess.getApppkey(),setting_owner.toUpperCase(),appkess.getBasecode(),appkess.getTelephone(),appkess.getAdresseelectro());
                 boolean success = accessLocalAppKes.updateAppkes(_appkes);
                 if (success){
                     binding.llsettingOwnerEdit.setVisibility(View.GONE);
-
                     Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
                     startActivity(intent);
                 }else {
@@ -99,8 +117,19 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     public void afficherBasecodeForm(){
+        AtomicBoolean hiden = new AtomicBoolean(false);
+        binding.txtsettingToggleBaseCodeEdit.setOnClickListener(view -> {
+            if (hiden.get()){
+                binding.txtsettingToggleBaseCodeEdit.setText("modifier");
+                binding.llsettingBaseCodeEdit.setVisibility(View.GONE);
+                hiden.set(false);
+            }else {
+                binding.txtsettingToggleBaseCodeEdit.setText("annuller");
+                binding.llsettingBaseCodeEdit.setVisibility(View.VISIBLE);
+                hiden.set(true);
+            }
 
-        binding.txtsettingToggleBaseCodeEdit.setOnClickListener(view -> binding.llsettingBaseCodeEdit.setVisibility(View.VISIBLE));
+        });
     }
 
     public void updateSettingbasecode(){
@@ -129,8 +158,20 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void afficherTelephoneForm(){
+        AtomicBoolean hiden = new AtomicBoolean(false);
+        binding.txtsettingToggleTelephoneEdit.setOnClickListener(view -> {
 
-        binding.txtsettingToggleTelephoneEdit.setOnClickListener(view -> binding.llsettingTelephoneEdit.setVisibility(View.VISIBLE));
+            if (hiden.get()){
+                binding.txtsettingToggleTelephoneEdit.setText("modifier");
+                binding.llsettingTelephoneEdit.setVisibility(View.GONE);
+                hiden.set(false);
+            }else {
+                binding.txtsettingToggleTelephoneEdit.setText("annuller");
+                binding.llsettingTelephoneEdit.setVisibility(View.VISIBLE);
+                hiden.set(true);
+            }
+
+        });
     }
 
     public void updateSettingTelephone(){
@@ -148,8 +189,8 @@ public class SettingsActivity extends AppCompatActivity {
                 boolean success = accessLocalAppKes.updateAppkes(_appkes);
                 if (success){
                     binding.llsettingTelephoneEdit.setVisibility(View.GONE);
-                    Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+//                    startActivity(intent);
                 }else {
                     binding.lleditsettingTelephone.setError("enregistrement avorté");
                 }
@@ -158,8 +199,19 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void afficherMailForm(){
+        AtomicBoolean hiden = new AtomicBoolean(false);
+        binding.txtsettingToggleMailEdit.setOnClickListener(view ->{
+            if (hiden.get()){
+                binding.txtsettingToggleMailEdit.setText("modifier");
+                binding.llsettingMailEdit.setVisibility(View.GONE);
+                hiden.set(false);
+            }else {
+                binding.txtsettingToggleMailEdit.setText("annuller");
+                binding.llsettingMailEdit.setVisibility(View.VISIBLE);
+                hiden.set(true);
+            }
 
-        binding.txtsettingToggleMailEdit.setOnClickListener(view -> binding.llsettingMailEdit.setVisibility(View.VISIBLE));
+        });
     }
 
     public void updateSettingMail(){

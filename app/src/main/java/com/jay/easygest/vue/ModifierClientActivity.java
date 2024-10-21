@@ -13,6 +13,7 @@ import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierClientBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 public class ModifierClientActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class ModifierClientActivity extends AppCompatActivity {
     private Clientcontrolleur clientcontrolleur;
     private Creditcontrolleur creditcontrolleur;
     private ClientViewModel clientViewModel;
+    private SmsSender smsSender;
     private ClientModel client;
 
 
@@ -30,6 +32,7 @@ public class ModifierClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         sessionManagement = new SessionManagement(this);
+        smsSender = new SmsSender(this,this);
         binding = ActivityModifierClientBinding.inflate(getLayoutInflater());
         clientcontrolleur= Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
@@ -78,6 +81,7 @@ public class ModifierClientActivity extends AppCompatActivity {
                String permis = binding.editmodifierclientpermis.getText().toString().trim();
                String passport = binding.editmodifierclientpassport.getText().toString().trim();
                String societe = binding.editmodifierclientsociete.getText().toString().trim();
+
                Integer nbrcredit = client.getNbrcredit();
                Long totalcredit = client.getTotalcredit();
                Integer nbraccount = client.getNbraccount();
@@ -85,8 +89,11 @@ public class ModifierClientActivity extends AppCompatActivity {
 
                if (nom.isEmpty() || prenoms.isEmpty() || telephone.isEmpty()){
                    Toast.makeText(ModifierClientActivity.this, "nom,prenoms et telephone obligatoires", Toast.LENGTH_SHORT).show();
+               }else if (telephone.length() < 10) {
+                   Toast.makeText(this, "numero doit étre de 10 chiffres", Toast.LENGTH_SHORT).show();
+
                }
-               ClientModel clientModel = new ClientModel(id,code,nom,prenoms,telephone,email,residence,cni,permis,passport,societe,nbrcredit,totalcredit,nbraccount,totalaccount);
+                ClientModel clientModel = new ClientModel(id,code,nom,prenoms,telephone,email,residence,cni,permis,passport,societe,nbrcredit,totalcredit,nbraccount,totalaccount);
                boolean success =  clientcontrolleur.modifierclient(clientModel);
 
                if(success ) {

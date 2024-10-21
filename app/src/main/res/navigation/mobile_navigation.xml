@@ -5,22 +5,12 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_listecredit">
 
-    <fragment
-        android:id="@+id/nav_versement"
-        android:name="com.jay.easygest.vue.ui.versement.VersementFragment"
-        android:label="@string/menu_versement"
-        tools:layout="@layout/fragment_versement" />
+
     <fragment
         android:id="@+id/nav_clients"
         android:name="com.jay.easygest.vue.ui.clients.ClientsFragment"
         android:label="@string/clients"
         tools:layout="@layout/fragment_client" />
-
-    <fragment
-        android:id="@+id/nav_credit"
-        android:name="com.jay.easygest.vue.ui.credit.CreditFragment"
-        android:label="@string/menu_credit"
-        tools:layout="@layout/fragment_credit" />
 
     <fragment
         android:id="@+id/nav_listecredit"
@@ -29,10 +19,23 @@
         tools:layout="@layout/fragment_listecredit" />
 
     <fragment
+        android:id="@+id/nav_credit"
+        android:name="com.jay.easygest.vue.ui.credit.CreditFragment"
+        android:label="@string/menu_credit"
+        tools:layout="@layout/fragment_credit" />
+
+
+    <fragment
         android:id="@+id/nav_account"
         android:name="com.jay.easygest.vue.ui.account.AccountFragment"
         android:label="@string/menu_account"
         tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/nav_sms_resent"
+        android:name="com.jay.easygest.vue.ui.smsResent.ResentMessageFragment"
+        android:label="@string/menu_sms_resent"
+        tools:layout="@layout/fragment_resent_message" />
 
     <fragment
         android:id="@+id/nav_changeusername"
@@ -51,4 +54,9 @@
         android:name="com.jay.easygest.vue.ui.propos.AproposFragment"
         android:label="@string/menu_a_propos"
         tools:layout="@layout/fragment_apropos" />
+    <fragment
+        android:id="@+id/nav_versement"
+        android:name="com.jay.easygest.vue.ui.versement.VersementFragment"
+        android:label="@string/menu_versement"
+        tools:layout="@layout/fragment_versement" />
 </navigation>

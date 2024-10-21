@@ -20,8 +20,6 @@ public class AccessLocal {
     private static final String ACTIF = "actif";
     private static final String COMPTEUR = "compteur";
     private static final String UTILISATEUR = "utilisateur";
-
-
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
@@ -124,7 +122,7 @@ public class AccessLocal {
         bd = accessBD.getReadableDatabase();
         String req = "select * from utilisateur where status = 0";
 
-        UserModel administrteur = null;
+        UserModel administrateur = null;
         Cursor cursor = bd.rawQuery(req,null);
         cursor.moveToLast();
         if(!cursor.isAfterLast()){
@@ -135,11 +133,11 @@ public class AccessLocal {
             int status = cursor.getInt(4);
             boolean actif = cursor.getInt(5)==1?true:false;
             int compteur = cursor.getInt(6);
-            administrteur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
+            administrateur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
         }
         cursor.close();
         bd.close();
-        return administrteur;
+        return administrateur;
     }
 
     public Integer nbrUtilisateurs(){

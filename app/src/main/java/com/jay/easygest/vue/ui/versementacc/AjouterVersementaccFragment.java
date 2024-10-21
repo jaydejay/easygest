@@ -1,7 +1,10 @@
 package com.jay.easygest.vue.ui.versementacc;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +16,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.databinding.FragmentAjouterVersementaccBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.AfficherclientActivity;
+import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
@@ -29,7 +38,12 @@ import java.util.Objects;
  */
 public class AjouterVersementaccFragment extends Fragment {
 
+    public static final String ACCOUNT = "account";
+
+    private SessionManagement sessionManagement;
+
     private FragmentAjouterVersementaccBinding binding;
+   private SmsSender smsSender ;
     private ClientViewModel clientViewModel;
     private ClientModel client;
     private AccountViewModel accountViewModel;
@@ -52,7 +66,10 @@ public class AjouterVersementaccFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sessionManagement = new SessionManagement(getContext());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(getActivity());
+
+         smsSender = new SmsSender(getContext(),getActivity());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
@@ -80,36 +97,51 @@ public class AjouterVersementaccFragment extends Fragment {
                 Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_LONG).show();
 
             } else {
-//                if (Integer.parseInt(somme_versee) >= 1000) {
 
-                    try {
-                        String codeclient = binding.ajoutervrsmtacccodeclt.getText().toString();
-                        String dateversement = binding.ajoutervrsmntaccdate.getText().toString();
-                        int sommeverse = Integer.parseInt(somme_versee);
-                        if (Objects.equals(client.getCodeclient(), codeclient)){
+                try {
+                    String codeclient = binding.ajoutervrsmtacccodeclt.getText().toString();
+                    String dateversement = binding.ajoutervrsmntaccdate.getText().toString();
+                    int sommeverse = Integer.parseInt(somme_versee);
+                    if (Objects.equals(client.getCodeclient(), codeclient)){
 
-                            int somme_total_account = accountViewModel.getTotalaccountsclient().getValue();
-                            if (  sommeverse > 0 & sommeverse <= somme_total_account){
+                        int somme_total_account = accountViewModel.getTotalaccountsclient().getValue();
+                        if (  sommeverse > 0 & sommeverse <= somme_total_account){
 
-                                boolean success = versementacccontrolleur.ajouterversement(client,sommeverse,dateversement );
-                                if (success) {
-                                    Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
-                                }
-                            }else {Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();}
+                            boolean success = versementacccontrolleur.ajouterversement(client,sommeverse,dateversement );
+                            if (success) {
+                                AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
+                                AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+                                String expediteurName = appKessModel.getOwner();
 
-                        }else {Toast.makeText(getContext(), "le client ne correspond pas", Toast.LENGTH_SHORT).show();}
+                                int total_reste_account = accountViewModel.getTotalrestesclient().getValue();
+                                String destinationAdress1 = "+225"+client.getTelephone();
+                                String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+                                String nomDestinataire = client.getNom();
+                                String prenomsDestinataire = client.getPrenoms();
 
-                    } catch (Exception e) {
-                        Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
-                    }
-//                }else {Toast.makeText(getContext(), "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();}
+                                String messageBody = expediteurName +"\n"+"\n"
+                                        + nomDestinataire + " "+prenomsDestinataire +"\n"
+                                        +"vous avez fait un versement de "+sommeverse+" FCFA"+" pour votre account"+"\n"
+                                        +"le "+dateversement+"\n"
+                                        +"reste à payer : "+total_reste_account ;
 
+                                smsSender.checkForSmsPermissionBeforeSend(client,sommeverse,somme_total_account,total_reste_account, ACCOUNT, MesOutils.convertStringToDate(dateversement).getTime(),messageBody,destinationAdress);
+
+                            } else {
+                                Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
+                            }
+                        }else {Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();}
+
+                    }else {Toast.makeText(getContext(), "le client ne correspond pas", Toast.LENGTH_SHORT).show();}
+
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
+
 
     public void desactiverEditextCodeclient(){
         clientViewModel.getClient().observe(getViewLifecycleOwner(),clientModel -> {
@@ -120,4 +152,18 @@ public class AjouterVersementaccFragment extends Fragment {
         });
 
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        }
+        smsSender.sentReiceiver();
+//        smsSender.deliveredReceiver();
+    }
+
+
 }

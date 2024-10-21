@@ -2,7 +2,6 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,11 +18,14 @@ import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherclientBinding;
 import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
@@ -31,19 +33,23 @@ import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public class AfficherclientActivity extends AppCompatActivity {
     private ActivityAfficherclientBinding binding;
     private  SessionManagement sessionManagement;
     private Clientcontrolleur clientcontrolleur;
     private  Creditcontrolleur creditcontrolleur;
-    private Accountcontroller accountcontroller;
+    private Accountcontroller accountcontrolleur;
     private Versementacccontrolleur versementacccontrolleur;
     private Versementcontrolleur versementcontrolleur;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
     private AccountViewModel accountViewModel;
     private ClientModel client;
+    private AccessLocalAppKes accessLocalAppKes;
+    private AppKessModel appKessModel;
+    private SmsSender smsSender;
     private int id ;
 
 
@@ -51,24 +57,29 @@ public class AfficherclientActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherclientBinding.inflate(getLayoutInflater());
-         sessionManagement = new SessionManagement(this);
-
+        sessionManagement = new SessionManagement(this);
+        smsSender = new SmsSender(this,this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
-        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
+        accountcontrolleur = Accountcontroller.getAccountcontrolleurInstance(this);
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
+
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+
+        accessLocalAppKes = new AccessLocalAppKes(this);
+        appKessModel = accessLocalAppKes.getAppkes();
         client = clientViewModel.getClient().getValue();
 
         creditcontrolleur.setRecapTresteClient(client);
         creditcontrolleur.setRecapTversementClient(client);
         creditcontrolleur.setRecapTcreditClient(client);
-        accountcontroller.setRecapTaccountClient(client);
-        accountcontroller.setRecapTresteClient(client);
+
+        accountcontrolleur.setRecapTaccountClient(client);
+        accountcontrolleur.setRecapTresteClient(client);
 
         int TresteCreditClient = 0;
         int TcreditClient = 0;
@@ -140,8 +151,8 @@ public class AfficherclientActivity extends AppCompatActivity {
             binding.afClientListeHistoAccounts.setVisibility(View.GONE);
         }
 
-        String text_Totalcredit= "credit en cours : "+TcreditClient ;
-        String text_Totalreste =  "reste à payer : "+TresteCreditClient ;
+        String text_Totalcredit= "credit en cours : "+TcreditClient;
+        String text_Totalreste =  "reste à payer : "+TresteCreditClient;
 
         String text_Totalaccount= "account en cours : "+TaccountClient ;
         String text_Totalreste_acc =  "reste à payer : "+TresteAccClient ;
@@ -155,7 +166,7 @@ public class AfficherclientActivity extends AppCompatActivity {
 
     public void afficherclient(){
         try {
-
+            client = clientViewModel.getClient().getValue();
                 if (client !=null){
                     String titre = "infos client "+client.getCodeclient();
                     ActionBar actionBar =  getSupportActionBar();
@@ -246,10 +257,10 @@ public class AfficherclientActivity extends AppCompatActivity {
 
         binding.btnAfClientSup.setOnClickListener(view -> clientViewModel.getClient().observe(this, client->{
             ArrayList<CreditModel>  credits = creditcontrolleur.listecreditsclient(client);
-             accountcontroller.listeAccountsClient(client);
+             accountcontrolleur.listeAccountsClient(client);
              ArrayList<AccountModel> accounts = accountViewModel.getAccount_solde_ou_non().getValue();
 
-             if (credits.size() == 0 && accounts.size() == 0) {
+             if (credits.size() == 0 && Objects.requireNonNull(accounts).size() == 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("supprimer un client");
                 builder.setMessage("vous etes sur le point de supprimer le client, son compte seras supprimé");
@@ -284,7 +295,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         binding.afClientListeAccounts.setOnClickListener(view -> {
 
             id = R.id.af_client_liste_accounts;
-            accountcontroller.listeAccountsClient(client);
+            accountcontrolleur.listeAccountsClient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","accounts en cour");
@@ -333,7 +344,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         binding.afClientListeHistoAccounts.setOnClickListener(view -> {
 
             id = R.id.af_client_liste_histo_accounts;
-            accountcontroller.listeAccountsoldeClient(client);
+            accountcontrolleur.listeAccountsoldeClient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","accounts soldés");
@@ -441,18 +452,69 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
 
+//    public void annullerCredit(CreditModel credit){
+//
+//        if (credit.getReste() > 0) {
+//
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle("anuller un credit");
+//            builder.setMessage("êtes vous sûre de vouloir annuller le credit"+"\n"
+//                    +"tous les versements associés seront également supprimés"+"\n"
+//                    +"l'annullation d'un credit est soumise a une pénalité allant de 1000 F à 10%"
+//                    +"de la somme du credit");
+//
+//            builder.setPositiveButton("oui", (dialog, which) -> {
+//                creditcontrolleur.annullerCredit(credit);
+//                Intent intent = new Intent(AfficherclientActivity.this, GestionActivity.class);
+//                startActivity(intent);
+//            });
+//
+//            builder.setNegativeButton("non", (dialog, which) -> {
+//
+//            });
+//
+//            builder.create().show();
+//
+//        }else{
+//            Toast.makeText(this, "credit deja soldé", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
     public void annullerCredit(CreditModel credit){
+        ClientModel client = credit.getClient();
 
         if (credit.getReste() > 0) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("anuller un credit");
-            builder.setMessage("etes vous sûre de vouloir annuller le credit, le client sera retiré de la liste des credits");
+            builder.setMessage("êtes vous sûre de vouloir annuller le credit"+"\n"
+                    +"tous les versements associés seront également supprimés"+"\n"
+                    +"l'annullation d'un credit est soumise a une pénalité allant de 1000 F à 10%"
+                    +"de la somme du credit");
 
             builder.setPositiveButton("oui", (dialog, which) -> {
-                creditcontrolleur.annullerCredit(credit);
-                Intent intent = new Intent(AfficherclientActivity.this, GestionActivity.class);
-                startActivity(intent);
+                boolean success = creditcontrolleur.annullerCredit(credit);
+                clientViewModel.getClient().setValue(client);
+                if (success){
+                    creditcontrolleur.setRecapTresteClient(client);
+                    creditcontrolleur.setRecapTcreditClient(client);
+
+                    int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                    int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+
+                    //  String destinationAdress = "+225"+clientModel.getTelephone();
+                    String destinationAdress = "5556";
+                    String messageBody = "EXPEDITEUR : "+appKessModel.getOwner() +"\n"+"\n"
+                            + client.getNom() + " "+client.getPrenoms() +"\n"
+                            +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
+                            +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                            +"total credit : "+total_credit_client+"\n"
+                            +"reste a payer : "+total_reste_client+"\n";
+
+                    smsSender.checkForSmsPermissionBeforeSend(client,credit.getVersement(),total_credit_client,total_reste_client,"credit",credit.getDatecredit(),messageBody,destinationAdress);
+
+                }
+
             });
 
             builder.setNegativeButton("non", (dialog, which) -> {
@@ -461,8 +523,6 @@ public class AfficherclientActivity extends AppCompatActivity {
 
             builder.create().show();
 
-        }else{
-            Toast.makeText(this, "credit deja soldé", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -489,7 +549,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
     public void supprimerAccountSoldes(){
-        accountcontroller.listeAccountsoldeClient(client);
+        accountcontrolleur.listeAccountsoldeClient(client);
         ArrayList<AccountModel> listeAccountsSoldes = accountViewModel.getAccount_solde_ou_non().getValue();
         long now = new Date().getTime();
 
@@ -497,7 +557,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         if (listeAccountsSoldes.size() != 0){
             for (AccountModel account : listeAccountsSoldes) {
                 if (MesOutils.getSppressionDate(account.getSoldedat()) <= now ){
-                    accountcontroller.supprimerAccountsSoldes(account);
+                    accountcontrolleur.supprimerAccountsSoldes(account);
                 }
             }
         }

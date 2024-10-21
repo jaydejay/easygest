@@ -296,7 +296,6 @@ public class AccessLocalAccount {
      * @param client le client
      * @return retourne la liste des accounts en cours du client
      */
-
     public ArrayList<AccountModel> listeAccountsClient(ClientModel client) {
 
         ArrayList<AccountModel> accounts = new ArrayList<>();

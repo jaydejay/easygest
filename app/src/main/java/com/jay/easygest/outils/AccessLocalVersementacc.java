@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.jay.easygest.controleur.Accountcontroller;
+import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.VersementsaccModel;
@@ -57,7 +59,7 @@ public class AccessLocalVersementacc {
         bd = accessBD.getWritableDatabase();
         boolean succes = false;
         long date = MesOutils.convertStringToDate(dateversement).getTime();
-
+        Accountcontroller accountcontroller = Accountcontroller.getAccountcontrolleurInstance(contexte);
         ArrayList<AccountModel> accountsunclient =  accessLocalAccount.listeAccountsClient(client);
 
         if (accountsunclient.size() > 0){
@@ -108,6 +110,7 @@ public class AccessLocalVersementacc {
             }
 
         }
+        accountcontroller.setRecapTresteClient(client);
         return succes;
     }
 

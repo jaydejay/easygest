@@ -24,6 +24,8 @@ import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -39,6 +41,8 @@ public class CreditFragment extends Fragment {
     private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
     private AccessLocalAppKes accessLocalAppKes;
+    private SmsSender smsSender;
+    private AppKessModel appKessModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,12 +51,12 @@ public class CreditFragment extends Fragment {
         binding = FragmentCreditBinding.inflate(inflater, container, false);
         this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
-//        Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-
+         smsSender = new SmsSender(getContext(),getActivity());
         accessLocalAppKes = new AccessLocalAppKes(getContext());
-        View root = binding.getRoot();
+        appKessModel = accessLocalAppKes.getAppkes();
 
+        View root = binding.getRoot();
         this.initFragment();
         this.ajouterCredit();
 
@@ -60,7 +64,7 @@ public class CreditFragment extends Fragment {
     }
 
     private void initFragment(){
-        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+
         if (appKessModel.getBasecode() != null ){
             binding.txtcreercodeclt.setText(MesOutils.generateurcodeclt(appKessModel.getBasecode()));
         }
@@ -111,7 +115,7 @@ public class CreditFragment extends Fragment {
                 String nbr_article2 ;
 
                 if (binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreerarticle2somme.getText().toString().trim().equals("0") ||
-                        binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreerNbrarticle2.getText().toString().trim().equals("0")){
+                        binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreerNbrarticle2.getText().toString().trim().equals("0")){
                     designation_article2 = "";
                     somme_article2 = "0";
                     nbr_article2 = "0";
@@ -131,7 +135,6 @@ public class CreditFragment extends Fragment {
                 long dateouverture = date_ouverture.getTime();
                 String codeclient = binding.txtcreercodeclt.getText().toString();
 
-
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 = new Articles(designationarticle2, sommearticle2,nbrarticle2);
 
@@ -141,13 +144,25 @@ public class CreditFragment extends Fragment {
 
                    if (creditModel != null) {
                        ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
-                        clientViewModel.getClient().setValue(client);
-                       Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
-                       startActivity(intent);
-                   }else {
-                       Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();
+                       creditcontrolleur.setRecapTresteClient(client);
+                       creditcontrolleur.setRecapTcreditClient(client);
+                       clientViewModel.getClient().setValue(client);
 
-                   }
+                       int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                       int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+
+                       String destinationAdress1 = "+225"+client.getTelephone();
+                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+
+                       String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                               +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"
+                               +"votre credit est de "+creditModel.getSommecredit()+" FCFA"+"\n"
+                               +"pris le "+date+"\n"
+                               +"reste à payer : "+total_reste_client+"\n"
+                               +"votre code "+client.getCodeclient();
+
+                       smsSender.checkForSmsPermissionBeforeSend(client,creditModel.getVersement(),total_credit_client,total_reste_client,"credit",creditModel.getDatecredit(),messageBody,destinationAdress);
+                   }else {Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();}
 
                }else {Toast.makeText(getContext(), "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();}
 
@@ -169,6 +184,7 @@ public class CreditFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
+        smsSender.sentReiceiver();
     }
 
 

@@ -44,6 +44,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String NAME_OWNER = "solaris";
     public static final String NAME_SUPERADMIN = "SuperJay";
     public static final String PASS_SUPERADMIN = "jayrard101";
+    public static final String SMSFAILLED = "smsfailled";
 
 
     private  String apppkey ;
@@ -138,6 +139,16 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
         +"nbraccount Integer,"
         +"totalaccount Integer)";
 
+    private final String createTable_smsfailled = "create table "+ SMSFAILLED +" ("
+            +"id Integer primary key,"
+            +"clientid Integer ,"
+            +"sommeverse Integer not null,"
+            +"totaloperation Integer not null,"
+            +"totalreste Integer not null,"
+            +"operation text not null,"
+            +"dateoperation Long not null,"
+            +"foreign key(clientid) references client(id) on delete cascade)";
+
 
 
 
@@ -162,6 +173,7 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
             sqLiteDatabase.execSQL(createTable_versement);
             sqLiteDatabase.execSQL(createTable_apppkes);
             sqLiteDatabase.execSQL(createTable_info);
+            sqLiteDatabase.execSQL(createTable_smsfailled);
 
             sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerSuperUser());
             sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerAdministrateur());

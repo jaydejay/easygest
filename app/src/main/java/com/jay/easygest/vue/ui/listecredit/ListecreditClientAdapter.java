@@ -95,7 +95,9 @@ public class ListecreditClientAdapter extends BaseAdapter {
                 String activity = v.getContext().getClass().getName();
                 if (activity.contains("GestionActivity")){
                     ((GestionActivity)context).annullerCredit(credits.get(position12));
-                }else {((AfficherCreditsClientActivity)context).annullerCredit(credits.get(position12));}
+                }else {
+                    ((AfficherCreditsClientActivity)context).annullerCredit(credits.get(position12));
+                }
             }catch (Exception e){}
 
 

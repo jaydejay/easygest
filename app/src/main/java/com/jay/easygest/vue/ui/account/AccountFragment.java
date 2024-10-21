@@ -24,6 +24,7 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -41,6 +42,8 @@ public class  AccountFragment extends Fragment {
     private Clientcontrolleur clientcontrolleur;
     private FragmentAccountBinding binding;
     private AccessLocalAppKes accessLocalAppKes;
+    private  AppKessModel appKessModel;
+    private SmsSender smsSender;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -53,6 +56,9 @@ public class  AccountFragment extends Fragment {
         accessLocalAppKes = new AccessLocalAppKes(getContext());
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+
+        appKessModel = accessLocalAppKes.getAppkes();
+        smsSender = new SmsSender(getContext(),getActivity());
         initFragment();
         creerAccount();
         return binding.getRoot();
@@ -139,12 +145,28 @@ public class  AccountFragment extends Fragment {
                     AccountModel account =  this.accountcontroller.creerAccount(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
                     if (account != null) {
                         ClientModel clientModel = clientcontrolleur.recupererClient(account.getClientid());
+                        clientViewModel.getClient().setValue(clientModel);
+
                         AccountModel account_ajoute = accountViewModel.getAccount().getValue();
                         AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+
                         accountViewModel.getAccount().setValue(accountModel);
-                        clientViewModel.getClient().setValue(clientModel);
-                        Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
-                        startActivity(intent);
+                        accountcontroller.setRecapTresteClient(clientModel);
+                        accountcontroller.setRecapTaccountClient(clientModel);
+                       int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                       int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+
+                        String destinationAdress1 = "+225"+clientModel.getTelephone();
+                        String destinationAdress = "5556";
+
+                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                +"bienvenu(e) "+clientModel.getNom() + " "+clientModel.getPrenoms()+"\n"
+                                +"votre account est de "+accountModel.getSommeaccount()+" FCFA"+"\n"
+                                +"pris le "+date+"\n"
+                                +"reste à payer : "+total_reste_client+"\n"
+                                +"votre code "+clientModel.getCodeclient();
+
+                        smsSender.checkForSmsPermissionBeforeSend(clientModel,accountModel.getVersement(),total_account_client,total_reste_client,"account",accountModel.getDateaccount(),messageBody,destinationAdress);
                     }else {Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();}
 
                 }else {Toast.makeText(getContext(), "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();}

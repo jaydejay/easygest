@@ -11,13 +11,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Clientcontrolleur;
+import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficheversementBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -28,9 +32,13 @@ public class AfficheversementActivity extends AppCompatActivity {
 
 
     private SessionManagement sessionManagement;
+    private AccessLocalAppKes accessLocalAppKes;
+    private SmsSender smsSender;
     private ActivityAfficheversementBinding binding;
     private Versementcontrolleur versementcontrolleur;
     private Clientcontrolleur clientcontrolleur;
+    private Creditcontrolleur creditcontrolleur;
+    private AppKessModel appKessModel;
     private ClientViewModel clientViewModel;
     private  VersementsModel versement;
     private CreditModel credit;
@@ -41,15 +49,19 @@ public class AfficheversementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManagement= new SessionManagement(this);
-
+        accessLocalAppKes = new AccessLocalAppKes(this);
+        smsSender= new SmsSender(this,this);
         binding = ActivityAfficheversementBinding.inflate(getLayoutInflater());
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
-        VersementViewModel versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-
         clientcontrolleur =Clientcontrolleur.getClientcontrolleurInstance(this);
+        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
+
+        VersementViewModel versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+
         setContentView(binding.getRoot());
+        appKessModel = accessLocalAppKes.getAppkes();
         credit = creditViewModel.getCredit().getValue();
         versement = versementViewModel.getMversement().getValue();
         position_versement = getIntent().getIntExtra("versementposition",0);
@@ -109,15 +121,32 @@ public class AfficheversementActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("annuller versement");
             builder.setMessage("êtes vous sûre de vouloir annuller le versement"+"\n");
-           builder.setPositiveButton(
-                   "oui",(dialog,which)->{
-                       boolean success =  versementcontrolleur.annullerversement(versement,credit);
-                       if (success){
-                           Intent intent = new Intent(this,GestionActivity.class);
-                           startActivity(intent);
-                       }
+            builder.setPositiveButton("oui",(dialog,which)->{
+                   boolean success =  versementcontrolleur.annullerversement(versement,credit);
+                   if (success){
+
+                       ClientModel clientModel = clientcontrolleur.recupererClient(versement.getClient().getId());
+                       clientViewModel.getClient().setValue(clientModel);
+                       creditcontrolleur.setRecapTresteClient(clientModel);
+                       creditcontrolleur.setRecapTcreditClient(clientModel);
+
+                       int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                       int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+
+                         String destinationAdress1 = "+225"+clientModel.getTelephone();
+                       String destinationAdress = "5556";
+                       String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                               + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                               +"vous avez annuller le versement de "+versement.getSommeverse()+" de votre credit"+"\n"
+                               +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                               +"total credit : "+total_credit_client+"\n"
+                               +"reste a payer : "+total_reste_client+"\n";
+
+                       smsSender.checkForSmsPermissionBeforeSend(clientModel,credit.getVersement(),total_credit_client,total_reste_client,"credit",credit.getDatecredit(),messageBody,destinationAdress);
 
                    }
+
+               }
            );
 
             builder.setNegativeButton("non", (dialog, which) -> {
@@ -156,6 +185,7 @@ public class AfficheversementActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+        smsSender.sentReiceiver();
     }
 
     @Override

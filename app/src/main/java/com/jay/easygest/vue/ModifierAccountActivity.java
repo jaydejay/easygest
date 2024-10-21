@@ -2,6 +2,7 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,10 +12,13 @@ import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierAccountBinding;
 import com.jay.easygest.model.AccountModel;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.owlike.genson.Genson;
@@ -32,6 +36,9 @@ public class ModifierAccountActivity extends AppCompatActivity {
     private ClientViewModel clientViewModel;
     private AccountModel account;
     private ClientModel client;
+    private AccessLocalAppKes accessLocalAppKes;
+    private SmsSender smsSender;
+    private AppKessModel appKessModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +51,10 @@ public class ModifierAccountActivity extends AppCompatActivity {
         account = accountViewModel.getAccount().getValue();
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
+
+        accessLocalAppKes = new AccessLocalAppKes(this);
+        smsSender = new SmsSender(this,this);
+        appKessModel = accessLocalAppKes.getAppkes();
         afficherAccount();
         modifierAccount();
         setContentView(binding.getRoot());
@@ -83,7 +94,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
 
             } else if (date_credit == null) {
 
-                Toast.makeText(ModifierAccountActivity.this, "format de date incorect", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ModifierAccountActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
             }else if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifaccarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifaccNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(ModifierAccountActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
@@ -140,9 +151,31 @@ public class ModifierAccountActivity extends AppCompatActivity {
                         AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_modifier).getId(),clientModel,account_modifier.getArticle1(),account_modifier.getArticle2(),account_modifier.getSommeaccount(),account_modifier.getVersement(),account_modifier.getReste(),account_modifier.getDateaccount(),account_modifier.getNumeroaccount());
                         accountViewModel.getAccount().setValue(accountModel);
                         clientViewModel.getClient().setValue(clientModel);
-                        Intent intent = new Intent(ModifierAccountActivity.this, AfficherAccountActivity.class);
-                        startActivity(intent);
-//                        finish();
+
+                        if (sommeaccount != ancienne_somme_account){
+
+                            accountcontroller.setRecapTresteClient(clientModel);
+                            accountcontroller.setRecapTaccountClient(clientModel);
+                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                            int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+
+                        String destinationAdress = "+225"+clientModel.getTelephone();
+//                            String destinationAdress = "5556";
+
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                    + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                    +"vous avez modifier l'account "+account_modifier.getNumeroaccount()+"\n"
+                                    +"le "+MesOutils.convertDateToString(new Date())+"\n"
+                                    +"ancien account : "+account.getSommeaccount()+"\n"
+                                    +"nouveau account : "+account_modifier.getSommeaccount();
+
+                            smsSender.checkForSmsPermissionBeforeSend(clientModel,accountModel.getVersement(),total_account_client,total_reste_client,"account",new Date().getTime(),messageBody,destinationAdress);
+                        }else {
+                            Intent intent = new Intent(ModifierAccountActivity.this, AffichercreditActivity.class);
+                            startActivity(intent);
+                        }
+
+
                     } else {
                         Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
                     }
@@ -160,6 +193,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
             startActivity(intent);
 //            finish();
         }
+
+        smsSender.sentReiceiver();
     }
 
     @Override

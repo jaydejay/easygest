@@ -1,8 +1,11 @@
 package com.jay.easygest.vue.ui.versement;
 
-import android.content.Context;
+import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +13,20 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jay.easygest.R;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentVersementBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -30,19 +37,23 @@ import java.util.Objects;
 
 public class VersementFragment extends Fragment {
 
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 2;
+    public static final String CREDIT = "credit";
     private SessionManagement sessionManagement;
+    private SmsSender smsSender;
     private FragmentVersementBinding binding;
     private Versementcontrolleur versementcontrolleur;
     private ClientViewModel clientViewModel;
     private CreditViewModel creditViewModel;
     private ClientModel client;
+//    private Integer total_reste_credit;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         sessionManagement = new SessionManagement(requireContext());
-
+         smsSender = new SmsSender(getContext(),getActivity());
         binding = FragmentVersementBinding.inflate(inflater, container, false);
         this.versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
         Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
@@ -76,15 +87,30 @@ public class VersementFragment extends Fragment {
                             String dateversement = binding.editversementdate.getText().toString();
                             int sommeverse = Integer.parseInt(somme_versee);
                             if (Objects.equals(client.getCodeclient(), codeclient)){
-
                                 int somme_total_credit = creditViewModel.getTotalcreditsclient().getValue();
-
                                 if (  sommeverse > 0 & sommeverse <= somme_total_credit){
 
                                     boolean success = versementcontrolleur.ajouterversement(client,sommeverse,dateversement );
                                     if (success) {
-                                        Intent intent = new Intent(getActivity(), AfficherclientActivity.class);
-                                        startActivity(intent);
+
+                                        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
+                                        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+                                        String expediteurName = appKessModel.getOwner();
+
+                                        int total_reste_credit = creditViewModel.getTotalrestesclient().getValue();
+
+                                        String destinationAdress1 = "+225"+client.getTelephone();
+                                        String destinationAdress = "5556";
+                                        String nomDestinataire = client.getNom();
+                                        String prenomsDestinataire = client.getPrenoms();
+
+                                        String messageBody = expediteurName +"\n"+"\n"
+                                                + nomDestinataire + " "+prenomsDestinataire +"\n"
+                                                +"vous avez fait un versement de "+sommeverse+" FCFA"+" pour votre credit"+"\n"
+                                                +"le "+dateversement+"\n"
+                                                +"reste à payer : "+total_reste_credit ;
+
+                                        smsSender.checkForSmsPermissionBeforeSend(client,sommeverse,somme_total_credit,total_reste_credit, CREDIT,MesOutils.convertStringToDate(dateversement).getTime(),messageBody,destinationAdress);
                                     } else {
                                         Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
                                     }
@@ -99,6 +125,7 @@ public class VersementFragment extends Fragment {
                 }
         });
     }
+
 
     public void desactiverEditextCodeclient(){
         clientViewModel.getClient().observe(getViewLifecycleOwner(),clientModel -> {
@@ -124,5 +151,8 @@ public class VersementFragment extends Fragment {
             startActivity(intent);
 
         }
+        smsSender.sentReiceiver();
+//        smsSender.deliveredReceiver();
+
     }
 }
