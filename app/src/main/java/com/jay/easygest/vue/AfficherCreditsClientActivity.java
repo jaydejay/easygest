@@ -157,14 +157,14 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
                     int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
                     appKessModel = accessLocalAppKes.getAppkes();
 
-                      String destinationAdress1 = "+225"+clientModel.getTelephone();
-                    String destinationAdress = "5556";
+                      String destinationAdress = "+225"+clientModel.getTelephone();
+//                    String destinationAdress = "5556";
                     String messageBody = appKessModel.getOwner() +"\n"+"\n"
                             + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
                             +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
                             +"le "+ MesOutils.convertDateToString(new Date())+"\n"
                             +"total credit : "+total_credit_client+"\n"
-                            +"reste a payer : "+total_reste_client+"\n";
+                            +"reste a payer : "+total_reste_client;
 
                     smsSender.checkForSmsPermissionBeforeSend(clientModel,credit.getVersement(),total_credit_client,total_reste_client,"credit",credit.getDatecredit(),messageBody,destinationAdress);
                 }

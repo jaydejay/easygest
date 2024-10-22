@@ -137,7 +137,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                         +"vous avez modifier un versement pour votre credit"+"\n"
                                         +"le "+ MesOutils.convertDateToString(new Date())+"\n"
                                         +"total account : "+total_credit_client+"\n"
-                                        +"reste a payer : "+total_reste_client+"\n";
+                                        +"reste a payer : "+total_reste_client;
 
                                     smsSender.checkForSmsPermissionBeforeSend(client,nouvellesommeverse,total_credit_client,total_reste_client,"credit",new Date().getTime(),messageBody,destinationAdress);
 

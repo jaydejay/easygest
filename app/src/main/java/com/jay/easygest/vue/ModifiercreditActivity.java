@@ -171,7 +171,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
                             +"vous avez modifier le credit "+creditModel.getNumerocredit()+"\n"
                             +"le "+MesOutils.convertDateToString(new Date())+"\n"
                             +"ancien credit : "+credit.getSommecredit()+"\n"
-                            +"nouveau credit : "+credit_modifier.getSommecredit()+"\n";
+                            +"nouveau credit : "+credit_modifier.getSommecredit()+"\n"
+                            +"reste à payer : "+total_reste_client;
 
                         smsSender.checkForSmsPermissionBeforeSend(clientModel,creditModel.getVersement(),total_credit_client,total_reste_client,"credit",new Date().getTime(),messageBody,destinationAdress);
                     }else {

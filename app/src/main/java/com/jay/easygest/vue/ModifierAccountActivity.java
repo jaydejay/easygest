@@ -167,7 +167,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
                                     +"vous avez modifier l'account "+account_modifier.getNumeroaccount()+"\n"
                                     +"le "+MesOutils.convertDateToString(new Date())+"\n"
                                     +"ancien account : "+account.getSommeaccount()+"\n"
-                                    +"nouveau account : "+account_modifier.getSommeaccount();
+                                    +"nouveau account : "+account_modifier.getSommeaccount()+"\n"
+                                    +"reste a payer : "+total_reste_client;
 
                             smsSender.checkForSmsPermissionBeforeSend(clientModel,accountModel.getVersement(),total_account_client,total_reste_client,"account",new Date().getTime(),messageBody,destinationAdress);
                         }else {

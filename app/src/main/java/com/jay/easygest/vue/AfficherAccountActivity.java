@@ -150,9 +150,9 @@ public class AfficherAccountActivity extends AppCompatActivity {
                         int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
                         int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
-                        String destinationAdress1 = "+225"+clientModel.getTelephone();
+                        String destinationAdress = "+225"+clientModel.getTelephone();
 //                        String destinationAdress1 = "+225"+VariablesStatique.CLIENT_TELEPHONE;
-                        String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+//                        String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
                         String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                 + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"

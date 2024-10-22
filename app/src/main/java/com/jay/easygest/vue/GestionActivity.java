@@ -254,7 +254,7 @@ public class GestionActivity extends AppCompatActivity {
                            +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
                            +"le "+ MesOutils.convertDateToString(new Date())+"\n"
                            +"total credit : "+total_credit_client+"\n"
-                           +"reste a payer : "+total_reste_client+"\n";
+                           +"reste a payer : "+total_reste_client;
 
                    smsSender.checkForSmsPermissionBeforeSend(clientModel,credit.getVersement(),total_credit_client,total_reste_client,"credit",credit.getDatecredit(),messageBody,destinationAdress);
                }

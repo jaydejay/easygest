@@ -69,7 +69,7 @@ public class AjouterVersementaccFragment extends Fragment {
         sessionManagement = new SessionManagement(getContext());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(getActivity());
 
-         smsSender = new SmsSender(getContext(),getActivity());
+        smsSender = new SmsSender(getContext(),getActivity());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
@@ -88,44 +88,52 @@ public class AjouterVersementaccFragment extends Fragment {
         binding.btnversementacc.setOnClickListener(v -> {
             String somme_versee = binding.ajoutervrsmntaccsomme.getText().toString().trim();
             String  date = binding.ajoutervrsmntaccdate.getText().toString().trim();
-            Date date_versement_account  = MesOutils.convertStringToDate(date);
+//            Date date_versement_account  = MesOutils.convertStringToDate(date);
 
             if ( somme_versee.isEmpty() || date.isEmpty()){
                 Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
 
-            } else if ( date_versement_account == null) {
+            } else if ( MesOutils.convertStringToDate(date) == null) {
                 Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_LONG).show();
 
             } else {
 
                 try {
-                    String codeclient = binding.ajoutervrsmtacccodeclt.getText().toString();
-                    String dateversement = binding.ajoutervrsmntaccdate.getText().toString();
-                    int sommeverse = Integer.parseInt(somme_versee);
-                    if (Objects.equals(client.getCodeclient(), codeclient)){
+//                    String codeclient = binding.ajoutervrsmtacccodeclt.getText().toString().trim();
+//                    String dateversement = binding.ajoutervrsmntaccdate.getText().toString();
+//                    int sommeverse_formulaire = Integer.parseInt(somme_versee);
+                    if (Objects.equals(client.getCodeclient(), binding.ajoutervrsmtacccodeclt.getText().toString().trim())){
 
                         int somme_total_account = accountViewModel.getTotalaccountsclient().getValue();
-                        if (  sommeverse > 0 & sommeverse <= somme_total_account){
+                        int total_reste_account_avant = accountViewModel.getTotalrestesclient().getValue();
+                        if (  Integer.parseInt(somme_versee) > 0 & Integer.parseInt(somme_versee) <= somme_total_account){
 
-                            boolean success = versementacccontrolleur.ajouterversement(client,sommeverse,dateversement );
+                            int sommeverse;
+                            if (Integer.parseInt(somme_versee) >= total_reste_account_avant){
+                                sommeverse = total_reste_account_avant;
+                            }else {
+                                sommeverse = Integer.parseInt(somme_versee);
+                            }
+
+                            boolean success = versementacccontrolleur.ajouterversement(client,sommeverse,date );
                             if (success) {
                                 AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
                                 AppKessModel appKessModel = accessLocalAppKes.getAppkes();
                                 String expediteurName = appKessModel.getOwner();
 
                                 int total_reste_account = accountViewModel.getTotalrestesclient().getValue();
-                                String destinationAdress1 = "+225"+client.getTelephone();
-                                String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+                                String destinationAdress = "+225"+client.getTelephone();
+//                                String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
                                 String nomDestinataire = client.getNom();
                                 String prenomsDestinataire = client.getPrenoms();
 
                                 String messageBody = expediteurName +"\n"+"\n"
-                                        + nomDestinataire + " "+prenomsDestinataire +"\n"
-                                        +"vous avez fait un versement de "+sommeverse+" FCFA"+" pour votre account"+"\n"
-                                        +"le "+dateversement+"\n"
-                                        +"reste à payer : "+total_reste_account ;
+                                    + nomDestinataire + " "+prenomsDestinataire +"\n"
+                                    +"vous avez fait un versement de "+sommeverse+" FCFA"+" pour votre account"+"\n"
+                                    +"le "+date+"\n"
+                                    +"reste à payer : "+total_reste_account ;
 
-                                smsSender.checkForSmsPermissionBeforeSend(client,sommeverse,somme_total_account,total_reste_account, ACCOUNT, MesOutils.convertStringToDate(dateversement).getTime(),messageBody,destinationAdress);
+                                smsSender.checkForSmsPermissionBeforeSend(client,sommeverse,somme_total_account,total_reste_account, ACCOUNT, MesOutils.convertStringToDate(date).getTime(),messageBody,destinationAdress);
 
                             } else {
                                 Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();

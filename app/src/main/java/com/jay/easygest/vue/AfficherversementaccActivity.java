@@ -137,14 +137,14 @@ public class AfficherversementaccActivity extends AppCompatActivity {
                             int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
                             int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
-                              String destinationAdress1 = "+225"+clientModel.getTelephone();
-                            String destinationAdress = "5556";
+                              String destinationAdress = "+225"+clientModel.getTelephone();
+//                            String destinationAdress = "5556";
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                 + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
                                 +"vous avez annuller le versement de "+versement.getSommeverse()+" de votre account"+"\n"
                                 +"le "+ MesOutils.convertDateToString(new Date())+"\n"
                                 +"total account : "+total_account_client+"\n"
-                                +"reste a payer : "+total_reste_client+"\n";
+                                +"reste a payer : "+total_reste_client;
 
                             smsSender.checkForSmsPermissionBeforeSend(clientModel,Integer.parseInt(String.valueOf(versement.getSommeverse())),total_account_client,total_reste_client,"accmount",account.getDateaccount(),messageBody,destinationAdress);
 
