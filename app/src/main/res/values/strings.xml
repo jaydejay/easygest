@@ -182,6 +182,7 @@
     <!-- le numero telephone de l'emulateur -->
     <string name="emulateur_telephone_1">5554</string>
     <string name="emulateur_telephone_2">555</string>
+    <string name="lepassword">le mot de passe</string>
 
 
 </resources>

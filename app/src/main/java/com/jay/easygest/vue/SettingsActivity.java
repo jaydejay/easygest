@@ -1,19 +1,26 @@
 package com.jay.easygest.vue;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.TextKeyListener;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.jay.easygest.R;
 import com.jay.easygest.databinding.ActivitySettingsBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.VariablesStatique;
+import com.jay.easygest.vue.viewmodels.SettingsViewModel;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,9 +28,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SettingsActivity extends AppCompatActivity {
 
     private SessionManagement sessionManagement;
+    private  SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     private ActivitySettingsBinding binding;
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appkess;
+    private SettingsViewModel settingsViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,35 +42,64 @@ public class SettingsActivity extends AppCompatActivity {
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         accessLocalAppKes = new AccessLocalAppKes(this);
         appkess = accessLocalAppKes.getAppkes();
+
+
+        sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+        settingsViewModel.getOwner().setValue(appkess.getOwner());
+        settingsViewModel.getBase_code().setValue(appkess.getBasecode());
+        settingsViewModel.getTelephone().setValue(appkess.getTelephone());
+        settingsViewModel.getEmail().setValue(appkess.getAdresseelectro());
+        settingsViewModel.getSetting_password().setValue(sharedPreferences.getString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,"jaydejay"));
+
         setContentView(binding.getRoot());
         initField();
         afficherOwnerForm();
         afficherBasecodeForm();
         afficherTelephoneForm();
         afficherMailForm();
+        afficherPasswordForm();
         updateSettingOwner();
         updateSettingbasecode();
         updateSettingTelephone();
         updateSettingMail();
+        updateSettingPassword();
     }
 
     public void initField(){
         try {
-            String owner = appkess.getOwner();
-            String baseCode = appkess.getBasecode();
-            String _telephone = appkess.getTelephone();
-            String email = appkess.getAdresseelectro();
 
-        String proprietaire = "Proprietaire "+"\n"+owner;
-        String base_code = "Base Code Client"+"\n"+ baseCode;
-        String telephone = "Telephone"+"\n"+_telephone;
-        String e_mail = "Adresse Electronique"+"\n"+email;
+            settingsViewModel.getOwner().observe(this,owner->{
+                String proprietaire = "Proprietaire "+"\n"+owner;
+                binding.txtsettingOwner.setText(proprietaire);
 
-        binding.txtsettingOwner.setText(proprietaire);
-        binding.txtsettingBaseCode.setText(base_code);
-        binding.txtsettingTelephone.setText(telephone);
-        binding.txtsettingMail.setText(e_mail);
+            });
 
+            settingsViewModel.getBase_code().observe(this,baseCode->{
+                String base_code = "Base Code Client"+"\n"+ baseCode;
+                binding.txtsettingBaseCode.setText(base_code);
+
+            });
+
+            settingsViewModel.getTelephone().observe(this,_telephone->{
+                String telephone = "Telephone"+"\n"+_telephone;
+                binding.txtsettingTelephone.setText(telephone);
+
+            });
+
+            settingsViewModel.getEmail().observe(this,email->{
+                String e_mail = "Emal"+"\n"+email;
+                binding.txtsettingMail.setText(e_mail);
+
+            });
+
+            settingsViewModel.getSetting_password().observe(this,password->{
+                String pass_word = "MDP setting"+"\n"+password;
+                binding.txtsettingPassword.setText(pass_word);
+
+            });
         }catch (Exception e){
             //do nothings
         }
@@ -72,13 +111,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding.txtsettingToggleOwnerEdit.setOnClickListener(view ->{
            if (hiden.get()){
-               hiden.set(false);
                binding.txtsettingToggleOwnerEdit.setText("modifier");
                binding.llsettingOwnerEdit.setVisibility(View.GONE);
+               hiden.set(false);
            }else {
-               hiden.set(true);
                binding.txtsettingToggleOwnerEdit.setText("annuller");
                binding.llsettingOwnerEdit.setVisibility(View.VISIBLE);
+               hiden.set(true);
            }
 
 
@@ -103,9 +142,10 @@ public class SettingsActivity extends AppCompatActivity {
                 AppKessModel _appkes = new AppKessModel(appkess.getAppnumber(),appkess.getApppkey(),setting_owner.toUpperCase(),appkess.getBasecode(),appkess.getTelephone(),appkess.getAdresseelectro());
                 boolean success = accessLocalAppKes.updateAppkes(_appkes);
                 if (success){
+                    settingsViewModel.getOwner().postValue(setting_owner);
                     binding.llsettingOwnerEdit.setVisibility(View.GONE);
-                    Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-                    startActivity(intent);
+                    binding.txtsettingToggleOwnerEdit.setText("modifier");
+
                 }else {
                     binding.lleditsettingOwner.setError("enregistrement avorté");
                 }
@@ -147,8 +187,9 @@ public class SettingsActivity extends AppCompatActivity {
                 boolean success = accessLocalAppKes.updateAppkes(_appkes);
                 if (success){
                     binding.llsettingBaseCodeEdit.setVisibility(View.GONE);
-                    Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-                    startActivity(intent);
+                    settingsViewModel.getBase_code().postValue(setting_base_code);
+                    binding.txtsettingToggleBaseCodeEdit.setText("modifier");
+
                 }else {
                     binding.lleditsettingBaseCode.setError("enregistrement avorté");
 
@@ -188,9 +229,9 @@ public class SettingsActivity extends AppCompatActivity {
                 AppKessModel _appkes = new AppKessModel(appkess.getAppnumber(),appkess.getApppkey(),appkess.getOwner(),appkess.getBasecode(),setting_telephone,appkess.getAdresseelectro());
                 boolean success = accessLocalAppKes.updateAppkes(_appkes);
                 if (success){
+                    settingsViewModel.getTelephone().postValue(setting_telephone);
                     binding.llsettingTelephoneEdit.setVisibility(View.GONE);
-//                    Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-//                    startActivity(intent);
+                    binding.txtsettingToggleTelephoneEdit.setText("modifier");
                 }else {
                     binding.lleditsettingTelephone.setError("enregistrement avorté");
                 }
@@ -224,12 +265,44 @@ public class SettingsActivity extends AppCompatActivity {
                 AppKessModel _appkes = new AppKessModel(appkess.getAppnumber(),appkess.getApppkey(),appkess.getOwner(),appkess.getBasecode(),appkess.getTelephone(),setting_mail);
                 boolean success = accessLocalAppKes.updateAppkes(_appkes);
                 if (success){
+                    settingsViewModel.getEmail().postValue(setting_mail);
                     binding.llsettingMailEdit.setVisibility(View.GONE);
-                    Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-                    startActivity(intent);
+                    binding.txtsettingToggleMailEdit.setText("modifier");
+
                 }else {
                     binding.lleditsettingMail.setError("enregistrement avorté");
                 }
+            }
+        });
+    }
+
+    public void afficherPasswordForm(){
+        AtomicBoolean hiden = new AtomicBoolean(false);
+        binding.txtsettingTogglePasswordEdit.setOnClickListener(view ->{
+            if (hiden.get()){
+                binding.txtsettingTogglePasswordEdit.setText("modifier");
+                binding.llsettingPasswordEdit.setVisibility(View.GONE);
+                hiden.set(false);
+            }else {
+                binding.txtsettingTogglePasswordEdit.setText("annuller");
+                binding.llsettingPasswordEdit.setVisibility(View.VISIBLE);
+                hiden.set(true);
+            }
+
+        });
+    }
+
+    public void updateSettingPassword(){
+
+        binding.settingButtonPassword.setOnClickListener(view -> {
+            String setting_password = Objects.requireNonNull(binding.editsettingPassword.getText()).toString().trim();
+            if (setting_password.isEmpty()){
+                binding.lleditsettingPassword.setError("obligatoire");
+            } else {
+                editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,setting_password).commit();
+                    settingsViewModel.getEmail().postValue(setting_password);
+                    binding.llsettingPasswordEdit.setVisibility(View.GONE);
+                    binding.txtsettingTogglePasswordEdit.setText("modifier");
             }
         });
     }

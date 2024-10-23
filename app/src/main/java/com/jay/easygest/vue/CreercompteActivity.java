@@ -2,7 +2,9 @@ package com.jay.easygest.vue;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.view.View;
@@ -12,17 +14,23 @@ import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityCreercompteBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.VariablesStatique;
 
 import java.util.Objects;
 
 
 public class CreercompteActivity extends AppCompatActivity {
 
+    public static final String SHARED_PREF_NAME = "setting_shared";
+    private  SharedPreferences sharedPreferences ;
+    private SharedPreferences.Editor editor;
    private ActivityCreercompteBinding binding;
    private Usercontrolleur usercontrolleur;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         binding = ActivityCreercompteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
@@ -34,6 +42,7 @@ public class CreercompteActivity extends AppCompatActivity {
     public void creerCompte(){
 
         binding.btncreercompte.setOnClickListener(view -> {
+
             String username = Objects.requireNonNull(binding.txtcreercompteusername.getText()).toString().trim();
             String password = Objects.requireNonNull(binding.txtcreercomptepassword.getText()).toString().trim();
             String repassword = Objects.requireNonNull(binding.txtcreercompterepeat.getText()).toString().trim();
@@ -76,6 +85,7 @@ public class CreercompteActivity extends AppCompatActivity {
 
                     if (repassword.equals(password)){
                         try {
+                            editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,password).commit();
                             int nbrutilisateur = usercontrolleur.nbrUtilisateur();
                             if (nbrutilisateur < 3){
                                 AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);

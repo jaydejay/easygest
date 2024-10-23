@@ -1,10 +1,16 @@
 package com.jay.easygest.vue;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,16 +28,19 @@ import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityGestionBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.UserModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -52,6 +61,10 @@ public class GestionActivity extends AppCompatActivity {
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
     private SmsSender smsSender;
+    EditText settingpassw;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +85,9 @@ public class GestionActivity extends AppCompatActivity {
 
         accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
+
+        sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         try {
             ArrayList<ClientModel> listeClients = clientcontrolleur.listeClients();
@@ -110,8 +126,32 @@ public class GestionActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, SettingsActivity.class);
+//            startActivity(intent);
+            Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+            UserModel user = usercontrolleur.recupProprietaire();
+           String setting_pass = sharedPreferences.getString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,user.getPassword());
+            View view = LayoutInflater.from(GestionActivity.this).inflate(R.layout.layout_settings,null);
+            settingpassw = view.findViewById(R.id.settings_passw);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+            builder.setTitle("mot de passe");
+            builder.setView(view);
+
+            builder.setPositiveButton("oui", (dialog, which) -> {
+                 String setting_pw = settingpassw.getText().toString().trim();
+                if (setting_pass.equals(setting_pw)){
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
+                }
+
+            });
+
+            builder.setNegativeButton("annuller",(dialog, which) ->{
+
+            });
+            builder.create().show();
+
             return true;
 
         } else if (item.getItemId() == R.id.action_deconnecter) {
