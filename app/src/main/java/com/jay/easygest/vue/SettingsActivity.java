@@ -300,7 +300,7 @@ public class SettingsActivity extends AppCompatActivity {
                 binding.lleditsettingPassword.setError("obligatoire");
             } else {
                 editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,setting_password).commit();
-                    settingsViewModel.getEmail().postValue(setting_password);
+                    settingsViewModel.getSetting_password().postValue(setting_password);
                     binding.llsettingPasswordEdit.setVisibility(View.GONE);
                     binding.txtsettingTogglePasswordEdit.setText("modifier");
             }
