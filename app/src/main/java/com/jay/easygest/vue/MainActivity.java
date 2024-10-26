@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private UserModel user;
     private SmsSendercontrolleur smsSendercontrolleur;
     private SmsreSender smsreSender;
+    private  AppKessModel appKessModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +62,12 @@ public class MainActivity extends AppCompatActivity {
         redirectToInitMdp();
 
         AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
-        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
-        String expediteurName = appKessModel.getOwner();
-
-        smsreSender = new SmsreSender(getBaseContext(),getParent());
+        appKessModel = accessLocalAppKes.getAppkes();
+        smsreSender = new SmsreSender(this,this);
         ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-
-
+        String expediteurName = appKessModel.getOwner();
         if (sms_no_Sents.size()>0){smsreSender.sendingUnSentMsg(sms_no_Sents,expediteurName);}
+
     }
 
     private void init() {
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         desactiverbtnAuthAdmineInit();
         parametres();
 //        reinitialiserMdp();
-
 
     }
 
@@ -179,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void activerProduit() {
         String[] appcredentials = usercontrolleur.getAppCredentials();
         String apppkey = appcredentials[1];
@@ -188,19 +185,16 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("cle d'activation");
             builder.setMessage("les donnees d'activations sont necessaires pour l'activation de votre produit, il est fortement recommendé de les noter." +"\n"
-                                +"appli key : " + apppkey + "\n"+
-                                "appli owner : " + apppowner );
+                                +"appli key : " + apppkey + "\n"
+                                +"appli owner : " + apppowner );
 
             builder.setPositiveButton("ok", (dialog, which) -> {
                 Intent intent = new Intent(this, ActiverProduitActivity.class);
                 intent.putExtra("apppowner", apppowner);
                 intent.putExtra("apppkey", apppkey);
                 startActivity(intent);
-
             });
-
             builder.create().show();
-
     }
 
     private void redirectToAppActivation() {
@@ -377,21 +371,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-//    private void afficherAlerteReinitialiserMdp() {
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("mot de passe reinitialisé");
-//        builder.setMessage("votre mot de passe a été reinitialisé, il est fortement recommendé de le noter." +
-//                "vous pouver le changer en accedant à modifier mot de passe dans le menu." +
-//                "ceci est une alerte elle diparaitra lorsque vous aurez cliquer sur ok." +
-//                "mot de passe : "+usercontrolleur.getProprietaireMdpInit()+"");
-//
-//        builder.setPositiveButton("ok", (dialog, which) -> {
-//
-//        });
-//
-//        builder.create().show();
-//    }
 
     @Override
     protected void onStart() {
@@ -401,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        smsreSender.sentReiceiver();
+        smsreSender.resentReiceiver();
 
     }
 

@@ -34,17 +34,14 @@ import java.util.concurrent.Future;
 
 public class SmsreSender  {
 
-    private static final String SMS_SENT = "SMS_SENT";
-    public static final String SMS_DELIVERED = "SMS_DELIVERED";
+    private static final String SMS_RESENT = "SMS_RESENT";
+    public static final String SMS_REDELIVERED = "SMS_REDELIVERED";
     public static final String SC_ADDRESS = null;
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 2;
     private Context context;
     private Activity activity;
     private SmsnoSentModel smsnoSentModel;
-
     private SmsSendercontrolleur smsSendercontrolleur;
-    private  String message;
-
     public SmsreSender(Context context,Activity activity) {
         this.context = context;
         this.activity = activity;
@@ -53,46 +50,39 @@ public class SmsreSender  {
     }
 
     public void sendingUnSentMsg(ArrayList<SmsnoSentModel> smss,String expediteurName  ){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         for ( SmsnoSentModel sms : smss) {
-
+            ExecutorService executor = Executors.newSingleThreadExecutor();
             smsnoSentModel = sms;
-            ClientModel client = smsnoSentModel.getClient();
+            ClientModel client = sms.getClient();
 //            String destinationAdress = client.getTelephone();
             String destinationAdress = "5556";
 
-            String messageBody = "EXPEDITEUR : "+expediteurName +"\n"+"\n"
+            String messageBody = expediteurName +"\n"+"\n"
                     + client.getNom() + " "+client.getPrenoms() +"\n"
-                    +"vous avez fait un versement de "+smsnoSentModel.getSommeverse()+" FCFA"+" pour votre "+smsnoSentModel.getOperation()+"\n"
-                    +"le "+ MesOutils.convertDateToString(new Date(smsnoSentModel.getDateoperation()))+"\n"
-                    +"reste à payer : "+smsnoSentModel.getTotalreste() ;
+                    +"vous avez fait un versement de "+sms.getSommeverse()+" FCFA"+" pour votre "+sms.getOperation()+"\n"
+                    +"le "+ MesOutils.convertDateToString(new Date(sms.getDateoperation()))+"\n"
+                    +"reste à payer : "+sms.getTotalreste() ;
 
-            Future<String> future = executor.submit(() -> {
-
+            Future<Boolean> future = executor.submit(() -> {
+                boolean success;
                 try {
-//                Thread.sleep(200);
-//                    smsSendwithInnerClass(sms.getClient(),sms.getSommeverse(),sms.getSommetotal(),sms.getTotalreste(),sms.getOperation(),sms.getDateoperation());
                     checkForSmsPermissionBeforeSend(messageBody,destinationAdress );
-                    sentReiceiver();
-
+                    success = true;
 
                 } catch (Exception e) {
-                    //do nothing
-
+                    success = false;
                 }
-               return "operation procced";
-
-
+               return success ;
             });
-            try {
-                String result = future.get();
-                Log.d("smsresender", "sendingUnSentMsg: result "+result);
 
+            try {
+                boolean result = future.get();
+                Log.d("smsresender", "sendingUnSentMsg: result "+result);
             } catch (Exception e) {
                 //do nothing
             }
+            executor.shutdown();
         }
-        executor.shutdown();
 
     }
 
@@ -104,7 +94,6 @@ public class SmsreSender  {
                     new String[]{android.Manifest.permission.SEND_SMS},
                     MY_PERMISSIONS_REQUEST_SEND_SMS);
         } else {
-//            smsnoSentModel = new SmsnoSentModel(client.getId(),sommeverse,somme_total_operation,total_reste_operation,operation,dateoperation);
             smsSendwithInnerClass(messageBody,destinationAdress );
         }
     }
@@ -112,30 +101,24 @@ public class SmsreSender  {
 
 
     private void smsSendwithInnerClass(String messageBody,String destinationAdress) {
-
         SmsManager sms = SmsManager.getDefault();
-        PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, new Intent(SMS_SENT), PendingIntent.FLAG_IMMUTABLE);
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED), PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent sentPI = PendingIntent.getBroadcast(context, 2, new Intent(SMS_RESENT), PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 3, new Intent(SMS_REDELIVERED), PendingIntent.FLAG_IMMUTABLE);
         sms.sendTextMessage(destinationAdress, SC_ADDRESS, messageBody, sentPI, deliveredPI);
     }
 
-    public void sentReiceiver(){
-
-
+    public void resentReiceiver(){
         BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                 if (getResultCode() == Activity.RESULT_OK) {
-                    message = "sms sent";
                     smsSendercontrolleur.delete(smsnoSentModel);
-
-                }else {message = "sms faiiled";}
+                }else {
+                    //do nothing
+                }
             }
         };
-
-        registerReceiver(context, smsSentReceiver, new IntentFilter(SMS_SENT),RECEIVER_NOT_EXPORTED);
-
+        registerReceiver(context, smsSentReceiver, new IntentFilter(SMS_RESENT),RECEIVER_NOT_EXPORTED);
     }
 
 

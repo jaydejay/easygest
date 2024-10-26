@@ -61,7 +61,7 @@ public class AccessLocalSmsSender {
             cursor.moveToFirst();
             if (!cursor.isAfterLast()){
                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-               smsnoSentModel = new SmsnoSentModel(cursor.getInt(0), client,cursor.getInt(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),cursor.getLong(7) );
+               smsnoSentModel = new SmsnoSentModel(cursor.getInt(0), client,cursor.getInt(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),cursor.getLong(6) );
 
             }
             cursor.close();
@@ -81,6 +81,7 @@ public class AccessLocalSmsSender {
             if (rslt != -1) {
                 success = true;
             }
+            db.close();
         }catch (Exception e){
             //do nthing
         }
@@ -93,11 +94,13 @@ public class AccessLocalSmsSender {
         ArrayList<SmsnoSentModel> smsnoSentModels = new ArrayList<>();
         try {
             Cursor cursor = db.query(SMSFAILLED,null,"id > 0",null,null,null,null);
+//            String req = "select * from smsfailled";
+//            Cursor cursor = db.rawQuery(req, null);
             if (cursor != null){
                 cursor.moveToFirst();
                 do {
                     ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-                    SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getInt(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),cursor.getLong(7) );
+                    SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getInt(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),cursor.getLong(6) );
                     smsnoSentModels.add(sms);
                 }while(cursor.moveToNext());
                 cursor.close();

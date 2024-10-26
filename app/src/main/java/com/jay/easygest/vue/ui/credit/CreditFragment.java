@@ -151,8 +151,8 @@ public class CreditFragment extends Fragment {
                        int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
                        int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
-                       String destinationAdress = "+225"+client.getTelephone();
-//                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+//                       String destinationAdress = "+225"+client.getTelephone();
+                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"

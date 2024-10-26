@@ -73,39 +73,45 @@ public class AfficherclientActivity extends AppCompatActivity {
         accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
         client = clientViewModel.getClient().getValue();
+        try {
+            creditcontrolleur.setRecapTresteClient(client);
+            creditcontrolleur.setRecapTversementClient(client);
+            creditcontrolleur.setRecapTcreditClient(client);
 
-        creditcontrolleur.setRecapTresteClient(client);
-        creditcontrolleur.setRecapTversementClient(client);
-        creditcontrolleur.setRecapTcreditClient(client);
+            accountcontrolleur.setRecapTaccountClient(client);
+            accountcontrolleur.setRecapTresteClient(client);
 
-        accountcontrolleur.setRecapTaccountClient(client);
-        accountcontrolleur.setRecapTresteClient(client);
+            int TresteCreditClient = 0;
+            int TcreditClient = 0;
 
-        int TresteCreditClient = 0;
-        int TcreditClient = 0;
+            if (creditViewModel.getTotalcreditsclient().getValue() != null){
+                TcreditClient = creditViewModel.getTotalcreditsclient().getValue();
+            }
 
-        if (creditViewModel.getTotalcreditsclient().getValue() != null){
-             TcreditClient = creditViewModel.getTotalcreditsclient().getValue();
+            if (creditViewModel.getTotalrestesclient().getValue() != null){
+                TresteCreditClient = creditViewModel.getTotalrestesclient().getValue();
+            }
+
+            int TaccountClient = 0;
+            int TresteAccClient =0;
+
+            if (accountViewModel.getTotalaccountsclient() != null){
+                TaccountClient = accountViewModel.getTotalaccountsclient().getValue();
+            }
+
+            if (accountViewModel.getTotalrestesclient().getValue() != null){
+                TresteAccClient = accountViewModel.getTotalrestesclient().getValue();
+            }
+
+            clientMenuDisabledAndRecpShow(TcreditClient,TresteCreditClient,TaccountClient,TresteAccClient);
+        }catch (Exception e){
+            //do nothing
         }
 
-        if (creditViewModel.getTotalrestesclient().getValue() != null){
-             TresteCreditClient = creditViewModel.getTotalrestesclient().getValue();
-        }
-
-        int TaccountClient = 0;
-        int TresteAccClient =0;
-
-        if (accountViewModel.getTotalaccountsclient() != null){
-            TaccountClient = accountViewModel.getTotalaccountsclient().getValue();
-        }
-
-        if (accountViewModel.getTotalrestesclient().getValue() != null){
-            TresteAccClient = accountViewModel.getTotalrestesclient().getValue();
-        }
 
         setContentView(binding.getRoot());
 
-        clientMenuDisabledAndRecpShow(TcreditClient,TresteCreditClient,TaccountClient,TresteAccClient);
+
         redirectToModifierClient();
         afficherclient();
         afficherListeVersementacc();
@@ -121,7 +127,18 @@ public class AfficherclientActivity extends AppCompatActivity {
         afficherListeCreditsoldes();
         supprimerCreditSoldes();
         supprimerAccountSoldes();
+//        afficherIntentMessage();
     }
+
+
+//        public void  afficherIntentMessage(){
+//            String msg = getIntent().getExtras().get("notsentmessge").toString();
+//            if ( msg.length() != 0){
+//                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+//            }
+//        }
+
+
 
 
     public void clientMenuDisabledAndRecpShow(Integer TcreditClient, Integer TresteCreditClient,Integer TaccountClient, Integer TresteAccClient){

@@ -29,11 +29,10 @@ import java.util.Date;
 
 
 public class SmsSender {
-    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 2;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     private static final String SMS_SENT = "SMS_SENT";
     public static final String SMS_DELIVERED = "SMS_DELIVERED";
     public static final String SC_ADDRESS = null;
-    private boolean msgsIsdifere;
     private final Context context;
     private final Activity activity;
     private SmsnoSentModel smsnoSentModel;
@@ -59,7 +58,7 @@ public class SmsSender {
     private void smsSendwithInnerClass(String messageBody, String destinationAdress ) {
         SmsManager sms = SmsManager.getDefault();
         PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, new Intent(SMS_SENT), PendingIntent.FLAG_IMMUTABLE);
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED), PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 1, new Intent(SMS_DELIVERED), PendingIntent.FLAG_IMMUTABLE);
         sms.sendTextMessage(destinationAdress, SC_ADDRESS, messageBody, sentPI, deliveredPI);
     }
 
@@ -70,7 +69,7 @@ public class SmsSender {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                if (getResultCode() == Activity.RESULT_OK) {
+                if (getResultCode() == Activity.RESULT_OK  ) {
 
                     Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
                     startActivity(context, intent_to_aff, null);
@@ -80,7 +79,7 @@ public class SmsSender {
                     boolean success = smsSendercontrolleur.insert(smsnoSentModel);
                     if(success){
                         Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
-                        intent_to_aff.putExtra("NOT_SENT_MESSAGE","erreur message pas envoye");
+                        intent_to_aff.putExtra("notsentmessge","erreur message pas envoye");
                         startActivity(context, intent_to_aff, null);
                     }
 
