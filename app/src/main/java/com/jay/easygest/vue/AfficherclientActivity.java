@@ -127,16 +127,18 @@ public class AfficherclientActivity extends AppCompatActivity {
         afficherListeCreditsoldes();
         supprimerCreditSoldes();
         supprimerAccountSoldes();
-//        afficherIntentMessage();
+        afficherIntentMessage();
     }
 
 
-//        public void  afficherIntentMessage(){
-//            String msg = getIntent().getExtras().get("notsentmessge").toString();
-//            if ( msg.length() != 0){
-//                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-//            }
-//        }
+        public void  afficherIntentMessage(){
+        Bundle intent = getIntent().getExtras();
+
+            if ( intent != null){
+                String msg = intent.get("smssentmessge").toString();
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            }
+        }
 
 
 

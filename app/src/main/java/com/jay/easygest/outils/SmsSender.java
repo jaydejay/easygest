@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import com.jay.easygest.vue.AfficherclientActivity;
 import java.util.Date;
 
 
-public class SmsSender {
+public class SmsSender extends AsyncTask {
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     private static final String SMS_SENT = "SMS_SENT";
     public static final String SMS_DELIVERED = "SMS_DELIVERED";
@@ -57,9 +58,9 @@ public class SmsSender {
 
     private void smsSendwithInnerClass(String messageBody, String destinationAdress ) {
         SmsManager sms = SmsManager.getDefault();
-        PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, new Intent(SMS_SENT), PendingIntent.FLAG_IMMUTABLE);
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 1, new Intent(SMS_DELIVERED), PendingIntent.FLAG_IMMUTABLE);
-        sms.sendTextMessage(destinationAdress, SC_ADDRESS, messageBody, sentPI, deliveredPI);
+        PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, new Intent(SMS_SENT), PendingIntent.FLAG_IMMUTABLE| PendingIntent.FLAG_UPDATE_CURRENT |PendingIntent.FLAG_ONE_SHOT);
+//        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 1, new Intent(SMS_DELIVERED), PendingIntent.FLAG_IMMUTABLE);
+        sms.sendTextMessage(destinationAdress, SC_ADDRESS, messageBody, sentPI, null);
     }
 
 
@@ -70,8 +71,8 @@ public class SmsSender {
             public void onReceive(Context context, Intent intent) {
 
                 if (getResultCode() == Activity.RESULT_OK  ) {
-
                     Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
+                    intent_to_aff.putExtra("smssentmessge"," message envoye");
                     startActivity(context, intent_to_aff, null);
 
                 } else {
@@ -79,7 +80,7 @@ public class SmsSender {
                     boolean success = smsSendercontrolleur.insert(smsnoSentModel);
                     if(success){
                         Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
-                        intent_to_aff.putExtra("notsentmessge","erreur message pas envoye");
+                        intent_to_aff.putExtra("smssentmessge","message non envoye");
                         startActivity(context, intent_to_aff, null);
                     }
 
@@ -115,6 +116,8 @@ public class SmsSender {
     }
 
 
-
-
+    @Override
+    protected Object doInBackground(Object[] objects) {
+        return null;
+    }
 }

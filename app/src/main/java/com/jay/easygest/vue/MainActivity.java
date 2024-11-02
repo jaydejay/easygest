@@ -380,8 +380,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        smsreSender.resentReiceiver();
-
+//        smsreSender.resentReiceiver();
+//        ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
+//        String expediteurName = appKessModel.getOwner();
+//        if (sms_no_Sents.size()>0){smsreSender.sendingUnSentMsg(sms_no_Sents,expediteurName);}
     }
 
     @Override
