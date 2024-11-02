@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class CreercompteActivity extends AppCompatActivity {
 
-    public static final String SHARED_PREF_NAME = "setting_shared";
+//    public static final String SHARED_PREF_NAME = "setting_shared";
     private  SharedPreferences sharedPreferences ;
     private SharedPreferences.Editor editor;
    private ActivityCreercompteBinding binding;

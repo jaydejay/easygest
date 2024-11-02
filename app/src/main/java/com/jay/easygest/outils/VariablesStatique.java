@@ -11,4 +11,6 @@ public abstract class VariablesStatique {
 
     public static final String AUTH_SHARED_PREF_VARIABLE = "is_authenticated";
     public static final String SETTING_SHARED_PREF_VARIABLE = "setting_password";
+
+    public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
 }

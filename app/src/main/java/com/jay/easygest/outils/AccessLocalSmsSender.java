@@ -21,6 +21,7 @@ public class AccessLocalSmsSender {
     public static final String OPERATION = "operation";
     public static final String ISDEFERE = "isdefere";
     public static final String DATEOPERATION = "dateoperation";
+    public static final String MESSAGE = "message";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase db;
     private final Context context;
@@ -38,11 +39,7 @@ public class AccessLocalSmsSender {
         db = accessBD.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(CLIENTID,smsnoSentModel.getClientid());
-        cv.put(SOMMEVERSE,smsnoSentModel.getSommeverse());
-        cv.put(TOTALOPERATION,smsnoSentModel.getSommetotal());
-        cv.put(TOTALRESTE,smsnoSentModel.getTotalreste());
-        cv.put(OPERATION,smsnoSentModel.getOperation());
-        cv.put(DATEOPERATION,smsnoSentModel.getDateoperation());
+        cv.put(MESSAGE,smsnoSentModel.getMessage());
         db.insert(SMSFAILLED,null,cv);
         success = true;
         }catch (Exception e){
@@ -61,7 +58,7 @@ public class AccessLocalSmsSender {
             cursor.moveToFirst();
             if (!cursor.isAfterLast()){
                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-               smsnoSentModel = new SmsnoSentModel(cursor.getInt(0), client,cursor.getInt(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),cursor.getLong(6) );
+               smsnoSentModel = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2) );
 
             }
             cursor.close();
@@ -100,7 +97,7 @@ public class AccessLocalSmsSender {
                 cursor.moveToFirst();
                 do {
                     ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-                    SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getInt(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),cursor.getLong(6) );
+                    SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2) );
                     smsnoSentModels.add(sms);
                 }while(cursor.moveToNext());
                 cursor.close();

@@ -1,10 +1,14 @@
 package com.jay.easygest.vue;
 
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.controleur.Clientcontrolleur;
@@ -14,6 +18,7 @@ import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
@@ -144,8 +149,19 @@ public class AjouterCreditActivity extends AppCompatActivity {
                                 +"total credit "+total_credit_client+"\n"
                                 +"reste à payer : "+total_reste_client;
 
+                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
 
-                        smsSender.checkForSmsPermissionBeforeSend(client,creditModel.getVersement(),total_credit_client,total_reste_client,"credit",creditModel.getDatecredit(),messageBody,destinationAdress);
+                        if (ActivityCompat.checkSelfPermission(this,
+                                android.Manifest.permission.SEND_SMS) !=
+                                PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{android.Manifest.permission.SEND_SMS},
+                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        } else {
+
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
+                            smsSender.sentReiceiver(smsnoSentModel);
+                        }
 
                     } else { Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();}
                 }else { Toast.makeText(this, "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();}

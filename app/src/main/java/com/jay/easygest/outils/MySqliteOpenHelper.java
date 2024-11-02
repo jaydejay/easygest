@@ -142,11 +142,7 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
     private final String createTable_smsfailled = "create table "+ SMSFAILLED +" ("
             +"id Integer primary key,"
             +"clientid Integer ,"
-            +"sommeverse Integer not null,"
-            +"totaloperation Integer not null,"
-            +"totalreste Integer not null,"
-            +"operation text not null,"
-            +"dateoperation Long not null,"
+            +"message Text not null,"
             +"foreign key(clientid) references client(id) on delete cascade)";
 
 

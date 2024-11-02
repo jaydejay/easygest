@@ -2,6 +2,7 @@ package com.jay.easygest.vue.ui.credit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,6 +23,7 @@ import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
@@ -31,10 +34,12 @@ import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.Date;
+import java.util.Objects;
 
 
 public class CreditFragment extends Fragment {
 
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     private SessionManagement sessionManagement;
     private FragmentCreditBinding binding;
     private Creditcontrolleur creditcontrolleur;
@@ -52,7 +57,7 @@ public class CreditFragment extends Fragment {
         this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-         smsSender = new SmsSender(getContext(),getActivity());
+        smsSender = new SmsSender(getContext(),getActivity());
         accessLocalAppKes = new AccessLocalAppKes(getContext());
         appKessModel = accessLocalAppKes.getAppkes();
 
@@ -141,7 +146,7 @@ public class CreditFragment extends Fragment {
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                if (Integer.parseInt(versement) < sommecredit){
                    CreditModel creditModel =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
-
+                   Log.d("creitfragment", "ajouterCredit: "+creditModel);
                    if (creditModel != null) {
                        ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
                        creditcontrolleur.setRecapTresteClient(client);
@@ -161,7 +166,20 @@ public class CreditFragment extends Fragment {
                                +"reste à payer : "+total_reste_client+"\n"
                                +"votre code "+client.getCodeclient();
 
-                       smsSender.checkForSmsPermissionBeforeSend(client,creditModel.getVersement(),total_credit_client,total_reste_client,"credit",creditModel.getDatecredit(),messageBody,destinationAdress);
+                       SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+
+                       if (ActivityCompat.checkSelfPermission(requireContext(),
+                               android.Manifest.permission.SEND_SMS) !=
+                               PackageManager.PERMISSION_GRANTED) {
+                           ActivityCompat.requestPermissions(requireActivity(),
+                                   new String[]{android.Manifest.permission.SEND_SMS},
+                                   MY_PERMISSIONS_REQUEST_SEND_SMS);
+                       } else {
+
+                           smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
+                           smsSender.sentReiceiver(smsnoSentModel);
+                       }
+
                    }else {Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();}
 
                }else {Toast.makeText(getContext(), "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();}
@@ -183,7 +201,7 @@ public class CreditFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
-        smsSender.sentReiceiver();
+
     }
 
 

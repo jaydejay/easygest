@@ -23,6 +23,7 @@ import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentVersementBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
@@ -87,7 +88,7 @@ public class VersementFragment extends Fragment {
 //                            String dateversement = binding.editversementdate.getText().toString();
 //                            int sommeverse_formulaire = Integer.parseInt(somme_versee);
 
-                            if (Objects.equals(client.getCodeclient(), binding.editversementcodeclt.getText().toString().trim())){
+                            if (Objects.equals(client.getCodeclient(),binding.editversementcodeclt.getText().toString().trim())){
                                 int somme_total_credit = creditViewModel.getTotalcreditsclient().getValue();
                                 int total_reste_credit_avant = creditViewModel.getTotalrestesclient().getValue();
 
@@ -118,7 +119,20 @@ public class VersementFragment extends Fragment {
                                                 +"le "+date+"\n"
                                                 +"reste à payer : "+total_reste_credit ;
 
-                                        smsSender.checkForSmsPermissionBeforeSend(client,sommeverse,somme_total_credit,total_reste_credit, CREDIT,MesOutils.convertStringToDate(date).getTime(),messageBody,destinationAdress);
+                                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+
+                                        if (ActivityCompat.checkSelfPermission(requireContext(),
+                                                android.Manifest.permission.SEND_SMS) !=
+                                                PackageManager.PERMISSION_GRANTED) {
+                                            ActivityCompat.requestPermissions(requireActivity(),
+                                                    new String[]{android.Manifest.permission.SEND_SMS},
+                                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                        } else {
+
+                                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress, client.getId() );
+                                            smsSender.sentReiceiver(smsnoSentModel);
+                                        }
+
                                     } else {
                                         Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
                                     }
@@ -159,7 +173,7 @@ public class VersementFragment extends Fragment {
             startActivity(intent);
 
         }
-        smsSender.sentReiceiver();
+//        smsSender.sentReiceiver();
 //        smsSender.deliveredReceiver();
 
     }

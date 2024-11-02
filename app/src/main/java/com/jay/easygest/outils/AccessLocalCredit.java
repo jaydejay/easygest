@@ -344,6 +344,7 @@ public class AccessLocalCredit {
                 int reste = cursor.getInt(6);
                 long datecredit = cursor.getLong(7);
                 Integer nbrcredit = cursor.getInt(8);
+//                ClientModel client = accessLocalClient.recupUnClient(clientid);
                 credit = new CreditModel(creditId, clientid, article1, article2, sommecredit, versement, reste, datecredit,nbrcredit);
                 credit.setSoldedat(cursor.getLong(9));
             }

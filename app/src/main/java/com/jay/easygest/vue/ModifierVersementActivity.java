@@ -1,6 +1,9 @@
 package com.jay.easygest.vue;
 
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
@@ -19,6 +23,7 @@ import com.jay.easygest.databinding.ActivityModifierVersementBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
@@ -139,7 +144,19 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                         +"total account : "+total_credit_client+"\n"
                                         +"reste a payer : "+total_reste_client;
 
-                                    smsSender.checkForSmsPermissionBeforeSend(client,nouvellesommeverse,total_credit_client,total_reste_client,"credit",new Date().getTime(),messageBody,destinationAdress);
+                                    SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+
+                                    if (ActivityCompat.checkSelfPermission(this,
+                                            android.Manifest.permission.SEND_SMS) !=
+                                            PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(this,
+                                                new String[]{android.Manifest.permission.SEND_SMS},
+                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                    } else {
+
+                                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versementsModel.getId() );
+                                        smsSender.sentReiceiver(smsnoSentModel);
+                                    }
 
                                 }else {
                                     Intent intent = new Intent(ModifierVersementActivity.this, AfficheversementActivity.class);
@@ -167,7 +184,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
-        smsSender.sentReiceiver();
+//        smsSender.sentReiceiver();
     }
 
     @Override

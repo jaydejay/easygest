@@ -1,7 +1,10 @@
 package com.jay.easygest.vue.ui.account;
 
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,6 +25,7 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
+import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
@@ -166,7 +171,19 @@ public class  AccountFragment extends Fragment {
                                 +"reste à payer : "+total_reste_client+"\n"
                                 +"votre code "+clientModel.getCodeclient();
 
-                        smsSender.checkForSmsPermissionBeforeSend(clientModel,accountModel.getVersement(),total_account_client,total_reste_client,"account",accountModel.getDateaccount(),messageBody,destinationAdress);
+                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
+
+                        if (ActivityCompat.checkSelfPermission(requireContext(),
+                                android.Manifest.permission.SEND_SMS) !=
+                                PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(requireActivity(),
+                                    new String[]{android.Manifest.permission.SEND_SMS},
+                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        } else {
+
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,accountModel.getId() );
+                            smsSender.sentReiceiver(smsnoSentModel);
+                        }
                     }else {Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();}
 
                 }else {Toast.makeText(getContext(), "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();}

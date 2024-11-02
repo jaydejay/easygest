@@ -122,7 +122,7 @@ public class ResentMessageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        smsSender.sentReiceiver();
-        smsSender.deliveredReceiver();
+//        smsSender.sentReiceiver();
+//        smsSender.deliveredReceiver();
     }
 }

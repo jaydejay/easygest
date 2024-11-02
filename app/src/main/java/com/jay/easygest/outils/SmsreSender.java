@@ -65,12 +65,12 @@ public class SmsreSender  {
 //            String destinationAdress = client.getTelephone();
                         String destinationAdress = "5556";
 
-                        String messageBody = expediteurName +"\n"+"\n"
-                                + client.getNom() + " "+client.getPrenoms() +"\n"
-                                +"vous avez fait un versement de "+sms.getSommeverse()+" FCFA"+" pour votre "+sms.getOperation()+"\n"
-                                +"le "+ MesOutils.convertDateToString(new Date(sms.getDateoperation()))+"\n"
-                                +"reste à payer : "+sms.getTotalreste() ;
-                        checkForSmsPermissionBeforeSend(messageBody,destinationAdress );
+//                        String messageBody = expediteurName +"\n"+"\n"
+//                                + client.getNom() + " "+client.getPrenoms() +"\n"
+//                                +"vous avez fait un versement de "+sms.getSommeverse()+" FCFA"+" pour votre "+sms.getOperation()+"\n"
+//                                +"le "+ MesOutils.convertDateToString(new Date(sms.getDateoperation()))+"\n"
+//                                +"reste à payer : "+sms.getTotalreste() ;
+                        checkForSmsPermissionBeforeSend(sms.getMessage(),destinationAdress );
                         resentReiceiver(sms);
 
                     }
@@ -85,11 +85,6 @@ public class SmsreSender  {
 
             try {
                  ArrayList<SmsnoSentModel> rs= future.get();
-//                for ( SmsnoSentModel sm : rs) {
-//                    smsSendercontrolleur.delete(sm);
-                    Log.d("smsresender", "sendingUnSentMsg: result "+rs);
-//                }
-
 
             } catch (Exception e) {
                 //do nothing
@@ -140,10 +135,9 @@ public class SmsreSender  {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (getResultCode() == Activity.RESULT_OK) {
-//
-                    smsSendercontrolleur.delete(sms);
 
+                if (getResultCode() == Activity.RESULT_OK) {
+                    smsSendercontrolleur.delete(sms);
                 }
             }
         };

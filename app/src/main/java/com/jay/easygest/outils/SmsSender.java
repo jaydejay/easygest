@@ -29,7 +29,7 @@ import com.jay.easygest.vue.AfficherclientActivity;
 import java.util.Date;
 
 
-public class SmsSender extends AsyncTask {
+public class SmsSender {
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     private static final String SMS_SENT = "SMS_SENT";
     public static final String SMS_DELIVERED = "SMS_DELIVERED";
@@ -43,41 +43,42 @@ public class SmsSender extends AsyncTask {
         this.activity = activity;
     }
 
-    public void checkForSmsPermissionBeforeSend(ClientModel client, int sommeverse, int somme_total_operation, int total_reste_operation,String operation,long dateoperation,String messageBody, String destinationAdress ) {
-        if (ActivityCompat.checkSelfPermission(context,
-                android.Manifest.permission.SEND_SMS) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{android.Manifest.permission.SEND_SMS},
-                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-        } else {
-            smsnoSentModel = new SmsnoSentModel(client.getId(),sommeverse,somme_total_operation,total_reste_operation,operation,dateoperation);
-            smsSendwithInnerClass(messageBody, destinationAdress );
-        }
-    }
+//    public void checkForSmsPermissionBeforeSend(String messageBody, String destinationAdress ) {
+//        if (ActivityCompat.checkSelfPermission(context,
+//                android.Manifest.permission.SEND_SMS) !=
+//                PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(activity,
+//                    new String[]{android.Manifest.permission.SEND_SMS},
+//                    VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS);
+//        } else {
+//
+//            smsSendwithInnerClass(messageBody, destinationAdress );
+//        }
+//    }
 
-    private void smsSendwithInnerClass(String messageBody, String destinationAdress ) {
+    public void smsSendwithInnerClass(String messageBody, String destinationAdress,int SMS_ID ) {
         SmsManager sms = SmsManager.getDefault();
-        PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, new Intent(SMS_SENT), PendingIntent.FLAG_IMMUTABLE| PendingIntent.FLAG_UPDATE_CURRENT |PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent sentPI = PendingIntent.getBroadcast(context, SMS_ID, new Intent(SMS_SENT), PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 //        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 1, new Intent(SMS_DELIVERED), PendingIntent.FLAG_IMMUTABLE);
         sms.sendTextMessage(destinationAdress, SC_ADDRESS, messageBody, sentPI, null);
     }
 
 
-    public void sentReiceiver(){
+    public void sentReiceiver(SmsnoSentModel sms){
 
         BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
                 if (getResultCode() == Activity.RESULT_OK  ) {
+
                     Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
                     intent_to_aff.putExtra("smssentmessge"," message envoye");
                     startActivity(context, intent_to_aff, null);
 
                 } else {
                     SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(context);
-                    boolean success = smsSendercontrolleur.insert(smsnoSentModel);
+                    boolean success = smsSendercontrolleur.insert(sms);
                     if(success){
                         Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
                         intent_to_aff.putExtra("smssentmessge","message non envoye");
@@ -92,32 +93,29 @@ public class SmsSender extends AsyncTask {
 
     }
 
-    public void deliveredReceiver(){
+//    public void deliveredReceiver(){
+//
+//       BroadcastReceiver smsDeliveredReceiver = new BroadcastReceiver() {
+//           @Override
+//            public void onReceive(Context arg0, Intent arg1) {
+//
+//                switch (getResultCode()) {
+//                    case Activity.RESULT_OK:
+////                        Toast.makeText(getBaseContext(), "SMS délivré",Toast.LENGTH_SHORT).show();
+//                        Log.d("SMS DELIVERED", "SMS délivré !");
+//                        break;
+//
+//                    case Activity.RESULT_CANCELED:
+////                        Toast.makeText(getBaseContext(), "“SMS non delivré",Toast.LENGTH_SHORT).show();
+//                        Log.d("SMS DELIVERED", "SMS non délivré !");
+//                        break;
+//                }
+//            }
+//        };
+//        registerReceiver(context, smsDeliveredReceiver, new IntentFilter(SMS_DELIVERED),RECEIVER_NOT_EXPORTED);
+//
+//    }
 
-       BroadcastReceiver smsDeliveredReceiver = new BroadcastReceiver() {
-           @Override
-            public void onReceive(Context arg0, Intent arg1) {
-
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-//                        Toast.makeText(getBaseContext(), "SMS délivré",Toast.LENGTH_SHORT).show();
-                        Log.d("SMS DELIVERED", "SMS délivré !");
-                        break;
-
-                    case Activity.RESULT_CANCELED:
-//                        Toast.makeText(getBaseContext(), "“SMS non delivré",Toast.LENGTH_SHORT).show();
-                        Log.d("SMS DELIVERED", "SMS non délivré !");
-                        break;
-                }
-            }
-        };
-        registerReceiver(context, smsDeliveredReceiver, new IntentFilter(SMS_DELIVERED),RECEIVER_NOT_EXPORTED);
-
-    }
 
 
-    @Override
-    protected Object doInBackground(Object[] objects) {
-        return null;
-    }
 }

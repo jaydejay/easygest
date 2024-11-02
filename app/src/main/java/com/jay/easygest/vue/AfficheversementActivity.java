@@ -1,12 +1,16 @@
 package com.jay.easygest.vue;
 
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
@@ -17,6 +21,7 @@ import com.jay.easygest.databinding.ActivityAfficheversementBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
@@ -142,7 +147,19 @@ public class AfficheversementActivity extends AppCompatActivity {
                                +"total credit : "+total_credit_client+"\n"
                                +"reste a payer : "+total_reste_client;
 
-                       smsSender.checkForSmsPermissionBeforeSend(clientModel,credit.getVersement(),total_credit_client,total_reste_client,"credit",credit.getDatecredit(),messageBody,destinationAdress);
+                       SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
+
+                       if (ActivityCompat.checkSelfPermission(this,
+                               android.Manifest.permission.SEND_SMS) !=
+                               PackageManager.PERMISSION_GRANTED) {
+                           ActivityCompat.requestPermissions(this,
+                                   new String[]{android.Manifest.permission.SEND_SMS},
+                                   MY_PERMISSIONS_REQUEST_SEND_SMS);
+                       } else {
+
+                           smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versement.getId() );
+                           smsSender.sentReiceiver(smsnoSentModel);
+                       }
 
                    }
 
@@ -185,7 +202,7 @@ public class AfficheversementActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-        smsSender.sentReiceiver();
+//        smsSender.sentReiceiver();
     }
 
     @Override
