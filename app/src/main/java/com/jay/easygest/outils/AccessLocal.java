@@ -234,10 +234,6 @@ public class AccessLocal {
             if (owner.equals(proprietaire) && cle.equals(cleproduit)){
                 success = true;
             }
-
-//            if(cursor.getString(cursor.getColumnIndexOrThrow("owner")).equals(proprietaire) && cursor.getString(cursor.getColumnIndexOrThrow("apppkey")).equals(cleproduit) ){
-//                success = true;
-//            }
         }
         cursor.close();
         bd.close();

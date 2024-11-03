@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private SessionManagement sessionManagement;
     private Usercontrolleur usercontrolleur;
-    private Integer compteur;
     private UserModel user;
     private SmsSendercontrolleur smsSendercontrolleur;
     private SmsreSender smsreSender;
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         init();
         authentification();
         redirectToAppActivation();
-        debloquerCompteProprietaire();
         redirectToInitMdp();
 
         AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
@@ -71,13 +69,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        fillTxtVConnestion();
-        fillTxtVConnestionErrorAdmin();
+        fillTxtVConnectionError();
         desactivatetxtCreation();
         desactiverbtnAuthInit();
-        desactiverbtnAuthAdmineInit();
         parametres();
-//        reinitialiserMdp();
 
     }
 
@@ -124,44 +119,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * permet de débloquer un compte
-     */
-    private void debloquerCompteProprietaire() {
-
-        binding.btnmaindeloqueadmine.setOnClickListener(view -> {
-            try {
-                String admin_username = Objects.requireNonNull(binding.editTextUsername.getText()).toString().trim();
-                String admin_password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString().trim();
-                UserModel administrateur = usercontrolleur.recupAdministrateur();
-                if ( admin_username.isEmpty() || admin_password.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (admin_username.length() >= 6 && admin_password.length() >= 8) {
-
-                        if (admin_username.equals(administrateur.getUsername()) && admin_password.equals(administrateur.getPassword())) {
-                            usercontrolleur.activerProprietaire();
-                            usercontrolleur.activerAdministrateur();
-                            initChamp();
-                            activerbtn(binding.btnauth);
-                            binding.mainlayoutadmine.setVisibility(View.GONE);
-                            fillTxtVConnestion();
-                            afficherAlerte();
-                        } else {
-                            Toast.makeText(MainActivity.this, "username ou mot de passe incorrecte", Toast.LENGTH_SHORT).show();
-                            desactiverbtnAuthAdmine(administrateur);
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
-                        desactiverbtnAuthAdmine(administrateur);
-                    }
-                }
-            } catch (Exception e) {
-                Toast.makeText(MainActivity.this, "un probleme d'integrité est survenu contacter votre administrateur", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-    }
 
 
     /**
@@ -177,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * affiche les donnees d'activation du produit
+     */
     private void activerProduit() {
         String[] appcredentials = usercontrolleur.getAppCredentials();
         String apppkey = appcredentials[1];
@@ -197,13 +157,18 @@ public class MainActivity extends AppCompatActivity {
             builder.create().show();
     }
 
+    /**
+     * redirection pour activer le produit
+     */
     private void redirectToAppActivation() {
         binding.txtCreateCompte.setOnClickListener(view -> activerProduit());
 
     }
 
-
-    public void fillTxtVConnestion(){
+    /**
+     * texte lors du blocage du compte
+     */
+    public void fillTxtVConnection(){
         try {
             user = usercontrolleur.recupProprietaire();
             if (user != null){
@@ -225,24 +190,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void fillTxtVConnestionErrorAdmin(){
+    /**
+     * affichage du texte d'erreur
+     */
+    public void fillTxtVConnectionError(){
         try {
-            user = usercontrolleur.recupAdministrateur();
+            user = usercontrolleur.recupProprietaire();
             if (user != null){
                 String msg_texte= "connection";
                 if (user.getCompteur() >= 3){
                     msg_texte = "débloquer votre compte"+"\n"
                             +"vous êtes ici parce que"+"\n"
-                            + "vous avez fait 3 tentatives"+"\n"
-                            +"de fausse connection"+"\n"
-                            +"acceder aux paramettres pour continuer";
+                            + "vous avez fait 3 tentatives de fausse connection"+"\n"
+                            +"acceder aux paramettres pour"+"\n"
+                            +"debloquer votre compte utilisateur";
                     binding.textVConnection.setTextColor(getResources().getColor(R.color.red));
                     binding.textVConnection.setTextSize(12);
                 }
 
                 binding.textVConnection.setText(msg_texte);
             }
-        }catch (Exception e){}
+        }catch (Exception e){
+            Log.d("mainactivity", "fillTxtVConnectionError: erreur");
+        }
 
     }
 
@@ -253,6 +223,9 @@ public class MainActivity extends AppCompatActivity {
         btn.setEnabled(true);
     }
 
+    /**
+     * desavtive la creation de compte utilisateur
+     */
     private void desactivatetxtCreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
         if (nbrutilisateur >= 3){
@@ -262,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * desactive le bouton d'authentification
+     * desactive le bouton d'authentification increment le compteur
      * @param userModel l'utilisateur
      */
     private void desactiverbtnAuth(UserModel userModel){
@@ -272,48 +245,58 @@ public class MainActivity extends AppCompatActivity {
                 usercontrolleur.desactiverProprietaire();
                 initChamp();
                 binding.btnauth.setVisibility(View.GONE);
-                binding.mainlayoutadmine.setVisibility(View.VISIBLE);
-                fillTxtVConnestion();
+                binding.txtParametres.setVisibility(View.VISIBLE);
+//                binding.mainlayoutadmine.setVisibility(View.VISIBLE);
+                fillTxtVConnectionError();
             }
         }
 
     }
+
+//    /**
+//     * desactive le bouton d'authentification d'un administrateur
+//     * @param userModel l'administrateur
+//     */
+//    private void desactiverbtnAuthAdmine(UserModel userModel){
+//        int cmpteur = incrementCompteur(userModel);
+//        if (cmpteur >= 3){
+//            initChamp();
+//            usercontrolleur.desactiverAdministrateur();
+//            binding.txtParametres.setVisibility(View.VISIBLE);
+////            binding.mainlayoutadmine.setVisibility(View.GONE);
+//            fillTxtVConnestionErrorAdmin();
+//        }
+//
+//    }
+
+
 
     /**
-     * desactive le bouton d'authentification d'un administrateur
-     * @param userModel l'administrateur
+     * desactive le bouton authentification pour un administrateur
      */
-    private void desactiverbtnAuthAdmine(UserModel userModel){
-        int cmpteur = incrementCompteur(userModel);
-        if (cmpteur >= 3){
-            initChamp();
-            usercontrolleur.desactiverAdministrateur();
-            binding.txtParametres.setVisibility(View.VISIBLE);
-            binding.mainlayoutadmine.setVisibility(View.GONE);
-            fillTxtVConnestionErrorAdmin();
-        }
+//    private void desactiverbtnAuthAdmineInit(){
+//        try {
+//            UserModel userModel = usercontrolleur.recupAdministrateur();
+//            if (userModel.getCompteur() >= 3){
+//                binding.txtParametres.setVisibility(View.VISIBLE);
+////               binding.mainlayoutadmine.setVisibility(View.GONE);
+//            }
+//        }catch (Exception e){
+//            //do nothing
+//        }
+//
+//    }
 
-    }
-
-    private void desactiverbtnAuthAdmineInit(){
-        try {
-            UserModel userModel = usercontrolleur.recupAdministrateur();
-            if (userModel.getCompteur() >= 3){
-                binding.txtParametres.setVisibility(View.VISIBLE);
-                binding.mainlayoutadmine.setVisibility(View.GONE);
-            }
-        }catch (Exception e){
-            //do nothing
-        }
-
-    }
-
+    /**
+     * desactive le bouton authentification pour un utilisateur a l'initiation
+     */
     private void desactiverbtnAuthInit(){
         try {
             UserModel userModel = usercontrolleur.recupProprietaire();
             if (userModel.getCompteur() >= 3){
                 binding.btnauth.setVisibility(View.GONE);
-                binding.mainlayoutadmine.setVisibility(View.VISIBLE);
+                binding.txtParametres.setVisibility(View.VISIBLE);
+                fillTxtVConnectionError();
             }
         }catch (Exception e){
             //do nothing
@@ -321,6 +304,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     * @param userModel l'utilisateur qui se connecte
+     * @return le nbr de tentative de connexion
+     */
     private Integer incrementCompteur( UserModel userModel){
         int compteur = userModel.getCompteur() ;
         try {
@@ -344,25 +332,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * affiche le message de reactivation du compte
      */
-    private void afficherAlerte() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("compte reactivé");
-        builder.setMessage("votre compte à été reactivé"+"\n"
-                +"cela est dû peut etre à une tentative frauduleuse de connection" +"\n"
-               + "continué de toujours bien garder vos identifiants secret" +"\n"
-               + "ne les communiqués en aucun cas à personne"+"\n"
-               + "de préference il est conseiller de le changer toutes les semaines"+"\n"
-               + "et surtout faite attention à qui vous remettez votre telephone"+"\n"
-               + "il est recommendé de toujours configurer le vérouillage"+"\n"
-                +"de votre téléphone avec un mot de passe ou un schema"+"\n");
-
-        builder.setPositiveButton("ok", (dialog, which) -> {
-
-        });
-
-        builder.create().show();
-    }
 
     public void redirectToInitMdp(){
         binding.txtMainMdpOublie.setOnClickListener(view -> {
@@ -380,10 +350,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        smsreSender.resentReiceiver();
-//        ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-//        String expediteurName = appKessModel.getOwner();
-//        if (sms_no_Sents.size()>0){smsreSender.sendingUnSentMsg(sms_no_Sents,expediteurName);}
     }
 
     @Override

@@ -107,12 +107,9 @@ public final class Usercontrolleur {
     public boolean authApp(String proprietaire, String cleproduit) {
 
            if (accessLocal.authapp(proprietaire,cleproduit)){
-//               String mdp = MesOutils.mdpgenerator();
                accessLocal.activerAdministrateur();
                accessLocal.activerProprietaire();
-//               this.setProprietaireMdpInit(mdp);
            }
-
         return accessLocal.authapp(proprietaire,cleproduit);
     }
 

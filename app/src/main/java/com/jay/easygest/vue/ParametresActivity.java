@@ -53,6 +53,29 @@ public class  ParametresActivity extends AppCompatActivity {
         builder.setMessage("votre application vient d'être débloqué." );
 
         builder.setPositiveButton("ok", (dialog, which) -> {
+
+            afficherConseil();
+
+        });
+
+        builder.create().show();
+    }
+
+    private void afficherConseil() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("compte reactivé");
+        builder.setMessage("votre compte à été reactivé"+"\n"
+                +"cela est dû peut etre à une tentative frauduleuse de connection" +"\n"
+                + "continué de toujours bien garder vos identifiants secret" +"\n"
+                + "ne les communiqués en aucun cas à personne"+"\n"
+                + "de préference il est conseiller de changer"+"\n"
+                + "votre mot de passe toutes les semaines"+"\n"
+                + "et surtout faite attention à qui vous remettez votre telephone"+"\n"
+                + "il est recommendé de toujours configurer le vérouillage"+"\n"
+                +"de votre téléphone avec un mot de passe ou un schema"+"\n");
+
+        builder.setPositiveButton("ok", (dialog, which) -> {
             Intent intent = new Intent(ParametresActivity.this,MainActivity.class);
             startActivity(intent);
         });
