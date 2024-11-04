@@ -43,6 +43,7 @@ import com.jay.easygest.model.UserModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
@@ -69,6 +70,7 @@ public class GestionActivity extends AppCompatActivity {
     EditText settingpassw;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private PasswordHascher passwordHascher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,8 @@ public class GestionActivity extends AppCompatActivity {
 
         accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
+
+        passwordHascher = new PasswordHascher();
 
         sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -131,11 +135,10 @@ public class GestionActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.action_settings) {
-//            Intent intent = new Intent(this, SettingsActivity.class);
-//            startActivity(intent);
+
             Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
             UserModel user = usercontrolleur.recupProprietaire();
-           String setting_pass = sharedPreferences.getString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,user.getPassword());
+            String setting_pass = sharedPreferences.getString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,user.getPassword());
             View view = LayoutInflater.from(GestionActivity.this).inflate(R.layout.layout_settings,null);
             settingpassw = view.findViewById(R.id.settings_passw);
 
@@ -144,9 +147,10 @@ public class GestionActivity extends AppCompatActivity {
             builder.setView(view);
 
             builder.setPositiveButton("oui", (dialog, which) -> {
-                 String setting_pw = settingpassw.getText().toString().trim();
-                if (setting_pass.equals(setting_pw)){
+
+                if (passwordHascher.verifyHashingPass(settingpassw.getText().toString().trim(),setting_pass)){
                     Intent intent = new Intent(this, SettingsActivity.class);
+                    intent.putExtra("mdp",settingpassw.getText().toString().trim());
                     startActivity(intent);
                 }
 
@@ -350,7 +354,6 @@ public class GestionActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-//        smsSender.sentReiceiver();
     }
 
     @Override

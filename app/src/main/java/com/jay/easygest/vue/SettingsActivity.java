@@ -18,6 +18,7 @@ import com.jay.easygest.R;
 import com.jay.easygest.databinding.ActivitySettingsBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.viewmodels.SettingsViewModel;
@@ -34,6 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appkess;
     private SettingsViewModel settingsViewModel;
+
+    private PasswordHascher passwordHascher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         accessLocalAppKes = new AccessLocalAppKes(this);
         appkess = accessLocalAppKes.getAppkes();
-
+        passwordHascher = new PasswordHascher();
 
         sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -52,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         settingsViewModel.getBase_code().setValue(appkess.getBasecode());
         settingsViewModel.getTelephone().setValue(appkess.getTelephone());
         settingsViewModel.getEmail().setValue(appkess.getAdresseelectro());
-        settingsViewModel.getSetting_password().setValue(sharedPreferences.getString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,"jaydejay"));
+        settingsViewModel.getSetting_password().setValue(getIntent().getExtras().get("mdp").toString());
 
         setContentView(binding.getRoot());
         initField();
@@ -299,10 +302,11 @@ public class SettingsActivity extends AppCompatActivity {
             if (setting_password.isEmpty()){
                 binding.lleditsettingPassword.setError("obligatoire");
             } else {
-                editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,setting_password).commit();
-                    settingsViewModel.getSetting_password().postValue(setting_password);
-                    binding.llsettingPasswordEdit.setVisibility(View.GONE);
-                    binding.txtsettingTogglePasswordEdit.setText("modifier");
+              String _setting_password = passwordHascher.getHashingPass(setting_password,VariablesStatique.MY_SALT);
+                editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_setting_password).commit();
+                settingsViewModel.getSetting_password().postValue(setting_password);
+                binding.llsettingPasswordEdit.setVisibility(View.GONE);
+                binding.txtsettingTogglePasswordEdit.setText("modifier");
             }
         });
     }
@@ -313,9 +317,8 @@ public class SettingsActivity extends AppCompatActivity {
         super.onResume();
         if (!sessionManagement.getSession()){
             Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-//            finish();
+
         }
     }
 

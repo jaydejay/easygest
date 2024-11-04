@@ -80,7 +80,7 @@ public class CreditFragment extends Fragment {
 
 
         binding.btncreercredit.setOnClickListener(v -> {
-
+            binding.btncreercredit.setEnabled(false);
             String nomclient = binding.edittxtcreernom.getText().toString().trim();
             String prenomsclient = binding.edittxtcreerprenoms.getText().toString().trim();
 
@@ -97,16 +97,18 @@ public class CreditFragment extends Fragment {
                     article1qte.isEmpty() || telephone.isEmpty() || versement.isEmpty()||date.isEmpty())
             {
                 Toast.makeText(getContext(), "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btncreercredit.setEnabled(true);
 
             } else if (date_ouverture == null) {
                 Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_SHORT).show();
-
+                binding.btncreercredit.setEnabled(true);
             } else if  (binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreerarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreerNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(getActivity(), "renseigner le nombre et le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+                binding.btncreercredit.setEnabled(true);
             } else if (telephone.length() < 10) {
                 Toast.makeText(getContext(), "numero doit étre de 10 chiffres", Toast.LENGTH_SHORT).show();
-
+                binding.btncreercredit.setEnabled(true);
             } else {
 
                 int sommearticle1 =Integer.parseInt(article1somme);
@@ -156,8 +158,8 @@ public class CreditFragment extends Fragment {
                        int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
                        int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
-//                       String destinationAdress = "+225"+client.getTelephone();
-                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+                       String destinationAdress = "+225"+client.getTelephone();
+//                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"
@@ -180,9 +182,15 @@ public class CreditFragment extends Fragment {
                            smsSender.sentReiceiver(smsnoSentModel);
                        }
 
-                   }else {Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();}
+                   }else {
+                       Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();
+                       binding.btncreercredit.setEnabled(true);
+                   }
 
-               }else {Toast.makeText(getContext(), "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();}
+               }else {
+                   Toast.makeText(getContext(), "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();
+                   binding.btncreercredit.setEnabled(true);
+               }
 
             }
         });

@@ -14,6 +14,7 @@ import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityCreercompteBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.VariablesStatique;
 
 import java.util.Objects;
@@ -26,12 +27,14 @@ public class CreercompteActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
    private ActivityCreercompteBinding binding;
    private Usercontrolleur usercontrolleur;
+   private PasswordHascher passwordHascher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         binding = ActivityCreercompteBinding.inflate(getLayoutInflater());
+        passwordHascher = new PasswordHascher();
         setContentView(binding.getRoot());
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         creerCompte();
@@ -85,13 +88,15 @@ public class CreercompteActivity extends AppCompatActivity {
 
                     if (repassword.equals(password)){
                         try {
-                            editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,password).commit();
+
                             int nbrutilisateur = usercontrolleur.nbrUtilisateur();
                             if (nbrutilisateur < 3){
                                 AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);
                                 AppKessModel appKessModel = accessLocalAppKes.getAppkes();
-                               boolean success = usercontrolleur.creerUser(username, password,appKessModel, owner,code_base,telephone,email);
+                                String _password = passwordHascher.getHashingPass(password,VariablesStatique.MY_SALT);
+                               boolean success = usercontrolleur.creerUser(username, _password,appKessModel, owner,code_base,telephone,email);
                                if (success){
+                                   editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_password).commit();
                                    Intent intent = new Intent(CreercompteActivity.this, MainActivity.class);
                                    startActivity(intent);
                                }

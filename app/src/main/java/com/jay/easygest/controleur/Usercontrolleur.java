@@ -6,6 +6,8 @@ import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccessLocal;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.PasswordHascher;
+import com.jay.easygest.outils.VariablesStatique;
 
 import java.util.Date;
 
@@ -16,6 +18,7 @@ public final class Usercontrolleur {
     private static AccessLocal accessLocal;
 
     private String proprietaireMdpInit;
+    private final PasswordHascher passwordHascher = new PasswordHascher() ;
 
     /**
      * constructeur
@@ -50,9 +53,10 @@ public final class Usercontrolleur {
 
     public void initMpdp(UserModel utilisateur){
         String mdp = MesOutils.mdpgenerator();
-        UserModel user = new UserModel(utilisateur.getId(),utilisateur.getUsername(),mdp,utilisateur.getDateInscription(),utilisateur.getStatus(),true,0);
+        String _mdp = passwordHascher.getHashingPass(mdp, VariablesStatique.MY_SALT);
+        UserModel user = new UserModel(utilisateur.getId(),utilisateur.getUsername(),_mdp,utilisateur.getDateInscription(),utilisateur.getStatus(),true,0);
         accessLocal.modifierUtilisateur(user);
-        this.setProprietaireMdpInit(mdp);
+        this.setProprietaireMdpInit(_mdp);
     }
 
     public boolean creerUser(String username, String password, AppKessModel appKess, String owner, String code_base, String telephone, String email){
@@ -64,7 +68,9 @@ public final class Usercontrolleur {
     public void modifierUser(UserModel user){accessLocal.modifierUtilisateur(user);}
 
     public UserModel recupProprietaire(){
-        return  accessLocal.recupProprietaire();
+       UserModel user = accessLocal.recupProprietaire();
+       this.setUser(user);
+        return user;
     }
 
     public UserModel recupAdministrateur(){

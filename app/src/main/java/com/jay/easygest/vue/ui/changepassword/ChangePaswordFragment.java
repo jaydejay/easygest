@@ -17,7 +17,9 @@ import android.widget.Toast;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.FragmentChangePaswordBinding;
 import com.jay.easygest.model.UserModel;
+import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.GestionActivity;
 import com.jay.easygest.vue.MainActivity;
 
@@ -29,6 +31,7 @@ public class ChangePaswordFragment extends Fragment {
     private UserModel user;
     private FragmentChangePaswordBinding binding;
     private int compteur;
+    private PasswordHascher passwordHascher;
 
 
     @Override
@@ -38,6 +41,7 @@ public class ChangePaswordFragment extends Fragment {
         sessionManagement = new SessionManagement(requireContext());
         binding = FragmentChangePaswordBinding.inflate(inflater,container,false);
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(getContext());
+        passwordHascher = new PasswordHascher();
         View root = binding.getRoot();
         changerPassword();
         return root;
@@ -48,9 +52,9 @@ public class ChangePaswordFragment extends Fragment {
         binding.btnchangepassword.setOnClickListener(v -> {
 
             try {
-                String username = binding.editchangerpasswordusername.getText().toString();
-                String nouveaupassword = binding.editchangerpasswordnouveaupassword.getText().toString();
-                String password = binding.editchangerpasswordpassword.getText().toString();
+                String username = binding.editchangerpasswordusername.getText().toString().trim();
+                String nouveaupassword = binding.editchangerpasswordnouveaupassword.getText().toString().trim();
+                String password = binding.editchangerpasswordpassword.getText().toString().trim();
                 if (username.isEmpty() || password.isEmpty() || nouveaupassword.isEmpty() ){
                     Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
 
@@ -58,22 +62,30 @@ public class ChangePaswordFragment extends Fragment {
                     if (username.length() >= 6 && password.length() >= 8 && nouveaupassword.length() >= 8){
 
                         user = usercontrolleur.recupProprietaire();
-                        if (username.equals(user.getUsername()) && password.equals(user.getPassword())){
-                            UserModel userModel = new UserModel(user.getId(),user.getUsername(),nouveaupassword,user.getDateInscription(),user.getStatus(),user.isActif(),0);
-                            usercontrolleur.modifierUser(userModel);
-                            usercontrolleur.setUser(userModel);
-                            Intent intent = new Intent(getActivity(), GestionActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+                        if(passwordHascher.verifyHashingPass(password,user.getPassword())){
+
+                            if (username.equals(user.getUsername())){
+                                String _nouveaupassword = passwordHascher.getHashingPass(nouveaupassword, VariablesStatique.MY_SALT);
+                                UserModel userModel = new UserModel(user.getId(),user.getUsername(),_nouveaupassword,user.getDateInscription(),user.getStatus(),user.isActif(),0);
+                                usercontrolleur.modifierUser(userModel);
+                                usercontrolleur.setUser(userModel);
+                                Intent intent = new Intent(getActivity(), GestionActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(getContext(), "username ne correspond pas", Toast.LENGTH_SHORT).show();
+                                desactiverbtnchangepassword(user);
+                            }
+
                         }else{
-                            Toast.makeText(getContext(), "username ou mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), " mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
                             desactiverbtnchangepassword(user);
                         }
-
                     }else{
                         Toast.makeText(getContext(), "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
                         desactiverbtnchangepassword(user);
                     }
+
                 }
             }catch (Exception e){
                 Toast.makeText(getContext(), "un probleme est survenu impossible de traiter la demande", Toast.LENGTH_SHORT).show();
@@ -85,7 +97,6 @@ public class ChangePaswordFragment extends Fragment {
 
     private void desactiverbtnchangepassword(UserModel user){
         int cmpteur = incrementCompteur(user);
-
         if (cmpteur >= 3){
             binding.btnchangepassword.setEnabled(false);
             usercontrolleur.desactiverProprietaire();
@@ -95,7 +106,6 @@ public class ChangePaswordFragment extends Fragment {
         }
 
     }
-
 
     private Integer incrementCompteur( UserModel userModel){
         try {
@@ -110,19 +120,6 @@ public class ChangePaswordFragment extends Fragment {
         return compteur;
 
     }
-
-    public void onStart() {
-        super.onStart();
-        if (!sessionManagement.getSession()){
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-
-        }
-
-    }
-
-
-
 
     @Override
     public void onResume() {

@@ -81,6 +81,7 @@ public class  AccountFragment extends Fragment {
     public void creerAccount(){
 
         binding.btncreeraccount.setOnClickListener(v -> {
+            binding.btncreeraccount.setEnabled(false);
 
             String nomclient = binding.edittxtcreeaccrnom.getText().toString().trim();
             String prenomsclient = binding.edittxtcreeraccprenoms.getText().toString().trim();
@@ -98,16 +99,19 @@ public class  AccountFragment extends Fragment {
                     article1qte.isEmpty() || telephone.isEmpty() || versement.isEmpty()||date.isEmpty())
             {
                 Toast.makeText(getContext(), "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btncreeraccount.setEnabled(true);
 
             } else if (date_ouverture == null) {
                 Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_SHORT).show();
+                binding.btncreeraccount.setEnabled(true);
 
             } else if  (binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreeraccarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(getActivity(), "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+                binding.btncreeraccount.setEnabled(true);
             } else if (telephone.length() < 10) {
                 Toast.makeText(getContext(), "numero doit étre de 10 chiffres", Toast.LENGTH_SHORT).show();
-
+                binding.btncreeraccount.setEnabled(true);
             } else {
 
                 int sommearticle1 =Integer.parseInt(article1somme);
@@ -184,9 +188,15 @@ public class  AccountFragment extends Fragment {
                             smsSender.smsSendwithInnerClass(messageBody, destinationAdress,accountModel.getId() );
                             smsSender.sentReiceiver(smsnoSentModel);
                         }
-                    }else {Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();}
+                    }else {
+                        Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();
+                        binding.btncreeraccount.setEnabled(true);
+                    }
 
-                }else {Toast.makeText(getContext(), "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();}
+                }else {
+                    Toast.makeText(getContext(), "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();
+                    binding.btncreeraccount.setEnabled(true);
+                }
 
             }
         });

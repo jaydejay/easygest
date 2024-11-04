@@ -28,12 +28,14 @@ public class AccessLocal {
     public static final String BASECODE = "basecode";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
+    private PasswordHascher passwordHascher;
 
 
 
     public AccessLocal(Context contexte) {
 
         this.accessBD = new MySqliteOpenHelper(contexte,null);
+        passwordHascher = new PasswordHascher();
 
     }
 
@@ -157,9 +159,13 @@ public class AccessLocal {
     public boolean isAuthenticated(String username, String password){
         boolean authenticated = false;
         UserModel proprietaire = this.recupProprietaire();
-        if(proprietaire.getUsername().equals(username) && proprietaire.getPassword().equals(password)){
-            authenticated = true;
+        if (passwordHascher.verifyHashingPass(password,proprietaire.getPassword())){
+
+            if(proprietaire.getUsername().equals(username)){
+                authenticated = true;
+            }
         }
+
         return authenticated ;
     }
 

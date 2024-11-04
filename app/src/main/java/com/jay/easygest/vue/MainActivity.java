@@ -18,12 +18,11 @@ import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.outils.AccessLocalAppKes;
-import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsreSender;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 
 
@@ -36,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private SmsSendercontrolleur smsSendercontrolleur;
     private SmsreSender smsreSender;
     private  AppKessModel appKessModel;
+    private PasswordHascher passwordHascher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         sessionManagement = new SessionManagement(this);
         smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+        passwordHascher = new PasswordHascher();
         boolean is_authenticated = sessionManagement.getSession();
         if (is_authenticated){
             Intent intent = new Intent(MainActivity.this, GestionActivity.class);
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+//        sampleJavaClass.usingArgon2KtFromJava("jaydejay","h4tTC5iHP75EdcLf");
         fillTxtVConnectionError();
         desactivatetxtCreation();
         desactiverbtnAuthInit();
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString().trim();
                 String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString().trim();
-                UserModel user = usercontrolleur.recupProprietaire();
+                user = usercontrolleur.recupProprietaire();
                 if (username.isEmpty() || password.isEmpty()) {
                     Toast.makeText(MainActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
 
@@ -93,9 +95,10 @@ public class MainActivity extends AppCompatActivity {
                     if (username.length() >= 6 && password.length() >= 8) {
 
                         if (usercontrolleur.isAuthenticated(username, password)) {
+                            UserModel user = usercontrolleur.getUser();
                             UserModel userModel = new UserModel(user.getId(), user.getUsername(), user.getPassword(), user.getDateInscription(), user.getStatus(), user.isActif(), 0);
                             usercontrolleur.modifierUser(userModel);
-                            usercontrolleur.setUser(userModel);
+                            usercontrolleur.setUser(user);
                             sessionManagement.saveSession(true);
                             Intent intent = new Intent(MainActivity.this, GestionActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -103,12 +106,13 @@ public class MainActivity extends AppCompatActivity {
                             finish();
 
                         } else {
+//
                             Toast.makeText(MainActivity.this, "username ou mot de passe incorrecte", Toast.LENGTH_SHORT).show();
-                            desactiverbtnAuth(user);
+                            desactiverbtnAuth(usercontrolleur.getUser());
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
-                        desactiverbtnAuth(user);
+                        desactiverbtnAuth(usercontrolleur.getUser());
                     }
 
                 }
@@ -239,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
      * @param userModel l'utilisateur
      */
     private void desactiverbtnAuth(UserModel userModel){
+        Log.d("main", "desactiverbtnAuth: "+userModel);
         if (userModel != null){
             int cmpteur = incrementCompteur(userModel);
             if (cmpteur >= 3){
@@ -246,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
                 initChamp();
                 binding.btnauth.setVisibility(View.GONE);
                 binding.txtParametres.setVisibility(View.VISIBLE);
-//                binding.mainlayoutadmine.setVisibility(View.VISIBLE);
                 fillTxtVConnectionError();
             }
         }
@@ -271,9 +275,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    /**
-     * desactive le bouton authentification pour un administrateur
-     */
+//    /**
+//     * desactive le bouton authentification pour un administrateur
+//     */
 //    private void desactiverbtnAuthAdmineInit(){
 //        try {
 //            UserModel userModel = usercontrolleur.recupAdministrateur();
@@ -332,8 +336,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * affiche le message de reactivation du compte
      */
-
-
     public void redirectToInitMdp(){
         binding.txtMainMdpOublie.setOnClickListener(view -> {
             Intent intent = new Intent(this, InitMdpActivity.class);

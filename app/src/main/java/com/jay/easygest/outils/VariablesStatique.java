@@ -13,4 +13,5 @@ public abstract class VariablesStatique {
     public static final String SETTING_SHARED_PREF_VARIABLE = "setting_password";
 
     public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
+    public static final String MY_SALT = "h4tTC5iHP75EdcLf";
 }
