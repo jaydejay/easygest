@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.FragmentChangeUsernameBinding;
 import com.jay.easygest.model.UserModel;
+import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.vue.GestionActivity;
 import com.jay.easygest.vue.MainActivity;
@@ -30,6 +31,7 @@ public class ChangeUsernameFragment extends Fragment {
     private Integer compteur;
     private UserModel user;
     private Usercontrolleur usercontrolleur;
+    private PasswordHascher passwordHascher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -38,6 +40,7 @@ public class ChangeUsernameFragment extends Fragment {
         sessionManagement = new SessionManagement(requireContext());
         binding = FragmentChangeUsernameBinding.inflate(inflater, container, false);
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(getContext());
+        passwordHascher = new PasswordHascher();
         View root = binding.getRoot();
         changerUsername();
         return root;
@@ -45,17 +48,18 @@ public class ChangeUsernameFragment extends Fragment {
 
     public void changerUsername(){
         binding.btnchangeusername.setOnClickListener(v -> {
-
+            binding.btnchangeusername.setEnabled(false);
             String username = binding.editchangerusernameusername.getText().toString().trim();
             String nouveauusername = binding.editchangerusernamenouveauusername.getText().toString().trim();
             String password = binding.editchangerusernamepassword.getText().toString().trim();
 
             if (username.isEmpty() || nouveauusername.isEmpty() || password.isEmpty() ){
                 Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btnchangeusername.setEnabled(true);
             }else {
                 if (username.length() >= 6 && nouveauusername.length() >= 6 && password.length() >= 8){
-                    user = usercontrolleur.getUser();
-                    if (username.equals(user.getUsername()) && password.equals(user.getPassword())){
+                    user = usercontrolleur.recupProprietaire();
+                    if (username.equals(user.getUsername()) && passwordHascher.verifyHashingPass(password,user.getPassword())){
                         UserModel userModel = new UserModel(user.getId(),nouveauusername,user.getPassword(),user.getDateInscription(),user.getStatus(),user.isActif(),0);
                         usercontrolleur.modifierUser(userModel);
                         usercontrolleur.setUser(userModel);
@@ -63,13 +67,19 @@ public class ChangeUsernameFragment extends Fragment {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }else{
+                        binding.btnchangeusername.setEnabled(true);
                         Toast.makeText(getContext(), "username ou mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
+                        user = usercontrolleur.getUser();
                         desactiverbtnchangerusername(user);
+
                     }
 
                 }else{
+                    binding.btnchangeusername.setEnabled(true);
                     Toast.makeText(getContext(), "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
+                    user = usercontrolleur.getUser();
                     desactiverbtnchangerusername(user);
+
                 }
             }
         });
