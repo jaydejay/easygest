@@ -95,20 +95,22 @@ public class ModifierVersementActivity extends AppCompatActivity {
 
     public void modifierVersement(){
         bouton_modifier.setOnClickListener(v -> {
+            bouton_modifier.setEnabled(false);
             String edt_somme = EDTsomme.getText().toString().trim();
             String dateversement = EDTdatecredit.getText().toString().trim();
             Date date = MesOutils.convertStringToDate(dateversement);
 
             if ( edt_somme.isEmpty() || dateversement.isEmpty()){
                 Toast.makeText(this, "champs obligatoires", Toast.LENGTH_SHORT).show();
+                bouton_modifier.setEnabled(true);
 
             } else if (date == null) {
                 Toast.makeText(ModifierVersementActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
+                bouton_modifier.setEnabled(true);
             } else {
 
                 try {
                     int nouvellesommeverse = Integer.parseInt(edt_somme);
-
                     CreditModel credit = creditViewModel.getCredit().getValue();
                     int somme_du_credit = 0;
                     if (credit != null) {
@@ -118,9 +120,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
                     int anncien_total_versement = creditViewModel.getCredit().getValue().getVersement();
                         int annciennesommeverse = Integer.parseInt(String.valueOf(versement.getSommeverse())) ;
                         int nouveau_total_versement = (anncien_total_versement-annciennesommeverse)+nouvellesommeverse;
-
                         if (  nouvellesommeverse > 0 & nouveau_total_versement <= somme_du_credit){
-
                             boolean success = versementcontrolleur.modifierVersement(credit,versement,nouveau_total_versement,nouvellesommeverse,dateversement);
                             if (success) {
                                 VersementsModel versementsModel = new VersementsModel(versement.getId(),client,credit,(long)nouvellesommeverse,credit.getId(), date.getTime());
@@ -143,9 +143,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                         +"le "+ MesOutils.convertDateToString(new Date())+"\n"
                                         +"total account : "+total_credit_client+"\n"
                                         +"reste a payer : "+total_reste_client;
-
                                     SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-
                                     if (ActivityCompat.checkSelfPermission(this,
                                             android.Manifest.permission.SEND_SMS) !=
                                             PackageManager.PERMISSION_GRANTED) {
@@ -153,7 +151,6 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                                 new String[]{android.Manifest.permission.SEND_SMS},
                                                 MY_PERMISSIONS_REQUEST_SEND_SMS);
                                     } else {
-
                                         smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versementsModel.getId() );
                                         smsSender.sentReiceiver(smsnoSentModel);
                                     }
@@ -163,14 +160,19 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
 
-                            } else { Toast.makeText(this, "revoyez le versement ", Toast.LENGTH_SHORT).show();}
-                        }else { Toast.makeText(this, "versement elevé", Toast.LENGTH_SHORT).show(); }
+                            } else {
+                                Toast.makeText(this, "revoyez le versement ", Toast.LENGTH_SHORT).show();
+                                bouton_modifier.setEnabled(true);
+                            }
+                        }else {
+                            Toast.makeText(this, "versement elevé", Toast.LENGTH_SHORT).show();
+                            bouton_modifier.setEnabled(true);
+                        }
 
                 } catch (Exception e) {
                     Toast.makeText(this, "erreur versement avorté", Toast.LENGTH_SHORT).show();
+                    bouton_modifier.setEnabled(true);
                 }
-
-
             }
         });
     }

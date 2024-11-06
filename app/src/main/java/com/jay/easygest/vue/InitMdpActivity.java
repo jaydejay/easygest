@@ -32,7 +32,7 @@ public class InitMdpActivity extends AppCompatActivity {
     private void initMdp(){
 
         binding.btnInitMdp.setOnClickListener(view -> {
-
+            binding.btnInitMdp.setEnabled(false);
             String username = binding.editTextInitMdpUsername.getText().toString().trim();
             String owner = binding.editTextInitMdpOwner.getText().toString().trim();
             String email = binding.editTextInitMdpOwnerMail.getText().toString().trim();
@@ -41,6 +41,7 @@ public class InitMdpActivity extends AppCompatActivity {
             AppKessModel appli_data = accessLocalAppKes.getAppkes();
             if (username.isEmpty() || owner.isEmpty() || email.isEmpty()){
                 Toast.makeText(InitMdpActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btnInitMdp.setEnabled(true);
             }else {
                 if (utilisateur.getUsername().equals(username) && appli_data.getOwner().equals(owner) && appli_data.getAdresseelectro().equals(email))
                 {
@@ -48,6 +49,7 @@ public class InitMdpActivity extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(InitMdpActivity.this, "informations incorrecttes", Toast.LENGTH_SHORT).show();
+                    binding.btnInitMdp.setEnabled(true);
                 }
             }
         });
@@ -67,7 +69,7 @@ public class InitMdpActivity extends AppCompatActivity {
         });
 
         builder.setNegativeButton("annuller",(dialog, which) -> {
-
+            binding.btnInitMdp.setEnabled(true);
         });
 
         builder.create().show();

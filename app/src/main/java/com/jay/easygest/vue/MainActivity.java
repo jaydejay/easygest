@@ -84,12 +84,14 @@ public class MainActivity extends AppCompatActivity {
     private void authentification() {
 
         binding.btnauth.setOnClickListener(view -> {
+            binding.btnauth.setEnabled(false);
             try {
                 String username = Objects.requireNonNull(binding.editTextUsername.getText()).toString().trim();
                 String password = Objects.requireNonNull(binding.editTextTextPassword.getText()).toString().trim();
                 user = usercontrolleur.recupProprietaire();
                 if (username.isEmpty() || password.isEmpty()) {
                     Toast.makeText(MainActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
+                    binding.btnauth.setEnabled(true);
 
                 } else {
                     if (username.length() >= 6 && password.length() >= 8) {
@@ -106,17 +108,19 @@ public class MainActivity extends AppCompatActivity {
                             finish();
 
                         } else {
-//
+                            binding.btnauth.setEnabled(true);
                             Toast.makeText(MainActivity.this, "username ou mot de passe incorrecte", Toast.LENGTH_SHORT).show();
                             desactiverbtnAuth(usercontrolleur.getUser());
                         }
                     } else {
+                        binding.btnauth.setEnabled(true);
                         Toast.makeText(MainActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
                         desactiverbtnAuth(usercontrolleur.getUser());
                     }
 
                 }
             } catch (Exception e) {
+                binding.btnauth.setEnabled(true);
                 Toast.makeText(MainActivity.this, "compte inexistant creer un compte", Toast.LENGTH_SHORT).show();
             }
 
@@ -333,9 +337,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * affiche le message de reactivation du compte
-     */
+
     public void redirectToInitMdp(){
         binding.txtMainMdpOublie.setOnClickListener(view -> {
             Intent intent = new Intent(this, InitMdpActivity.class);

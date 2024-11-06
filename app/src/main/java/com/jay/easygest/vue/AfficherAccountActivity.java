@@ -132,7 +132,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
     public void annullerAccount(){
 
         binding.supAccount.setOnClickListener(view -> {
-
+            binding.supAccount.setEnabled(false);
             if (account.getReste() > 0) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -186,7 +186,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
                 });
 
                 builder.setNegativeButton("non", (dialog, which) -> {
-
+                    binding.supAccount.setEnabled(true);
                 });
 
                 builder.create().show();

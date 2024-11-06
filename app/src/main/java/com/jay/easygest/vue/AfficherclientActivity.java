@@ -280,6 +280,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void supprimerClient() {
 
         binding.btnAfClientSup.setOnClickListener(view -> clientViewModel.getClient().observe(this, client->{
+            binding.btnAfClientSup.setEnabled(false);
             ArrayList<CreditModel>  credits = creditcontrolleur.listecreditsclient(client);
              accountcontrolleur.listeAccountsClient(client);
              ArrayList<AccountModel> accounts = accountViewModel.getAccount_solde_ou_non().getValue();
@@ -295,15 +296,19 @@ public class AfficherclientActivity extends AppCompatActivity {
                     if (success){
                         Intent intent = new Intent(AfficherclientActivity.this, GestionActivity.class);
                         startActivity(intent);
-                    }else {Toast.makeText(this, "echec de la suppression", Toast.LENGTH_LONG).show();}
+                    }else {Toast.makeText(this, "echec de la suppression", Toast.LENGTH_LONG).show();
+                        binding.btnAfClientSup.setEnabled(true);}
 
                 });
                 builder.setNegativeButton("non", (dialog, which) -> {
-
+                    binding.btnAfClientSup.setEnabled(true);
                 });
 
                 builder.create().show();
-            }else {Toast.makeText(this, "impossible de supprimer le client il a un credit ou un account en cours", Toast.LENGTH_LONG).show();}
+            }else {
+                 Toast.makeText(this, "impossible de supprimer le client il a un credit ou un account en cours", Toast.LENGTH_LONG).show();
+                 binding.btnAfClientSup.setEnabled(true);
+             }
 
         }));
 

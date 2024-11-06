@@ -26,6 +26,7 @@ public class ActiverProduitActivity extends AppCompatActivity {
 
     public void activerproduit(){
         binding.btnactiverproduit.setOnClickListener(v -> {
+            binding.btnactiverproduit.setEnabled(false);
            try {
                String proprietaire = binding.editactiverproduitAppowner.getText().toString().trim();
                String cleproduit = binding.editactiverproduitAppKey.getText().toString().trim();
@@ -41,12 +42,15 @@ public class ActiverProduitActivity extends AppCompatActivity {
                        finish();
                    } else {
                        Toast.makeText(ActiverProduitActivity.this, "produit non conforme", Toast.LENGTH_SHORT).show();
+                       binding.btnactiverproduit.setEnabled(true);
                    }
                } else {
                    Toast.makeText(ActiverProduitActivity.this, "champs obligatoire", Toast.LENGTH_SHORT).show();
+                   binding.btnactiverproduit.setEnabled(true);
                }
            }catch (Exception e){
                Toast.makeText(ActiverProduitActivity.this, "un probleme est survenu si cela persiste contacter l'editeur", Toast.LENGTH_LONG).show();
+               binding.btnactiverproduit.setEnabled(true);
            }
         });
     }

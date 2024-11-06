@@ -85,7 +85,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
 
     public void modifierAccount(){
         binding.btnmodifaccount.setOnClickListener(view -> {
-
+            binding.btnmodifaccount.setEnabled(false);
             String designationarticle1 = binding.modifaccarticle1.getText().toString().trim();
             String article1somme = binding.modifaccarticle1somme.getText().toString().trim();
             String article1qte = binding.modifaccNbrarticle1.getText().toString().trim();
@@ -96,13 +96,14 @@ public class ModifierAccountActivity extends AppCompatActivity {
                     ||date.isEmpty() )
             {
                 Toast.makeText(ModifierAccountActivity.this, "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
-
+                binding.btnmodifaccount.setEnabled(true);
             } else if (date_credit == null) {
-
                 Toast.makeText(ModifierAccountActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
+                binding.btnmodifaccount.setEnabled(true);
             }else if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifaccarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifaccNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(ModifierAccountActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+                binding.btnmodifaccount.setEnabled(true);
             } else {
                 int sommearticle1 =Integer.parseInt(article1somme) ;
                 int nbrarticle1 = Integer.parseInt(article1qte);
@@ -196,6 +197,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
+                        binding.btnmodifaccount.setEnabled(true);
                     }
             }
         });

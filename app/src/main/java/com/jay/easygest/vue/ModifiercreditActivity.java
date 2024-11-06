@@ -87,7 +87,7 @@ public class ModifiercreditActivity extends AppCompatActivity {
 
     public void modifierCredit(){
         binding.btnmodifcredit.setOnClickListener(view -> {
-
+            binding.btnmodifcredit.setEnabled(false);
             String designationarticle1 = binding.modifcredarticle1.getText().toString().trim();
             String article1somme = binding.modifcredarticle1somme.getText().toString().trim();
             String article1qte = binding.modifcredNbrarticle1.getText().toString().trim();
@@ -98,13 +98,14 @@ public class ModifiercreditActivity extends AppCompatActivity {
                     ||date.isEmpty() )
             {
                 Toast.makeText(ModifiercreditActivity.this, "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
-
+                binding.btnmodifcredit.setEnabled(true);
             } else if (date_credit == null) {
-
                 Toast.makeText(ModifiercreditActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
+                binding.btnmodifcredit.setEnabled(true);
             }else if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifcredarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifcredNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(ModifiercreditActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+                binding.btnmodifcredit.setEnabled(true);
             } else {
                 int sommearticle1 =Integer.parseInt(article1somme) ;
                 int nbrarticle1 = Integer.parseInt(article1qte);
@@ -200,6 +201,7 @@ public class ModifiercreditActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
+                    binding.btnmodifcredit.setEnabled(true);
                 }
             }
         });

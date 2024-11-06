@@ -45,7 +45,7 @@ public class CreercompteActivity extends AppCompatActivity {
     public void creerCompte(){
 
         binding.btncreercompte.setOnClickListener(view -> {
-
+            binding.btncreercompte.setEnabled(false);
             String username = Objects.requireNonNull(binding.txtcreercompteusername.getText()).toString().trim();
             String password = Objects.requireNonNull(binding.txtcreercomptepassword.getText()).toString().trim();
             String repassword = Objects.requireNonNull(binding.txtcreercompterepeat.getText()).toString().trim();
@@ -59,30 +59,38 @@ public class CreercompteActivity extends AppCompatActivity {
 
             if (username.isEmpty() || password.isEmpty() || repassword.isEmpty()){
                 Toast.makeText(CreercompteActivity.this, "champs sont obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btncreercompte.setEnabled(true);
 
             } else if (owner.isEmpty()) {
                 binding.lleditcreerCompteOwner.setError("obligatoire");
+                binding.btncreercompte.setEnabled(true);
 
             }else if (owner.length() < 5 ) {
                 binding.lleditcreerCompteOwner.setError("5 minimum");
+                binding.btncreercompte.setEnabled(true);
 
             }else if (owner.length() > 16 ) {
                 binding.lleditcreerCompteOwner.setError("16 maximum");
+                binding.btncreercompte.setEnabled(true);
 
             }else if (code_base.isEmpty()){
                 binding.lleditcreerCompteBaseCode.setError("obligatoire");
-
+                binding.btncreercompte.setEnabled(true);
             } else if (code_base.length() != 4 ) {
                 binding.lleditcreerCompteBaseCode.setError("4 lettres attendus ");
+                binding.btncreercompte.setEnabled(true);
 
             }else if (telephone.isEmpty()){
                 binding.llcreerCompteTelephone.setError("obligatoire");
+                binding.btncreercompte.setEnabled(true);
 
             } else if (telephone.length() != 10) {
                 binding.llcreerCompteTelephone.setError("10 caracteres");
+                binding.btncreercompte.setEnabled(true);
 
             }else if (email.isEmpty()){
                 binding.llcreerCompteMail.setError("obligatoire");
+                binding.btncreercompte.setEnabled(true);
             } else{
                 if (username.length() >= 6 && password.length() >= 8 && repassword.length() >= 8){
 
@@ -103,14 +111,21 @@ public class CreercompteActivity extends AppCompatActivity {
 
                             }else {
                                 Toast.makeText(CreercompteActivity.this, "action non autorisée", Toast.LENGTH_SHORT).show();
+                                binding.btncreercompte.setEnabled(true);
                             }
 
                         }catch (SQLiteConstraintException e){
                             Toast.makeText(CreercompteActivity.this, "formulaire invalde", Toast.LENGTH_SHORT).show();
+                            binding.btncreercompte.setEnabled(true);
                         }
-                    }else {Toast.makeText(CreercompteActivity.this, "mot de passes différents", Toast.LENGTH_SHORT).show();}
+                    }else {
+                        Toast.makeText(CreercompteActivity.this, "mot de passes différents", Toast.LENGTH_SHORT).show();}
+                        binding.btncreercompte.setEnabled(true);
 
-                }else{ Toast.makeText(CreercompteActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show(); }
+                }else{
+                    Toast.makeText(CreercompteActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
+                    binding.btncreercompte.setEnabled(true);
+                }
             }
 
         });

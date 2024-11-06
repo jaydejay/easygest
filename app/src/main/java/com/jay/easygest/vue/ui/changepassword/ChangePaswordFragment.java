@@ -50,13 +50,14 @@ public class ChangePaswordFragment extends Fragment {
     public void changerPassword(){
 
         binding.btnchangepassword.setOnClickListener(v -> {
-
+            binding.btnchangepassword.setEnabled(false);
             try {
                 String username = binding.editchangerpasswordusername.getText().toString().trim();
                 String nouveaupassword = binding.editchangerpasswordnouveaupassword.getText().toString().trim();
                 String password = binding.editchangerpasswordpassword.getText().toString().trim();
                 if (username.isEmpty() || password.isEmpty() || nouveaupassword.isEmpty() ){
                     Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
+                    binding.btnchangepassword.setEnabled(true);
 
                 }else {
                     if (username.length() >= 6 && password.length() >= 8 && nouveaupassword.length() >= 8){
@@ -73,21 +74,25 @@ public class ChangePaswordFragment extends Fragment {
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                             }else{
+                                binding.btnchangepassword.setEnabled(true);
                                 Toast.makeText(getContext(), "username ne correspond pas", Toast.LENGTH_SHORT).show();
                                 desactiverbtnchangepassword(user);
                             }
 
                         }else{
+                            binding.btnchangepassword.setEnabled(true);
                             Toast.makeText(getContext(), " mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
                             desactiverbtnchangepassword(user);
                         }
                     }else{
+                        binding.btnchangepassword.setEnabled(true);
                         Toast.makeText(getContext(), "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
                         desactiverbtnchangepassword(user);
                     }
 
                 }
             }catch (Exception e){
+                binding.btnchangepassword.setEnabled(true);
                 Toast.makeText(getContext(), "un probleme est survenu impossible de traiter la demande", Toast.LENGTH_SHORT).show();
             }
 

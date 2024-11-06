@@ -91,15 +91,18 @@ public class AjouterVersementaccFragment extends Fragment {
 
     public void ajouterversement(){
         binding.btnversementacc.setOnClickListener(v -> {
+            binding.btnversementacc.setEnabled(false);
             String somme_versee = binding.ajoutervrsmntaccsomme.getText().toString().trim();
             String  date = binding.ajoutervrsmntaccdate.getText().toString().trim();
 //            Date date_versement_account  = MesOutils.convertStringToDate(date);
 
             if ( somme_versee.isEmpty() || date.isEmpty()){
                 Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btnversementacc.setEnabled(true);
 
             } else if ( MesOutils.convertStringToDate(date) == null) {
                 Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_LONG).show();
+                binding.btnversementacc.setEnabled(true);
 
             } else {
 
@@ -154,13 +157,21 @@ public class AjouterVersementaccFragment extends Fragment {
 
                             } else {
                                 Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
+                                binding.btnversementacc.setEnabled(true);
                             }
-                        }else {Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();}
+                        }else {
+                            Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();
+                            binding.btnversementacc.setEnabled(true);
+                        }
 
-                    }else {Toast.makeText(getContext(), "le client ne correspond pas", Toast.LENGTH_SHORT).show();}
+                    }else {
+                        Toast.makeText(getContext(), "le client ne correspond pas", Toast.LENGTH_SHORT).show();
+                        binding.btnversementacc.setEnabled(true);
+                    }
 
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
+                    binding.btnversementacc.setEnabled(true);
                 }
             }
         });

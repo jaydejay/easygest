@@ -136,6 +136,7 @@ public class AffichercreditActivity extends AppCompatActivity {
     public void annullerCredit(){
 
         binding.supCredit.setOnClickListener(view -> {
+            binding.supCredit.setEnabled(false);
             ClientModel client = this.credit.getClient();
             if (credit.getReste() > 0) {
 
@@ -184,7 +185,7 @@ public class AffichercreditActivity extends AppCompatActivity {
                 });
 
                 builder.setNegativeButton("non", (dialog, which) -> {
-
+                    binding.supCredit.setEnabled(true);
                 });
 
                 builder.create().show();

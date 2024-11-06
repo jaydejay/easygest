@@ -72,6 +72,7 @@ public class AjouterCreditActivity extends AppCompatActivity {
     public void  ajouterCredit(){
 
         binding.btnajoutcredit.setOnClickListener(view -> {
+            binding.btnajoutcredit.setEnabled(false);
             String designationarticle1 = binding.ajoutcredarticle1.getText().toString().trim();
             String article1somme = binding.ajoutcredarticle1somme.getText().toString().trim();
             String article1qte = binding.ajoutcredNbrarticle1.getText().toString().trim();
@@ -83,12 +84,15 @@ public class AjouterCreditActivity extends AppCompatActivity {
                     || versement.isEmpty() ||date.isEmpty() )
             {
                 Toast.makeText(AjouterCreditActivity.this, "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btnajoutcredit.setEnabled(true);
 
             } else if (date_account == null) {
                 Toast.makeText(AjouterCreditActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
+                binding.btnajoutcredit.setEnabled(true);
             }else if (binding.ajoutcredarticle2.getText().toString().trim().length() != 0 && binding.ajoutcredarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.ajoutcredarticle2.getText().toString().trim().length() != 0 & binding.ajoutcredNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(AjouterCreditActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+                binding.btnajoutcredit.setEnabled(true);
             } else {
                 int sommearticle1 =Integer.parseInt(article1somme) ;
                 int nbrarticle1 = Integer.parseInt(article1qte);
@@ -163,8 +167,14 @@ public class AjouterCreditActivity extends AppCompatActivity {
                             smsSender.sentReiceiver(smsnoSentModel);
                         }
 
-                    } else { Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();}
-                }else { Toast.makeText(this, "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();}
+                    } else {
+                        Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
+                        binding.btnajoutcredit.setEnabled(true);
+                    }
+                }else {
+                    Toast.makeText(this, "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();
+                    binding.btnajoutcredit.setEnabled(true);
+                }
 
             }
         });

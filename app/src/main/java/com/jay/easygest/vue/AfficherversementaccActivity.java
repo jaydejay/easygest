@@ -124,7 +124,7 @@ public class AfficherversementaccActivity extends AppCompatActivity {
 
     public void annullerversement(){
         binding.afficheVersaccCancelButton.setOnClickListener(v->{
-
+            binding.afficheVersaccCancelButton.setEnabled(false);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("annuller versement");
             builder.setMessage("êtes vous sûre de vouloir annuller le versement"+"\n");
@@ -170,7 +170,7 @@ public class AfficherversementaccActivity extends AppCompatActivity {
                     }
             );
             builder.setNegativeButton("non", (dialog, which) -> {
-
+                binding.afficheVersaccCancelButton.setEnabled(true);
             });
 
             builder.create().show();

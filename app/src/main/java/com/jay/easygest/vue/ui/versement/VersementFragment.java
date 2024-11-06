@@ -71,22 +71,21 @@ public class VersementFragment extends Fragment {
 
     public void ajouterversement(){
         binding.btnversement.setOnClickListener(v -> {
+            binding.btnversement.setEnabled(false);
             String somme_versee = binding.editversementsomme.getText().toString().trim();
             String  date = binding.editversementdate.getText().toString().trim();
-//            Date date_versement_credit  = MesOutils.convertStringToDate(date);
 
                 if ( somme_versee.isEmpty() || date.isEmpty()){
                     Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
+                    binding.btnversement.setEnabled(true);
 
                 } else if ( MesOutils.convertStringToDate(date) == null) {
                     Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_LONG).show();
+                    binding.btnversement.setEnabled(true);
 
                 } else {
 
                         try {
-//                            String codeclient = binding.editversementcodeclt.getText().toString().trim();
-//                            String dateversement = binding.editversementdate.getText().toString();
-//                            int sommeverse_formulaire = Integer.parseInt(somme_versee);
 
                             if (Objects.equals(client.getCodeclient(),binding.editversementcodeclt.getText().toString().trim())){
                                 int somme_total_credit = creditViewModel.getTotalcreditsclient().getValue();
@@ -135,13 +134,21 @@ public class VersementFragment extends Fragment {
 
                                     } else {
                                         Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
+                                        binding.btnversement.setEnabled(true);
                                     }
-                                }else {Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();}
+                                }else {
+                                    Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();
+                                    binding.btnversement.setEnabled(true);
+                                }
 
-                            }else {Toast.makeText(getContext(), "le client ne correspond pas", Toast.LENGTH_SHORT).show();}
+                            }else {
+                                Toast.makeText(getContext(), "le client ne correspond pas", Toast.LENGTH_SHORT).show();
+                                binding.btnversement.setEnabled(true);
+                            }
 
                         } catch (Exception e) {
                             Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
+                            binding.btnversement.setEnabled(true);
                         }
 
                 }

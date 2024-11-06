@@ -68,9 +68,9 @@ public class ModifierClientActivity extends AppCompatActivity {
     public void modifierclient(){
 
         binding.btnmodifierclient.setOnClickListener(v -> {
+            binding.btnmodifierclient.setEnabled(false);
 
-               int id = client.getId();
-
+            int id = client.getId();
                String code = client.getCodeclient().trim();
                String nom = binding.editmodifierclientnom.getText().toString().trim();
                String prenoms = binding.editmodifierclientprenoms.getText().toString().trim();
@@ -89,22 +89,22 @@ public class ModifierClientActivity extends AppCompatActivity {
 
                if (nom.isEmpty() || prenoms.isEmpty() || telephone.isEmpty()){
                    Toast.makeText(ModifierClientActivity.this, "nom,prenoms et telephone obligatoires", Toast.LENGTH_SHORT).show();
+                   binding.btnmodifierclient.setEnabled(true);
                }else if (telephone.length() < 10) {
                    Toast.makeText(this, "numero doit étre de 10 chiffres", Toast.LENGTH_SHORT).show();
-
+                   binding.btnmodifierclient.setEnabled(true);
                }
                 ClientModel clientModel = new ClientModel(id,code,nom,prenoms,telephone,email,residence,cni,permis,passport,societe,nbrcredit,totalcredit,nbraccount,totalaccount);
                boolean success =  clientcontrolleur.modifierclient(clientModel);
-
                if(success ) {
                     creditcontrolleur.listecredits();
                    Intent intent = new Intent(ModifierClientActivity.this, AfficherclientActivity.class);
                    startActivity(intent);
 //                   finish();
                }
-
                else {
                    Toast.makeText(ModifierClientActivity.this,"erreur echec de la modification" , Toast.LENGTH_SHORT).show();
+                   binding.btnmodifierclient.setEnabled(true);
                }
 
         });

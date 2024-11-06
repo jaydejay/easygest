@@ -95,15 +95,17 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
 
     public void modifierVersement(){
         bouton_modifier.setOnClickListener(v -> {
+            bouton_modifier.setEnabled(false);
             String edt_somme = EDTsomme.getText().toString().trim();
             String dateversement = EDTdateaccount.getText().toString().trim();
             Date date = MesOutils.convertStringToDate(dateversement);
 
             if ( edt_somme.isEmpty() || dateversement.isEmpty()){
                 Toast.makeText(this, "champs obligatoires", Toast.LENGTH_SHORT).show();
-
+                bouton_modifier.setEnabled(true);
             } else if (date == null) {
                 Toast.makeText(ModifierVersementaccActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
+                bouton_modifier.setEnabled(true);
             } else {
 //                if (Integer.parseInt(edt_somme) >= 1000) {
 
@@ -116,7 +118,6 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                         int nouveau_total_versement = (anncien_total_versement-annciennesommeverse)+nouvellesommeverse;
 
                         if (  nouvellesommeverse > 0 & nouveau_total_versement <= somme_du_account){
-
                             boolean success = versementacccontrolleur.modifierVersement(account,versement,nouveau_total_versement,nouvellesommeverse,dateversement);
                             if (success) {
                                 VersementsaccModel versementsaccModel = new VersementsaccModel(versement.getId(),client,account,(long)nouvellesommeverse,date.getTime());
@@ -157,14 +158,20 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
 
-                            } else { Toast.makeText(this, "revoyez le versement ", Toast.LENGTH_SHORT).show();}
-                        }else { Toast.makeText(this, "versement elevé", Toast.LENGTH_SHORT).show(); }
+                            } else {
+                                Toast.makeText(this, "revoyez le versement ", Toast.LENGTH_SHORT).show();
+                                bouton_modifier.setEnabled(true);
+                            }
+                        }else {
+                            Toast.makeText(this, "versement elevé", Toast.LENGTH_SHORT).show();
+                            bouton_modifier.setEnabled(true);
+                        }
 
                     } catch (Exception e) {
                         Toast.makeText(this, "erreur versement avorté", Toast.LENGTH_SHORT).show();
+                        bouton_modifier.setEnabled(true);
                     }
-//                }else {Toast.makeText(this, "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();}
-
+//                }else {Toast.makeText(this, "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();
             }
         });
     }

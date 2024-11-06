@@ -72,6 +72,7 @@ public class AjouterAccountActivity extends AppCompatActivity {
     public void  ajouterAccount(){
 
         binding.btnajoutaccount.setOnClickListener(view -> {
+            binding.btnajoutaccount.setEnabled(false);
             String designationarticle1 = binding.ajoutaccarticle1.getText().toString().trim();
             String article1somme = binding.ajoutaccarticle1somme.getText().toString().trim();
             String article1qte = binding.ajoutaccNbrarticle1.getText().toString().trim();
@@ -83,13 +84,16 @@ public class AjouterAccountActivity extends AppCompatActivity {
                     || versement.isEmpty() ||date.isEmpty() )
             {
                 Toast.makeText(AjouterAccountActivity.this, "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
+                binding.btnajoutaccount.setEnabled(true);
 
             } else if (date_account == null) {
 
                 Toast.makeText(AjouterAccountActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
+                binding.btnajoutaccount.setEnabled(true);
             }else if (binding.ajoutaccarticle2.getText().toString().trim().length() != 0 && binding.ajoutaccarticle2somme.getText().toString().trim().isEmpty() ||
                     binding.ajoutaccarticle2.getText().toString().trim().length() != 0 & binding.ajoutaccNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(AjouterAccountActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
+                binding.btnajoutaccount.setEnabled(true);
             } else {
                 int sommearticle1 =Integer.parseInt(article1somme) ;
                 int nbrarticle1 = Integer.parseInt(article1qte);
@@ -162,8 +166,14 @@ public class AjouterAccountActivity extends AppCompatActivity {
                             smsSender.sentReiceiver(smsnoSentModel);
                         }
 
-                    } else { Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();}
-                }else {Toast.makeText(this, "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();}
+                    } else {
+                        Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
+                        binding.btnajoutaccount.setEnabled(true);
+                    }
+                }else {
+                    Toast.makeText(this, "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();
+                    binding.btnajoutaccount.setEnabled(true);
+                }
 
             }
         });

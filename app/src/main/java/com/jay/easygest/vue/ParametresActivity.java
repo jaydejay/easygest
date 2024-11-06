@@ -35,14 +35,21 @@ public class  ParametresActivity extends AppCompatActivity {
     public void debloqueapp(){
 
         binding.btnApikey.setOnClickListener(v -> {
+            binding.btnApikey.setEnabled(false);
             String proprietaire = binding.editAppowner.getText().toString().trim();
             String cleproduit = binding.editAppKey.getText().toString().trim();
 
             if (proprietaire.length() != 0 && cleproduit.length() != 0){
                 if (usercontrolleur.authApp(proprietaire,cleproduit)){
                     afficherAlerte();
-                }else { Toast.makeText(ParametresActivity.this, "produit non conforme", Toast.LENGTH_SHORT).show();}
-            }else { Toast.makeText(ParametresActivity.this, "champs obligatoire", Toast.LENGTH_SHORT).show();}
+                }else {
+                    Toast.makeText(ParametresActivity.this, "produit non conforme", Toast.LENGTH_SHORT).show();
+                    binding.btnApikey.setEnabled(true);
+                }
+            }else {
+                Toast.makeText(ParametresActivity.this, "champs obligatoire", Toast.LENGTH_SHORT).show();
+                binding.btnApikey.setEnabled(true);
+            }
         });
     }
 

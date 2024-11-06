@@ -148,7 +148,6 @@ public class CreditFragment extends Fragment {
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                if (Integer.parseInt(versement) < sommecredit){
                    CreditModel creditModel =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
-                   Log.d("creitfragment", "ajouterCredit: "+creditModel);
                    if (creditModel != null) {
                        ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
                        creditcontrolleur.setRecapTresteClient(client);
