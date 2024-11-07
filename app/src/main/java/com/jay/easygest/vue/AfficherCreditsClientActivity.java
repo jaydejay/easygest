@@ -149,42 +149,43 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
                     +"de la somme du credit");
 
             builder.setPositiveButton("oui", (dialog, which) -> {
-                ClientModel client = credit.getClient();
-                boolean success = creditcontrolleur.annullerCredit(credit);
-                if (success){
-                    ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
-                    clientViewModel.getClient().setValue(clientModel);
 
-                    creditcontrolleur.setRecapTresteClient(clientModel);
-                    creditcontrolleur.setRecapTcreditClient(clientModel);
+                if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.SEND_SMS) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.SEND_SMS},
+                            MY_PERMISSIONS_REQUEST_SEND_SMS);
+                } else {
 
-                    int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
-                    int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
-                    appKessModel = accessLocalAppKes.getAppkes();
+                    ClientModel client = credit.getClient();
+                    boolean success = creditcontrolleur.annullerCredit(credit);
+                    if (success){
+                        ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
+                        clientViewModel.getClient().setValue(clientModel);
 
-                      String destinationAdress = "+225"+clientModel.getTelephone();
+                        creditcontrolleur.setRecapTresteClient(clientModel);
+                        creditcontrolleur.setRecapTcreditClient(clientModel);
+
+                        int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                        int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+                        appKessModel = accessLocalAppKes.getAppkes();
+
+                        String destinationAdress = "+225"+clientModel.getTelephone();
 //                    String destinationAdress = "5556";
-                    String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                            + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
-                            +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
-                            +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                            +"total credit : "+total_credit_client+"\n"
-                            +"reste a payer : "+total_reste_client;
+                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
+                                +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                +"total credit : "+total_credit_client+"\n"
+                                +"reste a payer : "+total_reste_client;
 
-                    SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-
-                    if (ActivityCompat.checkSelfPermission(this,
-                            android.Manifest.permission.SEND_SMS) !=
-                            PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{android.Manifest.permission.SEND_SMS},
-                                MY_PERMISSIONS_REQUEST_SEND_SMS);
-                    } else {
-
+                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
                         smsSender.smsSendwithInnerClass(messageBody, destinationAdress,credit.getId() );
                         smsSender.sentReiceiver(smsnoSentModel);
-                    }
 
+
+                    }
                 }
 
             });

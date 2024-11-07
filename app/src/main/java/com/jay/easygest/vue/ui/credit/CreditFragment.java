@@ -147,43 +147,43 @@ public class CreditFragment extends Fragment {
 
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                if (Integer.parseInt(versement) < sommecredit){
-                   CreditModel creditModel =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
-                   if (creditModel != null) {
-                       ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
-                       creditcontrolleur.setRecapTresteClient(client);
-                       creditcontrolleur.setRecapTcreditClient(client);
-                       clientViewModel.getClient().setValue(client);
 
-                       int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
-                       int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+                   if (ActivityCompat.checkSelfPermission(requireContext(),
+                           android.Manifest.permission.SEND_SMS) !=
+                           PackageManager.PERMISSION_GRANTED) {
+                       ActivityCompat.requestPermissions(requireActivity(),
+                               new String[]{android.Manifest.permission.SEND_SMS},
+                               MY_PERMISSIONS_REQUEST_SEND_SMS);
+                       binding.btncreercredit.setEnabled(true);
+                   } else {
 
-                       String destinationAdress = "+225"+client.getTelephone();
-//                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+                       CreditModel creditModel =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
+                       if (creditModel != null) {
+                           ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
+                           creditcontrolleur.setRecapTresteClient(client);
+                           creditcontrolleur.setRecapTcreditClient(client);
+                           clientViewModel.getClient().setValue(client);
 
-                       String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                               +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"
-                               +"votre credit est de "+creditModel.getSommecredit()+" FCFA"+"\n"
-                               +"pris le "+date+"\n"
-                               +"reste à payer : "+total_reste_client+"\n"
-                               +"votre code "+client.getCodeclient();
+                           int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                           int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
-                       SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+//                           String destinationAdress = "+225"+client.getTelephone();
+                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
-                       if (ActivityCompat.checkSelfPermission(requireContext(),
-                               android.Manifest.permission.SEND_SMS) !=
-                               PackageManager.PERMISSION_GRANTED) {
-                           ActivityCompat.requestPermissions(requireActivity(),
-                                   new String[]{android.Manifest.permission.SEND_SMS},
-                                   MY_PERMISSIONS_REQUEST_SEND_SMS);
-                       } else {
-
+                           String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                   +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"
+                                   +"votre credit est de "+creditModel.getSommecredit()+" FCFA"+"\n"
+                                   +"pris le "+date+"\n"
+                                   +"reste à payer : "+total_reste_client+"\n"
+                                   +"votre code "+client.getCodeclient();
+                           SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
                            smsSender.sentReiceiver(smsnoSentModel);
+                       }else {
+                           Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();
+                           binding.btncreercredit.setEnabled(true);
                        }
 
-                   }else {
-                       Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();
-                       binding.btncreercredit.setEnabled(true);
                    }
 
                }else {

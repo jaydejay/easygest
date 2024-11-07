@@ -108,23 +108,32 @@ public class ModifierVersementActivity extends AppCompatActivity {
                 Toast.makeText(ModifierVersementActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
                 bouton_modifier.setEnabled(true);
             } else {
+                if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.SEND_SMS) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.SEND_SMS},
+                            MY_PERMISSIONS_REQUEST_SEND_SMS);
+                    bouton_modifier.setEnabled(true);
+                } else {
 
-                try {
-                    int nouvellesommeverse = Integer.parseInt(edt_somme);
-                    CreditModel credit = creditViewModel.getCredit().getValue();
-                    int somme_du_credit = 0;
-                    if (credit != null) {
-                        somme_du_credit = credit.getSommecredit();
-                    }
+                    try {
+                        int nouvellesommeverse = Integer.parseInt(edt_somme);
+                        CreditModel credit = creditViewModel.getCredit().getValue();
+                        int somme_du_credit = 0;
+                        if (credit != null) {
+                            somme_du_credit = credit.getSommecredit();
+                        }
 
-                    int anncien_total_versement = creditViewModel.getCredit().getValue().getVersement();
+                        int anncien_total_versement = creditViewModel.getCredit().getValue().getVersement();
                         int annciennesommeverse = Integer.parseInt(String.valueOf(versement.getSommeverse())) ;
                         int nouveau_total_versement = (anncien_total_versement-annciennesommeverse)+nouvellesommeverse;
                         if (  nouvellesommeverse > 0 & nouveau_total_versement <= somme_du_credit){
+
                             boolean success = versementcontrolleur.modifierVersement(credit,versement,nouveau_total_versement,nouvellesommeverse,dateversement);
                             if (success) {
                                 VersementsModel versementsModel = new VersementsModel(versement.getId(),client,credit,(long)nouvellesommeverse,credit.getId(), date.getTime());
-                               versementViewModel.getMversement().setValue(versementsModel);
+                                versementViewModel.getMversement().setValue(versementsModel);
                                 if (annciennesommeverse != nouvellesommeverse ){
 
                                     appKessModel = accessLocalAppKes.getAppkes();
@@ -135,25 +144,19 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                     int total_credit_client = creditViewModel.getTotalcreditsclient().getValue();
                                     int total_reste_client = creditViewModel.getTotalrestesclient().getValue();
 
-                                      String destinationAdress = "+225"+client.getTelephone();
+                                    String destinationAdress = "+225"+client.getTelephone();
 //                                    String destinationAdress = "5556";
                                     String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                                        + client.getNom() + " "+client.getPrenoms() +"\n"
-                                        +"vous avez modifier un versement pour votre credit"+"\n"
-                                        +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                                        +"total account : "+total_credit_client+"\n"
-                                        +"reste a payer : "+total_reste_client;
+                                            + client.getNom() + " "+client.getPrenoms() +"\n"
+                                            +"vous avez modifier un versement pour votre credit"+"\n"
+                                            +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                            +"total account : "+total_credit_client+"\n"
+                                            +"reste a payer : "+total_reste_client;
+
                                     SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                                    if (ActivityCompat.checkSelfPermission(this,
-                                            android.Manifest.permission.SEND_SMS) !=
-                                            PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions(this,
-                                                new String[]{android.Manifest.permission.SEND_SMS},
-                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
-                                    } else {
-                                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versementsModel.getId() );
-                                        smsSender.sentReiceiver(smsnoSentModel);
-                                    }
+                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versementsModel.getId() );
+                                    smsSender.sentReiceiver(smsnoSentModel);
+
 
                                 }else {
                                     Intent intent = new Intent(ModifierVersementActivity.this, AfficheversementActivity.class);
@@ -169,10 +172,13 @@ public class ModifierVersementActivity extends AppCompatActivity {
                             bouton_modifier.setEnabled(true);
                         }
 
-                } catch (Exception e) {
-                    Toast.makeText(this, "erreur versement avorté", Toast.LENGTH_SHORT).show();
-                    bouton_modifier.setEnabled(true);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "erreur versement avorté", Toast.LENGTH_SHORT).show();
+                        bouton_modifier.setEnabled(true);
+                    }
+
                 }
+
             }
         });
     }

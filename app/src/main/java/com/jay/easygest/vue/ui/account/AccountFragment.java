@@ -151,46 +151,49 @@ public class  AccountFragment extends Fragment {
 
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                 if (Integer.parseInt(versement) < sommecredit){
-                    AccountModel account =  this.accountcontroller.creerAccount(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
-                    if (account != null) {
-                        ClientModel clientModel = clientcontrolleur.recupererClient(account.getClientid());
-                        clientViewModel.getClient().setValue(clientModel);
 
-                        AccountModel account_ajoute = accountViewModel.getAccount().getValue();
-                        AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+                    if (ActivityCompat.checkSelfPermission(requireContext(),
+                            android.Manifest.permission.SEND_SMS) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(requireActivity(),
+                                new String[]{android.Manifest.permission.SEND_SMS},
+                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        binding.btncreeraccount.setEnabled(true);
+                    } else {
 
-                        accountViewModel.getAccount().setValue(accountModel);
-                        accountcontroller.setRecapTresteClient(clientModel);
-                        accountcontroller.setRecapTaccountClient(clientModel);
-                       int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
-                       int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+                        AccountModel account =  this.accountcontroller.creerAccount(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
+                        if (account != null) {
+                            ClientModel clientModel = clientcontrolleur.recupererClient(account.getClientid());
+                            clientViewModel.getClient().setValue(clientModel);
 
-                        String destinationAdress = "+225"+clientModel.getTelephone();
+                            AccountModel account_ajoute = accountViewModel.getAccount().getValue();
+                            AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+
+                            accountViewModel.getAccount().setValue(accountModel);
+                            accountcontroller.setRecapTresteClient(clientModel);
+                            accountcontroller.setRecapTaccountClient(clientModel);
+                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                            int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+
+                            String destinationAdress = "+225"+clientModel.getTelephone();
 //                        String destinationAdress = "5556";
 
-                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                                +"bienvenu(e) "+clientModel.getNom() + " "+clientModel.getPrenoms()+"\n"
-                                +"votre account est de "+accountModel.getSommeaccount()+" FCFA"+"\n"
-                                +"pris le "+date+"\n"
-                                +"reste à payer : "+total_reste_client+"\n"
-                                +"votre code "+clientModel.getCodeclient();
-
-                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-
-                        if (ActivityCompat.checkSelfPermission(requireContext(),
-                                android.Manifest.permission.SEND_SMS) !=
-                                PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(requireActivity(),
-                                    new String[]{android.Manifest.permission.SEND_SMS},
-                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-                        } else {
-
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                    +"bienvenu(e) "+clientModel.getNom() + " "+clientModel.getPrenoms()+"\n"
+                                    +"votre account est de "+accountModel.getSommeaccount()+" FCFA"+"\n"
+                                    +"pris le "+date+"\n"
+                                    +"reste à payer : "+total_reste_client+"\n"
+                                    +"votre code "+clientModel.getCodeclient();
+                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
                             smsSender.smsSendwithInnerClass(messageBody, destinationAdress,accountModel.getId() );
                             smsSender.sentReiceiver(smsnoSentModel);
+
+                        }else {
+                            Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();
+                            binding.btncreeraccount.setEnabled(true);
                         }
-                    }else {
-                        Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();
-                        binding.btncreeraccount.setEnabled(true);
+
+
                     }
 
                 }else {
@@ -223,6 +226,7 @@ public class  AccountFragment extends Fragment {
             startActivity(intent);
 
         }
+//        smsSender.sentReiceiver(smsnoSentModel);
     }
 
 }

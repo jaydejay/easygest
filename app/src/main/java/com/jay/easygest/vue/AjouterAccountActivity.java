@@ -127,49 +127,52 @@ public class AjouterAccountActivity extends AppCompatActivity {
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
+
                 if (Integer.parseInt(versement) < sommecredit){
-                    boolean success = accountcontroller.ajouterAccount( client,c_article1,c_article2,versement, dateaccount);
-                    if (success) {
-                        appKessModel = accessLocalAppKes.getAppkes();
-                        ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
-                        AccountModel account_ajoute = accountViewModel.getAccount().getValue();
-                        AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account_ajoute.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
-                        accountViewModel.getAccount().setValue(accountModel);
-                        clientViewModel.getClient().setValue(clientModel);
+                    if (ActivityCompat.checkSelfPermission(this,
+                            android.Manifest.permission.SEND_SMS) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.SEND_SMS},
+                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        binding.btnajoutaccount.setEnabled(true);
+                    } else {
+                        boolean success = accountcontroller.ajouterAccount( client,c_article1,c_article2,versement, dateaccount);
+                        if (success) {
+                            appKessModel = accessLocalAppKes.getAppkes();
+                            ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
+                            AccountModel account_ajoute = accountViewModel.getAccount().getValue();
+                            AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_ajoute).getId(),clientModel,account_ajoute.getArticle1(),account_ajoute.getArticle2(),account_ajoute.getSommeaccount(),account_ajoute.getVersement(),account_ajoute.getReste(),account_ajoute.getDateaccount(),account_ajoute.getNumeroaccount());
+                            accountViewModel.getAccount().setValue(accountModel);
+                            clientViewModel.getClient().setValue(clientModel);
 
-                        accountcontroller.setRecapTresteClient(clientModel);
-                        accountcontroller.setRecapTaccountClient(clientModel);
-                        int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
-                        int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+                            accountcontroller.setRecapTresteClient(clientModel);
+                            accountcontroller.setRecapTaccountClient(clientModel);
+                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                            int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
-                        String destinationAdress = "+225"+clientModel.getTelephone();
+                            String destinationAdress = "+225"+clientModel.getTelephone();
 //                        String destinationAdress = "5556";
 
-                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
-                                +"vous avez pris un autre account de "+accountModel.getSommeaccount()+" FCFA"+"\n"
-                                +"le "+date+"\n"
-                                +"total account "+total_account_client+"\n"
-                                +"reste à payer : "+total_reste_client;
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                    + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                    +"vous avez pris un autre account de "+accountModel.getSommeaccount()+" FCFA"+"\n"
+                                    +"le "+date+"\n"
+                                    +"total account "+total_account_client+"\n"
+                                    +"reste à payer : "+total_reste_client;
 
-                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-
-                        if (ActivityCompat.checkSelfPermission(this,
-                                android.Manifest.permission.SEND_SMS) !=
-                                PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{android.Manifest.permission.SEND_SMS},
-                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-                        } else {
-
+                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
                             smsSender.smsSendwithInnerClass(messageBody, destinationAdress,accountModel.getId() );
                             smsSender.sentReiceiver(smsnoSentModel);
+
+
+                        } else {
+                            Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
+                            binding.btnajoutaccount.setEnabled(true);
                         }
 
-                    } else {
-                        Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
-                        binding.btnajoutaccount.setEnabled(true);
                     }
+
                 }else {
                     Toast.makeText(this, "versement superieur ou égal à l'account", Toast.LENGTH_SHORT).show();
                     binding.btnajoutaccount.setEnabled(true);

@@ -127,50 +127,52 @@ public class AjouterCreditActivity extends AppCompatActivity {
                 Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                 if (Integer.parseInt(versement) < sommecredit){
-                    boolean success = creditcontroller.ajouterCredit( client,c_article1,c_article2,versement, dateaccount);
-                    if (success) {
-                        ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
-                        CreditModel credit_ajoute = creditViewModel.getCredit().getValue();
-                        CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_ajoute).getId(),clientModel,credit_ajoute.getArticle1(),credit_ajoute.getArticle2(),credit_ajoute.getSommecredit(),credit_ajoute.getVersement(),credit_ajoute.getReste(),credit_ajoute.getDatecredit(),credit_ajoute.getNumerocredit());
+                    if (ActivityCompat.checkSelfPermission(this,
+                            android.Manifest.permission.SEND_SMS) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.SEND_SMS},
+                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        binding.btnajoutcredit.setEnabled(true);
+                    } else {
 
-                        creditViewModel.getCredit().setValue(creditModel);
-                        clientViewModel.getClient().setValue(clientModel);
+                        boolean success = creditcontroller.ajouterCredit( client,c_article1,c_article2,versement, dateaccount);
+                        if (success) {
+                            ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
+                            CreditModel credit_ajoute = creditViewModel.getCredit().getValue();
+                            CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_ajoute).getId(),clientModel,credit_ajoute.getArticle1(),credit_ajoute.getArticle2(),credit_ajoute.getSommecredit(),credit_ajoute.getVersement(),credit_ajoute.getReste(),credit_ajoute.getDatecredit(),credit_ajoute.getNumerocredit());
 
-                        creditcontroller.setRecapTresteClient(clientModel);
-                        creditcontroller.setRecapTcreditClient(clientModel);
+                            creditViewModel.getCredit().setValue(creditModel);
+                            clientViewModel.getClient().setValue(clientModel);
+
+                            creditcontroller.setRecapTresteClient(clientModel);
+                            creditcontroller.setRecapTcreditClient(clientModel);
 
 
-                        int total_credit_client = creditcontroller.getRecapTcreditClient().getValue();
-                        int total_reste_client = creditcontroller.getRecapTresteClient().getValue();
+                            int total_credit_client = creditcontroller.getRecapTcreditClient().getValue();
+                            int total_reste_client = creditcontroller.getRecapTresteClient().getValue();
 
-                          String destinationAdress = "+225"+clientModel.getTelephone();
+                            String destinationAdress = "+225"+clientModel.getTelephone();
 //                        String destinationAdress = "5556";
 
-                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
-                                +"vous avez pris un autre credit de "+creditModel.getSommecredit()+" FCFA"+"\n"
-                                +"le "+date+"\n"
-                                +"total credit "+total_credit_client+"\n"
-                                +"reste à payer : "+total_reste_client;
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                    + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                    +"vous avez pris un autre credit de "+creditModel.getSommecredit()+" FCFA"+"\n"
+                                    +"le "+date+"\n"
+                                    +"total credit "+total_credit_client+"\n"
+                                    +"reste à payer : "+total_reste_client;
 
-                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-
-                        if (ActivityCompat.checkSelfPermission(this,
-                                android.Manifest.permission.SEND_SMS) !=
-                                PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{android.Manifest.permission.SEND_SMS},
-                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-                        } else {
-
+                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
                             smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
                             smsSender.sentReiceiver(smsnoSentModel);
-                        }
 
-                    } else {
-                        Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
-                        binding.btnajoutcredit.setEnabled(true);
+
+                        } else {
+                            Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();
+                            binding.btnajoutcredit.setEnabled(true);
+                        }
                     }
+
                 }else {
                     Toast.makeText(this, "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();
                     binding.btnajoutcredit.setEnabled(true);

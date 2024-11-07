@@ -105,50 +105,60 @@ public class ModifierAccountActivity extends AppCompatActivity {
                 Toast.makeText(ModifierAccountActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
                 binding.btnmodifaccount.setEnabled(true);
             } else {
-                int sommearticle1 =Integer.parseInt(article1somme) ;
-                int nbrarticle1 = Integer.parseInt(article1qte);
 
-                String designation_article2 ;
-                String designationarticle2 ;
-                int sommearticle2 ;
-                int nbrarticle2 ;
-                String somme_article2 ;
-                String nbr_article2 ;
+                if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.SEND_SMS) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.SEND_SMS},
+                            MY_PERMISSIONS_REQUEST_SEND_SMS);
+                    binding.btnmodifaccount.setEnabled(true);
+                } else {
 
-                if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifaccarticle2somme.getText().toString().trim().equals("0") ||
-                        binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifaccNbrarticle2.getText().toString().trim().equals("0")){
-                    designation_article2 = "";
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else if (binding.modifaccarticle2.getText().toString().trim().isEmpty()){
-                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else {
-                    designation_article2 = binding.modifaccarticle2.getText().toString().trim();
-                    somme_article2 = binding.modifaccarticle2somme.getText().toString().trim();
-                    nbr_article2 = binding.modifaccNbrarticle2.getText().toString().trim();
-                }
-                designationarticle2 = designation_article2;
-                sommearticle2 = Integer.parseInt(somme_article2);
-                nbrarticle2 = Integer.parseInt(nbr_article2);
-                long dateaccount = date_credit.getTime();
+                    int sommearticle1 =Integer.parseInt(article1somme) ;
+                    int nbrarticle1 = Integer.parseInt(article1qte);
 
-                Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
-                Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
-                int sommeaccount = c_article1.getSomme() + c_article2.getSomme();
+                    String designation_article2 ;
+                    String designationarticle2 ;
+                    int sommearticle2 ;
+                    int nbrarticle2 ;
+                    String somme_article2 ;
+                    String nbr_article2 ;
 
-                int versement;
-                if (account.getVersement() < sommeaccount){
-                    versement = account.getVersement();
-                }else {
-                    versement = sommeaccount;
-                }
-                int reste = sommeaccount - versement;
-                String article1 = new Genson().serialize(c_article1);
-                String article2 = new Genson().serialize(c_article2);
+                    if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifaccarticle2somme.getText().toString().trim().equals("0") ||
+                            binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifaccNbrarticle2.getText().toString().trim().equals("0")){
+                        designation_article2 = "";
+                        somme_article2 = "0";
+                        nbr_article2 = "0";
+                    }else if (binding.modifaccarticle2.getText().toString().trim().isEmpty()){
+                        designation_article2 = binding.modifaccarticle2.getText().toString().trim();
+                        somme_article2 = "0";
+                        nbr_article2 = "0";
+                    }else {
+                        designation_article2 = binding.modifaccarticle2.getText().toString().trim();
+                        somme_article2 = binding.modifaccarticle2somme.getText().toString().trim();
+                        nbr_article2 = binding.modifaccNbrarticle2.getText().toString().trim();
+                    }
+                    designationarticle2 = designation_article2;
+                    sommearticle2 = Integer.parseInt(somme_article2);
+                    nbrarticle2 = Integer.parseInt(nbr_article2);
+                    long dateaccount = date_credit.getTime();
 
-                AccountModel nouveau_account = new AccountModel(account.getId(),client.getId(),article1,article2,sommeaccount,versement,reste,dateaccount,account.getNumeroaccount());
+                    Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
+                    Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                    int sommeaccount = c_article1.getSomme() + c_article2.getSomme();
+
+                    int versement;
+                    if (account.getVersement() < sommeaccount){
+                        versement = account.getVersement();
+                    }else {
+                        versement = sommeaccount;
+                    }
+                    int reste = sommeaccount - versement;
+                    String article1 = new Genson().serialize(c_article1);
+                    String article2 = new Genson().serialize(c_article2);
+
+                    AccountModel nouveau_account = new AccountModel(account.getId(),client.getId(),article1,article2,sommeaccount,versement,reste,dateaccount,account.getNumeroaccount());
                     int ancienne_somme_account = account.getSommeaccount();
                     boolean success = accountcontroller.modifierAccount(nouveau_account, client,ancienne_somme_account);
                     if (success) {
@@ -164,7 +174,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
                             int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
                             int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
-                        String destinationAdress = "+225"+clientModel.getTelephone();
+                            String destinationAdress = "+225"+clientModel.getTelephone();
 //                            String destinationAdress = "5556";
 
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
@@ -176,18 +186,9 @@ public class ModifierAccountActivity extends AppCompatActivity {
                                     +"reste a payer : "+total_reste_client;
 
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,account.getId() );
+                            smsSender.sentReiceiver(smsnoSentModel);
 
-                            if (ActivityCompat.checkSelfPermission(this,
-                                    android.Manifest.permission.SEND_SMS) !=
-                                    PackageManager.PERMISSION_GRANTED) {
-                                ActivityCompat.requestPermissions(this,
-                                        new String[]{android.Manifest.permission.SEND_SMS},
-                                        MY_PERMISSIONS_REQUEST_SEND_SMS);
-                            } else {
-
-                                smsSender.smsSendwithInnerClass(messageBody, destinationAdress,account.getId() );
-                                smsSender.sentReiceiver(smsnoSentModel);
-                            }
 
                         }else {
                             Intent intent = new Intent(ModifierAccountActivity.this, AffichercreditActivity.class);
@@ -199,6 +200,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
                         Toast.makeText(this, "un probleme est survenu : modification avortée", Toast.LENGTH_SHORT).show();
                         binding.btnmodifaccount.setEnabled(true);
                     }
+                }
+
             }
         });
     }

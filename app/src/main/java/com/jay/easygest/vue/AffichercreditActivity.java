@@ -148,42 +148,43 @@ public class AffichercreditActivity extends AppCompatActivity {
                         +"de la somme du credit");
 
                 builder.setPositiveButton("oui", (dialog, which) -> {
-                   boolean success = creditcontrolleur.annullerCredit(credit);
-                   if (success){
-                       creditcontrolleur.setRecapTresteClient(client);
-                       creditcontrolleur.setRecapTcreditClient(client);
+                    if (ActivityCompat.checkSelfPermission(this,
+                            android.Manifest.permission.SEND_SMS) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.SEND_SMS},
+                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        binding.supCredit.setEnabled(true);
+                    } else {
 
-                       int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
-                       int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+                        boolean success = creditcontrolleur.annullerCredit(credit);
+                        if (success){
+                            creditcontrolleur.setRecapTresteClient(client);
+                            creditcontrolleur.setRecapTcreditClient(client);
 
-                         String destinationAdress = "+225"+client.getTelephone();
+                            int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                            int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+
+                            String destinationAdress = "+225"+client.getTelephone();
 //                       String destinationAdress = "5556";
-                       String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                               + client.getNom() + " "+client.getPrenoms() +"\n"
-                               +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
-                               +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                               +"total credit : "+total_credit_client+"\n"
-                               +"reste a payer : "+total_reste_client;
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                    + client.getNom() + " "+client.getPrenoms() +"\n"
+                                    +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
+                                    +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                    +"total credit : "+total_credit_client+"\n"
+                                    +"reste a payer : "+total_reste_client;
 
-                       SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,credit.getId() );
+                            smsSender.sentReiceiver(smsnoSentModel);
 
-                       if (ActivityCompat.checkSelfPermission(this,
-                               android.Manifest.permission.SEND_SMS) !=
-                               PackageManager.PERMISSION_GRANTED) {
-                           ActivityCompat.requestPermissions(this,
-                                   new String[]{android.Manifest.permission.SEND_SMS},
-                                   MY_PERMISSIONS_REQUEST_SEND_SMS);
-                       } else {
 
-                           smsSender.smsSendwithInnerClass(messageBody, destinationAdress,credit.getId() );
-                           smsSender.sentReiceiver(smsnoSentModel);
-                       }
-
-                   }else{   Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
-                       startActivity(intent);}
-
+                        }else{
+                            Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);
+                            startActivity(intent);
+                        }
+                    }
                 });
-
                 builder.setNegativeButton("non", (dialog, which) -> {
                     binding.supCredit.setEnabled(true);
                 });

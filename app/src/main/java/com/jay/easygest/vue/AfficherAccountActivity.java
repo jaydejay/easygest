@@ -143,46 +143,43 @@ public class AfficherAccountActivity extends AppCompatActivity {
                         +"de la somme de l'account");
 
                 builder.setPositiveButton("oui", (dialog, which) -> {
-                    boolean success = accountcontroller.annullerAccount(account);
-                    if (success){
-                        ClientModel clientModel = clientcontrolleur.recupererClient(account.getClient().getId());
-                        clientViewModel.getClient().setValue(clientModel);
+                    if (ActivityCompat.checkSelfPermission(this,
+                            android.Manifest.permission.SEND_SMS) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.SEND_SMS},
+                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        binding.supAccount.setEnabled(true);
+                    } else {
+                        boolean success = accountcontroller.annullerAccount(account);
+                        if (success){
+                            ClientModel clientModel = clientcontrolleur.recupererClient(account.getClient().getId());
+                            clientViewModel.getClient().setValue(clientModel);
 
-                        appKessModel = accessLocalAppKes.getAppkes();
+                            appKessModel = accessLocalAppKes.getAppkes();
 
-                        accountcontroller.setRecapTresteClient(clientModel);
-                        accountcontroller.setRecapTaccountClient(clientModel);
-                        int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
-                        int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
+                            accountcontroller.setRecapTresteClient(clientModel);
+                            accountcontroller.setRecapTaccountClient(clientModel);
+                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+                            int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
-                        String destinationAdress = "+225"+clientModel.getTelephone();
+                            String destinationAdress = "+225"+clientModel.getTelephone();
 //                        String destinationAdress1 = "+225"+VariablesStatique.CLIENT_TELEPHONE;
 //                        String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
-                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
-                                +"vous avez annullé l'account  "+account.getNumeroaccount()+"\n"
-                                +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                                +"total account "+total_account_client+"\n"
-                                +"reste à payer : "+total_reste_client;
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                    + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                    +"vous avez annullé l'account  "+account.getNumeroaccount()+"\n"
+                                    +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                    +"total account "+total_account_client+"\n"
+                                    +"reste à payer : "+total_reste_client;
 
-                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-
-                        if (ActivityCompat.checkSelfPermission(this,
-                                android.Manifest.permission.SEND_SMS) !=
-                                PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{android.Manifest.permission.SEND_SMS},
-                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-                        } else {
-
+                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
                             smsSender.smsSendwithInnerClass(messageBody, destinationAdress,account.getId() );
                             smsSender.sentReiceiver(smsnoSentModel);
+
                         }
-
-
                     }
-
                 });
 
                 builder.setNegativeButton("non", (dialog, which) -> {

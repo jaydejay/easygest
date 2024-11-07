@@ -108,6 +108,14 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                 bouton_modifier.setEnabled(true);
             } else {
 //                if (Integer.parseInt(edt_somme) >= 1000) {
+                if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.SEND_SMS) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.SEND_SMS},
+                            MY_PERMISSIONS_REQUEST_SEND_SMS);
+                    bouton_modifier.setEnabled(true);
+                } else {
 
                     try {
                         int nouvellesommeverse = Integer.parseInt(edt_somme);
@@ -130,28 +138,19 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                                     int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
                                     int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
-                                      String destinationAdress = "+225"+client.getTelephone();
+                                    String destinationAdress = "+225"+client.getTelephone();
 //                                    String destinationAdress = "5556";
                                     String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                                        + client.getNom() + " "+client.getPrenoms() +"\n"
-                                        +"vous avez modifier un versement pour votre account"+"\n"
-                                        +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                                        +"total account : "+total_account_client+"\n"
-                                        +"reste a payer : "+total_reste_client;
+                                            + client.getNom() + " "+client.getPrenoms() +"\n"
+                                            +"vous avez modifier un versement pour votre account"+"\n"
+                                            +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                            +"total account : "+total_account_client+"\n"
+                                            +"reste a payer : "+total_reste_client;
 
                                     SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versement.getId() );
+                                    smsSender.sentReiceiver(smsnoSentModel);
 
-                                    if (ActivityCompat.checkSelfPermission(this,
-                                            android.Manifest.permission.SEND_SMS) !=
-                                            PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions(this,
-                                                new String[]{android.Manifest.permission.SEND_SMS},
-                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
-                                    } else {
-
-                                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versement.getId() );
-                                        smsSender.sentReiceiver(smsnoSentModel);
-                                    }
 
                                 }else {
                                     Intent intent = new Intent(ModifierVersementaccActivity.this, AfficherversementaccActivity.class);
@@ -171,6 +170,9 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                         Toast.makeText(this, "erreur versement avorté", Toast.LENGTH_SHORT).show();
                         bouton_modifier.setEnabled(true);
                     }
+                }
+
+
 //                }else {Toast.makeText(this, "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();
             }
         });

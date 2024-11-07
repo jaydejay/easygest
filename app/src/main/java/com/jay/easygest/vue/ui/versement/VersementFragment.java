@@ -92,50 +92,52 @@ public class VersementFragment extends Fragment {
                                 int total_reste_credit_avant = creditViewModel.getTotalrestesclient().getValue();
 
                                 if (   Integer.parseInt(somme_versee) > 0 &  Integer.parseInt(somme_versee) <= somme_total_credit){
-                                    int sommeverse;
-                                    if ( Integer.parseInt(somme_versee) >= total_reste_credit_avant){
-                                        sommeverse = total_reste_credit_avant;
-                                    }else {
-                                        sommeverse =  Integer.parseInt(somme_versee) ;
-                                    }
-                                    boolean success = versementcontrolleur.ajouterversement(client,sommeverse,date );
-                                    if (success) {
 
-                                        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
-                                        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
-                                        String expediteurName = appKessModel.getOwner();
+                                    if (ActivityCompat.checkSelfPermission(requireContext(),
+                                            android.Manifest.permission.SEND_SMS) !=
+                                            PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(requireActivity(),
+                                                new String[]{android.Manifest.permission.SEND_SMS},
+                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                        binding.btnversement.setEnabled(true);
+                                    } else {
+                                        int sommeverse;
+                                        if ( Integer.parseInt(somme_versee) >= total_reste_credit_avant){
+                                            sommeverse = total_reste_credit_avant;
+                                        }else {
+                                            sommeverse =  Integer.parseInt(somme_versee) ;
+                                        }
+                                        boolean success = versementcontrolleur.ajouterversement(client,sommeverse,date );
+                                        if (success) {
 
-                                        int total_reste_credit = creditViewModel.getTotalrestesclient().getValue();
+                                            AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
+                                            AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+                                            String expediteurName = appKessModel.getOwner();
+
+                                            int total_reste_credit = creditViewModel.getTotalrestesclient().getValue();
 
 //                                        String destinationAdress = "+225"+client.getTelephone();
-                                        String destinationAdress = "5556";
-                                        String nomDestinataire = client.getNom();
-                                        String prenomsDestinataire = client.getPrenoms();
+                                            String destinationAdress = "5556";
+                                            String nomDestinataire = client.getNom();
+                                            String prenomsDestinataire = client.getPrenoms();
 
-                                        String messageBody = expediteurName +"\n"+"\n"
-                                                + nomDestinataire + " "+prenomsDestinataire +"\n"
-                                                +"vous avez fait un versement de "+sommeverse+" FCFA"+" pour votre credit"+"\n"
-                                                +"le "+date+"\n"
-                                                +"reste à payer : "+total_reste_credit ;
+                                            String messageBody = expediteurName +"\n"+"\n"
+                                                    + nomDestinataire + " "+prenomsDestinataire +"\n"
+                                                    +"vous avez fait un versement de "+sommeverse+" FCFA"+" pour votre credit"+"\n"
+                                                    +"le "+date+"\n"
+                                                    +"reste à payer : "+total_reste_credit ;
 
-                                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-
-                                        if (ActivityCompat.checkSelfPermission(requireContext(),
-                                                android.Manifest.permission.SEND_SMS) !=
-                                                PackageManager.PERMISSION_GRANTED) {
-                                            ActivityCompat.requestPermissions(requireActivity(),
-                                                    new String[]{android.Manifest.permission.SEND_SMS},
-                                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-                                        } else {
-
+                                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
                                             smsSender.smsSendwithInnerClass(messageBody, destinationAdress, client.getId() );
                                             smsSender.sentReiceiver(smsnoSentModel);
+
+                                        } else {
+                                            Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
+                                            binding.btnversement.setEnabled(true);
                                         }
 
-                                    } else {
-                                        Toast.makeText(getContext(), "revoyez le versement ", Toast.LENGTH_SHORT).show();
-                                        binding.btnversement.setEnabled(true);
                                     }
+
                                 }else {
                                     Toast.makeText(getContext(), "la somme versée superieur au crédit ou est égale à 0", Toast.LENGTH_SHORT).show();
                                     binding.btnversement.setEnabled(true);

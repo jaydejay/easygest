@@ -127,44 +127,42 @@ public class AfficheversementActivity extends AppCompatActivity {
             builder.setTitle("annuller versement");
             builder.setMessage("êtes vous sûre de vouloir annuller le versement"+"\n");
             builder.setPositiveButton("oui",(dialog,which)->{
-                   boolean success =  versementcontrolleur.annullerversement(versement,credit);
-                   if (success){
+                if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.SEND_SMS) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.SEND_SMS},
+                            MY_PERMISSIONS_REQUEST_SEND_SMS);
+                    binding.afficheVersCancelButton.setEnabled(true);
+                } else {
+                    boolean success =  versementcontrolleur.annullerversement(versement,credit);
+                    if (success){
 
-                       ClientModel clientModel = clientcontrolleur.recupererClient(versement.getClient().getId());
-                       clientViewModel.getClient().setValue(clientModel);
-                       creditcontrolleur.setRecapTresteClient(clientModel);
-                       creditcontrolleur.setRecapTcreditClient(clientModel);
+                        ClientModel clientModel = clientcontrolleur.recupererClient(versement.getClient().getId());
+                        clientViewModel.getClient().setValue(clientModel);
+                        creditcontrolleur.setRecapTresteClient(clientModel);
+                        creditcontrolleur.setRecapTcreditClient(clientModel);
 
-                       int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
-                       int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+                        int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                        int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
-                         String destinationAdress = "+225"+clientModel.getTelephone();
+                        String destinationAdress = "+225"+clientModel.getTelephone();
 //                       String destinationAdress = "5556";
-                       String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                               + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
-                               +"vous avez annuller le versement de "+versement.getSommeverse()+" de votre credit"+"\n"
-                               +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                               +"total credit : "+total_credit_client+"\n"
-                               +"reste a payer : "+total_reste_client;
+                        String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
+                                +"vous avez annuller le versement de "+versement.getSommeverse()+" de votre credit"+"\n"
+                                +"le "+ MesOutils.convertDateToString(new Date())+"\n"
+                                +"total credit : "+total_credit_client+"\n"
+                                +"reste a payer : "+total_reste_client;
 
-                       SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
+                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
+                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versement.getId() );
+                        smsSender.sentReiceiver(smsnoSentModel);
 
-                       if (ActivityCompat.checkSelfPermission(this,
-                               android.Manifest.permission.SEND_SMS) !=
-                               PackageManager.PERMISSION_GRANTED) {
-                           ActivityCompat.requestPermissions(this,
-                                   new String[]{android.Manifest.permission.SEND_SMS},
-                                   MY_PERMISSIONS_REQUEST_SEND_SMS);
-                       } else {
+                    }
+                }
 
-                           smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versement.getId() );
-                           smsSender.sentReiceiver(smsnoSentModel);
-                       }
-
-                   }
-
-               }
-           );
+            });
 
             builder.setNegativeButton("non", (dialog, which) -> {
                 binding.afficheVersCancelButton.setEnabled(true);
