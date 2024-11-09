@@ -2,9 +2,11 @@ package com.jay.easygest.controleur;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.gson.Gson;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
@@ -96,8 +98,11 @@ public final class Creditcontrolleur {
 
     public CreditModel creerCredit(String codeclt, String nomclient,String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long datecredit){
 
-        String article1 = new Genson().serialize(c_article1);
-        String article2 = new Genson().serialize(c_article2);
+//        String article1 = new Genson().serialize(c_article1);
+//        String article2 = new Genson().serialize(c_article2);
+
+        String article1 = new Gson().toJson(c_article1);
+        String article2 = new Gson().toJson(c_article2);
 
         int sommecredit = c_article1.getSomme() + c_article2.getSomme();
         int reste = sommecredit - Integer.parseInt(versement);
@@ -116,8 +121,11 @@ public final class Creditcontrolleur {
 
     public boolean ajouterCredit( ClientModel client,Articles c_article1, Articles c_article2, String versement, long datecredit) {
 
-        String article1 = new Genson().serialize(c_article1);
-        String article2 = new Genson().serialize(c_article2);
+//        String article1 = new Genson().serialize(c_article1);
+//        String article2 = new Genson().serialize(c_article2);
+
+        String article1 = new Gson().toJson(c_article1);
+        String article2 = new Gson().toJson(c_article2);
 
         int sommecredit = c_article1.getSomme() + c_article2.getSomme();
         int reste = sommecredit - Integer.parseInt(versement);

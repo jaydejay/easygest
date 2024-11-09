@@ -5,6 +5,8 @@ import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_S
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -12,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAffichercreditBinding;
@@ -28,6 +32,7 @@ import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.owlike.genson.Genson;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 
 public class AffichercreditActivity extends AppCompatActivity {
@@ -47,6 +52,8 @@ public class AffichercreditActivity extends AppCompatActivity {
     private SmsSender smsSender;
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
+    private Genson genson;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +66,19 @@ public class AffichercreditActivity extends AppCompatActivity {
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        genson = new Genson();
+        gson = new Gson();
+
         credit = creditViewModel.getCredit().getValue();
+        Articles article1 = genson.deserialize(credit.getArticle1(), Articles.class);
+
+        Type type = new TypeToken<Articles>(){}.getType();
+        Articles gson_article1 = gson.fromJson(credit.getArticle1(),type);
+
+        Log.i("affichercredit", "onCreate gson: "+gson_article1);
+        Log.i("affichercredit", "onCreate gson: "+gson_article1.getDesignation());
+        Log.i("affichercredit", "onCreate genson: "+article1);
         creditcontrolleur.listecredits();
-
-
         appKessModel = accessLocalAppKes.getAppkes();
 
         cardaffichercredittitle = findViewById(R.id.cardaffichercredittitle);
@@ -81,17 +97,24 @@ public class AffichercreditActivity extends AppCompatActivity {
 
 
     public void affichercredit(){
-
-        Articles c_article1 = new Genson().deserialize(credit.getArticle1(), Articles.class);
-        Articles c_article2 = new Genson().deserialize(credit.getArticle2(), Articles.class);
+//        Articles c_article1 = new Genson().deserialize(credit.getArticle1(), Articles.class);
+//        Articles c_article2 = new Genson().deserialize(credit.getArticle2(), Articles.class);
+        Type type = new TypeToken<Articles>(){}.getType();
+        Articles c_article1 = gson.fromJson(credit.getArticle1(),type);
+        Articles c_article2 = gson.fromJson(credit.getArticle2(),type);
         String article1 = "ARTICLE 1  "+c_article1.getDesignation() +"\n "+" quantite : "+c_article1.getNbrarticle()+"\n "+"somme : "+c_article1.getSomme();
         String article2 = "ARTICLE 2  "+c_article2.getDesignation() +"\n "+" quantite : "+c_article2.getNbrarticle()+"\n "+"somme : "+c_article2.getSomme();
         String credt = "CREDIT : "+credit.getSommecredit();
         String versement ="VERSEMENT : "+credit.getVersement();
         String reste ="RESTE : "+credit.getReste();
+
+        if (c_article2.getDesignation().length() == 0){
+            cardaffichercreditarticle2.setVisibility(View.GONE);
+        }
         cardaffichercredittitle.setText(credit.toString3());
         cardaffichercreditarticle1.setText(article1);
         cardaffichercreditarticle2.setText(article2);
+
         cardaffichercreditcredit.setText(credt);
         cardaffichercreditreste.setText(reste);
         cardaffichercreditversement.setText(versement);

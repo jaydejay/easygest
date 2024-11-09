@@ -90,6 +90,10 @@ public class  AccountFragment extends Fragment {
             String article1somme = binding.edittxtcreeraccarticle1somme.getText().toString().trim();
             String article1qte = binding.edittxtcreeraccNbrarticle1.getText().toString().trim();
 
+            String designationarticle2 = binding.edittxtcreeraccarticle2.getText().toString().trim();
+            String article2somme = binding.edittxtcreeraccarticle2somme.getText().toString().trim();
+            String article2qte = binding.edittxtcreeraccNbrarticle2.getText().toString().trim();
+
             String telephone =  binding.edittxtcreeracctelephone.getText().toString().trim();
             String versement = binding.edittxtcreeraccversement.getText().toString().trim();
             String date = binding.editTextaccDate.getText().toString().trim();
@@ -116,31 +120,37 @@ public class  AccountFragment extends Fragment {
 
                 int sommearticle1 =Integer.parseInt(article1somme);
                 int nbrarticle1 = Integer.parseInt(article1qte);
-
-                String designation_article2 ;
-                String designationarticle2 ;
-                int sommearticle2 ;
-                int nbrarticle2 ;
-                String somme_article2 ;
-                String nbr_article2 ;
-
-                if (binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreeraccarticle2somme.getText().toString().trim().equals("0") ||
-                        binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().equals("0")){
-                    designation_article2 = "";
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else if (binding.edittxtcreeraccarticle2.getText().toString().trim().isEmpty()){
-                    designation_article2 = binding.edittxtcreeraccarticle2.getText().toString().trim();
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else {
-                    designation_article2 = binding.edittxtcreeraccarticle2.getText().toString().trim();
-                    somme_article2 = binding.edittxtcreeraccarticle2somme.getText().toString().trim();
-                    nbr_article2 = binding.edittxtcreeraccNbrarticle2.getText().toString().trim();
+                int sommearticle2 = 0 ;
+                int nbrarticle2 = 0 ;
+                if (!designationarticle2.isEmpty()){
+                    sommearticle2 =Integer.parseInt(article2somme);
+                    nbrarticle2 = Integer.parseInt(article2qte);
                 }
-                designationarticle2 = designation_article2;
-                sommearticle2 = Integer.parseInt(somme_article2);
-                nbrarticle2 = Integer.parseInt(nbr_article2);
+
+
+//                String designation_article2 ;
+//                String designationarticle2 ;
+
+//                String somme_article2 ;
+//                String nbr_article2 ;
+
+//                if (binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreeraccarticle2somme.getText().toString().trim().equals("0") ||
+//                        binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().equals("0")){
+//                    designation_article2 = "";
+//                    somme_article2 = "0";
+//                    nbr_article2 = "0";
+//                }else if (binding.edittxtcreeraccarticle2.getText().toString().trim().isEmpty()){
+//                    designation_article2 = binding.edittxtcreeraccarticle2.getText().toString().trim();
+//                    somme_article2 = "0";
+//                    nbr_article2 = "0";
+//                }else {
+//                    designation_article2 = binding.edittxtcreeraccarticle2.getText().toString().trim();
+//                    somme_article2 = binding.edittxtcreeraccarticle2somme.getText().toString().trim();
+//                    nbr_article2 = binding.edittxtcreeraccNbrarticle2.getText().toString().trim();
+//                }
+//                designationarticle2 = designation_article2;
+//                sommearticle2 = Integer.parseInt(somme_article2);
+//                nbrarticle2 = Integer.parseInt(nbr_article2);
 
                 long dateouverture = date_ouverture.getTime();
                 String codeclient = binding.txtcreeracccodeclt.getText().toString();
@@ -149,8 +159,9 @@ public class  AccountFragment extends Fragment {
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 = new Articles(designationarticle2, sommearticle2,nbrarticle2);
 
-                int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
-                if (Integer.parseInt(versement) < sommecredit){
+
+                int sommeaccount  = c_article1.getSomme() + c_article2.getSomme();
+                if (Integer.parseInt(versement) < sommeaccount){
 
                     if (ActivityCompat.checkSelfPermission(requireContext(),
                             android.Manifest.permission.SEND_SMS) !=

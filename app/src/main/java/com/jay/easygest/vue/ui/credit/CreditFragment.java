@@ -88,6 +88,10 @@ public class CreditFragment extends Fragment {
             String article1somme = binding.edittxtcreerarticle1somme.getText().toString().trim();
             String article1qte = binding.edittxtcreerNbrarticle1.getText().toString().trim();
 
+            String designationarticle2 = binding.edittxtcreerarticle2.getText().toString().trim();
+            String article2somme = binding.edittxtcreerarticle2somme.getText().toString().trim();
+            String article2qte = binding.edittxtcreerNbrarticle2.getText().toString().trim();
+
             String telephone =  binding.edittxtcreertelephone.getText().toString().trim();
             String versement = binding.edittxtcreerversement.getText().toString().trim();
             String date = binding.editTextDate.getText().toString().trim();
@@ -113,31 +117,12 @@ public class CreditFragment extends Fragment {
 
                 int sommearticle1 =Integer.parseInt(article1somme);
                 int nbrarticle1 = Integer.parseInt(article1qte);
-
-                String designation_article2 ;
-                String designationarticle2 ;
-                int sommearticle2 ;
-                int nbrarticle2 ;
-                String somme_article2 ;
-                String nbr_article2 ;
-
-                if (binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreerarticle2somme.getText().toString().trim().equals("0") ||
-                        binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreerNbrarticle2.getText().toString().trim().equals("0")){
-                    designation_article2 = "";
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else if (binding.edittxtcreerarticle2.getText().toString().trim().isEmpty()){
-                    designation_article2 = binding.edittxtcreerarticle2.getText().toString().trim();
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else {
-                    designation_article2 = binding.edittxtcreerarticle2.getText().toString().trim();
-                    somme_article2 = binding.edittxtcreerarticle2somme.getText().toString().trim();
-                    nbr_article2 = binding.edittxtcreerNbrarticle2.getText().toString().trim();
+                int sommearticle2 = 0 ;
+                int nbrarticle2 = 0 ;
+                if (!designationarticle2.isEmpty()){
+                    sommearticle2 =Integer.parseInt(article2somme);
+                    nbrarticle2 = Integer.parseInt(article2qte);
                 }
-                designationarticle2 = designation_article2;
-                sommearticle2 = Integer.parseInt(somme_article2);
-                nbrarticle2 = Integer.parseInt(nbr_article2);
 
                 long dateouverture = date_ouverture.getTime();
                 String codeclient = binding.txtcreercodeclt.getText().toString();
@@ -146,50 +131,50 @@ public class CreditFragment extends Fragment {
                 Articles c_article2 = new Articles(designationarticle2, sommearticle2,nbrarticle2);
 
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
-               if (Integer.parseInt(versement) < sommecredit){
+                if (Integer.parseInt(versement) < sommecredit){
 
-                   if (ActivityCompat.checkSelfPermission(requireContext(),
-                           android.Manifest.permission.SEND_SMS) !=
-                           PackageManager.PERMISSION_GRANTED) {
-                       ActivityCompat.requestPermissions(requireActivity(),
-                               new String[]{android.Manifest.permission.SEND_SMS},
-                               MY_PERMISSIONS_REQUEST_SEND_SMS);
-                       binding.btncreercredit.setEnabled(true);
-                   } else {
+                    if (ActivityCompat.checkSelfPermission(requireContext(),
+                            android.Manifest.permission.SEND_SMS) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(requireActivity(),
+                                new String[]{android.Manifest.permission.SEND_SMS},
+                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                        binding.btncreercredit.setEnabled(true);
+                    } else {
 
-                       CreditModel creditModel =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
-                       if (creditModel != null) {
-                           ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
-                           creditcontrolleur.setRecapTresteClient(client);
-                           creditcontrolleur.setRecapTcreditClient(client);
-                           clientViewModel.getClient().setValue(client);
+                        CreditModel creditModel =  this.creditcontrolleur.creerCredit(codeclient, nomclient,prenomsclient,telephone, c_article1, c_article2, versement, dateouverture);
+                        if (creditModel != null) {
+                            ClientModel client = clientcontrolleur.recupererClient(creditModel.getClientid());
+                            creditcontrolleur.setRecapTresteClient(client);
+                            creditcontrolleur.setRecapTcreditClient(client);
+                            clientViewModel.getClient().setValue(client);
 
-                           int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
-                           int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
+                            int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+                            int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
 //                           String destinationAdress = "+225"+client.getTelephone();
-                       String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+                            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
-                           String messageBody = appKessModel.getOwner() +"\n"+"\n"
-                                   +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"
-                                   +"votre credit est de "+creditModel.getSommecredit()+" FCFA"+"\n"
-                                   +"pris le "+date+"\n"
-                                   +"reste à payer : "+total_reste_client+"\n"
-                                   +"votre code "+client.getCodeclient();
-                           SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                           smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
-                           smsSender.sentReiceiver(smsnoSentModel);
-                       }else {
-                           Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();
-                           binding.btncreercredit.setEnabled(true);
-                       }
+                            String messageBody = appKessModel.getOwner() +"\n"+"\n"
+                                    +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"
+                                    +"votre credit est de "+creditModel.getSommecredit()+" FCFA"+"\n"
+                                    +"pris le "+date+"\n"
+                                    +"reste à payer : "+total_reste_client+"\n"
+                                    +"votre code "+client.getCodeclient();
+                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
+                            smsSender.sentReiceiver(smsnoSentModel);
+                        }else {
+                            Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();
+                            binding.btncreercredit.setEnabled(true);
+                        }
 
-                   }
+                    }
 
-               }else {
-                   Toast.makeText(getContext(), "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();
-                   binding.btncreercredit.setEnabled(true);
-               }
+                }else {
+                    Toast.makeText(getContext(), "versement superieur ou egal au credit", Toast.LENGTH_SHORT).show();
+                    binding.btncreercredit.setEnabled(true);
+                }
 
             }
         });

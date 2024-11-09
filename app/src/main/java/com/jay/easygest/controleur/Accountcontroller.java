@@ -2,6 +2,8 @@ package com.jay.easygest.controleur;
 
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
+
+import com.google.gson.Gson;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.Articles;
 import com.jay.easygest.model.ClientModel;
@@ -85,8 +87,11 @@ public class Accountcontroller {
      */
     public AccountModel creerAccount(String codeclt, String nomclient, String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long dateaccount){
 
-        String article1 = new Genson().serialize(c_article1);
-        String article2 = new Genson().serialize(c_article2);
+//        String article1 = new Genson().serialize(c_article1);
+//        String article2 = new Genson().serialize(c_article2);
+
+        String article1 = new Gson().toJson(c_article1);
+        String article2 = new Gson().toJson(c_article2);
 
         int sommeaccoount = c_article1.getSomme() + c_article2.getSomme();
         int reste = sommeaccoount - Integer.parseInt(versement);

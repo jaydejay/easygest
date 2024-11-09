@@ -11,6 +11,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherAccountBinding;
@@ -28,6 +31,7 @@ import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.owlike.genson.Genson;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Objects;
 
@@ -43,6 +47,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
     private ClientViewModel clientViewModel;
     private  AccountViewModel accountViewModel;
     private  AccountModel account;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
         account = accountViewModel.getAccount().getValue();
+        gson = new Gson();
 
         afficheraccount();
         redirectToModifierAccount();
@@ -71,17 +77,22 @@ public class AfficherAccountActivity extends AppCompatActivity {
     }
 
     public void afficheraccount(){
-
-        Articles c_article1 = new Genson().deserialize(account.getArticle1(), Articles.class);
-        Articles c_article2 = new Genson().deserialize(account.getArticle2(), Articles.class);
+        Type type = new TypeToken<Articles>(){}.getType();
+        Articles c_article1 = gson.fromJson(account.getArticle1(),type);
+        Articles c_article2 = gson.fromJson(account.getArticle2(),type);
         String article1 = "ARTICLE 1  "+c_article1.getDesignation() +"\n "+" quantite : "+c_article1.getNbrarticle()+"\n "+"somme : "+c_article1.getSomme();
         String article2 = "ARTICLE 2  "+c_article2.getDesignation() +"\n "+" quantite : "+c_article2.getNbrarticle()+"\n "+"somme : "+c_article2.getSomme();
         String account1 = "ACCOUNT: "+account.getSommeaccount();
         String versement ="VERSEMENT : "+account.getVersement();
         String reste ="RESTE : "+account.getReste();
+
+        if (c_article2.getDesignation().length() == 0){
+            binding.cardafficheraccountarticle2.setVisibility(View.GONE);
+        }
         binding.cardafficheraccounttitle.setText(account.toString3());
         binding.cardafficheraccountarticle1.setText(article1);
         binding.cardafficheraccountarticle2 .setText(article2);
+
         binding.cardafficheraccountaccount.setText(account1);
         binding.cardafficheraccountreste.setText(reste);
         binding.cardafficheraccountverement.setText(versement);
@@ -91,7 +102,6 @@ public class AfficherAccountActivity extends AppCompatActivity {
     public void redirectListeCredits(){
 
         binding.recapaccListecredits.setOnClickListener(v -> {
-
             Intent intent = new Intent(AfficherAccountActivity.this, GestionActivity.class);
             startActivity(intent);
 
@@ -108,10 +118,6 @@ public class AfficherAccountActivity extends AppCompatActivity {
             startActivity(intent);
 
         });
-
-
-
-
     }
 
     public void desactiverButtum(){

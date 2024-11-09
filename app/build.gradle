@@ -43,7 +43,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.7.7'
     implementation 'androidx.navigation:navigation-ui:2.7.7'
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation 'com.owlike:genson:1.6'
+    implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.lambdapioneer.argon2kt:argon2kt:1.6.0'

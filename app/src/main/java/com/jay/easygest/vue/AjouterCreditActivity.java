@@ -76,6 +76,11 @@ public class AjouterCreditActivity extends AppCompatActivity {
             String designationarticle1 = binding.ajoutcredarticle1.getText().toString().trim();
             String article1somme = binding.ajoutcredarticle1somme.getText().toString().trim();
             String article1qte = binding.ajoutcredNbrarticle1.getText().toString().trim();
+
+            String designationarticle2 = binding.ajoutcredarticle2.getText().toString().trim();
+            String article2somme = binding.ajoutcredarticle2somme.getText().toString().trim();
+            String article2qte = binding.ajoutcredNbrarticle2.getText().toString().trim();
+
             String date = binding.ajoutcredDate.getText().toString().trim();
             String versement = binding.ajoutcredversement.getText().toString().trim();
             Date date_account = MesOutils.convertStringToDate(date);
@@ -97,30 +102,13 @@ public class AjouterCreditActivity extends AppCompatActivity {
                 int sommearticle1 =Integer.parseInt(article1somme) ;
                 int nbrarticle1 = Integer.parseInt(article1qte);
 
-                String designation_article2 ;
-                String designationarticle2 ;
-                int sommearticle2 ;
-                int nbrarticle2 ;
-                String somme_article2 ;
-                String nbr_article2 ;
-
-                if (binding.ajoutcredarticle2.getText().toString().trim().length() != 0 && binding.ajoutcredarticle2somme.getText().toString().trim().equals("0") ||
-                        binding.ajoutcredarticle2.getText().toString().trim().length() != 0 & binding.ajoutcredNbrarticle2.getText().toString().trim().equals("0")){
-                    designation_article2 = "";
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else if (binding.ajoutcredarticle2.getText().toString().trim().isEmpty()){
-                    designation_article2 = binding.ajoutcredarticle2.getText().toString().trim();
-                    somme_article2 = "0";
-                    nbr_article2 = "0";
-                }else {
-                    designation_article2 = binding.ajoutcredarticle2.getText().toString().trim();
-                    somme_article2 = binding.ajoutcredarticle2somme.getText().toString().trim();
-                    nbr_article2 = binding.ajoutcredNbrarticle2.getText().toString().trim();
+                int sommearticle2 = 0 ;
+                int nbrarticle2 = 0 ;
+                if (!designationarticle2.isEmpty()){
+                    sommearticle2 =Integer.parseInt(article2somme);
+                    nbrarticle2 = Integer.parseInt(article2qte);
                 }
-                designationarticle2 = designation_article2;
-                sommearticle2 = Integer.parseInt(somme_article2);
-                nbrarticle2 = Integer.parseInt(nbr_article2);
+
                 long dateaccount = date_account.getTime();
 
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
