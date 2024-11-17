@@ -62,8 +62,8 @@ public class SmsreSender  {
                     for ( SmsnoSentModel sms : smss) {
 //                        smsnoSentModel = sms;
                         ClientModel client = sms.getClient();
-//            String destinationAdress = client.getTelephone();
-                        String destinationAdress = "5556";
+            String destinationAdress = client.getTelephone();
+//                        String destinationAdress = "5556";
 
 //                        String messageBody = expediteurName +"\n"+"\n"
 //                                + client.getNom() + " "+client.getPrenoms() +"\n"
@@ -77,7 +77,7 @@ public class SmsreSender  {
 
                 } catch (Exception e) {
 //                    rslt = false;
-                    Log.d("smsresender", "je suis das l'exeception ");
+
                 }
 
                return smss ;

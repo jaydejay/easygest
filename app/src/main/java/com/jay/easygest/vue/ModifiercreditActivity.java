@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifiercreditBinding;
@@ -26,8 +28,8 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
-import com.owlike.genson.Genson;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Objects;
 
@@ -68,8 +70,9 @@ public class ModifiercreditActivity extends AppCompatActivity {
     }
 
     public void afficherCredit(){
-        Articles article1 = new Genson().deserialize(credit.getArticle1(), Articles.class);
-        Articles article2 = new Genson().deserialize(credit.getArticle2(), Articles.class);
+        Type type = new TypeToken<Articles>(){}.getType();
+        Articles article1 = new Gson().fromJson(credit.getArticle1(), Articles.class);
+        Articles article2 = new Gson().fromJson(credit.getArticle2(), Articles.class);
         binding.modifcredrnom.setText(client.getNom());
         binding.modifcredprenoms.setText(client.getPrenoms());
         binding.modifcredcodeclt.setText(client.getCodeclient());
@@ -160,8 +163,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
 
                     int reste = sommecredit - versement;
 
-                    String article1 = new Genson().serialize(c_article1);
-                    String article2 = new Genson().serialize(c_article2);
+                    String article1 = new Gson().toJson(c_article1);
+                    String article2 = new Gson().toJson(c_article2);
 
                     CreditModel nouveau_credit = new CreditModel(credit.getId(),client.getId(),article1,article2,sommecredit,versement,reste,datecredit,credit.getNumerocredit());
                     int ancienne_somme_credit = credit.getSommecredit();

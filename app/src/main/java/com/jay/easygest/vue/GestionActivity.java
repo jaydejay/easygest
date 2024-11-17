@@ -138,6 +138,7 @@ public class GestionActivity extends AppCompatActivity {
 
             Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
             UserModel user = usercontrolleur.recupProprietaire();
+
             String setting_pass = sharedPreferences.getString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,user.getPassword());
             View view = LayoutInflater.from(GestionActivity.this).inflate(R.layout.layout_settings,null);
             settingpassw = view.findViewById(R.id.settings_passw);
@@ -149,9 +150,12 @@ public class GestionActivity extends AppCompatActivity {
             builder.setPositiveButton("oui", (dialog, which) -> {
 
                 if (passwordHascher.verifyHashingPass(settingpassw.getText().toString().trim(),setting_pass)){
+
                     Intent intent = new Intent(this, SettingsActivity.class);
                     intent.putExtra("mdp",settingpassw.getText().toString().trim());
                     startActivity(intent);
+
+
                 }
 
             });

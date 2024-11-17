@@ -16,7 +16,6 @@ import com.jay.easygest.outils.AccessLocalCredit;
 import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersement;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.owlike.genson.Genson;
 
 import java.util.ArrayList;
 

@@ -11,7 +11,6 @@ import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.AccessLocalAccount;
 import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersementacc;
-import com.owlike.genson.Genson;
 
 import java.util.ArrayList;
 
@@ -118,8 +117,11 @@ public class Accountcontroller {
      */
     public boolean ajouterAccount( ClientModel client,Articles c_article1, Articles c_article2, String versement, long dateaccount) {
 
-        String article1 = new Genson().serialize(c_article1);
-        String article2 = new Genson().serialize(c_article2);
+//        String article1 = new Genson().serialize(c_article1);
+//        String article2 = new Genson().serialize(c_article2);
+
+        String article1 = new Gson().toJson(c_article1);
+        String article2 = new Gson().toJson(c_article2);
 
         int sommeaccount = c_article1.getSomme() + c_article2.getSomme();
         int reste = sommeaccount - Integer.parseInt(versement);

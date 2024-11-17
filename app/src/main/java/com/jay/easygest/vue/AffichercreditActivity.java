@@ -30,7 +30,6 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
-import com.owlike.genson.Genson;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -52,7 +51,6 @@ public class AffichercreditActivity extends AppCompatActivity {
     private SmsSender smsSender;
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
-    private Genson genson;
     private Gson gson;
 
     @Override
@@ -66,18 +64,8 @@ public class AffichercreditActivity extends AppCompatActivity {
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        genson = new Genson();
         gson = new Gson();
-
         credit = creditViewModel.getCredit().getValue();
-        Articles article1 = genson.deserialize(credit.getArticle1(), Articles.class);
-
-        Type type = new TypeToken<Articles>(){}.getType();
-        Articles gson_article1 = gson.fromJson(credit.getArticle1(),type);
-
-        Log.i("affichercredit", "onCreate gson: "+gson_article1);
-        Log.i("affichercredit", "onCreate gson: "+gson_article1.getDesignation());
-        Log.i("affichercredit", "onCreate genson: "+article1);
         creditcontrolleur.listecredits();
         appKessModel = accessLocalAppKes.getAppkes();
 

@@ -29,7 +29,6 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.owlike.genson.Genson;
 
 import java.lang.reflect.Type;
 import java.util.Date;

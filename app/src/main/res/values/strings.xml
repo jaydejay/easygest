@@ -77,8 +77,8 @@
     <string name="nombre_dix">10</string>
     <string name="modif_">modif</string>
     <string name="menu_import_export">import/export</string>
-    <string name="exporter">exporter</string>
-    <string name="importer">importer</string>
+    <string name="exporter">sauvegarder</string>
+    <string name="importer">restorer</string>
     <string name="parametre">parametres</string>
     <string name="appkey">cle du produit</string>
     <string name="app_owner">proprietaire</string>
@@ -183,6 +183,11 @@
     <string name="emulateur_telephone_1">5554</string>
     <string name="emulateur_telephone_2">555</string>
     <string name="lepassword">le mot de passe</string>
+    <string name="save_amovible">savegarde sur amovible</string>
+    <string name="save_drive">savegarde sur Drive</string>
+    <string name="deconnecter_restore">deconnecter l\'application</string>
+    <string name="relancer_restore">relancer l\'application</string>
+    <string name="restore_premier_pas">restore premier pas</string>
 
 
 </resources>

@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierAccountBinding;
@@ -26,8 +28,8 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.owlike.genson.Genson;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Objects;
 
@@ -66,8 +68,9 @@ public class ModifierAccountActivity extends AppCompatActivity {
     }
 
     public void afficherAccount(){
-        Articles article1 = new Genson().deserialize(account.getArticle1(), Articles.class);
-        Articles article2 = new Genson().deserialize(account.getArticle2(), Articles.class);
+        Type type = new TypeToken<Articles>(){}.getType();
+        Articles article1 = new Gson().fromJson(account.getArticle1(), Articles.class);
+        Articles article2 = new Gson().fromJson(account.getArticle2(), Articles.class);
         binding.modifaccrnom.setText(client.getNom());
         binding.modifaccprenoms.setText(client.getPrenoms());
         binding.modifacccodeclt.setText(client.getCodeclient());
@@ -155,8 +158,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
                         versement = sommeaccount;
                     }
                     int reste = sommeaccount - versement;
-                    String article1 = new Genson().serialize(c_article1);
-                    String article2 = new Genson().serialize(c_article2);
+                    String article1 = new Gson().toJson(c_article1);
+                    String article2 = new Gson().toJson(c_article2);
 
                     AccountModel nouveau_account = new AccountModel(account.getId(),client.getId(),article1,article2,sommeaccount,versement,reste,dateaccount,account.getNumeroaccount());
                     int ancienne_somme_account = account.getSommeaccount();

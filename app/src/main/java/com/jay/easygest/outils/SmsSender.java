@@ -91,6 +91,7 @@ public class SmsSender {
 
         registerReceiver(context, smsSentReceiver, new IntentFilter(SMS_SENT),RECEIVER_NOT_EXPORTED);
 
+
     }
 
 //    public void deliveredReceiver(){
@@ -115,6 +116,8 @@ public class SmsSender {
 //        registerReceiver(context, smsDeliveredReceiver, new IntentFilter(SMS_DELIVERED),RECEIVER_NOT_EXPORTED);
 //
 //    }
+
+
 
 
 

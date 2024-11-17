@@ -59,4 +59,9 @@
         android:name="com.jay.easygest.vue.ui.versement.VersementFragment"
         android:label="@string/menu_versement"
         tools:layout="@layout/fragment_versement" />
+    <fragment
+        android:id="@+id/nav_import_export"
+        android:name="com.jay.easygest.vue.ui.importexport.ImportExportFragment"
+        android:label="@string/menu_import_export"
+        tools:layout="@layout/fragment_import_export" />
 </navigation>

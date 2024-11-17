@@ -14,4 +14,5 @@ public abstract class VariablesStatique {
 
     public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     public static final String MY_SALT = "h4tTC5iHP75EdcLf";
+    public static final String DATABASE_NAME = "gestioncredit.db";
 }
