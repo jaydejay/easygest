@@ -5,7 +5,6 @@ import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_S
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,6 +29,7 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
+import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -51,6 +51,7 @@ public class AffichercreditActivity extends AppCompatActivity {
     private SmsSender smsSender;
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
+    private SmsSenderViewModel smsSenderViewModel;
     private Gson gson;
 
     @Override
@@ -59,11 +60,12 @@ public class AffichercreditActivity extends AppCompatActivity {
         sessionManagement = new SessionManagement(this);
         binding = ActivityAffichercreditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         accessLocalAppKes = new AccessLocalAppKes(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        smsSenderViewModel = new ViewModelProvider(this).get(SmsSenderViewModel.class);
         gson = new Gson();
         credit = creditViewModel.getCredit().getValue();
         creditcontrolleur.listecredits();
@@ -186,9 +188,8 @@ public class AffichercreditActivity extends AppCompatActivity {
                                     +"reste a payer : "+total_reste_client;
 
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,credit.getId() );
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);
-
 
                         }else{
                             Intent intent = new Intent(AffichercreditActivity.this, GestionActivity.class);

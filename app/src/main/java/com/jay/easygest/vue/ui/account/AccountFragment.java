@@ -2,11 +2,9 @@ package com.jay.easygest.vue.ui.account;
 
 import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +28,6 @@ import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
-import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
@@ -63,7 +60,7 @@ public class  AccountFragment extends Fragment {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
         appKessModel = accessLocalAppKes.getAppkes();
-        smsSender = new SmsSender(getContext(),getActivity());
+        smsSender = new SmsSender(getContext(), getActivity());
         initFragment();
         creerAccount();
         return binding.getRoot();
@@ -127,38 +124,11 @@ public class  AccountFragment extends Fragment {
                     nbrarticle2 = Integer.parseInt(article2qte);
                 }
 
-
-//                String designation_article2 ;
-//                String designationarticle2 ;
-
-//                String somme_article2 ;
-//                String nbr_article2 ;
-
-//                if (binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreeraccarticle2somme.getText().toString().trim().equals("0") ||
-//                        binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().equals("0")){
-//                    designation_article2 = "";
-//                    somme_article2 = "0";
-//                    nbr_article2 = "0";
-//                }else if (binding.edittxtcreeraccarticle2.getText().toString().trim().isEmpty()){
-//                    designation_article2 = binding.edittxtcreeraccarticle2.getText().toString().trim();
-//                    somme_article2 = "0";
-//                    nbr_article2 = "0";
-//                }else {
-//                    designation_article2 = binding.edittxtcreeraccarticle2.getText().toString().trim();
-//                    somme_article2 = binding.edittxtcreeraccarticle2somme.getText().toString().trim();
-//                    nbr_article2 = binding.edittxtcreeraccNbrarticle2.getText().toString().trim();
-//                }
-//                designationarticle2 = designation_article2;
-//                sommearticle2 = Integer.parseInt(somme_article2);
-//                nbrarticle2 = Integer.parseInt(nbr_article2);
-
                 long dateouverture = date_ouverture.getTime();
                 String codeclient = binding.txtcreeracccodeclt.getText().toString();
 
-
                 Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
                 Articles c_article2 = new Articles(designationarticle2, sommearticle2,nbrarticle2);
-
 
                 int sommeaccount  = c_article1.getSomme() + c_article2.getSomme();
                 if (Integer.parseInt(versement) < sommeaccount){
@@ -183,7 +153,7 @@ public class  AccountFragment extends Fragment {
                             accountViewModel.getAccount().setValue(accountModel);
                             accountcontroller.setRecapTresteClient(clientModel);
                             accountcontroller.setRecapTaccountClient(clientModel);
-                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
+//                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
                             int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
                             String destinationAdress = "+225"+clientModel.getTelephone();
@@ -195,10 +165,10 @@ public class  AccountFragment extends Fragment {
                                     +"pris le "+date+"\n"
                                     +"reste à payer : "+total_reste_client+"\n"
                                     +"votre code "+clientModel.getCodeclient();
-                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,accountModel.getId() );
-                            smsSender.sentReiceiver(smsnoSentModel);
 
+                            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
+                            smsSender.sentReiceiver(smsnoSentModel);
                         }else {
                             Toast.makeText(getContext(), "un probleme est survenu : account non enregistrer", Toast.LENGTH_SHORT).show();
                             binding.btncreeraccount.setEnabled(true);

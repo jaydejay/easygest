@@ -1,12 +1,8 @@
 package com.jay.easygest.vue.ui.versement;
 
-import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +13,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.jay.easygest.R;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.FragmentVersementBinding;
@@ -28,12 +23,11 @@ import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
-import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
+import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class VersementFragment extends Fragment {
@@ -47,20 +41,21 @@ public class VersementFragment extends Fragment {
     private ClientViewModel clientViewModel;
     private CreditViewModel creditViewModel;
     private ClientModel client;
-//    private Integer total_reste_credit;
+    private SmsSenderViewModel smsSenderViewModel;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         sessionManagement = new SessionManagement(requireContext());
-         smsSender = new SmsSender(getContext(),getActivity());
+         smsSender = new SmsSender(getContext(), getActivity());
         binding = FragmentVersementBinding.inflate(inflater, container, false);
         this.versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(getContext());
         Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
 
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+
         client = clientViewModel.getClient().getValue();
         creditcontrolleur.setRecapTcreditClient(client);
 
@@ -116,8 +111,8 @@ public class VersementFragment extends Fragment {
 
                                             int total_reste_credit = creditViewModel.getTotalrestesclient().getValue();
 
-//                                        String destinationAdress = "+225"+client.getTelephone();
-                                            String destinationAdress = "5556";
+                                        String destinationAdress = "+225"+client.getTelephone();
+//                                            String destinationAdress = "5556";
                                             String nomDestinataire = client.getNom();
                                             String prenomsDestinataire = client.getPrenoms();
 
@@ -128,7 +123,7 @@ public class VersementFragment extends Fragment {
                                                     +"reste à payer : "+total_reste_credit ;
 
                                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress, client.getId() );
+                                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                                             smsSender.sentReiceiver(smsnoSentModel);
 
                                         } else {

@@ -1,17 +1,14 @@
 package com.jay.easygest.vue.ui.credit;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,12 +26,10 @@ import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
-import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.Date;
-import java.util.Objects;
 
 
 public class CreditFragment extends Fragment {
@@ -51,13 +46,12 @@ public class CreditFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         sessionManagement = new SessionManagement(requireContext());
         binding = FragmentCreditBinding.inflate(inflater, container, false);
         this.creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        smsSender = new SmsSender(getContext(),getActivity());
+        smsSender = new SmsSender(getContext(), getActivity());
         accessLocalAppKes = new AccessLocalAppKes(getContext());
         appKessModel = accessLocalAppKes.getAppkes();
 
@@ -162,7 +156,7 @@ public class CreditFragment extends Fragment {
                                     +"reste à payer : "+total_reste_client+"\n"
                                     +"votre code "+client.getCodeclient();
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);
                         }else {
                             Toast.makeText(getContext(), "un probleme est survenu : crédit non enregistrer", Toast.LENGTH_SHORT).show();
@@ -180,11 +174,6 @@ public class CreditFragment extends Fragment {
         });
     }
 
-    public void onStart() {
-        super.onStart();
-    }
-
-
 
     @Override
     public void onResume() {
@@ -198,3 +187,4 @@ public class CreditFragment extends Fragment {
 
 
 }
+

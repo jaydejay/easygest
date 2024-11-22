@@ -22,6 +22,7 @@ public class AccessLocalSmsSender {
     public static final String ISDEFERE = "isdefere";
     public static final String DATEOPERATION = "dateoperation";
     public static final String MESSAGE = "message";
+    public static final String SMSID = "smsid";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase db;
     private final Context context;
@@ -40,6 +41,7 @@ public class AccessLocalSmsSender {
         ContentValues cv = new ContentValues();
         cv.put(CLIENTID,smsnoSentModel.getClientid());
         cv.put(MESSAGE,smsnoSentModel.getMessage());
+        cv.put(SMSID,smsnoSentModel.getSmsid());
         db.insert(SMSFAILLED,null,cv);
         success = true;
         }catch (Exception e){
@@ -58,7 +60,7 @@ public class AccessLocalSmsSender {
             cursor.moveToFirst();
             if (!cursor.isAfterLast()){
                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-               smsnoSentModel = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2) );
+               smsnoSentModel = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2), cursor.getInt(3));
 
             }
             cursor.close();
@@ -97,7 +99,7 @@ public class AccessLocalSmsSender {
                 cursor.moveToFirst();
                 do {
                     ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-                    SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2) );
+                    SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2), cursor.getInt(3));
                     smsnoSentModels.add(sms);
                 }while(cursor.moveToNext());
                 cursor.close();

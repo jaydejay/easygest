@@ -23,7 +23,7 @@ public class ModifierClientActivity extends AppCompatActivity {
     private Clientcontrolleur clientcontrolleur;
     private Creditcontrolleur creditcontrolleur;
     private ClientViewModel clientViewModel;
-    private SmsSender smsSender;
+
     private ClientModel client;
 
 
@@ -32,7 +32,6 @@ public class ModifierClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this,this);
         binding = ActivityModifierClientBinding.inflate(getLayoutInflater());
         clientcontrolleur= Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);

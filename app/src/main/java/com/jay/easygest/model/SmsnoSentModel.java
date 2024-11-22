@@ -1,5 +1,10 @@
 package com.jay.easygest.model;
 
+import com.jay.easygest.outils.MesOutils;
+
+import java.util.Date;
+import java.util.UUID;
+
 public class SmsnoSentModel {
 
 
@@ -8,18 +13,21 @@ public class SmsnoSentModel {
     private Integer clientid;
     private ClientModel client;
     private String message;
+    private int smsid;
 
 
-    public SmsnoSentModel(Integer clientid,String message) {
+    public SmsnoSentModel(Integer clientid, String message) {
 
         this.clientid = clientid;
         this.message = message;
+        calculUuid();
     }
 
-    public SmsnoSentModel(Integer id,ClientModel client,String message) {
+    public SmsnoSentModel(Integer id, ClientModel client, String message, int smsid) {
         this.id = id;
         this.client = client;
         this.message = message;
+        this.smsid = smsid;
     }
 
     public Integer getId() {
@@ -38,11 +46,17 @@ public class SmsnoSentModel {
         return message;
     }
 
+    public int getSmsid() {
+        return smsid;
+    }
+
+    public void calculUuid(){
+
+        this.smsid = MesOutils.smsidnumbergenerator();
+    }
+
     @Override
     public String toString() {
-        return "SmsnoSentModel{" +
-                "id=" + id +
-                '\'' +
-                '}';
+        return ""+clientid;
     }
 }

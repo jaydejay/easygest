@@ -16,7 +16,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
-import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierVersementBinding;
@@ -29,7 +28,6 @@ import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
-import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
@@ -60,7 +58,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         accessLocalAppKes = new AccessLocalAppKes(this);
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
@@ -150,13 +148,12 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                             + client.getNom() + " "+client.getPrenoms() +"\n"
                                             +"vous avez modifier un versement pour votre credit"+"\n"
                                             +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                                            +"total account : "+total_credit_client+"\n"
+                                            +"total credit : "+total_credit_client+"\n"
                                             +"reste a payer : "+total_reste_client;
 
                                     SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versementsModel.getId() );
+                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                                     smsSender.sentReiceiver(smsnoSentModel);
-
 
                                 }else {
                                     Intent intent = new Intent(ModifierVersementActivity.this, AfficheversementActivity.class);
@@ -189,10 +186,9 @@ public class ModifierVersementActivity extends AppCompatActivity {
         super.onResume();
         if (!sessionManagement.getSession()){
             Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
-//        smsSender.sentReiceiver();
+
     }
 
     @Override

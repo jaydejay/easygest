@@ -12,13 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.SmsSendercontrolleur;
+import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityMainBinding;
-import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.UserModel;
-import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.outils.AccessLocalAppKes;
-import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsreSender;
 
@@ -34,17 +32,14 @@ public class MainActivity extends AppCompatActivity {
     private UserModel user;
     private SmsSendercontrolleur smsSendercontrolleur;
     private SmsreSender smsreSender;
-    private  AppKessModel appKessModel;
-    private PasswordHascher passwordHascher;
+//    private  AppKessModel appKessModel;
+//    private PasswordHascher passwordHascher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sessionManagement = new SessionManagement(this);
-        smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
-        this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-        passwordHascher = new PasswordHascher();
         boolean is_authenticated = sessionManagement.getSession();
         if (is_authenticated){
             Intent intent = new Intent(MainActivity.this, GestionActivity.class);
@@ -52,25 +47,22 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
+        this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+        smsreSender = new SmsreSender(this,this);
+        ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
+        if (sms_no_Sents.size()>0){smsreSender.sendingUnSentMsg(sms_no_Sents);}
+
         setContentView(binding.getRoot());
         init();
         authentification();
         redirectToAppActivation();
         redirectToInitMdp();
 
-        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
-        appKessModel = accessLocalAppKes.getAppkes();
-        smsreSender = new SmsreSender(this,this);
-        ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-        String expediteurName = appKessModel.getOwner();
-        if (sms_no_Sents.size()>0){smsreSender.sendingUnSentMsg(sms_no_Sents,expediteurName);}
-
     }
 
     private void init() {
-//        sampleJavaClass.usingArgon2KtFromJava("jaydejay","h4tTC5iHP75EdcLf");
         fillTxtVConnectionError();
         desactivatetxtCreation();
         desactiverbtnAuthInit();
@@ -143,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * affiche les donnees d'activation du produit
+     * affiche les donnees pour activer le produit
      */
     private void activerProduit() {
         String[] appcredentials = usercontrolleur.getAppCredentials();
@@ -173,33 +165,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * texte lors du blocage du compte
-     */
-    public void fillTxtVConnection(){
-        try {
-            user = usercontrolleur.recupProprietaire();
-            if (user != null){
-                String msg_texte= "connection";
-                if (user.getCompteur() >= 3){
-                     msg_texte = "débloquer votre compte"+"\n"
-                            +"vous êtes ici parce que"+"\n"
-                            + "vous avez fait 3 tentatives"+"\n"
-                            +"de fausse connection"+"\n"
-                            +"entrer l'username et le mot de passe administrateur"+"\n"
-                            +"pour debloquer votre compte utilisateur";
-                     binding.textVConnection.setTextColor(getResources().getColor(R.color.red));
-                    binding.textVConnection.setTextSize(12);
-                }
-
-                binding.textVConnection.setText(msg_texte);
-            }
-        }catch (Exception e){}
-
-    }
 
     /**
      * affichage du texte d'erreur
+     * apres 3 tentatives de connection
      */
     public void fillTxtVConnectionError(){
         try {
@@ -233,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * desavtive la creation de compte utilisateur
+     * le nbr d'utilisateur est limité a 3
      */
     private void desactivatetxtCreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
@@ -247,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
      * @param userModel l'utilisateur
      */
     private void desactiverbtnAuth(UserModel userModel){
-        Log.d("main", "desactiverbtnAuth: "+userModel);
         if (userModel != null){
             int cmpteur = incrementCompteur(userModel);
             if (cmpteur >= 3){
@@ -296,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     /**
-     * desactive le bouton authentification pour un utilisateur a l'initiation
+     * desactive le bouton authentification pour un utilisateur au demarrage
      */
     private void desactiverbtnAuthInit(){
         try {
@@ -315,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      *
      * @param userModel l'utilisateur qui se connecte
-     * @return le nbr de tentative de connexion
+     * @return le nbr de tentative de connection
      */
     private Integer incrementCompteur( UserModel userModel){
         int compteur = userModel.getCompteur() ;

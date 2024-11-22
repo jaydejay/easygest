@@ -5,7 +5,6 @@ import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_S
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,13 +53,12 @@ public class ModifierAccountActivity extends AppCompatActivity {
         binding = ActivityModifierAccountBinding.inflate(getLayoutInflater());
         accountViewModel= new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel= new ViewModelProvider(this).get(ClientViewModel.class);
-        client = clientViewModel.getClient().getValue();
         account = accountViewModel.getAccount().getValue();
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
         accessLocalAppKes = new AccessLocalAppKes(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         appKessModel = accessLocalAppKes.getAppkes();
         afficherAccount();
         modifierAccount();
@@ -189,7 +187,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
                                     +"reste a payer : "+total_reste_client;
 
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,account.getId() );
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);
 
 

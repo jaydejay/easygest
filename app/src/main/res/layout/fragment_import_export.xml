@@ -10,8 +10,9 @@
         android:id="@+id/layoutexport"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="50dp"
+        android:paddingStart="4dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="70dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,7 +24,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:gravity="fill_vertical"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"/>
 
         <TextView
@@ -34,7 +35,8 @@
             android:layout_marginBottom="10dp"
             android:text="@string/save_amovible"
             android:textColor="@color/link"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/export_drive"
@@ -44,14 +46,15 @@
             android:layout_marginBottom="10dp"
             android:text="@string/save_drive"
             android:textColor="@color/link"
-            android:textSize="13sp" />
+            android:textSize="14sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutimport"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/layoutexport"
@@ -75,7 +78,8 @@
             android:text="@string/restore_premier_pas"
             android:textColorHighlight="@color/bleue_brillant"
             android:textColor="@color/bleue_brillant"
-            android:textSize="13sp" />
+            android:textSize="14sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/import_deconnecter"
@@ -86,7 +90,8 @@
             android:text="@string/deconnecter_restore"
             android:textColorHighlight="@color/bleue_brillant"
             android:textColor="@color/bleue_brillant"
-            android:textSize="13sp" />
+            android:textSize="14sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/import_reconnecter"
@@ -97,7 +102,8 @@
             android:text="@string/relancer_restore"
             android:textColorHighlight="@color/bleue_brillant"
             android:textColor="@color/bleue_brillant"
-            android:textSize="13sp" />
+            android:textSize="14sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <LinearLayout
@@ -105,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
-        android:gravity="center_vertical"
+        android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/layoutexport"
         tools:layout_editor_absoluteX="0dp"
@@ -116,7 +122,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:backgroundTint="@color/teal_700"
             android:text="@string/exporter"
             android:textColor="@color/design_default_color_background"
@@ -126,7 +132,6 @@
             android:id="@+id/btnimport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
             android:text="@string/importer"
             android:textSize="12sp"
             android:backgroundTint="@color/teal_700"

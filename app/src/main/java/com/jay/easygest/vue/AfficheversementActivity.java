@@ -50,12 +50,13 @@ public class AfficheversementActivity extends AppCompatActivity {
     private int position_versement;
     private int nbr_versement;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManagement= new SessionManagement(this);
         accessLocalAppKes = new AccessLocalAppKes(this);
-        smsSender= new SmsSender(this,this);
+        smsSender= new SmsSender(this, this);
         binding = ActivityAfficheversementBinding.inflate(getLayoutInflater());
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur =Clientcontrolleur.getClientcontrolleurInstance(this);
@@ -156,8 +157,9 @@ public class AfficheversementActivity extends AppCompatActivity {
                                 +"reste a payer : "+total_reste_client;
 
                         SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versement.getId() );
+                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                         smsSender.sentReiceiver(smsnoSentModel);
+
 
                     }
                 }

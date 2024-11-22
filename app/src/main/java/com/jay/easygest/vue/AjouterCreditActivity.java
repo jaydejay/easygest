@@ -55,9 +55,10 @@ public class AjouterCreditActivity extends AppCompatActivity {
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         accessLocalAppKes = new AccessLocalAppKes(this);
          appKessModel = accessLocalAppKes.getAppkes();
+
         init();
         ajouterCredit();
         setContentView(binding.getRoot());
@@ -151,9 +152,8 @@ public class AjouterCreditActivity extends AppCompatActivity {
                                     +"reste à payer : "+total_reste_client;
 
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);
-
 
                         } else {
                             Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();

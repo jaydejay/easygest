@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,6 +70,7 @@ public class GestionActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private PasswordHascher passwordHascher;
+    private Usercontrolleur usercontrolleur ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class GestionActivity extends AppCompatActivity {
         binding = ActivityGestionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
@@ -90,13 +90,15 @@ public class GestionActivity extends AppCompatActivity {
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
+         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+
         accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
 
         passwordHascher = new PasswordHascher();
-
         sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
 
         try {
             ArrayList<ClientModel> listeClients = clientcontrolleur.listeClients();
@@ -136,7 +138,7 @@ public class GestionActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.action_settings) {
 
-            Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+
             UserModel user = usercontrolleur.recupProprietaire();
 
             String setting_pass = sharedPreferences.getString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,user.getPassword());
@@ -150,12 +152,19 @@ public class GestionActivity extends AppCompatActivity {
             builder.setPositiveButton("oui", (dialog, which) -> {
 
                 if (passwordHascher.verifyHashingPass(settingpassw.getText().toString().trim(),setting_pass)){
-
                     Intent intent = new Intent(this, SettingsActivity.class);
                     intent.putExtra("mdp",settingpassw.getText().toString().trim());
+                    UserModel user2 = new UserModel(user.getId(),user.getUsername(),user.getPassword(),user.getDateInscription(),user.getStatus(),true,0);
+                    usercontrolleur.modifierUser(user2);
+                    usercontrolleur.setUser(user2);
                     startActivity(intent);
-
-
+                }else {
+                    UserModel userModel = usercontrolleur.recupProprietaire();
+                    int compteur = incrementCompteur(userModel);
+                    if (compteur >= 3){
+                        sessionManagement.removeSession();
+                        finish();
+                    }
                 }
 
             });
@@ -173,6 +182,26 @@ public class GestionActivity extends AppCompatActivity {
             return true;
 
         } else { return super.onOptionsItemSelected(item);}
+    }
+
+    /**
+     *
+     * @param userModel l'utilisateur qui se connecte
+     * @return le nbr de tentative de connexion
+     */
+    private Integer incrementCompteur( UserModel userModel){
+        int compteur = userModel.getCompteur() ;
+        try {
+            compteur = compteur + 1;
+            UserModel user = new UserModel(userModel.getId(),userModel.getUsername(),userModel.getPassword(),userModel.getDateInscription(),userModel.getStatus(),userModel.isActif(),compteur);
+            Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+            usercontrolleur.modifierUser(user);
+            usercontrolleur.setUser(user);
+        }catch (Exception e){
+            //do nothing
+        }
+        return compteur;
+
     }
 
     @Override
@@ -317,8 +346,7 @@ public class GestionActivity extends AppCompatActivity {
                                 +"reste a payer : "+total_reste_client;
 
                         SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-
-                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,credit.getId() );
+                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid());
                         smsSender.sentReiceiver(smsnoSentModel);
 
                     }

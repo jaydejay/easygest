@@ -63,7 +63,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherclientBinding.inflate(getLayoutInflater());
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         accountcontrolleur = Accountcontroller.getAccountcontrolleurInstance(this);
@@ -74,7 +74,6 @@ public class AfficherclientActivity extends AppCompatActivity {
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-
         accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
         client = clientViewModel.getClient().getValue();
@@ -481,34 +480,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
 
-//    public void annullerCredit(CreditModel credit){
-//
-//        if (credit.getReste() > 0) {
-//
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setTitle("anuller un credit");
-//            builder.setMessage("êtes vous sûre de vouloir annuller le credit"+"\n"
-//                    +"tous les versements associés seront également supprimés"+"\n"
-//                    +"l'annullation d'un credit est soumise a une pénalité allant de 1000 F à 10%"
-//                    +"de la somme du credit");
-//
-//            builder.setPositiveButton("oui", (dialog, which) -> {
-//                creditcontrolleur.annullerCredit(credit);
-//                Intent intent = new Intent(AfficherclientActivity.this, GestionActivity.class);
-//                startActivity(intent);
-//            });
-//
-//            builder.setNegativeButton("non", (dialog, which) -> {
-//
-//            });
-//
-//            builder.create().show();
-//
-//        }else{
-//            Toast.makeText(this, "credit deja soldé", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
     public void annullerCredit(CreditModel credit){
         ClientModel client = credit.getClient();
 
@@ -531,8 +502,8 @@ public class AfficherclientActivity extends AppCompatActivity {
                     int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
                     int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
-                    //  String destinationAdress = "+225"+clientModel.getTelephone();
-                    String destinationAdress = "5556";
+                      String destinationAdress = "+225"+client.getTelephone();
+//                    String destinationAdress = "5556";
                     String messageBody = "EXPEDITEUR : "+appKessModel.getOwner() +"\n"+"\n"
                             + client.getNom() + " "+client.getPrenoms() +"\n"
                             +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
@@ -540,8 +511,6 @@ public class AfficherclientActivity extends AppCompatActivity {
                             +"total credit : "+total_credit_client+"\n"
                             +"reste a payer : "+total_reste_client+"\n";
 
-
-                    SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
                     if (ActivityCompat.checkSelfPermission(this,
                             android.Manifest.permission.SEND_SMS) !=
                             PackageManager.PERMISSION_GRANTED) {
@@ -549,8 +518,8 @@ public class AfficherclientActivity extends AppCompatActivity {
                                 new String[]{android.Manifest.permission.SEND_SMS},
                                 MY_PERMISSIONS_REQUEST_SEND_SMS);
                     } else {
-
-                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,credit.getId() );
+                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
+                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                         smsSender.sentReiceiver(smsnoSentModel);
                     }
 

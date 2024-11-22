@@ -2,12 +2,9 @@ package com.jay.easygest.vue.ui.versementacc;
 
 import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +25,10 @@ import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
-import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -74,10 +69,11 @@ public class AjouterVersementaccFragment extends Fragment {
         sessionManagement = new SessionManagement(getContext());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(getActivity());
 
-        smsSender = new SmsSender(getContext(),getActivity());
+        smsSender = new SmsSender(getContext(), getActivity());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+
     }
 
     @Override
@@ -150,7 +146,7 @@ public class AjouterVersementaccFragment extends Fragment {
                                             +"reste à payer : "+total_reste_account ;
 
                                     SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress, client.getId() );
+                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                                     smsSender.sentReiceiver(smsnoSentModel);
 
                                 } else {

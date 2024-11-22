@@ -56,7 +56,7 @@ public class AfficherversementaccActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         accessLocalAppKes = new AccessLocalAppKes(this);
         binding = ActivityAfficherversementaccBinding.inflate(getLayoutInflater());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
@@ -161,8 +161,9 @@ public class AfficherversementaccActivity extends AppCompatActivity {
                                         +"reste a payer : "+total_reste_client;
 
                                 SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                                smsSender.smsSendwithInnerClass(messageBody, destinationAdress,account.getId() );
+                                smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                                 smsSender.sentReiceiver(smsnoSentModel);
+
 
                             }
                         }

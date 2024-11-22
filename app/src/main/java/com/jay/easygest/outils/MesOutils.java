@@ -1,5 +1,9 @@
 package com.jay.easygest.outils;
 
+import androidx.lifecycle.ViewModelProvider;
+
+import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -72,6 +76,16 @@ public abstract  class MesOutils {
     }
 
 
+    public static int smsidnumbergenerator(){
+        Random random = new Random();
+        int chif1 = random.nextInt(10);
+        int chif2 = random.nextInt(10);
+        int chif3 = random.nextInt(10);
+        int chif4 = random.nextInt(10);
+        String numletter = chif1+""+chif2+""+chif3+""+chif4;
+        return Integer.parseInt(numletter);
+    }
+
     public static int apppnumbergenerator(){
         Random random = new Random();
         int chif1 = random.nextInt(10);
@@ -132,5 +146,6 @@ public abstract  class MesOutils {
         calendar.add(Calendar.MONTH,6);
         return convertStringToDate(datef.format(calendar.getTime())).getTime();
     }
+
 
 }

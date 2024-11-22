@@ -143,6 +143,7 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
             +"id Integer primary key,"
             +"clientid Integer ,"
             +"message Text not null,"
+            +"smsid Integer not null,"
             +"foreign key(clientid) references client(id) on delete cascade)";
 
 

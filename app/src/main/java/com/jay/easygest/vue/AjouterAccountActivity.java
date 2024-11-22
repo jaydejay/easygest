@@ -25,6 +25,7 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
+import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.util.Date;
 import java.util.Objects;
@@ -41,6 +42,7 @@ public class AjouterAccountActivity extends AppCompatActivity {
     private SmsSender smsSender;
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
+    private SmsSenderViewModel smsSenderViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,8 @@ public class AjouterAccountActivity extends AppCompatActivity {
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         client = clientViewModel.getClient().getValue();
         accessLocalAppKes = new AccessLocalAppKes(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
+        smsSenderViewModel = new ViewModelProvider(this).get(SmsSenderViewModel.class);
         init();
         ajouterAccount();
         setContentView(binding.getRoot());
@@ -149,9 +152,8 @@ public class AjouterAccountActivity extends AppCompatActivity {
                                     +"reste à payer : "+total_reste_client;
 
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,accountModel.getId() );
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);
-
 
                         } else {
                             Toast.makeText(this, "un probleme est survenu : ajout avortée", Toast.LENGTH_SHORT).show();

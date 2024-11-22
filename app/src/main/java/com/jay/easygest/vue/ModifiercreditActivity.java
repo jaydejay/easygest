@@ -5,7 +5,6 @@ import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_S
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +23,6 @@ import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
@@ -52,7 +50,6 @@ public class ModifiercreditActivity extends AppCompatActivity {
         binding = ActivityModifiercreditBinding.inflate(getLayoutInflater());
         creditViewModel= new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel= new ViewModelProvider(this).get(ClientViewModel.class);
-
         client = clientViewModel.getClient().getValue();
         credit = creditViewModel.getCredit().getValue();
 
@@ -60,7 +57,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
         accessLocalAppKes = new AccessLocalAppKes(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
+
         appKessModel = accessLocalAppKes.getAppkes();
         afficherCredit();
         modifierCredit();
@@ -194,9 +192,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
                                     +"reste à payer : "+total_reste_client;
 
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,creditModel.getId() );
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);
-
 
                         }else {
                             Intent intent = new Intent(ModifiercreditActivity.this, AffichercreditActivity.class);

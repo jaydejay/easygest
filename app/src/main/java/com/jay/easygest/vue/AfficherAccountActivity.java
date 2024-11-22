@@ -24,15 +24,14 @@ import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.Objects;
 
 public class AfficherAccountActivity extends AppCompatActivity {
 
@@ -46,6 +45,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
     private ClientViewModel clientViewModel;
     private  AccountViewModel accountViewModel;
     private  AccountModel account;
+
     private Gson gson;
 
     @Override
@@ -53,7 +53,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherAccountBinding.inflate(getLayoutInflater());
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
 
         accessLocalAppKes = new AccessLocalAppKes(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
@@ -61,8 +61,8 @@ public class AfficherAccountActivity extends AppCompatActivity {
 
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-
         account = accountViewModel.getAccount().getValue();
+
         gson = new Gson();
 
         afficheraccount();
@@ -180,9 +180,8 @@ public class AfficherAccountActivity extends AppCompatActivity {
                                     +"reste à payer : "+total_reste_client;
 
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,account.getId() );
+                            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);
-
                         }
                     }
                 });

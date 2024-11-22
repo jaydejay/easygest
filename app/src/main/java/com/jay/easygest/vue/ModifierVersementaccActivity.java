@@ -23,7 +23,6 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.SmsnoSentModel;
-import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
@@ -31,6 +30,7 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
+import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.util.Date;
 import java.util.Objects;
@@ -49,6 +49,7 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
     private AppKessModel appKessModel;
     private VersementsaccModel versement;
     private ClientModel client;
+    private SmsSenderViewModel smsSenderViewModel;
    EditText EDTcodeclient;
    EditText EDTsomme;
    EditText EDTdateaccount;
@@ -59,7 +60,7 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
         accessLocalAppKes = new AccessLocalAppKes(this);
         binding = ActivityModifierVersementaccBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -70,6 +71,7 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
 
          versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        smsSenderViewModel = new ViewModelProvider(this).get(SmsSenderViewModel.class);
 
         versement = versementaccViewModel.getMversementacc().getValue();
         client = Objects.requireNonNull(versement).getClient();
@@ -148,7 +150,7 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                                             +"reste a payer : "+total_reste_client;
 
                                     SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress,versement.getId() );
+                                    smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                                     smsSender.sentReiceiver(smsnoSentModel);
 
 

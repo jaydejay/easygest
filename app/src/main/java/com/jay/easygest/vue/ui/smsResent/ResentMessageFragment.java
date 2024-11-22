@@ -80,7 +80,7 @@ public class ResentMessageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentResentMessageBinding.inflate(getLayoutInflater());
-        smsSender = new SmsSender(getContext(),getActivity());
+        smsSender = new SmsSender(getContext(), getActivity());
         if (smss_to_send.size() > 0){ sendingUnSentMsg(smss_to_send);}else{ binding.txtvResentLoading.setText(getResources().getString(R.string.not_sms));}
 //        sendingUnSentMsg();
 //        if (smss_to_send.isEmpty()){

@@ -5,7 +5,6 @@ import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_S
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -65,29 +64,26 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
         sessionManagement = new SessionManagement(this);
         accessLocalAppKes = new AccessLocalAppKes(this);
-        smsSender = new SmsSender(this,this);
+        smsSender = new SmsSender(this, this);
 
         com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding binding = ActivityAfficherCreditsClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
-
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         ClientModel client = clientViewModel.getClient().getValue();
-
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
-
-         versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
+        versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
 
         int fragmentid =  getIntent().getIntExtra("fragmentid",R.id.af_client_liste_credits);
        String titre = getIntent().getStringExtra("titre");
-        assert client != null;
-        String identite_de_client = client.getNom()+" "+ client.getPrenoms()+" "+ client.getCodeclient();
-       binding.textViewCredClitVers.setText(identite_de_client);
 
+        if (client != null){
+            String identite_de_client = client.getNom()+" "+ client.getPrenoms()+" "+ client.getCodeclient();
+            binding.textViewCredClitVers.setText(identite_de_client);
+        }
 
        ActionBar actionBar =  getSupportActionBar();
         if (actionBar != null) {
@@ -163,7 +159,6 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
                     if (success){
                         ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                         clientViewModel.getClient().setValue(clientModel);
-
                         creditcontrolleur.setRecapTresteClient(clientModel);
                         creditcontrolleur.setRecapTcreditClient(clientModel);
 
@@ -181,9 +176,8 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
                                 +"reste a payer : "+total_reste_client;
 
                         SmsnoSentModel smsnoSentModel = new SmsnoSentModel(clientModel.getId(),messageBody);
-                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,credit.getId() );
+                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                         smsSender.sentReiceiver(smsnoSentModel);
-
 
                     }
                 }

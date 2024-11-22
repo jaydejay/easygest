@@ -28,7 +28,6 @@ import java.io.OutputStream;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ImportExportFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ImportExportFragment extends Fragment {
@@ -38,16 +37,6 @@ public class ImportExportFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @return A new instance of fragment ImportExportFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ImportExportFragment newInstance() {
-
-        return new ImportExportFragment();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,11 +138,11 @@ public class ImportExportFragment extends Fragment {
                     + "dans com.jay.easygest"+ "\n"
                     + "dans files"+ "\n"
                     + "dans documents"+ "\n"
-                    + "copier le fichier data "+ "\n"
+                    + "copier le fichier data"+ "\n"
                     + "ouvrez l'application Drive"+ "\n"
                     + "allez dans le dossier mydrive et coller"+ "\n"
-                    + "si vous ne connaissez pas Drive je vous invite "+ "\n"
-                    + "a vous familliarisez avec se outil de google "+ "\n");
+                    + "si vous ne connaissez pas Drive je vous invite"+ "\n"
+                    + "a vous familliarisez avec se outil de google"+ "\n");
 
             builder.setPositiveButton("ok", (dialog, which) -> {
 
@@ -244,7 +233,7 @@ public class ImportExportFragment extends Fragment {
    private void exportDB() {
 
         File path = this.requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        File file = new File(path, "data.db");
+        File file = new File(path, VariablesStatique.BACKUP_DATABASE_NAME);
 
         String currentDBPath = getDatabasePath();
         File currentDB = new File(currentDBPath);
@@ -295,7 +284,7 @@ public class ImportExportFragment extends Fragment {
     private void importDB() {
 
         File currentDBPath = this.requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        File currentDB = new File(currentDBPath, "data.db");
+        File currentDB = new File(currentDBPath, VariablesStatique.BACKUP_DATABASE_NAME);
 
         String path = getDatabasePath();
         File file = new File(path);
@@ -331,7 +320,6 @@ public class ImportExportFragment extends Fragment {
             }
 
         } catch (Exception e) {
-            Log.d("importexport", "importDB: "+e.getMessage());
             Toast.makeText(getContext(), "inserer une carte memoire ou fichier introuvable", Toast.LENGTH_SHORT).show();
         }
     }
