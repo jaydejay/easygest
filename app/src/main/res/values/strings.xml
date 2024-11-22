@@ -5,50 +5,34 @@
     <string name="valider">valider</string>
     <string name="creer_compte">creer un compte</string>
     <string name="title_activity_gestion">Gestion des Activités</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_versement">Versement</string>
     <string name="menu_credit">Credit</string>
     <string name="menu_listecredit">liste credits</string>
-    <string name="menu_listeversement">liste versement</string>
     <string name="menu_changeusername">changer utilisateur</string>
     <string name="menu_changepasword">changer mot de passe</string>
     <string name="repete_password">repeter password</string>
     <string name="creer">creer</string>
-    <string name="debloque_cmpt">debloquer votre compte</string>
-    <string name="enreg_credit">enregitrer</string>
     <string name="modif_credit">modifier credit</string>
-    <string name="modif">Modif</string>
-    <string name="consulter_credit">consulter</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="ajouter_credit">ajouter credit</string>
     <string name="article_1">article 1</string>
     <string name="versement">versement</string>
-    <string name="premier_versement">premier versement</string>
     <string name="article_2">article 2</string>
-    <string name="designation">designation</string>
-    <string name="somme_1">somme 1</string>
-    <string name="somme_2">somme 2</string>
-    <string name="article_3">article 3</string>
     <string name="date">date</string>
     <string name="enregistrer">enregistrer</string>
     <string name="nom_client">nom client</string>
     <string name="date_credit">date credit</string>
 
     <string name="reste">Reste</string>
-    <string name="suspenses_dot">…</string>
     <string name="total_credit">T credits</string>
     <string name="total_versement">T versements</string>
     <string name="total_reste">T restes</string>
     <string name="nouveau_username">nouveau username</string>
     <string name="nouveau_password">nouveau password</string>
     <string name="annuller">Annuller</string>
-    <string name="annul">annuller</string>
     <string name="clients">clients</string>
     <string name="nom">nom</string>
     <string name="prenoms">prenom</string>
@@ -57,25 +41,12 @@
     <string name="telephone">telephone</string>
     <string name="societe">societe</string>
     <string name="email">email</string>
-    <string name="adresse">adresse</string>
     <string name="residence">residence</string>
     <string name="cni">cni</string>
     <string name="permis">permis</string>
     <string name="code_client">code client</string>
     <string name="passport">passport</string>
-    <string name="supprime">Supp</string>
     <string name="nouveau_credit">nouveau credit</string>
-    <string name="nombre_un">1</string>
-    <string name="nombre_deux">2</string>
-    <string name="nombre_trois">3</string>
-    <string name="nombre_quatre">4</string>
-    <string name="nombre_cinq">5</string>
-    <string name="nombre_six">6</string>
-    <string name="nombre_sept">7</string>
-    <string name="nombre_huit">8</string>
-    <string name="nombre_neuf">9</string>
-    <string name="nombre_dix">10</string>
-    <string name="modif_">modif</string>
     <string name="menu_import_export">import/export</string>
     <string name="exporter">sauvegarder</string>
     <string name="importer">restorer</string>
@@ -83,15 +54,11 @@
     <string name="appkey">cle du produit</string>
     <string name="app_owner">proprietaire</string>
     <string name="menu_a_propos">a propos</string>
-    <string name="nom_structure">BEDA COMMUNICATION fournisseur de marchandises et d\'articles divers</string>
     <string name="nom_structurestandard">EasyGest gestionnaire de la clientelle</string>
-    <string name="slogan_structure">toujours là pour vous</string>
     <string name="slogan_structurestandard">simplicité et efficacité</string>
-    <string name="solaris_systeme">solaris systeme inc 0556287703</string>
     <string name="info_solaris">"EasyGest est un produit de solaris systeme structure de the solaris groupe systeme cooporation intervenant dans plusieurs domaines dont l'informatique : conception d'applications mobiles android ,ios conception d'application web (creation de site web ) concception d'application bureatique installation et maintenance de reseaux informatiques maintenance informatique installation de reseaux electrique, les TP et bien d'autres"</string>
     <string name="solaris_systeme_telephone"> solaris systeme inc 0556287703</string>
     <string name="solaris_systeme_email"> Email : solaris@gmail.com</string>
-    <string name="solaris_systeme_adresse_postale"> boite postale : 05 bp 2284 abidjan 05</string>
     <string name="recap_credit">recap credit</string>
     <string name="activer_produit">activer produit</string>
     <string name="code">code</string>
@@ -99,29 +66,22 @@
     <string name="Mes_credits">Mes credits</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="somme_article2">somme article 2</string>
-    <string name="somme_article1">somme article 1</string>
     <string name="prenoms_client">prenoms client</string>
     <string name="zero">0</string>
     <string name="somme">somme</string>
     <string name="nbr_account">nbr account</string>
     <string name="nbr_credit">nbr credit</string>
-    <string name="num_permis">no permis</string>
     <string name="total_account">T account</string>
     <string name="Afficher_client">client infos</string>
     <string name="quantite1">qte</string>
-    <string name="quantite2">qte</string>
     <string name="num_cresdit">num credit</string>
     <string name="mes_accounts">mes accounts</string>
-    <string name="Mes_versements_credit">versements credits</string>
-    <string name="Mes_versements_account">versements accounts</string>
     <string name="faire_un_versement_acc">versé un account</string>
     <string name="faire_un_versement_credit">versé un credit</string>
     <string name="histo_credits">histo credits</string>
     <string name="histo_accounts">histo accounts</string>
     <string name="menu_account">Account</string>
-    <string name="date_account">date account</string>
     <string name="voir_versements">voir versements</string>
     <string name="account">account</string>
     <string name="recap_account">Recap Account\t\t</string>
@@ -134,26 +94,14 @@
     <string name="info_versement">infos versement</string>
     <string name="le_client">le client</string>
     <string name="liste_credit">liste credits</string>
-    <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="owner">owner</string>
-    <string name="save">save</string>
     <string name="base_code">code pref</string>
-    <string name="sauver">sauver</string>
     <string name="parametres">parametres</string>
     <string name="helper_text">caracteres</string>
     <string name="le_propritaire">le propritaire</string>
@@ -169,19 +117,14 @@
     <string name="action_deconnection">deconnection</string>
     <string name="reinitialiser">reinitialiser</string>
     <string name="mdp_init">reinitialisation du mot de passe</string>
-    <string name="permission_not_granted">permission not granted</string>
     <string name="menu_sms_resent">revoie msg</string>
     <string name="loading">loading...</string>
-    <string name="sending">sending...</string>
     <string name="sending_finish">tous les messages ont étés envoyés</string>
     <string name="not_sms">pas de messages à envoyer</string>
 
     <!-- le numero telephone du client -->
-    <string name="client_telephone">"+225"+clientModel.getTelephone()</string>
 
     <!-- le numero telephone de l'emulateur -->
-    <string name="emulateur_telephone_1">5554</string>
-    <string name="emulateur_telephone_2">555</string>
     <string name="lepassword">le mot de passe</string>
     <string name="save_amovible">savegarde sur amovible</string>
     <string name="save_drive">savegarde sur Drive</string>

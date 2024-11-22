@@ -4,6 +4,4 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">180dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="afclient_scroll_dim">200dp</dimen>
 </resources>

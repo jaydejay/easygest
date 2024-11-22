@@ -9,10 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="link">#0a95ff</color>
     <color name="bleu_clair">#2EABD7</color>
-    <color name="orange">#E7A867</color>
-    <color name="violet_clair">#D71479</color>
     <color name="gris_peu_fonce">#626D73</color>
-    <color name="gris_claire">#B1B3B0</color>
     <color name="bleue_brillant">#673EE6</color>
     <color name="red">#B11105</color>
 </resources>
