@@ -5,10 +5,16 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/nav_clients"
             android:icon="@drawable/ic_baseline_person_24"
             android:title="@string/clients" />
+
+        <item
+            android:id="@+id/nav_articles"
+            android:icon="@drawable/ic_menu_addchart"
+            android:title="@string/ajouter_article" />
 
         <item
             android:id="@+id/nav_credit"

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,14 +29,17 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
+import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityGestionBinding;
 import com.jay.easygest.model.AppKessModel;
+import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.SmsnoSentModel;
@@ -46,6 +51,7 @@ import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
+import com.jay.easygest.vue.ui.articles.ArticlesViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -63,6 +69,7 @@ public class GestionActivity extends AppCompatActivity {
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
+    private ArticlesViewModel articlesViewModel;
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
     private SmsSender smsSender;
@@ -78,6 +85,7 @@ public class GestionActivity extends AppCompatActivity {
 
 
         binding = ActivityGestionBinding.inflate(getLayoutInflater());
+         articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
         setContentView(binding.getRoot());
         sessionManagement = new SessionManagement(this);
         smsSender = new SmsSender(this, this);
@@ -114,7 +122,7 @@ public class GestionActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_clients, R.id.nav_listecredit, R.id.nav_credit, R.id.nav_account,R.id.nav_changepsssword,R.id.nav_changeusername,R.id.nav_import_export, R.id.nav_a_propos )
+                R.id.nav_clients, R.id.nav_articles, R.id.nav_listecredit, R.id.nav_credit, R.id.nav_account,R.id.nav_changepsssword,R.id.nav_changeusername,R.id.nav_import_export, R.id.nav_a_propos )
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_gestion);
@@ -379,6 +387,32 @@ public class GestionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void redirectToModifierArticleActivity(ArticlesModel articlesModel) {
+        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+        articlescontrolleur.setMarticle(articlesModel);
+        Intent intent = new Intent(this, ModifierArticleActivity.class);
+//        intent.putExtra("articleid",articlesModel.getId());
+        startActivity(intent);
+    }
+
+    public void redirectToModifierArticleImgesActivity(ArticlesModel articlesModel) {
+        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+        articlescontrolleur.setMarticle(articlesModel);
+        Intent intent = new Intent(this, ModifierArticleActivity.class);
+//        intent.putExtra("articleid",articlesModel.getId());
+        startActivity(intent);
+    }
+
+    public void redirectToArticleDetailsActivity(ArticlesModel articlesModel) {
+        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+        articlescontrolleur.setMarticle(articlesModel);
+//        Log.d("gestionactivity", "onCreate: "+articlesModel.getId());
+        Intent intent = new Intent(this, ArticleDetailsActivity.class);
+        startActivity(intent);
+    }
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -399,5 +433,7 @@ public class GestionActivity extends AppCompatActivity {
         super.onDestroy();
         binding = null;
     }
+
+
 
 }

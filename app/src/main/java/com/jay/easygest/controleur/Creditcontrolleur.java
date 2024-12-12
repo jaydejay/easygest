@@ -2,12 +2,11 @@ package com.jay.easygest.controleur;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
-import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
@@ -15,7 +14,6 @@ import com.jay.easygest.outils.AccessLocalClient;
 import com.jay.easygest.outils.AccessLocalCredit;
 import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersement;
-import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 import java.util.ArrayList;
 
@@ -95,7 +93,7 @@ public final class Creditcontrolleur {
 
     public void setMCredits(ArrayList<CreditModel> credits) {this.mcredits.setValue(credits); }
 
-    public CreditModel creerCredit(String codeclt, String nomclient,String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long datecredit){
+    public CreditModel creerCredit(String codeclt, String nomclient, String prenomsclient, String telephone , Article c_article1, Article c_article2, String versement, long datecredit){
 
 //        String article1 = new Genson().serialize(c_article1);
 //        String article2 = new Genson().serialize(c_article2);
@@ -118,7 +116,7 @@ public final class Creditcontrolleur {
         return  credit;
     }
 
-    public boolean ajouterCredit( ClientModel client,Articles c_article1, Articles c_article2, String versement, long datecredit) {
+    public boolean ajouterCredit(ClientModel client, Article c_article1, Article c_article2, String versement, long datecredit) {
 
 //        String article1 = new Genson().serialize(c_article1);
 //        String article2 = new Genson().serialize(c_article2);

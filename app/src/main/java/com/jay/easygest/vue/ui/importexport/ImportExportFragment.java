@@ -286,7 +286,7 @@ public class ImportExportFragment extends Fragment {
         File currentDBPath = this.requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
         File currentDB = new File(currentDBPath, VariablesStatique.BACKUP_DATABASE_NAME);
 
-        String path = getDatabasePath();
+        String path = this.getDatabasePath();
         File file = new File(path);
 
         try {
@@ -308,8 +308,8 @@ public class ImportExportFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle("consigne de restoration");
                 builder.setMessage("cette action constitue la premiere étape"+ "\n"
-                        + "- étape 2 deconnecter l'appli"+ "\n"
-                        + "- étape 3 relancer l'appli"+ "\n"
+                        + "- étape 2 deconnecter l'appli"+"\n"
+                        + "- étape 3 relancer l'appli"+"\n"
                         + "consulter le dictatiel pour connaitre chaque procedure");
 
                 builder.setPositiveButton("ok", (dialog, which) -> {

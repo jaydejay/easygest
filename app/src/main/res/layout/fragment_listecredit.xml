@@ -20,13 +20,15 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-
             <SearchView
                 android:id="@+id/searchcredit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#5CFFFFFF"
-                android:queryHint="reccherche"/>
+                android:queryHint="reccherche"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
         </LinearLayout>
 
         <LinearLayout
@@ -86,15 +88,12 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
             <ListView
                 android:id="@+id/lstviewcredits"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"/>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -131,6 +131,33 @@
     <string name="deconnecter_restore">deconnecter l\'application</string>
     <string name="relancer_restore">relancer l\'application</string>
     <string name="restore_premier_pas">restore premier pas</string>
+    <string name="designation">designation</string>
+    <string name="prix">le prix</string>
+    <string name="quantite">la quantite</string>
+    <string name="article_image">article image</string>
+    <string name="enregistrer_un_article">enregistrer un article</string>
+    <string name="ajouter_article">ajouter article</string>
+    <string name="choisir_une_image">image</string>
+    <string name="article_ajouter">ajouter</string>
+    <string name="article_liste">articles</string>
+    <string name="article_en_stock">en stock</string>
+    <string name="gauche">gauche</string>
+    <string name="droite">droite</string>
+    <string name="derierre">derierre</string>
+    <string name="face">face</string>
+    <string name="enreg_image">enregistrer</string>
+    <string name="article_popup_modifier">modifier</string>
+    <string name="article_popup_supprimer">supprimer</string>
+    <string name="menu_d_aticle">menu d\'aticle</string>
+    <string name="article_popup_detail">detail</string>
+    <string name="liste_articles">liste des articles</string>
+    <string name="liste_to_credits">liste des credits</string>
+    <string name="image_d_article">image d\'article</string>
+    <string name="Details_article">Details article</string>
+    <string name="modifier_article">modifier article</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description">description</string>
 
 
 </resources>

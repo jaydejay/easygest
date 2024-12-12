@@ -21,7 +21,7 @@ public class ListeaccountAdapter extends BaseAdapter {
 
     private final Context contexte;
     private final LayoutInflater inflater;
-    private ArrayList<AccountModel> accounts;
+    private final ArrayList<AccountModel> accounts;
 
     public ListeaccountAdapter(Context contexte, ArrayList<AccountModel> accounts) {
         this.contexte = contexte;

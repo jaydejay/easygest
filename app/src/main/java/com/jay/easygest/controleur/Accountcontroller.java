@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.jay.easygest.model.AccountModel;
-import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.VersementsaccModel;
 import com.jay.easygest.outils.AccessLocalAccount;
@@ -24,8 +24,6 @@ public class Accountcontroller {
 
     private final MutableLiveData<Integer> mtotalresteaccountclient = new MutableLiveData<>();
     private final  MutableLiveData<Integer> mtotalaccountClient = new MutableLiveData<>();
-
-
 
     /**
      * la liste de tous les accounts
@@ -84,7 +82,7 @@ public class Accountcontroller {
      * @param dateaccount la date de l'account
      * @return cree un account si le client n'existe pas
      */
-    public AccountModel creerAccount(String codeclt, String nomclient, String prenomsclient, String telephone , Articles c_article1, Articles c_article2, String versement, long dateaccount){
+    public AccountModel creerAccount(String codeclt, String nomclient, String prenomsclient, String telephone , Article c_article1, Article c_article2, String versement, long dateaccount){
 
 //        String article1 = new Genson().serialize(c_article1);
 //        String article2 = new Genson().serialize(c_article2);
@@ -115,7 +113,7 @@ public class Accountcontroller {
      * @param dateaccount la date de l'opération
      * @return  retourne vraie si l"account à été crée avec succes sinon faux
      */
-    public boolean ajouterAccount( ClientModel client,Articles c_article1, Articles c_article2, String versement, long dateaccount) {
+    public boolean ajouterAccount(ClientModel client, Article c_article1, Article c_article2, String versement, long dateaccount) {
 
 //        String article1 = new Genson().serialize(c_article1);
 //        String article2 = new Genson().serialize(c_article2);

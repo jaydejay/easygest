@@ -17,7 +17,7 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifiercreditBinding;
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.SmsnoSentModel;
@@ -68,9 +68,9 @@ public class ModifiercreditActivity extends AppCompatActivity {
     }
 
     public void afficherCredit(){
-        Type type = new TypeToken<Articles>(){}.getType();
-        Articles article1 = new Gson().fromJson(credit.getArticle1(), Articles.class);
-        Articles article2 = new Gson().fromJson(credit.getArticle2(), Articles.class);
+        Type type = new TypeToken<Article>(){}.getType();
+        Article article1 = new Gson().fromJson(credit.getArticle1(), Article.class);
+        Article article2 = new Gson().fromJson(credit.getArticle2(), Article.class);
         binding.modifcredrnom.setText(client.getNom());
         binding.modifcredprenoms.setText(client.getPrenoms());
         binding.modifcredcodeclt.setText(client.getCodeclient());
@@ -147,8 +147,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
                     nbrarticle2 = Integer.parseInt(nbr_article2);
                     long datecredit = date_credit.getTime();
 
-                    Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
-                    Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                    Article c_article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
+                    Article c_article2 =  new Article(designationarticle2, sommearticle2,nbrarticle2);
                     int sommecredit = c_article1.getSomme() + c_article2.getSomme();
 
                     int versement;

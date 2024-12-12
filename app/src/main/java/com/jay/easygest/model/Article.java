@@ -1,16 +1,14 @@
 package com.jay.easygest.model;
 
-import java.util.Collection;
-
-public class Articles{
+public class Article {
     private String designation;
     private Integer prix;
     private Integer nbrarticle;
     private Integer somme;
 
-    public Articles() {}
+    public Article() {}
 
-    public Articles(String designation, Integer prix, Integer nbrarticle) {
+    public Article(String designation, Integer prix, Integer nbrarticle) {
         this.designation = designation;
         this.prix = prix;
         this.nbrarticle = nbrarticle;
@@ -37,7 +35,6 @@ public class Articles{
 
         this.somme = prix*nbrarticle;
     }
-
 
     public void setSomme(Integer somme) {
         this.somme = somme;

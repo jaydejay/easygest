@@ -230,10 +230,8 @@ public class AccessLocalCredit {
 
     public ArrayList<CreditModel> listeCredits(){
         ArrayList<CreditModel> credits = new ArrayList<>();
-
         try {
             bd = accessBD.getReadableDatabase();
-
             String req = "select * from credit where reste != 0 ";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();

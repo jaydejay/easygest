@@ -19,7 +19,7 @@ import com.jay.easygest.R;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityAffichercreditBinding;
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.SmsnoSentModel;
@@ -89,9 +89,9 @@ public class AffichercreditActivity extends AppCompatActivity {
     public void affichercredit(){
 //        Articles c_article1 = new Genson().deserialize(credit.getArticle1(), Articles.class);
 //        Articles c_article2 = new Genson().deserialize(credit.getArticle2(), Articles.class);
-        Type type = new TypeToken<Articles>(){}.getType();
-        Articles c_article1 = gson.fromJson(credit.getArticle1(),type);
-        Articles c_article2 = gson.fromJson(credit.getArticle2(),type);
+        Type type = new TypeToken<Article>(){}.getType();
+        Article c_article1 = gson.fromJson(credit.getArticle1(),type);
+        Article c_article2 = gson.fromJson(credit.getArticle2(),type);
         String article1 = "ARTICLE 1  "+c_article1.getDesignation() +"\n "+" quantite : "+c_article1.getNbrarticle()+"\n "+"somme : "+c_article1.getSomme();
         String article2 = "ARTICLE 2  "+c_article2.getDesignation() +"\n "+" quantite : "+c_article2.getNbrarticle()+"\n "+"somme : "+c_article2.getSomme();
         String credt = "CREDIT : "+credit.getSommecredit();

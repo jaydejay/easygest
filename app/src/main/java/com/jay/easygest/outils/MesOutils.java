@@ -1,9 +1,18 @@
 package com.jay.easygest.outils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.util.Base64;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,6 +43,41 @@ public abstract  class MesOutils {
         SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy",Locale.FRANCE);
         return date.format(ladate);
 
+    }
+
+    public static byte[] convertBitmapToByterry(Bitmap bitmap){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public static Bitmap convertByterryToBitmap(byte[] bytearr){
+
+        return BitmapFactory.decodeByteArray(bytearr,0,bytearr.length);
+    }
+
+
+
+    public static String bitmapToString(Bitmap bitmap){
+
+        ByteArrayOutputStream img_stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,50,img_stream);
+        byte[] img_bite = img_stream.toByteArray();
+        return Base64.encodeToString(img_bite,0);
+
+    }
+
+    public static Bitmap StringTobitmap(String string){
+        Bitmap bitmap = null;
+        try {
+            byte[] img_bite = Base64.decode(string,Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(img_bite,0,img_bite.length);
+        }catch (Exception e){
+           //nothing
+        }
+
+        return bitmap;
     }
 
     public static String codeAgenceGenerator(){

@@ -17,7 +17,7 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.FragmentCreditBinding;
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.SmsnoSentModel;
@@ -121,8 +121,8 @@ public class CreditFragment extends Fragment {
                 long dateouverture = date_ouverture.getTime();
                 String codeclient = binding.txtcreercodeclt.getText().toString();
 
-                Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
-                Articles c_article2 = new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                Article c_article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
+                Article c_article2 = new Article(designationarticle2, sommearticle2,nbrarticle2);
 
                 int sommecredit  = c_article1.getSomme() + c_article2.getSomme();
                 if (Integer.parseInt(versement) < sommecredit){
@@ -146,8 +146,8 @@ public class CreditFragment extends Fragment {
                             int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
                             int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
-                           String destinationAdress = "+225"+client.getTelephone();
-//                            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+//                           String destinationAdress = "+225"+client.getTelephone();
+                            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                     +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"

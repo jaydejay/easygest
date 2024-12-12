@@ -18,7 +18,7 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierAccountBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
@@ -66,9 +66,9 @@ public class ModifierAccountActivity extends AppCompatActivity {
     }
 
     public void afficherAccount(){
-        Type type = new TypeToken<Articles>(){}.getType();
-        Articles article1 = new Gson().fromJson(account.getArticle1(), Articles.class);
-        Articles article2 = new Gson().fromJson(account.getArticle2(), Articles.class);
+        Type type = new TypeToken<Article>(){}.getType();
+        Article article1 = new Gson().fromJson(account.getArticle1(), Article.class);
+        Article article2 = new Gson().fromJson(account.getArticle2(), Article.class);
         binding.modifaccrnom.setText(client.getNom());
         binding.modifaccprenoms.setText(client.getPrenoms());
         binding.modifacccodeclt.setText(client.getCodeclient());
@@ -145,8 +145,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
                     nbrarticle2 = Integer.parseInt(nbr_article2);
                     long dateaccount = date_credit.getTime();
 
-                    Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
-                    Articles c_article2 =  new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                    Article c_article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
+                    Article c_article2 =  new Article(designationarticle2, sommearticle2,nbrarticle2);
                     int sommeaccount = c_article1.getSomme() + c_article2.getSomme();
 
                     int versement;

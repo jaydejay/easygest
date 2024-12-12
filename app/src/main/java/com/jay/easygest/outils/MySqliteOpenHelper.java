@@ -22,9 +22,12 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_CREDIT = "credit";
     public static final String TABLE_ACCOUNT = "account";
     public static final String TABLE_INFO = "infos";
+    public static final String TABLE_SMSFAILLED = "smsfailled";
     public static final String NAME_ADMIN = "JayAdmine";
     public static final String PASS_ADMIN = "jayrard10";
     private static final String TABLE_VERSEMENTACC = "versementacc";
+    public static final String TABLE_ARTICLES = "articles";
+    public static final String TABLE_IMAGE = "image";
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
@@ -44,8 +47,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String NAME_OWNER = "solaris";
     public static final String NAME_SUPERADMIN = "SuperJay";
     public static final String PASS_SUPERADMIN = "jayrard101";
-    public static final String SMSFAILLED = "smsfailled";
-
 
     private  String apppkey ;
     private int apppnumber ;
@@ -139,12 +140,26 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
         +"nbraccount Integer,"
         +"totalaccount Integer)";
 
-    private final String createTable_smsfailled = "create table "+ SMSFAILLED +" ("
+    private final String createTable_smsfailled = "create table "+ TABLE_SMSFAILLED +" ("
             +"id Integer primary key,"
             +"clientid Integer ,"
             +"message Text not null,"
             +"smsid Integer not null,"
             +"foreign key(clientid) references client(id) on delete cascade)";
+
+    private final String createTable_articles = "create table "+ TABLE_ARTICLES +" ("
+            +"id Integer primary key,"
+            +"designation Text not null,"
+            +"prix Integer not null,"
+            +"quantite Integer not null,"
+            +"description Text)";
+
+    private final String createTable_image = "create table "+ TABLE_IMAGE +" ("
+            +"id Integer primary key,"
+            +"image Blob,"
+            +"articleid Integer not null,"
+            +"foreign key(articleid) references articles(id) on delete cascade)";
+
 
 
 
@@ -165,12 +180,14 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
             sqLiteDatabase.execSQL(createTable_utilisateur);
             sqLiteDatabase.execSQL(createTable_client);
             sqLiteDatabase.execSQL(createTable_account);
+            sqLiteDatabase.execSQL(createTable_articles);
             sqLiteDatabase.execSQL(createTable_credit);
             sqLiteDatabase.execSQL(createTable_versementacc);
             sqLiteDatabase.execSQL(createTable_versement);
             sqLiteDatabase.execSQL(createTable_apppkes);
             sqLiteDatabase.execSQL(createTable_info);
             sqLiteDatabase.execSQL(createTable_smsfailled);
+            sqLiteDatabase.execSQL(createTable_image);
 
             sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerSuperUser());
             sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerAdministrateur());

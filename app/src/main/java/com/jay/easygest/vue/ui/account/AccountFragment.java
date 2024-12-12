@@ -21,7 +21,7 @@ import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.FragmentAccountBinding;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.Articles;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
@@ -127,8 +127,8 @@ public class  AccountFragment extends Fragment {
                 long dateouverture = date_ouverture.getTime();
                 String codeclient = binding.txtcreeracccodeclt.getText().toString();
 
-                Articles c_article1 = new Articles(designationarticle1, sommearticle1,nbrarticle1);
-                Articles c_article2 = new Articles(designationarticle2, sommearticle2,nbrarticle2);
+                Article c_article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
+                Article c_article2 = new Article(designationarticle2, sommearticle2,nbrarticle2);
 
                 int sommeaccount  = c_article1.getSomme() + c_article2.getSomme();
                 if (Integer.parseInt(versement) < sommeaccount){
