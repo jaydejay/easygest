@@ -74,6 +74,53 @@ public class ArticlesFragment extends Fragment {
     }
 
 
+    public  ArrayList<ArticlesModel> getFilter(String mtext){
+        ArrayList<ArticlesModel> filteredliste = new ArrayList<>();
+        try {
+
+            articlesViewModel.getArticlelivedatas().observe(getViewLifecycleOwner(),articlesModels -> {
+                for (ArticlesModel article : articlesModels) {
+                    if (article.getId() != null){
+                        if (article.getDesignation().contains(mtext) ){
+                            filteredliste.add(article);
+                        }
+                    }
+
+                }
+
+            });
+            return filteredliste;
+
+        }catch (Exception e){
+            return filteredliste;
+        }
+
+
+    }
+
+    public void rechercherArticle(){
+
+        binding.searchArticle.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                ArrayList<ArticlesModel> articles = ArticlesFragment.this.getFilter(newText);
+                try {
+                    adapter = new ListeArticlesAdapter(getContext(),articles );
+                    adapter.notifyDataSetChanged();
+                    binding.articleListView.setAdapter(adapter);
+                }catch (Exception e){
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
 
 
 }
