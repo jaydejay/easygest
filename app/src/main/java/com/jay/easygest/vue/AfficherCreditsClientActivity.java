@@ -68,15 +68,17 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
 
         com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding binding = ActivityAfficherCreditsClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
-        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
-        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
-        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        ClientModel client = clientViewModel.getClient().getValue();
-        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
-        versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
 
+        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
+        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
+        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
+
+        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+        versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
+        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
+        versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
+
+        ClientModel client = clientViewModel.getClient().getValue();
         int fragmentid =  getIntent().getIntExtra("fragmentid",R.id.af_client_liste_credits);
        String titre = getIntent().getStringExtra("titre");
 

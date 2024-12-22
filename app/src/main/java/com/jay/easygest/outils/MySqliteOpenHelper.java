@@ -51,6 +51,9 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     private  String apppkey ;
     private int apppnumber ;
 
+    public MySqliteOpenHelper(@Nullable Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
+        super(context, name, factory, version);
+    }
     private final String createTable_utilisateur = "create table "+TABLE_UTILISATEUR+"("
             +"id Integer primary key autoincrement,"
             +"username Text not null unique,"
@@ -161,19 +164,10 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
             +"foreign key(articleid) references articles(id) on delete cascade)";
 
 
-
-
-
-
-    public MySqliteOpenHelper(@Nullable Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
-        super(context, name, factory, version);
-    }
-
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         apppnumber = MesOutils.apppnumbergenerator();
-         apppkey = MesOutils.apppkeygenerator();
-
+        apppkey = MesOutils.apppkeygenerator();
         sqLiteDatabase.beginTransaction();
 
         try {
@@ -193,11 +187,10 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
             sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerAdministrateur());
             sqLiteDatabase.insert(TABLE_APPPKES,null,apppPersitence());
             sqLiteDatabase.insert(TABLE_INFO,null,creeeinfo());
+
             sqLiteDatabase.setTransactionSuccessful();
 
 
-        }catch (Exception e){
-//            sqLiteDatabase.endTransaction();
         }finally {
             sqLiteDatabase.endTransaction();
 

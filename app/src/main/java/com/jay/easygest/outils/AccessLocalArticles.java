@@ -30,13 +30,14 @@ public class AccessLocalArticles {
     public static final String IMAGE_LEFT = "imageleft";
     public static final String ARTICLEID = "articleid";
     public static final String DESCRIPTION = "description";
-    private final MySqliteOpenHelper accessBD;
+    private Context contexte;
+    private MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
-    private final Context contexte;
 
-    public AccessLocalArticles( Context contexte) {
+
+    public AccessLocalArticles(Context context) {
+        this.contexte = context;
         this.accessBD = new MySqliteOpenHelper(contexte,null);
-        this.contexte = contexte;
     }
 
 
@@ -57,13 +58,11 @@ public class AccessLocalArticles {
                 image_cv.put(IMAGE,image.getImage2());
                 image_cv.put(ARTICLEID,(int)rslt);
                 long imageid = bd.insertWithOnConflict(TABLE_IMAGE,null,image_cv,1);
-                Image image_base = new Image((int)imageid,image.getImage(),(int)rslt);
+                Image image_base = new Image((int)imageid,image.getImage2(),(int)rslt);
                 images.add(image_base);
             }
             articlesModel = new ArticlesModel((int)rslt,article.getDesignation(),article.getPrix(),article.getQuantite(), article.getDesignation(), images);
             bd.setTransactionSuccessful();
-        }catch (Exception e){
-            articlesModel = null ;
         }finally {
             bd.endTransaction();
         }
@@ -86,6 +85,7 @@ public class AccessLocalArticles {
 //            bd.close();
         }catch (Exception e){
             //do nothing
+//            bd.close();
             return article;
         }
         return article;
@@ -94,37 +94,21 @@ public class AccessLocalArticles {
     public ArrayList<Image> imagesDunArticles(int articleid){
         bd = accessBD.getReadableDatabase();
         ArrayList<Image> images = new ArrayList<>();
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<ArrayList<Image>> future = executor.submit(() -> {
             try {
                 String req = "select * from image where " + ARTICLEID + "="+articleid+"";
                 Cursor cursor = bd.rawQuery(req, null);
-//            if (cursor != null){
                 cursor.moveToFirst();
                 do {
-//                    Bitmap image_to_show = MesOutils.convertByterryToBitmap(cursor.getBlob(1));
                     Image image = new Image(cursor.getInt(0),cursor.getBlob(1),cursor.getInt(2));
                     images.add(image);
                 }while (cursor.moveToNext());
 
-//            }
-
-                Thread.sleep(200);
                 cursor.close();
-            } catch (InterruptedException e) {
+//                bd.close();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            return images;
-        });
-        try {
-            ArrayList<Image> result = future.get();
-            return images;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        executor.shutdown();
         return images;
-
 
     }
 
@@ -138,15 +122,16 @@ public class AccessLocalArticles {
             articles_cv.put(QUANTITE,article.getQuantite());
             articles_cv.put(DESCRIPTION,article.getDescription());
            int rslt = bd.update(TABLE_ARTICLES, articles_cv, ID+ "= ?", new String[] {String.valueOf(article.getId())});
-//
+
             if (rslt < 1){
                articleModel = null;
            }else {
                articleModel = article;
            }
-
+//            bd.close();
         }catch (Exception e){
             articleModel = null;
+            bd.close();
         }
 
         return articleModel;
@@ -162,9 +147,10 @@ public class AccessLocalArticles {
         int rslt;
         try{
          rslt =  accessBD.getWritableDatabase().delete(TABLE_ARTICLES, ID +"=?",new String[]{String.valueOf(article.getId())});
-
+//            bd.close();
         }catch( SQLiteException e) {
             rslt = 0;
+            bd.close();
         }
         return rslt;
     }
@@ -181,12 +167,14 @@ public class AccessLocalArticles {
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
             do{
-                ArticlesModel articlesModel = new ArticlesModel(cursor.getInt(0),cursor.getString(1), cursor.getInt(2),cursor.getInt(3), cursor.getString(4));
+                AccessLocalImage accessLocalImage = new AccessLocalImage(contexte) ;
+                ArrayList<Image> images = accessLocalImage.imagesDunArticles(cursor.getInt(0));
+                ArticlesModel articlesModel = new ArticlesModel(cursor.getInt(0),cursor.getString(1), cursor.getInt(2),cursor.getInt(3), cursor.getString(4),images);
                 articlesModels.add(articlesModel);
             }
             while (cursor.moveToNext());
             cursor.close();
-
+//            bd.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

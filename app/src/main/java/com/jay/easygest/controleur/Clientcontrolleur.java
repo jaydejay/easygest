@@ -20,7 +20,6 @@ public class Clientcontrolleur {
             clientcontrolleurInstance = new Clientcontrolleur();
             accessLocalClient = new AccessLocalClient(contexte);
         }
-
         return clientcontrolleurInstance;
     }
 

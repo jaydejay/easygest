@@ -62,6 +62,9 @@ public class ArticlesModel {
         return images;
     }
 
+    public void setImages(ArrayList<Image> images) {
+        this.images = images;
+    }
 
     @Override
     public String toString() {

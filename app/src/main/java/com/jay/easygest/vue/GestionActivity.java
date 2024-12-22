@@ -65,6 +65,7 @@ public class GestionActivity extends AppCompatActivity {
     private Creditcontrolleur creditcontrolleur;
     private SessionManagement sessionManagement;
     private Accountcontroller accountcontrolleur;
+    private Articlescontrolleur articlescontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
@@ -78,6 +79,7 @@ public class GestionActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private PasswordHascher passwordHascher;
     private Usercontrolleur usercontrolleur ;
+    private ArrayList<ArticlesModel>  articles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,7 @@ public class GestionActivity extends AppCompatActivity {
 
 
         binding = ActivityGestionBinding.inflate(getLayoutInflater());
-         articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
+
         setContentView(binding.getRoot());
         sessionManagement = new SessionManagement(this);
         smsSender = new SmsSender(this, this);
@@ -93,20 +95,20 @@ public class GestionActivity extends AppCompatActivity {
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         accountcontrolleur = Accountcontroller.getAccountcontrolleurInstance(this);
-
+        usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+        articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-
-         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-
+        articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
+        articlescontrolleur.listeArticles();
         accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
 
         passwordHascher = new PasswordHascher();
         sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+
 
         try {
             ArrayList<ClientModel> listeClients = clientcontrolleur.listeClients();
@@ -406,7 +408,6 @@ public class GestionActivity extends AppCompatActivity {
     public void redirectToArticleDetailsActivity(ArticlesModel articlesModel) {
         Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
         articlescontrolleur.setMarticle(articlesModel);
-//        Log.d("gestionactivity", "onCreate: "+articlesModel.getId());
         Intent intent = new Intent(this, ArticleDetailsActivity.class);
         startActivity(intent);
     }

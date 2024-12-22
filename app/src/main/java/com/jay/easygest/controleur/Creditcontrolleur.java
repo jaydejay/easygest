@@ -49,9 +49,10 @@ public final class Creditcontrolleur {
             Creditcontrolleur.creditcontrolleurInstance = new Creditcontrolleur();
             accessLocalcredit = new AccessLocalCredit(contexte);
             accessLocalVersement = new AccessLocalVersement(contexte);
-             accessLocalInfo = new AccessLocalInfo(contexte);
-             accessLocalClient = new AccessLocalClient(contexte);
+            accessLocalInfo = new AccessLocalInfo(contexte);
+            accessLocalClient = new AccessLocalClient(contexte);
         }
+
 
         return creditcontrolleurInstance;
     }
@@ -94,9 +95,6 @@ public final class Creditcontrolleur {
     public void setMCredits(ArrayList<CreditModel> credits) {this.mcredits.setValue(credits); }
 
     public CreditModel creerCredit(String codeclt, String nomclient, String prenomsclient, String telephone , Article c_article1, Article c_article2, String versement, long datecredit){
-
-//        String article1 = new Genson().serialize(c_article1);
-//        String article2 = new Genson().serialize(c_article2);
 
         String article1 = new Gson().toJson(c_article1);
         String article2 = new Gson().toJson(c_article2);

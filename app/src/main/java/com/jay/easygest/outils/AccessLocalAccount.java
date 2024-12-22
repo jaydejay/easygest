@@ -38,8 +38,8 @@ public class AccessLocalAccount {
     private final AccessLocalClient accessLocalClient;
 
 
-    public AccessLocalAccount(Context contexte) {
-        this.contexte = contexte;
+    public AccessLocalAccount(Context context) {
+        this.contexte = context;
         this.accessBD = new MySqliteOpenHelper(contexte,null);
         accessLocalClient = new AccessLocalClient(contexte);
 

@@ -45,14 +45,14 @@ public abstract  class MesOutils {
 
     }
 
-    public static byte[] convertBitmapToByterry(Bitmap bitmap){
+    public static synchronized byte[] convertBitmapToByterry(Bitmap bitmap){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,40,byteArrayOutputStream);
 
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static Bitmap convertByterryToBitmap(byte[] bytearr){
+    public static synchronized  Bitmap convertByterryToBitmap(byte[] bytearr){
 
         return BitmapFactory.decodeByteArray(bytearr,0,bytearr.length);
     }

@@ -19,9 +19,8 @@ public class AccountViewModel extends ViewModel {
         Accountcontroller accountcontroller = Accountcontroller.getAccountcontrolleurInstance(null);
         this.account_solde_ou_non = new MutableLiveData<>();
         this.account = new MutableLiveData<>();
-        this.account = accountcontroller.getMaccount();
         this.account_solde_ou_non = accountcontroller.getMaccounts();
-
+        this.account = accountcontroller.getMaccount();
         totalaccountsclient = accountcontroller.getRecapTaccounttClient();
         totalrestesclient = accountcontroller.getRecapTresteClient();
 

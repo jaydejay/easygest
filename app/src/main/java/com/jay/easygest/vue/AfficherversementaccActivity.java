@@ -67,8 +67,6 @@ public class AfficherversementaccActivity extends AppCompatActivity {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
 
-        setContentView(binding.getRoot());
-
         versement = versementaccViewModel.getMversementacc().getValue();
         account = Objects.requireNonNull(versement).getAccount();
         position_versement = getIntent().getIntExtra("versementaccposition",0);

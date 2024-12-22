@@ -8,7 +8,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +40,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditarticle_designation"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="0dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="2"
@@ -129,36 +130,36 @@
 
                 <ImageView
                     android:id="@+id/article_imageView_face"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
                     android:src="@android:drawable/ic_menu_gallery" />
 
                 <ImageView
                     android:id="@+id/article_imageView_left"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
                     android:src="@android:drawable/ic_menu_gallery" />
 
                 <ImageView
                     android:id="@+id/article_imageView_right"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
                     android:src="@android:drawable/ic_menu_gallery" />
 
                 <ImageView
                     android:id="@+id/article_imageView_back"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
                     android:src="@android:drawable/ic_menu_gallery" />

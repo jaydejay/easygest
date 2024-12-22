@@ -2,6 +2,7 @@ package com.jay.easygest.vue.ui.articles;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,10 +98,13 @@ public class ListeArticlesAdapter extends BaseAdapter {
                     int rslt = articlescontrolleur.deleteArticle(articles.get(position));
                     if (rslt > 0){
                         articles.remove(position);
+                        articlescontrolleur.setMarticles(articles);
                     }
                 }
 
                 if (item.getItemId()== R.id.article_popup_detail ){
+                    articles.get(position).setImages(images);
+
                     ((GestionActivity)contexte).redirectToArticleDetailsActivity(articles.get(position));
                 }
 
