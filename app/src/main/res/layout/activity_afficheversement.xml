@@ -67,61 +67,55 @@
             android:textAlignment="textStart"/>
     </LinearLayout>
     <!-- Buttons -->
-    <LinearLayout
-        android:id="@+id/layourt_versement4"
+
+
+    <Button
+        android:id="@+id/affiche_vers_modif_button"
+        style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:text="@string/modifier"
+        app:layout_constraintEnd_toStartOf="@+id/affiche_vers_cancel_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layourt_versement2"
-        style="?android:attr/buttonBarStyle">
+        app:layout_constraintTop_toBottomOf="@+id/layourt_versement2" />
 
-        <Button
-            android:id="@+id/affiche_vers_modif_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
-            android:text="@string/modifier"
-            style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"/>
 
-        <Button
-            android:id="@+id/affiche_vers_cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/annuller"
-            style="@style/ShapeAppearanceOverlay.Material3.Button"/>
-    </LinearLayout>
-    <!-- les deux liens -->
-    <LinearLayout
+    <Button
+        android:id="@+id/affiche_vers_cancel_button"
+        style="@style/ShapeAppearanceOverlay.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="@string/annuller"
+        app:layout_constraintStart_toEndOf="@+id/affiche_vers_modif_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/affiche_vers_modif_button" />
+
+    <TextView
+        android:id="@+id/af_versm_to_credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/liste_articles"
+        android:textColor="@color/gris_peu_fonce"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layourt_versement4">
+        app:layout_constraintEnd_toStartOf="@+id/af_versm_to_client"
+        app:layout_constraintTop_toBottomOf="@+id/affiche_vers_modif_button" />
 
-
-        <TextView
-            android:id="@+id/af_versm_to_credits"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:textColor="@color/gris_peu_fonce"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/af_versm_to_client"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/gris_peu_fonce"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="textStart"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/af_versm_to_client"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/le_client"
+        android:textAlignment="textStart"
+        android:textColor="@color/gris_peu_fonce"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/af_versm_to_credits"
+        app:layout_constraintTop_toTopOf="@+id/af_versm_to_credits" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

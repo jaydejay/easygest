@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
@@ -120,27 +119,7 @@ public class AccessLocal {
     }
 
 
-    public UserModel recupAdministrateur(){
-        bd = accessBD.getReadableDatabase();
-        String req = "select * from utilisateur where status = 0";
 
-        UserModel administrateur = null;
-        Cursor cursor = bd.rawQuery(req,null);
-        cursor.moveToLast();
-        if(!cursor.isAfterLast()){
-            int id = cursor.getInt(0);
-            String username = cursor.getString(1);
-            String password = cursor.getString(2);
-            long dateInscription = cursor.getLong(3);
-            int status = cursor.getInt(4);
-            boolean actif = cursor.getInt(5)==1?true:false;
-            int compteur = cursor.getInt(6);
-            administrateur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
-        }
-        cursor.close();
-        bd.close();
-        return administrateur;
-    }
 
     public Integer nbrUtilisateurs(){
         try {
@@ -182,19 +161,6 @@ public class AccessLocal {
 
     }
 
-//    public void activerProprietaire(String mdp){
-//        try {
-//            bd = accessBD.getWritableDatabase();
-//            ContentValues cv = new ContentValues();
-//            cv.put(ACTIF, true);
-//            cv.put(COMPTEUR, 0);
-//            cv.put(PASSWORD, mdp);
-//            bd.update(UTILISATEUR, cv, STATUS + "=" + 1, null);
-//        }catch (Exception e){
-//            //do nothing
-//        }
-//    }
-
     public void activerProprietaire(){
         try {
             bd = accessBD.getWritableDatabase();
@@ -207,14 +173,6 @@ public class AccessLocal {
         }
     }
 
-    public void desactiverAdministrateur(){
-        bd = accessBD.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(ACTIF,false);
-        bd.update(UTILISATEUR,cv,STATUS+"="+0,null);
-
-
-    }
 
     public void activerAdministrateur(){
 

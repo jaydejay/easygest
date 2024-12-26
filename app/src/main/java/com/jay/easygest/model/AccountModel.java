@@ -125,16 +125,12 @@ public class AccountModel {
         this.soldedat = value;
     }
 
+    @NonNull
     public String toString() {
         return getCodeclient()+" "+getNomclient()+" "+getPrenomsclient()+"\n"
                 +"accompte du "+ MesOutils.convertDateToString(new Date(dateaccount));
     }
 
-    @NonNull
-    public String toString2() {
-        return client.getCodeclient()+"\n "+client.getNom()+" "+client.getPrenoms()+"\n"
-                +"accompte du "+ MesOutils.convertDateToString(new Date(dateaccount));
-    }
 
     @NonNull
     public String toString3() {

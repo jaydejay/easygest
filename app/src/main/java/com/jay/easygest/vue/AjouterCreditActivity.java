@@ -38,7 +38,6 @@ public class AjouterCreditActivity extends AppCompatActivity {
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
     private ClientModel client;
-    private AccessLocalAppKes accessLocalAppKes;
     private   SmsSender smsSender;
     private AppKessModel appKessModel;
 
@@ -56,7 +55,7 @@ public class AjouterCreditActivity extends AppCompatActivity {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
         smsSender = new SmsSender(this, this);
-        accessLocalAppKes = new AccessLocalAppKes(this);
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
          appKessModel = accessLocalAppKes.getAppkes();
 
         init();
@@ -142,8 +141,6 @@ public class AjouterCreditActivity extends AppCompatActivity {
                             int total_reste_client = creditcontroller.getRecapTresteClient().getValue();
 
                             String destinationAdress = "+225"+clientModel.getTelephone();
-//                        String destinationAdress = "5556";
-
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                     + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
                                     +"vous avez pris un autre credit de "+creditModel.getSommecredit()+" FCFA"+"\n"

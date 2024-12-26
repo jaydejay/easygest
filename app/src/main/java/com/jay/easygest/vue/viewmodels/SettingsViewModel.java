@@ -4,8 +4,6 @@ package com.jay.easygest.vue.viewmodels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.jay.easygest.outils.AccessLocalAppKes;
-
 public class SettingsViewModel extends ViewModel {
 
 //    private AccessLocalAppKes accessLocalAppKes;

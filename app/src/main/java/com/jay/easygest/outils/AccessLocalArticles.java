@@ -5,16 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.Image;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class AccessLocalArticles {
 
@@ -25,9 +20,6 @@ public class AccessLocalArticles {
     public static final String QUANTITE = "quantite";
     public static final String TABLE_IMAGE = "image";
     public static final String IMAGE = "image";
-    public static final String IMAGE_BACK = "imageback";
-    public static final String IMAGE_RIGHT = "imageright";
-    public static final String IMAGE_LEFT = "imageleft";
     public static final String ARTICLEID = "articleid";
     public static final String DESCRIPTION = "description";
     private Context contexte;
@@ -68,48 +60,6 @@ public class AccessLocalArticles {
         }
 
         return articlesModel;
-    }
-
-    public ArticlesModel recupererArticle(int articleid){
-        ArticlesModel article = null;
-        try {
-            bd = accessBD.getReadableDatabase();
-            String req = "select * from articles where " + ID + "="+articleid+"";
-            Cursor cursor = bd.rawQuery(req, null);
-            cursor.moveToLast();
-            if (!cursor.isAfterLast()) {
-                ArrayList<Image> images = this.imagesDunArticles(articleid);
-                article = new ArticlesModel(cursor.getInt(0),cursor.getString(1), cursor.getInt(2),cursor.getInt(3), cursor.getString(4), images);
-            }
-            cursor.close();
-//            bd.close();
-        }catch (Exception e){
-            //do nothing
-//            bd.close();
-            return article;
-        }
-        return article;
-    }
-
-    public ArrayList<Image> imagesDunArticles(int articleid){
-        bd = accessBD.getReadableDatabase();
-        ArrayList<Image> images = new ArrayList<>();
-            try {
-                String req = "select * from image where " + ARTICLEID + "="+articleid+"";
-                Cursor cursor = bd.rawQuery(req, null);
-                cursor.moveToFirst();
-                do {
-                    Image image = new Image(cursor.getInt(0),cursor.getBlob(1),cursor.getInt(2));
-                    images.add(image);
-                }while (cursor.moveToNext());
-
-                cursor.close();
-//                bd.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        return images;
-
     }
 
     public ArticlesModel updateArticle(ArticlesModel article){
@@ -181,27 +131,7 @@ public class AccessLocalArticles {
         return articlesModels;
     }
 
-    /**
-     * indique si un article est en stoc ou pas
-     * @param article l'article
-     * @return vrai si article en stock sinon faux
-     */
-    public boolean isInStock(ArticlesModel article){
-        return article.getQuantite() > 0;
-    }
 
-    public int updateImage(int oldImageId, Image newImage) {
-        bd = accessBD.getWritableDatabase();
-        int rslt ;
-        ContentValues image_cv = new ContentValues();
-        byte[] imageToStore = MesOutils.convertBitmapToByterry(newImage.getImage());
-        image_cv.put(TABLE_IMAGE,imageToStore);
-        image_cv.put(TABLE_IMAGE,oldImageId);
-        try {
-          rslt = bd.update(TABLE_IMAGE,image_cv,ID+"=?",new String[] {String.valueOf(oldImageId)});
-        }catch (Exception e){
-            rslt = 0;
-        }
-        return rslt;
-    }
+
+
 }

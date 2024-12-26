@@ -1,5 +1,7 @@
 package com.jay.easygest.model;
 
+import androidx.annotation.NonNull;
+
 public class Article {
     private String designation;
     private Integer prix;
@@ -40,6 +42,7 @@ public class Article {
         this.somme = somme;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return  "" + designation + ": " + somme;

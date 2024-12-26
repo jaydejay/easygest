@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
-import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.databinding.ActivityModifierVersementaccBinding;
 import com.jay.easygest.model.AccountModel;
@@ -30,7 +29,6 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.versementacc.VersementaccViewModel;
-import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.util.Date;
 import java.util.Objects;
@@ -42,14 +40,12 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
     private AccessLocalAppKes accessLocalAppKes;
     private ActivityModifierVersementaccBinding binding;
     private Versementacccontrolleur versementacccontrolleur;
-    private Clientcontrolleur clientcontrolleur;
     private Accountcontroller accountcontroller;
     private AccountViewModel accountViewModel;
     private  VersementaccViewModel versementaccViewModel;
     private AppKessModel appKessModel;
     private VersementsaccModel versement;
     private ClientModel client;
-    private SmsSenderViewModel smsSenderViewModel;
    EditText EDTcodeclient;
    EditText EDTsomme;
    EditText EDTdateaccount;
@@ -66,12 +62,10 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(this);
-        clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
 
          versementaccViewModel = new ViewModelProvider(this).get(VersementaccViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        smsSenderViewModel = new ViewModelProvider(this).get(SmsSenderViewModel.class);
 
         versement = versementaccViewModel.getMversementacc().getValue();
         client = Objects.requireNonNull(versement).getClient();

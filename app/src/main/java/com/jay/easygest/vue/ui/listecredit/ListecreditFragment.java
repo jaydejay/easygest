@@ -1,16 +1,13 @@
 package com.jay.easygest.vue.ui.listecredit;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -54,7 +51,9 @@ public class ListecreditFragment extends Fragment {
             adapter = new ListecreditAdapter(getContext(), listecredits);
             adapter.notifyDataSetChanged();
             binding.lstviewcredits.setAdapter(adapter);
-        }catch (Exception e){}
+        }catch (Exception e){
+            //
+        }
 
 
     }

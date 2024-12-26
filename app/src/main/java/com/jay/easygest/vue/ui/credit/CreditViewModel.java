@@ -9,19 +9,19 @@ import java.util.ArrayList;
 public class  CreditViewModel extends ViewModel {
 
 
-    private final MutableLiveData<Integer> totalcredits;
-    private final MutableLiveData<Integer> totalversements;
-    private final MutableLiveData<Integer> totalrestes;
-    private final MutableLiveData<CreditModel> credit;
-    private final MutableLiveData<ArrayList<CreditModel>> credits;
-    private final MutableLiveData<ArrayList<CreditModel>> credits_client_soldes_ou_non ;
-
-    private final MutableLiveData<Integer> totalcreditsclient ;
-    private final MutableLiveData<Integer> totalrestesclient ;
+    private  MutableLiveData<Integer> totalcredits ;
+    private  MutableLiveData<Integer> totalversements ;
+    private  MutableLiveData<Integer> totalrestes ;
+    private  MutableLiveData<CreditModel> credit ;
+    private  MutableLiveData<ArrayList<CreditModel>> credits;
+    private  MutableLiveData<ArrayList<CreditModel>> credits_client_soldes_ou_non ;
+    private  MutableLiveData<Integer> totalcreditsclient ;
+    private final MutableLiveData<Integer> totalrestesclient  ;
     public  MutableLiveData<Integer> idmenu = new MutableLiveData<>() ;
 
 
     public CreditViewModel() {
+
         Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(null);
 
         totalcredits = creditcontrolleur.getRecapTcredit();
@@ -33,6 +33,17 @@ public class  CreditViewModel extends ViewModel {
         credit = creditcontrolleur.getMCredit();
         credits = creditcontrolleur.getMCredits();
         credits_client_soldes_ou_non = creditcontrolleur.getMCredits();
+
+
+//        totalcredits = new MutableLiveData<>(0);
+//        totalversements = new MutableLiveData<>(0);
+//        totalrestes = new MutableLiveData<>();
+//
+//        totalcreditsclient = new MutableLiveData<>(0);
+//        totalrestesclient = new MutableLiveData<>(0);
+//        credit = new MutableLiveData<>();
+//        credits = new MutableLiveData<>();
+//        credits_client_soldes_ou_non = new MutableLiveData<>();
 
     }
 

@@ -52,7 +52,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     private VersementViewModel versementViewModel;
     private AccountViewModel accountViewModel;
     private ClientModel client;
-    private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
     private SmsSender smsSender;
     private int id ;
@@ -74,7 +73,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        accessLocalAppKes = new AccessLocalAppKes(this);
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
         client = clientViewModel.getClient().getValue();
         try {
@@ -145,8 +144,6 @@ public class AfficherclientActivity extends AppCompatActivity {
         }
 
 
-
-
     public void clientMenuDisabledAndRecpShow(Integer TcreditClient, Integer TresteCreditClient,Integer TaccountClient, Integer TresteAccClient){
 
         if (TresteCreditClient == 0){
@@ -174,11 +171,11 @@ public class AfficherclientActivity extends AppCompatActivity {
             binding.afClientListeHistoAccounts.setVisibility(View.GONE);
         }
 
-        String text_Totalcredit= "credit en cours : "+TcreditClient;
-        String text_Totalreste =  "reste à payer : "+TresteCreditClient;
+        String text_Totalcredit= "credit en cours "+"\n"+TcreditClient;
+        String text_Totalreste =  "reste à payer "+"\n"+TresteCreditClient;
 
-        String text_Totalaccount= "account en cours : "+TaccountClient ;
-        String text_Totalreste_acc =  "reste à payer : "+TresteAccClient ;
+        String text_Totalaccount= "account en cours"+"\n"+TaccountClient ;
+        String text_Totalreste_acc =  "reste à payer"+"\n"+TresteAccClient ;
 
         binding.textViewAfClientRecapCreditSomme.setText(text_Totalcredit);
         binding.textViewAfClientRecapCreditReste.setText(text_Totalreste);
@@ -299,9 +296,7 @@ public class AfficherclientActivity extends AppCompatActivity {
                         binding.btnAfClientSup.setEnabled(true);}
 
                 });
-                builder.setNegativeButton("non", (dialog, which) -> {
-                    binding.btnAfClientSup.setEnabled(true);
-                });
+                builder.setNegativeButton("non", (dialog, which) -> binding.btnAfClientSup.setEnabled(true));
 
                 builder.create().show();
             }else {
@@ -326,7 +321,7 @@ public class AfficherclientActivity extends AppCompatActivity {
             accountcontrolleur.listeAccountsClient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
-            intent.putExtra("titre","accounts en cour");
+            intent.putExtra("titre","accounts en cours");
             startActivity(intent);
 
         });

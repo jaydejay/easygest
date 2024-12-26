@@ -29,7 +29,6 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
-import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -49,9 +48,7 @@ public class AffichercreditActivity extends AppCompatActivity {
     private ActivityAffichercreditBinding binding;
     private ClientViewModel clientViewModel;
     private SmsSender smsSender;
-    private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
-    private SmsSenderViewModel smsSenderViewModel;
     private Gson gson;
 
     @Override
@@ -61,11 +58,10 @@ public class AffichercreditActivity extends AppCompatActivity {
         binding = ActivityAffichercreditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         smsSender = new SmsSender(this, this);
-        accessLocalAppKes = new AccessLocalAppKes(this);
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        smsSenderViewModel = new ViewModelProvider(this).get(SmsSenderViewModel.class);
         gson = new Gson();
         credit = creditViewModel.getCredit().getValue();
         creditcontrolleur.listecredits();
@@ -87,8 +83,6 @@ public class AffichercreditActivity extends AppCompatActivity {
 
 
     public void affichercredit(){
-//        Articles c_article1 = new Genson().deserialize(credit.getArticle1(), Articles.class);
-//        Articles c_article2 = new Genson().deserialize(credit.getArticle2(), Articles.class);
         Type type = new TypeToken<Article>(){}.getType();
         Article c_article1 = gson.fromJson(credit.getArticle1(),type);
         Article c_article2 = gson.fromJson(credit.getArticle2(),type);
@@ -197,9 +191,7 @@ public class AffichercreditActivity extends AppCompatActivity {
                         }
                     }
                 });
-                builder.setNegativeButton("non", (dialog, which) -> {
-                    binding.supCredit.setEnabled(true);
-                });
+                builder.setNegativeButton("non", (dialog, which) -> binding.supCredit.setEnabled(true));
 
                 builder.create().show();
 

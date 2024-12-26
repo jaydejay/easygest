@@ -36,7 +36,6 @@ public class AccessLocalVersement {
     private SQLiteDatabase bd;
     private AccessLocalCredit accessLocalCredit;
     private final AccessLocalClient accessLocalClient;
-    private Creditcontrolleur creditcontrolleur;
     private Context contexte;
 
 
@@ -69,7 +68,7 @@ public class AccessLocalVersement {
            bd = accessBD.getWritableDatabase();
            boolean succes = false;
            long date = MesOutils.convertStringToDate(dateversement).getTime();
-        creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(contexte);
+        Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(contexte);
         ArrayList<CreditModel> creditsunclient =  creditcontrolleur.listecreditsclient(client);
 
         if (creditsunclient.size() > 0){
@@ -260,37 +259,6 @@ public class AccessLocalVersement {
         }
         return  versements;
     }
-
-
-//    /**
-//     *
-//     * @param clientModel le client
-//     * @return liste des versements en cours du client
-//     */
-//    public ArrayList<CreditModel> listeVersementsclient(ClientModel clientModel){
-//        ArrayList<VersementsModel> versements = new ArrayList<>();
-//        try {
-//            bd = accessBD.getReadableDatabase();
-//            String req = "select * from versement where " + CLIENTID + "='" +clientModel.getId()+"'";
-//            Cursor cursor = bd.rawQuery(req, null);
-//            cursor.moveToFirst();
-//            do {
-//                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(2));
-//                VersementsModel versement = new VersementsModel(cursor.getInt(0),client,creditModel,cursor.getLong(1),cursor.getInt(2),cursor.getLong(4));
-//                versements.add(versement);
-//
-//            }
-//            while (cursor.moveToNext());
-//            cursor.close();
-//
-//
-//        }catch(Exception e){
-//            versements = null;
-//        }
-//        return  versements;
-//
-//    }
-
 
 
     public VersementsModel recupVersementById(Integer versementid){

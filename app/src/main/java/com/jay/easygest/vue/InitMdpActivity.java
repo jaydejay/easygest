@@ -1,13 +1,12 @@
 package com.jay.easygest.vue;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.jay.easygest.R;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityInitMdpBinding;
 import com.jay.easygest.model.AppKessModel;
@@ -68,10 +67,7 @@ public class InitMdpActivity extends AppCompatActivity {
             afficherMdpAlerte();
         });
 
-        builder.setNegativeButton("annuller",(dialog, which) -> {
-            binding.btnInitMdp.setEnabled(true);
-        });
-
+        builder.setNegativeButton("annuller",(dialog, which) -> binding.btnInitMdp.setEnabled(true));
         builder.create().show();
     }
 

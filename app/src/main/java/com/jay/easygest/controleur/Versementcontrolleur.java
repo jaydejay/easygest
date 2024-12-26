@@ -24,7 +24,6 @@ public class Versementcontrolleur {
         if(Versementcontrolleur.versementcontrolleurInstance == null){
             Versementcontrolleur.versementcontrolleurInstance = new Versementcontrolleur();
             accessLocalVersement = new AccessLocalVersement(contexte);
-//            accessLocalCredit = new AccessLocalCredit(contexte);
 
         }
 

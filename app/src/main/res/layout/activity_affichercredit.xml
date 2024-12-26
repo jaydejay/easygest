@@ -159,7 +159,7 @@
                     android:textColor="@color/bleu_clair"
                     android:textSize="16sp"
                     android:linksClickable="true"
-                    android:text="@string/liste_credit"
+                    android:text="@string/liste_articles"
                     android:textStyle="bold" />
 
                 <TextView

@@ -62,6 +62,7 @@ public class VersementsModel {
 
 
 
+    @NonNull
     @Override
     public String toString() {
         return "VersementsModel{" +

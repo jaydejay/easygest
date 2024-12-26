@@ -14,7 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:id="@+id/ll_article_id"
@@ -57,7 +58,7 @@
                         android:id="@+id/editarticles_designation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName"/>
+                        android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -78,7 +79,7 @@
                         android:id="@+id/editarticles_prix"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -100,19 +101,20 @@
                         android:id="@+id/editarticles_quantite"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <EditText
                     android:id="@+id/editarticles_description"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
                     android:ems="10"
-                    android:textColor="@color/black"
-                    android:importantForAutofill="no"
-                    android:hint="@string/description"
                     android:gravity="start|top"
-                    android:inputType="textMultiLine"/>
+                    android:hint="@string/description"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
 
@@ -121,6 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:padding="5dp"
@@ -170,28 +173,22 @@
                 android:id="@+id/btn_article_enreg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
                 android:text="@string/enreg_image" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
+
+            <TextView
+                android:id="@+id/ajout_article_to_liste_articles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/article_to_liste_credits"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/link"
-                    android:textSize="16sp"
-                    android:text="@string/liste_to_credits" />
-
-            </LinearLayout>
+                android:gravity="center_horizontal"
+                android:text="@string/liste_articles"
+                android:textColor="@color/link"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

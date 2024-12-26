@@ -2,17 +2,8 @@ package com.jay.easygest.outils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.ParcelFileDescriptor;
-import android.util.Base64;
-
-import androidx.lifecycle.ViewModelProvider;
-
-import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,52 +49,7 @@ public abstract  class MesOutils {
     }
 
 
-
-    public static String bitmapToString(Bitmap bitmap){
-
-        ByteArrayOutputStream img_stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,50,img_stream);
-        byte[] img_bite = img_stream.toByteArray();
-        return Base64.encodeToString(img_bite,0);
-
-    }
-
-    public static Bitmap StringTobitmap(String string){
-        Bitmap bitmap = null;
-        try {
-            byte[] img_bite = Base64.decode(string,Base64.DEFAULT);
-            bitmap = BitmapFactory.decodeByteArray(img_bite,0,img_bite.length);
-        }catch (Exception e){
-           //nothing
-        }
-
-        return bitmap;
-    }
-
-    public static String codeAgenceGenerator(){
-//        Random random = new Random();
-//        int n =5;
-        String str = "ABCDEFGH0IJKLMNOPQRSTUVWXYZ";
-        String num = "123456789";
-        String num2 = "0123456789";
-
-        StringBuilder stringBuilder1 = new StringBuilder(1);
-        StringBuilder stringBuilder2 = new StringBuilder(1);
-        StringBuilder stringBuilder3 = new StringBuilder(2);
-
-        int index = (int)(num.length() * Math.random());
-        stringBuilder1.append(num.charAt(index));
-
-        int index2 = (int)(str.length() * Math.random());
-        stringBuilder2.append(str.charAt(index2));
-
-        for (int i = 0; i < 2; i++) {
-            int index3 = (int)(num2.length() * Math.random());
-            stringBuilder3.append(num2.charAt(index3));
-        }
-
-        return stringBuilder1+""+stringBuilder2+""+stringBuilder2;
-    }
+//
 
 
 

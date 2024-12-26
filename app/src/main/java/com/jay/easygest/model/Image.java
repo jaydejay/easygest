@@ -3,14 +3,14 @@ package com.jay.easygest.model;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
+
 public class Image {
 
     private Integer id;
     private Bitmap image;
     private byte[] image2;
     private Integer articleid;
-
-    public Image() {}
 
 
 
@@ -61,6 +61,7 @@ public class Image {
         return image2;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Image{" +

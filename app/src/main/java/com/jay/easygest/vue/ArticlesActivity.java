@@ -3,11 +3,9 @@ package com.jay.easygest.vue;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +19,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
@@ -339,7 +335,7 @@ public class ArticlesActivity extends AppCompatActivity {
     }
 
     public void redirectTolisteCredits(){
-        binding.articleToListeCredits.setOnClickListener(view -> {
+        binding.ajoutArticleToListeArticles.setOnClickListener(view -> {
             Intent intent = new Intent(ArticlesActivity.this, GestionActivity.class);
             startActivity(intent);
         });

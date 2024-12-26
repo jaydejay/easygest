@@ -1,14 +1,11 @@
 package com.jay.easygest.controleur;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.jay.easygest.model.ArticlesModel;
-import com.jay.easygest.model.Image;
 import com.jay.easygest.outils.AccessLocalArticles;
-import com.jay.easygest.outils.AccessLocalImage;
 
 import java.util.ArrayList;
 
@@ -17,6 +14,7 @@ public class Articlescontrolleur {
     private static AccessLocalArticles accessLocalArticles;
     private  MutableLiveData<ArticlesModel> marticle = new MutableLiveData<>() ;
     private  MutableLiveData<ArrayList<ArticlesModel>> marticles = new MutableLiveData<>();
+    private  MutableLiveData<ArrayList<ArticlesModel>> adaptermarticles = new MutableLiveData<>();
 
 
     public Articlescontrolleur() {
@@ -28,6 +26,7 @@ public class Articlescontrolleur {
             Articlescontrolleur.articlescontrolleurInstance = new Articlescontrolleur();
             accessLocalArticles = new AccessLocalArticles(context);
         }
+//        accessLocalArticles = new AccessLocalArticles(context);
         return articlescontrolleurInstance;
     }
 
@@ -47,39 +46,32 @@ public class Articlescontrolleur {
         this.marticles.setValue(marticles);
     }
 
+    public MutableLiveData<ArrayList<ArticlesModel>> getAdaptermarticles() {
+        return adaptermarticles;
+    }
+
+    public void setAdaptermarticles(ArrayList<ArticlesModel> articles) {
+        this.adaptermarticles.setValue(articles);
+    }
+
     public ArticlesModel insertArticle(ArticlesModel article){
         return accessLocalArticles.insertArticle(article);
 
     }
 
-    public ArticlesModel recupererArticle(int articleid){
-      return accessLocalArticles.recupererArticle(articleid);
-    }
 
     public ArticlesModel updateArticle(ArticlesModel article){
        return accessLocalArticles.updateArticle(article);
     }
 
     public int deleteArticle(ArticlesModel article){
-        int rslt = accessLocalArticles.deleteArticle(article);
-//        if (rslt > 0){
-//            this.listeArticles();
-//        }
-        return rslt;
+        return accessLocalArticles.deleteArticle(article);
     }
 
-//    public ArrayList<ArticlesModel> listeArticles(){
-//        ArrayList<ArticlesModel> liste_articles =  accessLocalArticles.listeArticles();
-//        this.setMarticles(liste_articles);
-//       return liste_articles ;
-//    }
 
-    public void listeArticles(){
+    public void listeArticles2(){
         ArrayList<ArticlesModel> liste_articles =  accessLocalArticles.listeArticles();
         this.setMarticles(liste_articles);
     }
 
-    public int updateImage(int oldImageId, Image newImage) {
-        return accessLocalArticles.updateImage(oldImageId,newImage);
-    }
 }

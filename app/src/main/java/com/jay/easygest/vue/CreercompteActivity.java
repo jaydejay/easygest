@@ -22,8 +22,6 @@ import java.util.Objects;
 
 public class CreercompteActivity extends AppCompatActivity {
 
-//    public static final String SHARED_PREF_NAME = "setting_shared";
-    private  SharedPreferences sharedPreferences ;
     private SharedPreferences.Editor editor;
    private ActivityCreercompteBinding binding;
    private Usercontrolleur usercontrolleur;
@@ -31,7 +29,8 @@ public class CreercompteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        //    public static final String SHARED_PREF_NAME = "setting_shared";
+        SharedPreferences sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         binding = ActivityCreercompteBinding.inflate(getLayoutInflater());
         passwordHascher = new PasswordHascher();

@@ -28,9 +28,6 @@ public class SmsSendercontrolleur {
     public boolean insert(SmsnoSentModel sms){
        return  accessLocalSmsSender.insert(sms);
     }
-
-    public SmsnoSentModel getSmsnoSentModel(int id){return accessLocalSmsSender.getSmsnoSentModel(id); }
-
     public boolean delete(SmsnoSentModel sms){
         return accessLocalSmsSender.delete(sms);
     }

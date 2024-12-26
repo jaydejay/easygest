@@ -94,7 +94,6 @@ public class AfficherversementaccActivity extends AppCompatActivity {
         binding.textViewAfVersmaccSomme.setText(texte2);
         binding.textViewAfVersmaccNumeroCredit.setText(texte3);
 
-        binding.afVersmaccToCredits.setText(getResources().getString(R.string.liste_credit));
         binding.afVersmaccToClient.setText(R.string.le_client);
 
         ActionBar ab = getSupportActionBar();
@@ -168,9 +167,7 @@ public class AfficherversementaccActivity extends AppCompatActivity {
 
                     }
             );
-            builder.setNegativeButton("non", (dialog, which) -> {
-                binding.afficheVersaccCancelButton.setEnabled(true);
-            });
+            builder.setNegativeButton("non", (dialog, which) -> binding.afficheVersaccCancelButton.setEnabled(true));
 
             builder.create().show();
 

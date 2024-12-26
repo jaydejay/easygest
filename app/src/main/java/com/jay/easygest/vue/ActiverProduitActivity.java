@@ -7,7 +7,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jay.easygest.databinding.ActivityActiverProduitBinding;
-import com.jay.easygest.outils.SessionManagement;
 
 public class ActiverProduitActivity extends AppCompatActivity {
 

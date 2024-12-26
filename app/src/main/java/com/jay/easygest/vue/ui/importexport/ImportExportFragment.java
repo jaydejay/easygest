@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -46,7 +47,7 @@ public class ImportExportFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentImportExportBinding.inflate(inflater,container,false);
 
@@ -324,31 +325,8 @@ public class ImportExportFragment extends Fragment {
         }
     }
 
-    /**
-     * supprime la sauvegarde
-     */
 
-    private void deleteExternalStoragePrivateDoc() {
 
-        File path = this.requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        if (path != null) {
-            File file = new File(path, "gestioncredit.db");
-            file.delete();
-        }
-    }
-
-    /**
-     *
-     * @return vrai si le fichier ou le repertoire de sauvegarde existe
-     */
-   private boolean hasExternalStoragePrivateDoc() {
-        File path =this.requireContext(). getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        if (path != null) {
-            File file = new File(path, "gestioncredit.db");
-            return file.exists();
-        }
-        return false;
-    }
 
 
 }

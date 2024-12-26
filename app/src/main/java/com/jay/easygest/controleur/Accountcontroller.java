@@ -84,9 +84,6 @@ public class Accountcontroller {
      */
     public AccountModel creerAccount(String codeclt, String nomclient, String prenomsclient, String telephone , Article c_article1, Article c_article2, String versement, long dateaccount){
 
-//        String article1 = new Genson().serialize(c_article1);
-//        String article2 = new Genson().serialize(c_article2);
-
         String article1 = new Gson().toJson(c_article1);
         String article2 = new Gson().toJson(c_article2);
 
@@ -114,9 +111,6 @@ public class Accountcontroller {
      * @return  retourne vraie si l"account à été crée avec succes sinon faux
      */
     public boolean ajouterAccount(ClientModel client, Article c_article1, Article c_article2, String versement, long dateaccount) {
-
-//        String article1 = new Genson().serialize(c_article1);
-//        String article2 = new Genson().serialize(c_article2);
 
         String article1 = new Gson().toJson(c_article1);
         String article2 = new Gson().toJson(c_article2);
@@ -160,7 +154,8 @@ public class Accountcontroller {
             int somme_a_verse = accountModel.getSommeaccount()-ancienne_somme_account;
             accessLocalInfo.modifierAccountInfos(somme_a_verse);
             this.setAccount(account);
-            this.listeaccounts();
+//            this.listeaccounts();
+            this.listeAccountsClient(client);
             success = true;
         }
 

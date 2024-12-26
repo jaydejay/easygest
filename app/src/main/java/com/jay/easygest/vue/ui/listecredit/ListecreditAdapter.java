@@ -88,7 +88,9 @@ public class ListecreditAdapter extends BaseAdapter {
                 if (activity.contains("GestionActivity")){
                     ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
                 }else {((AfficherclientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
-            }catch (Exception e){}
+            }catch (Exception e){
+                //
+            }
 
         });
 

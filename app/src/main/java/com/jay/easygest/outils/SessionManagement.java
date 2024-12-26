@@ -2,11 +2,8 @@ package com.jay.easygest.outils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.jay.easygest.outils.VariablesStatique;
 
 public class SessionManagement {
-
-    public static final String SHARED_PREF_NAME = "auth_shared";
     private final SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 

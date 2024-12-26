@@ -14,13 +14,10 @@ import java.util.ArrayList;
 
 public class AccessLocalCredit {
 
-    public static final String NBR_CREDIT = "nbrcredit";
-    public static final String TOTAL_CREDIT = "totalcredit";
     public static final String TABLE_VERSEMENT = "versement";
     public static final String CODECLIENT = "codeclient";
     public static final String CLIENTID = "clientid";
     public static final String VERSEMENTS = "versements";
-//    public static final String TABLE_CLIENT = CLIENT;
 
     public static final String NOM = "nom";
     public static final String ARTICLE_1 = "article1";
@@ -57,15 +54,6 @@ public class AccessLocalCredit {
         this.contexte = contexte;
         this.accessBD = new MySqliteOpenHelper(contexte, null);
         accessLocalClient = new AccessLocalClient(contexte);
-    }
-
-
-    public ContentValues updateinfo(int nbrcredit,int totalcreditint){
-        ContentValues cv = new ContentValues();
-        cv.put(NBR_CREDIT,nbrcredit);
-        cv.put(TOTAL_CREDIT,totalcreditint);
-
-        return cv;
     }
 
     public ContentValues creerCredit(CreditModel credit, long client_id) {

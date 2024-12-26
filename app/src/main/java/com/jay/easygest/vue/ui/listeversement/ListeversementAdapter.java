@@ -12,7 +12,6 @@ import com.jay.easygest.R;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherCreditsClientActivity;
-import com.jay.easygest.vue.AfficherclientActivity;
 import com.jay.easygest.vue.GestionActivity;
 
 import java.util.ArrayList;

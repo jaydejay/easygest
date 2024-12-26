@@ -1,5 +1,7 @@
 package com.jay.easygest.model;
 
+import androidx.annotation.NonNull;
+
 public class AppKessModel {
 
     private int appnumber;
@@ -42,6 +44,7 @@ public class AppKessModel {
         return adresseelectro;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "AppKessModel{" +

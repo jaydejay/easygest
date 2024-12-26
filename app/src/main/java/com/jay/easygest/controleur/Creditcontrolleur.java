@@ -10,7 +10,6 @@ import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
-import com.jay.easygest.outils.AccessLocalClient;
 import com.jay.easygest.outils.AccessLocalCredit;
 import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersement;
@@ -25,7 +24,6 @@ public final class Creditcontrolleur {
     private static AccessLocalCredit accessLocalcredit;
     private static AccessLocalInfo accessLocalInfo ;
     private static AccessLocalVersement accessLocalVersement;
-    private static AccessLocalClient accessLocalClient;
     private final MutableLiveData<Integer> mtotalcredit = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversement = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalreste = new MutableLiveData<>();
@@ -50,7 +48,6 @@ public final class Creditcontrolleur {
             accessLocalcredit = new AccessLocalCredit(contexte);
             accessLocalVersement = new AccessLocalVersement(contexte);
             accessLocalInfo = new AccessLocalInfo(contexte);
-            accessLocalClient = new AccessLocalClient(contexte);
         }
 
 
@@ -75,9 +72,6 @@ public final class Creditcontrolleur {
         setMCredit(credit);
     }
 
-    public ArrayList<CreditModel> getCredits() {
-        return credits;
-    }
     public void setCredits(ArrayList<CreditModel> credits) {
         this.credits = credits;
         setMCredits(credits);
@@ -115,9 +109,6 @@ public final class Creditcontrolleur {
     }
 
     public boolean ajouterCredit(ClientModel client, Article c_article1, Article c_article2, String versement, long datecredit) {
-
-//        String article1 = new Genson().serialize(c_article1);
-//        String article2 = new Genson().serialize(c_article2);
 
         String article1 = new Gson().toJson(c_article1);
         String article2 = new Gson().toJson(c_article2);

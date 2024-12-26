@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.jay.easygest.R;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
@@ -37,7 +36,6 @@ public class AfficheversementActivity extends AppCompatActivity {
 
 
     private SessionManagement sessionManagement;
-    private AccessLocalAppKes accessLocalAppKes;
     private SmsSender smsSender;
     private ActivityAfficheversementBinding binding;
     private Versementcontrolleur versementcontrolleur;
@@ -55,7 +53,7 @@ public class AfficheversementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManagement= new SessionManagement(this);
-        accessLocalAppKes = new AccessLocalAppKes(this);
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
         smsSender= new SmsSender(this, this);
         binding = ActivityAfficheversementBinding.inflate(getLayoutInflater());
         versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
@@ -94,9 +92,6 @@ public class AfficheversementActivity extends AppCompatActivity {
         binding.textViewAfVersmDate.setText(date);
         binding.textViewAfVersmSomme.setText(texte2);
         binding.textViewAfVersmNumeroCredit.setText(texte3);
-
-        binding.afVersmToCredits.setText(getResources().getString(R.string.liste_credits));
-        binding.afVersmToClient.setText(getResources().getString(R.string.le_client));
 
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
@@ -166,9 +161,7 @@ public class AfficheversementActivity extends AppCompatActivity {
 
             });
 
-            builder.setNegativeButton("non", (dialog, which) -> {
-                binding.afficheVersCancelButton.setEnabled(true);
-            });
+            builder.setNegativeButton("non", (dialog, which) -> binding.afficheVersCancelButton.setEnabled(true));
 
             builder.create().show();
 

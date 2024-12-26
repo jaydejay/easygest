@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,7 +15,6 @@ import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityMainBinding;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.UserModel;
-import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsreSender;
 
@@ -30,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private SessionManagement sessionManagement;
     private Usercontrolleur usercontrolleur;
     private UserModel user;
-    private SmsSendercontrolleur smsSendercontrolleur;
-    private SmsreSender smsreSender;
-//    private  AppKessModel appKessModel;
+    //    private  AppKessModel appKessModel;
 //    private PasswordHascher passwordHascher;
 
     @Override
@@ -48,11 +44,12 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
+        SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-        smsreSender = new SmsreSender(this,this);
+        SmsreSender smsreSender = new SmsreSender(this, this);
         ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-        if (sms_no_Sents.size()>0){smsreSender.sendingUnSentMsg(sms_no_Sents);}
+        if (sms_no_Sents.size()>0){
+            smsreSender.sendingUnSentMsg(sms_no_Sents);}
 
         setContentView(binding.getRoot());
         init();
@@ -193,12 +190,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
-    private void activerbtn(Button btn){
-        btn.setVisibility(View.VISIBLE);
-        btn.setEnabled(true);
-    }
 
     /**
      * desavtive la creation de compte utilisateur

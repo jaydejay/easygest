@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ImageViewModel extends ViewModel {
 
-    private  MutableLiveData<Image> image = new MutableLiveData<>();
+    private  MutableLiveData<Image> image;
     private MutableLiveData<ArrayList<Image>> images ;
     private MutableLiveData<Bitmap> bitmapimageface ;
     private MutableLiveData<Bitmap> bitmapimageleft ;

@@ -86,7 +86,9 @@ public class ListecreditClientAdapter extends BaseAdapter {
                 if (activity.contains("GestionActivity")){
                     ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
                 }else {((AfficherCreditsClientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
-            }catch (Exception e){}
+            }catch (Exception e){
+                //
+            }
         });
 
         holder.btnlisteviewannuller.setOnClickListener(v -> {
@@ -98,7 +100,9 @@ public class ListecreditClientAdapter extends BaseAdapter {
                 }else {
                     ((AfficherCreditsClientActivity)context).annullerCredit(credits.get(position12));
                 }
-            }catch (Exception e){}
+            }catch (Exception e){
+                //
+            }
 
 
         });

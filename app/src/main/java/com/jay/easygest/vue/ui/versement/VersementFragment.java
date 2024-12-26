@@ -26,14 +26,13 @@ import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
-import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.util.Objects;
 
 public class VersementFragment extends Fragment {
 
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 2;
-    public static final String CREDIT = "credit";
+//    public static final String CREDIT = "credit";
     private SessionManagement sessionManagement;
     private SmsSender smsSender;
     private FragmentVersementBinding binding;
@@ -41,7 +40,6 @@ public class VersementFragment extends Fragment {
     private ClientViewModel clientViewModel;
     private CreditViewModel creditViewModel;
     private ClientModel client;
-    private SmsSenderViewModel smsSenderViewModel;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -175,10 +173,6 @@ public class VersementFragment extends Fragment {
         if (!sessionManagement.getSession()){
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
-
         }
-//        smsSender.sentReiceiver();
-//        smsSender.deliveredReceiver();
-
     }
 }

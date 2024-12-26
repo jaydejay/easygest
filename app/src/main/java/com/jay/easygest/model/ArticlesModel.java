@@ -1,5 +1,7 @@
 package com.jay.easygest.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class ArticlesModel {
@@ -36,7 +38,6 @@ public class ArticlesModel {
         this.description = description;
     }
 
-    public ArticlesModel() {}
 
     public Integer getId() {
         return id;
@@ -66,6 +67,7 @@ public class ArticlesModel {
         this.images = images;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return  "" + designation + ": " + prix;

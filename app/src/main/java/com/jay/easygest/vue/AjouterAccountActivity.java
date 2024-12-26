@@ -25,7 +25,6 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
-import com.jay.easygest.vue.viewmodels.SmsSenderViewModel;
 
 import java.util.Date;
 import java.util.Objects;
@@ -42,7 +41,6 @@ public class AjouterAccountActivity extends AppCompatActivity {
     private SmsSender smsSender;
     private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
-    private SmsSenderViewModel smsSenderViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,6 @@ public class AjouterAccountActivity extends AppCompatActivity {
         client = clientViewModel.getClient().getValue();
         accessLocalAppKes = new AccessLocalAppKes(this);
         smsSender = new SmsSender(this, this);
-        smsSenderViewModel = new ViewModelProvider(this).get(SmsSenderViewModel.class);
         init();
         ajouterAccount();
         setContentView(binding.getRoot());
@@ -142,8 +139,6 @@ public class AjouterAccountActivity extends AppCompatActivity {
                             int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
                             String destinationAdress = "+225"+clientModel.getTelephone();
-//                        String destinationAdress = "5556";
-
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                     + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
                                     +"vous avez pris un autre account de "+accountModel.getSommeaccount()+" FCFA"+"\n"

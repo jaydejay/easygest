@@ -13,7 +13,6 @@ import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierClientBinding;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.SessionManagement;
-import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
 public class ModifierClientActivity extends AppCompatActivity {
@@ -99,7 +98,6 @@ public class ModifierClientActivity extends AppCompatActivity {
                     creditcontrolleur.listecredits();
                    Intent intent = new Intent(ModifierClientActivity.this, AfficherclientActivity.class);
                    startActivity(intent);
-//                   finish();
                }
                else {
                    Toast.makeText(ModifierClientActivity.this,"erreur echec de la modification" , Toast.LENGTH_SHORT).show();
@@ -115,7 +113,6 @@ public class ModifierClientActivity extends AppCompatActivity {
         super.onResume();
         if (!sessionManagement.getSession()){
             Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
     }

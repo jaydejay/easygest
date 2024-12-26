@@ -27,21 +27,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
+
         <activity
             android:name=".vue.ArticleDetailsActivity"
             android:exported="false"
             android:label="@string/Details_article"
-            android:parentActivityName=".vue.GestionActivity"/>
+            android:parentActivityName=".vue.GestionActivity" />
         <activity
             android:name=".vue.ModifierArticleActivity"
             android:exported="false"
             android:label="@string/modifier_article"
-            android:parentActivityName=".vue.GestionActivity"/>
+            android:parentActivityName=".vue.GestionActivity" />
         <activity
             android:name=".vue.ArticlesActivity"
             android:exported="false"
             android:label="@string/ajouter_article"
-            android:parentActivityName=".vue.GestionActivity"/>
+            android:parentActivityName=".vue.GestionActivity" />
         <activity
             android:name=".vue.InitMdpActivity"
             android:exported="false" />
@@ -125,8 +126,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Trigger Google Play services to install the backported photo picker module. -->
-
+        </activity>
     </application>
 
 </manifest>

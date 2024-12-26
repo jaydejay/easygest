@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +20,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -29,7 +27,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Articlescontrolleur;
@@ -51,7 +48,6 @@ import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
-import com.jay.easygest.vue.ui.articles.ArticlesViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
@@ -65,58 +61,53 @@ public class GestionActivity extends AppCompatActivity {
     private Creditcontrolleur creditcontrolleur;
     private SessionManagement sessionManagement;
     private Accountcontroller accountcontrolleur;
-    private Articlescontrolleur articlescontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
-    private ArticlesViewModel articlesViewModel;
-    private AccessLocalAppKes accessLocalAppKes;
     private AppKessModel appKessModel;
     private SmsSender smsSender;
     EditText settingpassw;
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private PasswordHascher passwordHascher;
     private Usercontrolleur usercontrolleur ;
-    private ArrayList<ArticlesModel>  articles;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         binding = ActivityGestionBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
         sessionManagement = new SessionManagement(this);
         smsSender = new SmsSender(this, this);
+
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         Versementcontrolleur versementcontrolleur = Versementcontrolleur.getVersementcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         accountcontrolleur = Accountcontroller.getAccountcontrolleurInstance(this);
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-        articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
-        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
-        articlescontrolleur.listeArticles();
-        accessLocalAppKes = new AccessLocalAppKes(this);
+        creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+
+
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
         appKessModel = accessLocalAppKes.getAppkes();
 
         passwordHascher = new PasswordHascher();
         sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+
 
 
         try {
             ArrayList<ClientModel> listeClients = clientcontrolleur.listeClients();
+            ArrayList<CreditModel> credits =creditcontrolleur.listecredits();
             clientViewModel.getListeClients().setValue(listeClients);
-            creditViewModel.getCredits().setValue(creditcontrolleur.listecredits());
+            creditViewModel.getCredits().setValue(credits);
             versementViewModel.getMversements().setValue(versementcontrolleur.listeversements());
 
-        }catch (Exception e){}
+        }catch (Exception e){
+            //
+        }
 
 
         setSupportActionBar(binding.appBarGestion.toolbar);
@@ -134,6 +125,7 @@ public class GestionActivity extends AppCompatActivity {
 
 
     }
+
 
 
     @Override
@@ -427,6 +419,7 @@ public class GestionActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         sessionManagement.removeSession();
+        creditViewModel.getCredits().setValue(creditcontrolleur.listecredits());
     }
 
     @Override
@@ -435,6 +428,16 @@ public class GestionActivity extends AppCompatActivity {
         binding = null;
     }
 
+
+    public void deleteArticle(ArticlesModel articlesModel) {
+        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+        int rslt = articlescontrolleur.deleteArticle(articlesModel);
+        if (rslt > 0){
+            Intent intent = new Intent(this, GestionActivity.class);
+            startActivity(intent);
+
+        }
+    }
 
 
 }

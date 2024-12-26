@@ -16,12 +16,10 @@ public class AccessLocalImage {
     public static final String IMAGE = "image";
     public static final String ID = "id";
     private final MySqliteOpenHelper accessBD;
-    private final Context contexte;
     private SQLiteDatabase bd;
 
     public AccessLocalImage(Context context) {
-        this.contexte = context;
-        this.accessBD = new MySqliteOpenHelper(contexte,null);
+        this.accessBD = new MySqliteOpenHelper(context,null);
     }
 
     public ArrayList<Image> imagesDunArticles(int articleid){
@@ -60,42 +58,6 @@ public class AccessLocalImage {
         return rslt;
     }
 
-    public int updateImage(Image newImage) {
-        bd = accessBD.getWritableDatabase();
-        int rslt ;
-        ContentValues image_cv = new ContentValues();
-        image_cv.put(IMAGE,newImage.getImage2());
-
-        try {
-            rslt = bd.update(TABLE_IMAGE,image_cv,ID+"=?",new String[] {String.valueOf(newImage.getId())});
-//            bd.close();
-        }catch (Exception e){
-
-            rslt = 0;
-//            bd.close();
-        }
-
-        return rslt;
-    }
-
-    public Image recupererimage(int imageid){
-        bd = accessBD.getWritableDatabase();
-        Image image = null;
-        try{
-           Cursor cursor = bd.query(TABLE_IMAGE,null,ID+"=?",new String[] {String.valueOf(imageid)},null,null,null);
-           cursor.moveToFirst();
-           if (!cursor.isAfterLast()){
-               image = new Image(cursor.getInt(0),cursor.getBlob(1), cursor.getInt(2) );
-           }
-           cursor.close();
-           bd.close();
-        }catch (Exception e){
-            bd.close();
-            return image;
-        }
-        return image;
-    }
-
     public long isertImage(Image image) {
         bd = accessBD.getWritableDatabase();
         long rslt;
@@ -114,16 +76,4 @@ public class AccessLocalImage {
         return rslt;
     }
 
-    public int deleteFalseImages(Integer lastimageId, Integer articleId) {
-        bd = accessBD.getWritableDatabase();
-//        String req = "select * from image where id > " + lastimageId +" and articleid =" + articleId +"";
-//        int rslt;
-//        Cursor cursor = bd.rawQuery(req, null);
-//        cursor.moveToFirst();
-//        do {
-        int rslt =bd.delete(TABLE_IMAGE,ID +">? and "+ ARTICLEID+"=?",new String[]{String.valueOf(lastimageId),String.valueOf(articleId)});
-//        }while (cursor.moveToNext());
-
-     return rslt;
-    }
 }

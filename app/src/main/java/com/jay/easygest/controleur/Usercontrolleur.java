@@ -73,10 +73,6 @@ public final class Usercontrolleur {
         return user;
     }
 
-    public UserModel recupAdministrateur(){
-        return accessLocal.recupAdministrateur();
-    }
-
 
     public boolean isAuthenticated(String username, String password){
         return accessLocal.isAuthenticated(username, password);
@@ -88,20 +84,6 @@ public final class Usercontrolleur {
 
     public void desactiverProprietaire(){
         accessLocal.desactiverProprietaire();
-    }
-
-    public void activerProprietaire(){
-//        String mdp = MesOutils.mdpgenerator();
-        accessLocal.activerProprietaire();
-//        this.setProprietaireMdpInit(mdp);
-    }
-
-    public void desactiverAdministrateur(){
-        accessLocal.desactiverAdministrateur();
-    }
-
-    public void activerAdministrateur(){
-        accessLocal.activerAdministrateur();
     }
 
     /**

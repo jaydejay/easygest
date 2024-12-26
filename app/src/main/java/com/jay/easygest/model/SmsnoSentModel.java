@@ -1,9 +1,8 @@
 package com.jay.easygest.model;
 
-import com.jay.easygest.outils.MesOutils;
+import androidx.annotation.NonNull;
 
-import java.util.Date;
-import java.util.UUID;
+import com.jay.easygest.outils.MesOutils;
 
 public class SmsnoSentModel {
 
@@ -55,6 +54,7 @@ public class SmsnoSentModel {
         this.smsid = MesOutils.smsidnumbergenerator();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return ""+clientid;

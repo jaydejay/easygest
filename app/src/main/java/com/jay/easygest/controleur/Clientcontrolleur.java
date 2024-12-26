@@ -1,8 +1,12 @@
 package com.jay.easygest.controleur;
+
 import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
+
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.AccessLocalClient;
+
 import java.util.ArrayList;
 
 public class Clientcontrolleur {

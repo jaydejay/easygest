@@ -1,22 +1,14 @@
 package com.jay.easygest.model;
 
+import androidx.annotation.NonNull;
+
 public class VersementsaccModel {
     private Integer id;
-    private String codeclient;
     private ClientModel client;
     private  AccountModel account;
     private Long sommeverse;
-    private Integer account_id;
     private Long dateversement;
 
-
-    public VersementsaccModel(String codeclient, Long sommeverse, Integer account_id, Long dateversement) {
-
-        this.codeclient = codeclient;
-        this.sommeverse = sommeverse;
-        this.account_id = account_id;
-        this.dateversement = dateversement;
-    }
 
     public VersementsaccModel(int id, ClientModel client, AccountModel account, Long sommeverse, Long dateversement) {
         this.id = id;
@@ -26,15 +18,8 @@ public class VersementsaccModel {
         this.dateversement = dateversement;
     }
 
-
-
-
     public Integer getId() {
         return id;
-    }
-
-    public String getCodeclient() {
-        return codeclient;
     }
 
     public ClientModel getClient() {
@@ -48,17 +33,13 @@ public class VersementsaccModel {
     public Long getSommeverse() {
         return sommeverse;
     }
-
-    public Integer getAccount_id() {
-        return account_id;
-    }
-
     public Long getDateversement() {
         return dateversement;
     }
 
 
 
+    @NonNull
     @Override
     public String toString() {
         return "VersementsaccModel{" +

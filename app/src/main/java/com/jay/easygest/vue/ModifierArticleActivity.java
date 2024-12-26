@@ -20,12 +20,12 @@ public class ModifierArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityModofierArticleBinding.inflate(getLayoutInflater());
         Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
-//       articlesModel = articlescontrolleur.recupererArticle(getIntent().getIntExtra("articleid",1));
         articlesModel = articlescontrolleur.getMarticle().getValue();
         setContentView(binding.getRoot());
 
         initA();
         updateArtice();
+        redirectToListArticles();
     }
 
     public void initA(){
@@ -91,6 +91,14 @@ public class ModifierArticleActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void redirectToListArticles(){
+        binding.modifArticleToListeArticles.setOnClickListener(view -> {
+            Intent intent = new Intent(ModifierArticleActivity.this,GestionActivity.class);
+            startActivity(intent);
+        });
+
     }
 
 }

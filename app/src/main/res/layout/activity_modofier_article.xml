@@ -111,15 +111,15 @@
 
 
             <TextView
-                android:id="@+id/article_to_liste_credits"
+                android:id="@+id/modif_article_to_liste_articles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:textStyle="bold"
                 android:gravity="center_horizontal"
-                android:text="@string/liste_to_credits"
+                android:text="@string/liste_articles"
                 android:textColor="@color/link"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

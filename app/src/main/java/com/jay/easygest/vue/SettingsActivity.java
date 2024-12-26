@@ -3,18 +3,12 @@ package com.jay.easygest.vue;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.method.TextKeyListener;
-import android.text.style.StyleSpan;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.jay.easygest.R;
 import com.jay.easygest.databinding.ActivitySettingsBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
@@ -29,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SettingsActivity extends AppCompatActivity {
 
     private SessionManagement sessionManagement;
-    private  SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private ActivitySettingsBinding binding;
     private AccessLocalAppKes accessLocalAppKes;
@@ -47,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         appkess = accessLocalAppKes.getAppkes();
         passwordHascher = new PasswordHascher();
 
-        sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);

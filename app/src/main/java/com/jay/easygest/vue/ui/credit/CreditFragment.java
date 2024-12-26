@@ -25,7 +25,6 @@ import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
-import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
@@ -40,7 +39,6 @@ public class CreditFragment extends Fragment {
     private Creditcontrolleur creditcontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private ClientViewModel clientViewModel;
-    private AccessLocalAppKes accessLocalAppKes;
     private SmsSender smsSender;
     private AppKessModel appKessModel;
 
@@ -52,7 +50,7 @@ public class CreditFragment extends Fragment {
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(getContext());
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         smsSender = new SmsSender(getContext(), getActivity());
-        accessLocalAppKes = new AccessLocalAppKes(getContext());
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
         appKessModel = accessLocalAppKes.getAppkes();
 
         View root = binding.getRoot();
@@ -143,11 +141,11 @@ public class CreditFragment extends Fragment {
                             creditcontrolleur.setRecapTcreditClient(client);
                             clientViewModel.getClient().setValue(client);
 
-                            int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
+//                            int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
                             int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
-//                           String destinationAdress = "+225"+client.getTelephone();
-                            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
+                           String destinationAdress = "+225"+client.getTelephone();
+//                            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                     +"bienvenu(e) "+client.getNom() + " "+client.getPrenoms()+"\n"

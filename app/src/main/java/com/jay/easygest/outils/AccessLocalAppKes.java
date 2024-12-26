@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.InfosModel;
 
 import java.util.ArrayList;
 
@@ -18,7 +17,7 @@ public class AccessLocalAppKes {
     public static final String BASECODE = "basecode";
     public static final String TELEPHONE = "telephone";
     public static final String ADRESSEELECTRO = "adresseelectro";
-    private MySqliteOpenHelper accessBD;
+    private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
 
     public AccessLocalAppKes(Context context) {

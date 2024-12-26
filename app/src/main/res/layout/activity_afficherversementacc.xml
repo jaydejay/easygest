@@ -109,6 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
+            android:text="@string/liste_articles"
             android:textColor="@color/bleu_clair"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -117,10 +118,11 @@
             android:id="@+id/af_versmacc_to_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/le_client"
+            android:textAlignment="textStart"
             android:textColor="@color/bleu_clair"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="textStart"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

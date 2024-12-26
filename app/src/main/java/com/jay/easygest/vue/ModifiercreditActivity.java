@@ -12,7 +12,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifiercreditBinding;
@@ -27,7 +26,6 @@ import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 
-import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Objects;
 
@@ -39,7 +37,6 @@ public class ModifiercreditActivity extends AppCompatActivity {
     private ActivityModifiercreditBinding binding;
     private CreditModel credit;
     private ClientModel client;
-    private AccessLocalAppKes accessLocalAppKes;
     private SmsSender smsSender;
     private AppKessModel appKessModel;
 
@@ -56,7 +53,7 @@ public class ModifiercreditActivity extends AppCompatActivity {
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
 
-        accessLocalAppKes = new AccessLocalAppKes(this);
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
         smsSender = new SmsSender(this, this);
 
         appKessModel = accessLocalAppKes.getAppkes();
@@ -68,7 +65,6 @@ public class ModifiercreditActivity extends AppCompatActivity {
     }
 
     public void afficherCredit(){
-        Type type = new TypeToken<Article>(){}.getType();
         Article article1 = new Gson().fromJson(credit.getArticle1(), Article.class);
         Article article2 = new Gson().fromJson(credit.getArticle2(), Article.class);
         binding.modifcredrnom.setText(client.getNom());
@@ -178,11 +174,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
                             creditcontrolleur.setRecapTresteClient(clientModel);
                             creditcontrolleur.setRecapTcreditClient(clientModel);
 
-                            int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
                             int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
-
                             String destinationAdress = "+225"+clientModel.getTelephone();
-//                        String destinationAdress = "5556";
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                     + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
                                     +"vous avez modifier le credit "+creditModel.getNumerocredit()+"\n"

@@ -49,9 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@android:color/holo_green_light"
-            android:text="@string/article_liste"
+            android:text="@string/article_out_stock"
             android:textColor="@color/design_default_color_primary_dark"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <Button
             android:id="@+id/btn_aricle_stock"
@@ -64,7 +64,7 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/article_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

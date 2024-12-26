@@ -17,7 +17,7 @@
     <string name="creer">creer</string>
     <string name="modif_credit">modifier credit</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="ajouter_credit">ajouter credit</string>
+    <string name="ajouter_credit">Ajouter credit</string>
     <string name="article_1">article 1</string>
     <string name="versement">versement</string>
     <string name="article_2">article 2</string>
@@ -76,17 +76,17 @@
     <string name="Afficher_client">client infos</string>
     <string name="quantite1">qte</string>
     <string name="num_cresdit">num credit</string>
-    <string name="mes_accounts">mes accounts</string>
-    <string name="faire_un_versement_acc">versé un account</string>
-    <string name="faire_un_versement_credit">versé un credit</string>
-    <string name="histo_credits">histo credits</string>
-    <string name="histo_accounts">histo accounts</string>
+    <string name="mes_accounts">Mes accounts</string>
+    <string name="faire_un_versement_acc">Versé un account</string>
+    <string name="faire_un_versement_credit">Versé un credit</string>
+    <string name="histo_credits">Histo credits</string>
+    <string name="histo_accounts">Histo accounts</string>
     <string name="menu_account">Account</string>
-    <string name="voir_versements">voir versements</string>
+    <string name="voir_versements">Voir versements</string>
     <string name="account">account</string>
     <string name="recap_account">Recap Account\t\t</string>
     <string name="modif_account">modifier account</string>
-    <string name="ajouter_account">ajouter account</string>
+    <string name="ajouter_account">Ajouter account</string>
     <string name="ajouter">ajouter</string>
     <string name="liste_credits">liste credits</string>
     <string name="num_account">num account</string>
@@ -155,9 +155,10 @@
     <string name="image_d_article">image d\'article</string>
     <string name="Details_article">Details article</string>
     <string name="modifier_article">modifier article</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="description">description</string>
+    <string name="article_out_stock">hors stock</string>
 
 
 </resources>

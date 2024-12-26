@@ -128,6 +128,8 @@ public class AfficherAccountActivity extends AppCompatActivity {
 
     public void redirectToModifierAccount(){
         binding.modifierAccount.setOnClickListener(view -> {
+            ClientModel client = this.account.getClient();
+            this.clientViewModel.getClient().setValue(client);
             Intent intent = new Intent(this,ModifierAccountActivity.class);
             startActivity(intent);
         });
@@ -168,9 +170,6 @@ public class AfficherAccountActivity extends AppCompatActivity {
                             int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
                             String destinationAdress = "+225"+clientModel.getTelephone();
-//                        String destinationAdress1 = "+225"+VariablesStatique.CLIENT_TELEPHONE;
-//                        String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
-
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                     + clientModel.getNom() + " "+clientModel.getPrenoms() +"\n"
                                     +"vous avez annullé l'account  "+account.getNumeroaccount()+"\n"
@@ -185,9 +184,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
                     }
                 });
 
-                builder.setNegativeButton("non", (dialog, which) -> {
-                    binding.supAccount.setEnabled(true);
-                });
+                builder.setNegativeButton("non", (dialog, which) -> binding.supAccount.setEnabled(true));
 
                 builder.create().show();
 

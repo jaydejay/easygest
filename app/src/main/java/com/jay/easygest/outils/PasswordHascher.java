@@ -15,17 +15,14 @@ public class PasswordHascher {
         final Argon2Kt argon2Kt = new Argon2Kt();
 
         final Argon2KtResult hashResult = argon2Kt.hash(Argon2Mode.ARGON2_I, password.getBytes(), salt.getBytes());
-        final String encodedOutput = hashResult.encodedOutputAsString();
 
-        return encodedOutput;
+        return hashResult.encodedOutputAsString();
     }
 
     @Keep
     public boolean verifyHashingPass(String password, String encodingPass){
         final Argon2Kt argon2Kt = new Argon2Kt();
-        final boolean verificationResult = argon2Kt.verify(Argon2Mode.ARGON2_I, encodingPass, password.getBytes());
-
-        return verificationResult;
+        return argon2Kt.verify(Argon2Mode.ARGON2_I, encodingPass, password.getBytes());
     }
 
 

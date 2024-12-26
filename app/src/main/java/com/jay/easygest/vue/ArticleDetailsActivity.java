@@ -18,15 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.controleur.Imagecontrolleur;
 import com.jay.easygest.databinding.ActivityArticleDetailsBinding;
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.Image;
 import com.jay.easygest.outils.MesOutils;
-import com.jay.easygest.outils.MySqliteOpenHelper;
 import com.jay.easygest.vue.ui.articles.ArticlesViewModel;
-import com.jay.easygest.vue.viewmodels.ImageViewModel;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -35,10 +32,8 @@ import java.util.ArrayList;
 public class ArticleDetailsActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_WRITE = 100;
     private ActivityArticleDetailsBinding binding;
-    private MySqliteOpenHelper accessBD;
+//    private MySqliteOpenHelper accessBD;
     private Imagecontrolleur imagecontrolleur ;
-    private ArticlesViewModel articlesViewModel;
-    private ImageViewModel imageViewModel;
     private  ArticlesModel article;
     private  ActivityResultLauncher<Intent> activityResultLauncherFace;
     private  ActivityResultLauncher<Intent> activityResultLauncherLeft;
@@ -53,9 +48,9 @@ public class ArticleDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityArticleDetailsBinding.inflate(getLayoutInflater());
-        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
-        articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
-        imageViewModel = new ViewModelProvider(this).get(ImageViewModel.class);
+//        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+        ArticlesViewModel articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
+//        imageViewModel = new ViewModelProvider(this).get(ImageViewModel.class);
         imagecontrolleur = Imagecontrolleur.getImagecontrolleurInstance(this);
         article = articlesViewModel.getArticlelivedata().getValue();
 
@@ -74,7 +69,6 @@ public class ArticleDetailsActivity extends AppCompatActivity {
 
                             Image newImage2 = new Image((int) rslt1,bitemapTobite, article.getId());
                             article.getImages().add(newImage2);
-                            int taille2 = article.getImages().size();
                             binding.articleDetailFace.setImageBitmap(bitmapimageface);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageface);
                         }
@@ -83,7 +77,7 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         int rslt2 = imagecontrolleur.updateImageInt(imageBite2);
                         if (rslt2 > 0) {
                             article.getImages().set(0,imageBite2);
-                            int taille3 = article.getImages().size();
+
                             binding.articleDetailFace.setImageBitmap(bitmapimageface);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageface);
                         }
@@ -111,7 +105,6 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         if (rslt1 > 0) {
                             Image newImage2 = new Image((int) rslt1,bitemapTobite, article.getId());
                             article.getImages().add(newImage2);
-                            int taille2 = article.getImages().size();
                             binding.articleDetailLeft.setImageBitmap(bitmapimageleft);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageleft);
                         }
@@ -120,7 +113,6 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         int rslt2 = imagecontrolleur.updateImageInt(imageBite2);
                         if (rslt2 > 0) {
                             article.getImages().set(1,imageBite2);
-                            int taille3 = article.getImages().size();
                             binding.articleDetailLeft.setImageBitmap(bitmapimageleft);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageleft);
                         }
@@ -146,7 +138,7 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         if (rslt1 > 0) {
                             Image newImage2 = new Image((int) rslt1,bitemapTobite, article.getId());
                             article.getImages().add(newImage2);
-                            int taille2 = article.getImages().size();
+
                             binding.articleDetailRight.setImageBitmap(bitmapimageright);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageright);
                         }
@@ -155,7 +147,6 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         int rslt2 = imagecontrolleur.updateImageInt(imageBite2);
                         if (rslt2 > 0) {
                             article.getImages().set(2,imageBite2);
-                            int taille3 = article.getImages().size();
                             binding.articleDetailRight.setImageBitmap(bitmapimageright);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageright);
                         }
@@ -179,7 +170,6 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         if (rslt1 > 0) {
                             Image newImage2 = new Image((int) rslt1,bitemapTobite, article.getId());
                             article.getImages().add(newImage2);
-                            int taille2 = article.getImages().size();
                             binding.articleDetailBack.setImageBitmap(bitmapimageback);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageback);
                         }
@@ -188,7 +178,6 @@ public class ArticleDetailsActivity extends AppCompatActivity {
                         int rslt2 = imagecontrolleur.updateImageInt(imageBite2);
                         if (rslt2 > 0) {
                             article.getImages().set(3,imageBite2);
-                            int taille3 = article.getImages().size();
                             binding.articleDetailBack.setImageBitmap(bitmapimageback);
                             binding.articleDetailImageView.setImageBitmap(bitmapimageback);
                         }

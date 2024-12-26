@@ -24,7 +24,6 @@ import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
-import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
@@ -38,7 +37,7 @@ import java.util.Objects;
  */
 public class AjouterVersementaccFragment extends Fragment {
 
-    public static final String ACCOUNT = "account";
+//    public static final String ACCOUNT = "account";
 
     private SessionManagement sessionManagement;
 
@@ -103,9 +102,6 @@ public class AjouterVersementaccFragment extends Fragment {
             } else {
 
                 try {
-//                    String codeclient = binding.ajoutervrsmtacccodeclt.getText().toString().trim();
-//                    String dateversement = binding.ajoutervrsmntaccdate.getText().toString();
-//                    int sommeverse_formulaire = Integer.parseInt(somme_versee);
                     if (Objects.equals(client.getCodeclient(), binding.ajoutervrsmtacccodeclt.getText().toString().trim())){
 
                         int somme_total_account = accountViewModel.getTotalaccountsclient().getValue();
@@ -192,8 +188,6 @@ public class AjouterVersementaccFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
-//        smsSender.sentReiceiver();
-//        smsSender.deliveredReceiver();
     }
 
 

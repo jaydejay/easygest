@@ -11,23 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.databinding.FragmentArticlesBinding;
 import com.jay.easygest.model.ArticlesModel;
-import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.vue.ArticlesActivity;
-import com.jay.easygest.vue.ui.account.AccountViewModel;
-import com.jay.easygest.vue.ui.listecredit.ListecreditAdapter;
-import com.jay.easygest.vue.ui.listecredit.ListecreditFragment;
 
 import java.util.ArrayList;
 
 public class ArticlesFragment extends Fragment {
-    private Articlescontrolleur articlescontrolleur;
-    private ListeArticlesAdapter adapter;
     private ArticlesViewModel articlesViewModel;
-    private ArrayList<ArticlesModel>  articles;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
     private FragmentArticlesBinding binding;
 
     @Override
@@ -40,9 +37,21 @@ public class ArticlesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentArticlesBinding.inflate(inflater,container,false);
-        articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(getContext());
+        //    private ListeArticlesAdapter adapter;
+        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(getContext());
+        articlescontrolleur.listeArticles2();
         articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
+        articlesViewModel.getArticleInstocklivedatas();
+
+        recyclerView = binding.articleListView;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+
+//        getAllArticle();
         creerliste();
+        getArticleInStock();
+        getArticleOutStock();
         rechercherArticle();
         redirectToArticleActivity();
 
@@ -61,11 +70,11 @@ public class ArticlesFragment extends Fragment {
 
     public void creerliste(){
         try {
-            articlesViewModel.getArticlelivedatas().observe(getViewLifecycleOwner(),articlesModels -> {
-                adapter = new ListeArticlesAdapter(getContext(),articlesModels);
-                adapter.notifyDataSetChanged();
-                binding.articleListView.setAdapter(adapter);
-            });
+               articlesViewModel.getArticleAdapterlivedatas().observe(getViewLifecycleOwner(),articlesAdapterModels -> {
+                   adapter = new RecycleViewArticleAdapter(getContext(),articlesAdapterModels);
+                   adapter.notifyDataSetChanged();
+                   recyclerView.setAdapter(adapter);
+               });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,7 +87,7 @@ public class ArticlesFragment extends Fragment {
         ArrayList<ArticlesModel> filteredliste = new ArrayList<>();
         try {
 
-            articlesViewModel.getArticlelivedatas().observe(getViewLifecycleOwner(),articlesModels -> {
+            articlesViewModel.getArticleAdapterlivedatas().observe(getViewLifecycleOwner(),articlesModels -> {
                 for (ArticlesModel article : articlesModels) {
                     if (article.getId() != null){
                         if (article.getDesignation().contains(mtext) ){
@@ -111,9 +120,9 @@ public class ArticlesFragment extends Fragment {
 
                 ArrayList<ArticlesModel> articles = ArticlesFragment.this.getFilter(newText);
                 try {
-                    adapter = new ListeArticlesAdapter(getContext(),articles );
+                    adapter = new RecycleViewArticleAdapter(getContext(),articles);
                     adapter.notifyDataSetChanged();
-                    binding.articleListView.setAdapter(adapter);
+                    recyclerView.setAdapter(adapter);
                 }catch (Exception e){
                     return true;
                 }
@@ -122,5 +131,13 @@ public class ArticlesFragment extends Fragment {
         });
     }
 
+    public void getArticleInStock(){
+        binding.btnAricleStock.setOnClickListener(view -> articlesViewModel.getArticleInstocklivedatas());
+    }
+
+    public void getArticleOutStock(){
+        binding.btnListeAricle.setOnClickListener(view -> articlesViewModel.getArticleOutStocklivedatas());
+
+    }
 
 }

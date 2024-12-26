@@ -1,5 +1,7 @@
 package com.jay.easygest.model;
 
+import androidx.annotation.NonNull;
+
 public class InfosModel {
 
     private Integer appnumber ;
@@ -38,6 +40,7 @@ public class InfosModel {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         return "infocredit{" +
