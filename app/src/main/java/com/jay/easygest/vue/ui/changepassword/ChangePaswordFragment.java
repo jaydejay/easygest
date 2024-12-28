@@ -52,36 +52,43 @@ public class ChangePaswordFragment extends Fragment {
             try {
                 String username = binding.editchangerpasswordusername.getText().toString().trim();
                 String nouveaupassword = binding.editchangerpasswordnouveaupassword.getText().toString().trim();
+                String repeat_nouveaupassword = binding.editchangerpasswordRenouveaupassword.getText().toString().trim();
                 String password = binding.editchangerpasswordpassword.getText().toString().trim();
-                if (username.isEmpty() || password.isEmpty() || nouveaupassword.isEmpty() ){
+                if (username.isEmpty() || password.isEmpty() || nouveaupassword.isEmpty()|| repeat_nouveaupassword.isEmpty() ){
                     Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
                     binding.btnchangepassword.setEnabled(true);
 
                 }else {
                     if (username.length() >= 6 && password.length() >= 8 && nouveaupassword.length() >= 8){
+                        if (repeat_nouveaupassword.equals(nouveaupassword)){
+                            user = usercontrolleur.recupProprietaire();
+                            if(passwordHascher.verifyHashingPass(password,user.getPassword())){
 
-                        user = usercontrolleur.recupProprietaire();
-                        if(passwordHascher.verifyHashingPass(password,user.getPassword())){
+                                if (username.equals(user.getUsername())){
+                                    String _nouveaupassword = passwordHascher.getHashingPass(nouveaupassword, VariablesStatique.MY_SALT);
+                                    UserModel userModel = new UserModel(user.getId(),user.getUsername(),_nouveaupassword,user.getDateInscription(),user.getStatus(),user.isActif(),0);
+                                    usercontrolleur.modifierUser(userModel);
+                                    usercontrolleur.setUser(userModel);
+                                    Intent intent = new Intent(getActivity(), GestionActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }else{
+                                    binding.btnchangepassword.setEnabled(true);
+                                    Toast.makeText(getContext(), "username ne correspond pas", Toast.LENGTH_SHORT).show();
+                                    desactiverbtnchangepassword(user);
+                                }
 
-                            if (username.equals(user.getUsername())){
-                                String _nouveaupassword = passwordHascher.getHashingPass(nouveaupassword, VariablesStatique.MY_SALT);
-                                UserModel userModel = new UserModel(user.getId(),user.getUsername(),_nouveaupassword,user.getDateInscription(),user.getStatus(),user.isActif(),0);
-                                usercontrolleur.modifierUser(userModel);
-                                usercontrolleur.setUser(userModel);
-                                Intent intent = new Intent(getActivity(), GestionActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
                             }else{
                                 binding.btnchangepassword.setEnabled(true);
-                                Toast.makeText(getContext(), "username ne correspond pas", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), " mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
                                 desactiverbtnchangepassword(user);
                             }
-
                         }else{
                             binding.btnchangepassword.setEnabled(true);
-                            Toast.makeText(getContext(), " mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
-                            desactiverbtnchangepassword(user);
+                            Toast.makeText(getContext(), "nouveaux mot de passe incoherents", Toast.LENGTH_SHORT).show();
                         }
+
+
                     }else{
                         binding.btnchangepassword.setEnabled(true);
                         Toast.makeText(getContext(), "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();

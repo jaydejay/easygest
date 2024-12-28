@@ -24,7 +24,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/mdp_init" />
+            android:text="@string/mdp_init"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editText_init_mdp_username"
@@ -49,9 +51,7 @@
             android:autofillHints="@string/owner"
             android:layout_marginTop="25dp"
             android:hint="@string/owner"
-            android:inputType="textPersonName"
-            />
-
+            android:inputType="textPersonName"/>
         <EditText
             android:id="@+id/editText_init_mdp_owner_mail"
             android:layout_width="221dp"
@@ -62,7 +62,18 @@
             android:ems="10"
             android:gravity="center"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"/>
+        <EditText
+            android:id="@+id/editText_init_mdp_password"
+            android:layout_width="221dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:autofillHints="@string/password"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/password"
+            android:inputType="textPassword"/>
 
         <Button
             android:id="@+id/btn_init_mdp"

@@ -62,6 +62,20 @@ public class MainActivity extends AppCompatActivity {
         desactivatetxtCreation();
         desactiverbtnAuthInit();
         parametres();
+        hideInitMdpText();
+
+    }
+
+    private void hideInitMdpText() {
+
+        try {
+            UserModel userModel = usercontrolleur.recupProprietaire();
+            if (userModel == null || userModel.getCompteur() >= 3){
+                binding.txtMainMdpOublie.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            //do nothing
+        }
 
     }
 
@@ -261,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
             UserModel userModel = usercontrolleur.recupProprietaire();
             if (userModel.getCompteur() >= 3){
                 binding.btnauth.setVisibility(View.GONE);
+                binding.txtMainMdpOublie.setVisibility(View.GONE);
                 binding.txtParametres.setVisibility(View.VISIBLE);
                 fillTxtVConnectionError();
             }

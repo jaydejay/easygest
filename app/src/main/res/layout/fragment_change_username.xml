@@ -25,54 +25,65 @@
         android:padding="10dp"
         android:orientation="vertical">
 
+        <EditText
+            android:id="@+id/editchangerusernameusername"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            android:autofillHints="@string/username" />
 
-    <EditText
-                android:id="@+id/editchangerusernameusername"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="center_horizontal|top"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/username"
-                android:inputType="textPersonName"
-                android:autofillHints="@string/username" />
+        <EditText
+            android:id="@+id/editchangerusernamenouveauusername"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/nouveau_username"
+            android:inputType="textPersonName"
+            android:autofillHints="@string/nouveau_username" />
+        <EditText
+            android:id="@+id/editchangerusername_renouveau_username"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/repeat_nouveau_username"
+            android:inputType="textPersonName"
+            android:autofillHints="@string/repeat_nouveau_username" />
 
-            <EditText
-                android:id="@+id/editchangerusernamenouveauusername"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/nouveau_username"
-                android:inputType="textPersonName"
-                android:autofillHints="@string/nouveau_username" />
+        <EditText
+            android:id="@+id/editchangerusernamepassword"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:autofillHints="@string/password" />
 
-            <EditText
-                android:id="@+id/editchangerusernamepassword"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:autofillHints="@string/password" />
-
-            <Button
-                android:id="@+id/btnchangeusername"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:text="@string/modifier"/>
+        <Button
+            android:id="@+id/btnchangeusername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:text="@string/modifier"/>
     </LinearLayout>
 
     </ScrollView>

@@ -47,36 +47,42 @@ public class ChangeUsernameFragment extends Fragment {
             binding.btnchangeusername.setEnabled(false);
             String username = binding.editchangerusernameusername.getText().toString().trim();
             String nouveauusername = binding.editchangerusernamenouveauusername.getText().toString().trim();
+            String repeat_nouveauusername = binding.editchangerusernameRenouveauUsername.getText().toString().trim();
             String password = binding.editchangerusernamepassword.getText().toString().trim();
 
-            if (username.isEmpty() || nouveauusername.isEmpty() || password.isEmpty() ){
+            if (username.isEmpty() || nouveauusername.isEmpty() || password.isEmpty() || repeat_nouveauusername.isEmpty() ){
                 Toast.makeText(getContext(), "champs obligatoires", Toast.LENGTH_SHORT).show();
                 binding.btnchangeusername.setEnabled(true);
             }else {
                 if (username.length() >= 6 && nouveauusername.length() >= 6 && password.length() >= 8){
-                    user = usercontrolleur.recupProprietaire();
-                    if (username.equals(user.getUsername()) && passwordHascher.verifyHashingPass(password,user.getPassword())){
-                        UserModel userModel = new UserModel(user.getId(),nouveauusername,user.getPassword(),user.getDateInscription(),user.getStatus(),user.isActif(),0);
-                        usercontrolleur.modifierUser(userModel);
-                        usercontrolleur.setUser(userModel);
-                        Intent intent = new Intent(getActivity(), GestionActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+
+                    if (repeat_nouveauusername.equals(nouveauusername)){
+                        user = usercontrolleur.recupProprietaire();
+                        if (username.equals(user.getUsername()) && passwordHascher.verifyHashingPass(password,user.getPassword())){
+                            UserModel userModel = new UserModel(user.getId(),nouveauusername,user.getPassword(),user.getDateInscription(),user.getStatus(),user.isActif(),0);
+                            usercontrolleur.modifierUser(userModel);
+                            usercontrolleur.setUser(userModel);
+                            Intent intent = new Intent(getActivity(), GestionActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }else{
+                            binding.btnchangeusername.setEnabled(true);
+                            Toast.makeText(getContext(), "username ou mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
+                            user = usercontrolleur.getUser();
+                            desactiverbtnchangerusername(user);
+                        }
+
                     }else{
                         binding.btnchangeusername.setEnabled(true);
-                        Toast.makeText(getContext(), "username ou mot de passe ne correspond pas", Toast.LENGTH_SHORT).show();
-                        user = usercontrolleur.getUser();
-                        desactiverbtnchangerusername(user);
-
+                        Toast.makeText(getContext(), "noueaux username incoherents", Toast.LENGTH_SHORT).show();
                     }
-
                 }else{
                     binding.btnchangeusername.setEnabled(true);
                     Toast.makeText(getContext(), "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();
                     user = usercontrolleur.getUser();
                     desactiverbtnchangerusername(user);
-
                 }
+
             }
         });
     }

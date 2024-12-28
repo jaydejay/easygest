@@ -12,11 +12,13 @@ import com.jay.easygest.databinding.ActivityInitMdpBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.PasswordHascher;
 
 public class InitMdpActivity extends AppCompatActivity {
     private ActivityInitMdpBinding binding;
     private Usercontrolleur usercontrolleur;
     private AccessLocalAppKes accessLocalAppKes;
+    private PasswordHascher passwordHascher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +36,25 @@ public class InitMdpActivity extends AppCompatActivity {
             binding.btnInitMdp.setEnabled(false);
             String username = binding.editTextInitMdpUsername.getText().toString().trim();
             String owner = binding.editTextInitMdpOwner.getText().toString().trim();
+            String mot_de_passe = binding.editTextInitMdpPassword.getText().toString().trim();
             String email = binding.editTextInitMdpOwnerMail.getText().toString().trim();
 
             UserModel utilisateur = usercontrolleur.recupProprietaire();
             AppKessModel appli_data = accessLocalAppKes.getAppkes();
-            if (username.isEmpty() || owner.isEmpty() || email.isEmpty()){
+            if (username.isEmpty() || owner.isEmpty() || mot_de_passe.isEmpty() || email.isEmpty()){
                 Toast.makeText(InitMdpActivity.this, "champs obligatoires", Toast.LENGTH_SHORT).show();
                 binding.btnInitMdp.setEnabled(true);
             }else {
+
                 if (utilisateur.getUsername().equals(username) && appli_data.getOwner().equals(owner) && appli_data.getAdresseelectro().equals(email))
                 {
-                   afficherMdpAlertebefor(utilisateur);
+                    passwordHascher = new PasswordHascher();
+                    if (passwordHascher.verifyHashingPass(mot_de_passe,utilisateur.getPassword())){
+                        afficherMdpAlertebefor(utilisateur);
+                    }else {
+                        Toast.makeText(InitMdpActivity.this, "mot de passe incorrect", Toast.LENGTH_SHORT).show();
+                        binding.btnInitMdp.setEnabled(true);
+                    }
 
                 }else {
                     Toast.makeText(InitMdpActivity.this, "informations incorrecttes", Toast.LENGTH_SHORT).show();
