@@ -56,7 +56,7 @@ public final class Usercontrolleur {
         String _mdp = passwordHascher.getHashingPass(mdp, VariablesStatique.MY_SALT);
         UserModel user = new UserModel(utilisateur.getId(),utilisateur.getUsername(),_mdp,utilisateur.getDateInscription(),utilisateur.getStatus(),true,0);
         accessLocal.modifierUtilisateur(user);
-        this.setProprietaireMdpInit(_mdp);
+        this.setProprietaireMdpInit(mdp);
     }
 
     public boolean creerUser(String username, String password, AppKessModel appKess, String owner, String code_base, String telephone, String email){

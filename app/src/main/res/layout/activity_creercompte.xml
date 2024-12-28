@@ -13,71 +13,72 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="15dp">
+
             <TextView
                 android:id="@+id/texv_creer_compte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:gravity="center_horizontal"
                 android:text="@string/creer_votre_compte"
                 android:textSize="20sp"
-                android:gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtcreercompteusername"
-            android:layout_width="221dp"
-            android:layout_height="70dp"
-            android:autofillHints="@string/username"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:hint="@string/username"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/texv_creer_compte" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtcreercompteusername"
+                android:layout_width="221dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:autofillHints="@string/username"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/username"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/texv_creer_compte" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtcreercomptepassword"
-            android:layout_width="221dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="8dp"
-            android:autofillHints="@string/password"
-            android:ems="10"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtcreercompteusername" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtcreercomptepassword"
+                android:layout_width="221dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:autofillHints="@string/password"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtcreercompteusername" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtcreercompterepeat"
-            android:layout_width="221dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="8dp"
-            android:autofillHints="@string/repete_password"
-            android:ems="10"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:hint="@string/repete_password"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtcreercomptepassword" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtcreercompterepeat"
+                android:layout_width="221dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:autofillHints="@string/repete_password"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/repete_password"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtcreercomptepassword" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -102,7 +103,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/lleditcreer_compte_base_code"
                 android:layout_width="221sp"
@@ -111,14 +111,14 @@
                 android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="@string/base_code"
-                app:counterEnabled="true"
                 android:inputType="textPersonName"
+                app:counterEnabled="true"
                 app:counterMaxLength="4"
                 app:errorEnabled="true"
                 app:helperText="@string/helper_text_code"
                 app:helperTextEnabled="true">
 
-            <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editcreer_compte_base_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -139,7 +139,7 @@
                 app:helperText="@string/helper_text_telephone"
                 app:helperTextEnabled="true">
 
-            <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editcreer_compte_telephone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -160,12 +160,12 @@
                 app:helperText="@string/helper_text_email"
                 app:helperTextEnabled="true">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editcreer_compte_mail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textWebEmailAddress"
-                android:textColor="#0B0909" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editcreer_compte_mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textWebEmailAddress"
+                    android:textColor="#0B0909" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -173,8 +173,8 @@
                 android:id="@+id/btncreercompte"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
                 android:text="@string/creer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 
 public class SettingsViewModel extends ViewModel {
 
-//    private AccessLocalAppKes accessLocalAppKes;
     private final MutableLiveData<String> owner ;
     private final MutableLiveData<String> base_code ;
     private final MutableLiveData<String> telephone ;

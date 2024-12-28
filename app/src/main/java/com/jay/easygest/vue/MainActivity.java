@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private SessionManagement sessionManagement;
     private Usercontrolleur usercontrolleur;
     private UserModel user;
-    //    private  AppKessModel appKessModel;
-//    private PasswordHascher passwordHascher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
