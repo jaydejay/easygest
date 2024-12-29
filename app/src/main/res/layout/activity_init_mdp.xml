@@ -63,17 +63,6 @@
             android:gravity="center"
             android:hint="@string/email"
             android:inputType="textEmailAddress"/>
-        <EditText
-            android:id="@+id/editText_init_mdp_password"
-            android:layout_width="221dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25dp"
-            android:autofillHints="@string/password"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/password"
-            android:inputType="textPassword"/>
 
         <Button
             android:id="@+id/btn_init_mdp"

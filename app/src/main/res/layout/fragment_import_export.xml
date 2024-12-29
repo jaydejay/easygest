@@ -6,137 +6,164 @@
     android:layout_height="match_parent"
     tools:context=".vue.ui.importexport.ImportExportFragment">
 
-    <LinearLayout
-        android:id="@+id/layoutexport"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:paddingStart="4dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="70dp"
-        android:orientation="vertical"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/export_consigne"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="fill_vertical"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
+            android:orientation="vertical"
+            android:paddingBottom="15dp">
 
-        <TextView
-            android:id="@+id/export_amovible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/save_amovible"
-            android:textColor="@color/link"
-            android:textSize="13sp"
-            android:textStyle="bold"/>
+            <LinearLayout
+                android:id="@+id/layoutexport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/export_drive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/save_drive"
-            android:textColor="@color/link"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/export_consigne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="fill_vertical"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/layoutimport"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/layoutexport"
-        app:layout_constraintTop_toTopOf="parent">
+                <TextView
+                    android:id="@+id/export_amovible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/save_amovible"
+                    android:textColor="@color/link"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/import_consigne"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/export_drive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/save_drive"
+                    android:textColor="@color/link"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/import_premier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/restore_premier_pas"
-            android:textColorHighlight="@color/bleue_brillant"
-            android:textColor="@color/bleue_brillant"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
+            <LinearLayout
+                android:id="@+id/layoutimport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutexport">
 
-        <TextView
-            android:id="@+id/import_deconnecter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/deconnecter_restore"
-            android:textColorHighlight="@color/bleue_brillant"
-            android:textColor="@color/bleue_brillant"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/import_consigne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="fill_vertical"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/import_reconnecter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/relancer_restore"
-            android:textColorHighlight="@color/bleue_brillant"
-            android:textColor="@color/bleue_brillant"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/import_premier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/restore_premier_pas"
+                    android:textColor="@color/bleue_brillant"
+                    android:textColorHighlight="@color/bleue_brillant"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/layoutbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/layoutexport"
-        tools:layout_editor_absoluteX="0dp"
-        style="?android:attr/buttonBarStyle">
+                <TextView
+                    android:id="@+id/import_deconnecter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/deconnecter_restore"
+                    android:textColor="@color/bleue_brillant"
+                    android:textColorHighlight="@color/bleue_brillant"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnexport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
-            android:text="@string/exporter"
-            android:backgroundTint="@color/teal_700"
-            style="?android:attr/buttonBarButtonStyle"
-            android:textColor="@color/design_default_color_background"
-            android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/import_reconnecter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/relancer_restore"
+                    android:textColor="@color/bleue_brillant"
+                    android:textColorHighlight="@color/bleue_brillant"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btnimport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/importer"
-            android:textSize="12sp"
-            android:backgroundTint="@color/teal_700"
-            android:textColor="@color/design_default_color_background"
-            style="?android:attr/buttonBarButtonStyle" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutbtn"
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutimport">
+
+                <Button
+                    android:id="@+id/btnexport"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:backgroundTint="@color/teal_700"
+                    android:text="@string/exporter"
+                    android:textColor="@color/design_default_color_background"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btnimport"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/teal_700"
+                    android:text="@string/importer"
+                    android:textColor="@color/design_default_color_background"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

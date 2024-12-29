@@ -233,39 +233,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    /**
-//     * desactive le bouton d'authentification d'un administrateur
-//     * @param userModel l'administrateur
-//     */
-//    private void desactiverbtnAuthAdmine(UserModel userModel){
-//        int cmpteur = incrementCompteur(userModel);
-//        if (cmpteur >= 3){
-//            initChamp();
-//            usercontrolleur.desactiverAdministrateur();
-//            binding.txtParametres.setVisibility(View.VISIBLE);
-////            binding.mainlayoutadmine.setVisibility(View.GONE);
-//            fillTxtVConnestionErrorAdmin();
-//        }
-//
-//    }
-
-
-
-//    /**
-//     * desactive le bouton authentification pour un administrateur
-//     */
-//    private void desactiverbtnAuthAdmineInit(){
-//        try {
-//            UserModel userModel = usercontrolleur.recupAdministrateur();
-//            if (userModel.getCompteur() >= 3){
-//                binding.txtParametres.setVisibility(View.VISIBLE);
-////               binding.mainlayoutadmine.setVisibility(View.GONE);
-//            }
-//        }catch (Exception e){
-//            //do nothing
-//        }
-//
-//    }
 
     /**
      * desactive le bouton authentification pour un utilisateur au demarrage
