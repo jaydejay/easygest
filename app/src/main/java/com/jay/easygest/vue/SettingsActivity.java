@@ -39,7 +39,6 @@ public class SettingsActivity extends AppCompatActivity {
         accessLocalAppKes = new AccessLocalAppKes(this);
         appkess = accessLocalAppKes.getAppkes();
         passwordHascher = new PasswordHascher();
-
         SharedPreferences sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -130,8 +129,8 @@ public class SettingsActivity extends AppCompatActivity {
             }else if (setting_owner.length() < 5 ) {
                 binding.lleditsettingOwner.setError("5 minimum");
 
-            }else if (setting_owner.length() > 16 ) {
-                binding.lleditsettingOwner.setError("16 maximum");
+            }else if (setting_owner.length() > 50 ) {
+                binding.lleditsettingOwner.setError("50 maximum");
 
             }else {
 

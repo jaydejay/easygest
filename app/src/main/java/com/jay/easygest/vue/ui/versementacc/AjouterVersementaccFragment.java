@@ -37,8 +37,6 @@ import java.util.Objects;
  */
 public class AjouterVersementaccFragment extends Fragment {
 
-//    public static final String ACCOUNT = "account";
-
     private SessionManagement sessionManagement;
 
     private FragmentAjouterVersementaccBinding binding;

@@ -314,10 +314,6 @@ public class ArticlesActivity extends AppCompatActivity {
                 Toast.makeText(this, "vous devez decrire l'article", Toast.LENGTH_LONG).show();
                 binding.btnArticleEnreg.setEnabled(true);
 
-            }else if (string_description.length() < 10) {
-                Toast.makeText(this, "10 caracteres minimum", Toast.LENGTH_LONG).show();
-                binding.btnArticleEnreg.setEnabled(true);
-
             }else {
                 ArrayList<Image> mimages = imageViewModel.getImages().getValue();
                 ArticlesModel articlesModel = new ArticlesModel(string_designation,Integer.parseInt(string_prix),Integer.parseInt(string_quantite), string_description, mimages );

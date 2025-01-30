@@ -83,6 +83,7 @@ public class InitMdpActivity extends AppCompatActivity {
         builder.setPositiveButton("ok", (dialog, which) -> {
             Intent intent = new Intent(InitMdpActivity.this,MainActivity.class);
             startActivity(intent);
+            finish();
         });
 
         builder.create().show();

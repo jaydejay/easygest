@@ -32,7 +32,6 @@ import java.util.Objects;
 public class VersementFragment extends Fragment {
 
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 2;
-//    public static final String CREDIT = "credit";
     private SessionManagement sessionManagement;
     private SmsSender smsSender;
     private FragmentVersementBinding binding;

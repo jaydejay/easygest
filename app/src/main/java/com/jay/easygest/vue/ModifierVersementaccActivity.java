@@ -151,6 +151,7 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                                 }else {
                                     Intent intent = new Intent(ModifierVersementaccActivity.this, AfficherversementaccActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 }
 
                             } else {

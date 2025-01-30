@@ -158,6 +158,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                 }else {
                                     Intent intent = new Intent(ModifierVersementActivity.this, AfficheversementActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 }
 
                             } else {

@@ -32,7 +32,6 @@ import java.util.ArrayList;
 public class ArticleDetailsActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_WRITE = 100;
     private ActivityArticleDetailsBinding binding;
-//    private MySqliteOpenHelper accessBD;
     private Imagecontrolleur imagecontrolleur ;
     private  ArticlesModel article;
     private  ActivityResultLauncher<Intent> activityResultLauncherFace;
@@ -48,13 +47,12 @@ public class ArticleDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityArticleDetailsBinding.inflate(getLayoutInflater());
-//        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+
         ArticlesViewModel articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
-//        imageViewModel = new ViewModelProvider(this).get(ImageViewModel.class);
+
         imagecontrolleur = Imagecontrolleur.getImagecontrolleurInstance(this);
         article = articlesViewModel.getArticlelivedata().getValue();
 
-//        article = articlescontrolleur.getMarticle().getValue();
          activityResultLauncherFace = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result ->{
             if (result.getData()!= null && result.getResultCode() == RESULT_OK){
                 Uri selectedImageUri = result.getData().getData();

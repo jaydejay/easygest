@@ -37,7 +37,6 @@ public class ArticlesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentArticlesBinding.inflate(inflater,container,false);
-        //    private ListeArticlesAdapter adapter;
         Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(getContext());
         articlescontrolleur.listeArticles2();
         articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
@@ -48,7 +47,6 @@ public class ArticlesFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-//        getAllArticle();
         creerliste();
         getArticleInStock();
         getArticleOutStock();

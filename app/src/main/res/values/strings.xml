@@ -140,7 +140,7 @@
     <string name="choisir_une_image">image</string>
     <string name="article_ajouter">ajouter</string>
     <string name="article_liste">articles</string>
-    <string name="article_en_stock">en stock</string>
+    <string name="article_en_stock">stock</string>
     <string name="gauche">gauche</string>
     <string name="droite">droite</string>
     <string name="derierre">derierre</string>
@@ -156,9 +156,8 @@
     <string name="Details_article">Details article</string>
     <string name="modifier_article">modifier article</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="description">description</string>
-    <string name="article_out_stock">hors stock</string>
+    <string name="article_out_stock">hstock</string>
     <string name="repeat_nouveau_password">repeter password</string>
     <string name="repeat_nouveau_username">repeter username</string>
 

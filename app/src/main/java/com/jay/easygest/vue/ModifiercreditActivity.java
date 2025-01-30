@@ -191,6 +191,7 @@ public class ModifiercreditActivity extends AppCompatActivity {
                         }else {
                             Intent intent = new Intent(ModifiercreditActivity.this, AffichercreditActivity.class);
                             startActivity(intent);
+                            finish();
                         }
 
                     } else {

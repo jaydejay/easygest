@@ -98,6 +98,7 @@ public class ModifierClientActivity extends AppCompatActivity {
                     creditcontrolleur.listecredits();
                    Intent intent = new Intent(ModifierClientActivity.this, AfficherclientActivity.class);
                    startActivity(intent);
+                   finish();
                }
                else {
                    Toast.makeText(ModifierClientActivity.this,"erreur echec de la modification" , Toast.LENGTH_SHORT).show();

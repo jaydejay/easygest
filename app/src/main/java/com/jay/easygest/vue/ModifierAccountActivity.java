@@ -189,6 +189,7 @@ public class ModifierAccountActivity extends AppCompatActivity {
                         }else {
                             Intent intent = new Intent(ModifierAccountActivity.this, AfficherAccountActivity.class);
                             startActivity(intent);
+                            finish();
                         }
 
 
