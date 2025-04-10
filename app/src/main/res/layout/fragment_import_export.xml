@@ -20,112 +20,63 @@
             android:orientation="vertical"
             android:paddingBottom="15dp">
 
+
             <LinearLayout
-                android:id="@+id/layoutexport"
+                android:id="@+id/layout_consigne"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
+                android:layout_marginTop="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/export_consigne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="fill_vertical"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/export_amovible"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/export_Consigne"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/save_amovible"
-                    android:textColor="@color/link"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
+                    android:text="@string/export_consigne" />
                 <TextView
-                    android:id="@+id/export_drive"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/import_Consigne"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/save_drive"
-                    android:textColor="@color/link"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutimport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutexport">
-
+                    android:text="@string/import_Consigne" />
                 <TextView
-                    android:id="@+id/import_consigne"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/import_Consigne1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="fill_vertical"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
+                    android:text="@string/import_Consigne" />
                 <TextView
-                    android:id="@+id/import_premier"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/import_Consigne2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/restore_premier_pas"
-                    android:textColor="@color/bleue_brillant"
-                    android:textColorHighlight="@color/bleue_brillant"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
+                    android:text="@string/import_Consigne" />
                 <TextView
-                    android:id="@+id/import_deconnecter"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/import_Consigne3"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/deconnecter_restore"
-                    android:textColor="@color/bleue_brillant"
-                    android:textColorHighlight="@color/bleue_brillant"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
+                    android:text="@string/import_Consigne" />
                 <TextView
-                    android:id="@+id/import_reconnecter"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/import_Consigne4"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/relancer_restore"
-                    android:textColor="@color/bleue_brillant"
-                    android:textColorHighlight="@color/bleue_brillant"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:text="@string/import_Consigne" />
+                <TextView
+                    android:id="@+id/import_Consigne5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/import_Consigne" />
+                <TextView
+                    android:id="@+id/import_Consigne7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/import_Consigne" />
+                <TextView
+                    android:id="@+id/import_Consigne8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/import_Consigne" />
             </LinearLayout>
 
             <LinearLayout
@@ -133,12 +84,12 @@
                 style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="150dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutimport">
+                app:layout_constraintTop_toBottomOf="@+id/layout_consigne">
 
                 <Button
                     android:id="@+id/btnexport"

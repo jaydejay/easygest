@@ -160,5 +160,7 @@
     <string name="article_out_stock">hstock</string>
     <string name="repeat_nouveau_password">repeter password</string>
     <string name="repeat_nouveau_username">repeter username</string>
+    <string name="export_consigne">export Consigne</string>
+    <string name="import_Consigne">import Consigne</string>
 
 </resources>

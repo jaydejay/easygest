@@ -102,6 +102,7 @@ public class AffichercreditActivity extends AppCompatActivity {
         cardaffichercreditcredit.setText(credt);
         cardaffichercreditreste.setText(reste);
         cardaffichercreditversement.setText(versement);
+
     }
 
     public void redirectModifierCreditActivity(){

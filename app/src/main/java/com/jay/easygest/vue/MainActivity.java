@@ -225,9 +225,7 @@ public class MainActivity extends AppCompatActivity {
             if (cmpteur >= 3){
                 usercontrolleur.desactiverProprietaire();
                 initChamp();
-                binding.btnauth.setVisibility(View.GONE);
-                binding.txtParametres.setVisibility(View.VISIBLE);
-                fillTxtVConnectionError();
+                init();
             }
         }
 
@@ -258,9 +256,9 @@ public class MainActivity extends AppCompatActivity {
      * @return le nbr de tentative de connection
      */
     private Integer incrementCompteur( UserModel userModel){
-        int compteur = userModel.getCompteur() ;
+        int compteur = userModel.getCompteur() + 1;
         try {
-            compteur = compteur + 1;
+//            compteur = compteur ;
            UserModel user = new UserModel(userModel.getId(),userModel.getUsername(),userModel.getPassword(),userModel.getDateInscription(),userModel.getStatus(),userModel.isActif(),compteur);
             usercontrolleur.modifierUser(user);
             usercontrolleur.setUser(user);

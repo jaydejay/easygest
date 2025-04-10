@@ -194,6 +194,7 @@ public class ArticleDetailsActivity extends AppCompatActivity {
         getArticleLeftImage();
         getArticleRigthImage();
         getArticleBackImage();
+
         getActivityResultLancherFace();
         getActivityResultLancherLeft();
         getActivityResultLancherRight();

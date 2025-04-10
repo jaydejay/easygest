@@ -1,12 +1,20 @@
 package com.jay.easygest.vue.ui.importexport;
 
-import android.graphics.Typeface;
-import android.media.MediaScannerConnection;
+import static android.app.Activity.RESULT_OK;
+
+import static com.google.android.gms.common.ConnectionResult.SERVICE_DISABLED;
+import static com.google.android.gms.common.ConnectionResult.SERVICE_INVALID;
+import static com.google.android.gms.common.ConnectionResult.SERVICE_MISSING;
+import static com.google.android.gms.common.ConnectionResult.SERVICE_UPDATING;
+import static com.google.android.gms.common.ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED;
+import static com.google.android.gms.common.ConnectionResult.SUCCESS;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +22,26 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.jay.easygest.databinding.FragmentImportExportBinding;
+import com.jay.easygest.outils.DriveServiceHelper;
+import com.jay.easygest.outils.PreferedServiceHelper;
 import com.jay.easygest.outils.VariablesStatique;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Collections;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,51 +49,55 @@ import java.io.OutputStream;
  */
 public class ImportExportFragment extends Fragment {
 
+    public static final String IMPORT_CONSIGNE = "suite a un probleme une " +"\n"
+            +"restoration permet d'avoir" +"\n"
+            +"la derniere sauvegarde des" +"\n"
+            +"donnees.les etapes suivantes" +"\n"
+            +"decrivent les actions pour" +"\n"
+            +"bien mener une restoration.";
+
+    public static final String EXPORT_CONSIGNE = "il est important de faire" + "\n"
+            +"une suvegarde regulière"+"\n"
+            +"pour pouvoir restorer vos" + "\n"
+            +"données en cas de " + "\n"
+            +"problemes la restoration" + "\n"
+            +"ne conserne que la dernière" +"\n"
+            +"version sauvegardée.";
+    private static final int RC_SIGN_IN = 100;
+    private static final int MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE = 2;
+    public static final String STORAGE_PATH = "/storage/emulated/0/";
+    public static final String DRIVE_FILE_NAME = "gestioncredit.db";
+    private NetHttpTransport transport ;
+    private static final GsonFactory JSON_FACTORY = new GsonFactory();
+    private DriveServiceHelper driveServiceHelper;
+    private PreferedServiceHelper preferedServiceHelper;
+
     private FragmentImportExportBinding binding;
+    private GoogleApiAvailability googleApiAvailability;
     public ImportExportFragment() {
         // Required empty public constructor
     }
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         binding = FragmentImportExportBinding.inflate(inflater,container,false);
 
-        String export_consigne ="il est important de faire" + "\n"
-                +"une suvegarde reguliere"+"\n"
-                +"pour pouvoir restorer vos" + "\n"
-                +"donnees en cas de " + "\n"
-                +"problemes la restoration" + "\n"
-                +"ne conserne que la derniere" +"\n"
-                +"version sauvegardee.";
+        preferedServiceHelper = new PreferedServiceHelper(requireContext());
+        transport = new NetHttpTransport();
+        googleApiAvailability =  GoogleApiAvailability.getInstance();
 
-        String import_consigne = "suite a un probleme une " +"\n"
-                +"restoration permet d'avoir" +"\n"
-                +"la derniere sauvegarde des" +"\n"
-                +"donnees.les etapes suivantes" +"\n"
-                +"decrivent les actions pour" +"\n"
-                +"bien mener une restoration.";
+//        launchsignInIntent();
+        mainUploadMethod();
+        mainRestoreMethod();
 
-        binding.exportConsigne.setText(export_consigne);
-        binding.importConsigne.setText(import_consigne);
-        exportAction();
-        importAction();
-        sauvegardeAmovible();
-        sauvegardeDrive();
-        restorationPremierPas();
-        restorationDeconnecter();
-        restorationReconnecter();
 
         return binding.getRoot();
     }
+
+
 
     /**
      *
@@ -88,242 +108,220 @@ public class ImportExportFragment extends Fragment {
 
     }
 
-    /**
-     * amorce la sauvegarde
-     */
-    public void exportAction(){
-        binding.btnexport.setOnClickListener(v -> exportDB());
-    }
 
-    /**
-     * amorce la restoration
-     */
-    public void importAction(){
-        binding.btnimport.setOnClickListener(v -> importDB());
-    }
-
-    /**
-     * sauvegarde amovible
-     */
-    private void sauvegardeAmovible(){
-
-        binding.exportAmovible.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("sauvegarde amovible");
-            builder.setMessage("cette sauvegarde permet d'avoir"+ "\n"
-                    +"une version sur support amovible"+ "\n"
-                    + "aller dans gestionnaire de fichiers"+ "\n"
-                    + "dans android"+ "\n"
-                    + "dans data"+ "\n"
-                    + "dans com.jay.easygest"+ "\n"
-                    + "dans files"+ "\n"
-                    + "dans documents"+ "\n"
-                    + "dans copier le fichier data sur le support"+ "\n");
-
-            builder.setPositiveButton("ok", (dialog, which) -> {
-
-            });
-            builder.create().show();
-        });
-
-    }
-    private void sauvegardeDrive(){
-
-        binding.exportDrive.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle(" sauvegarde Drive");
-            builder.setMessage("cette sauvegarde permet d'avoir une version sur google Drive"+ "\n"
-                    +"aller dans gestionnaire de fichiers"+ "\n"
-                    + "dans android"+ "\n"
-                    + "dans data"+ "\n"
-                    + "dans com.jay.easygest"+ "\n"
-                    + "dans files"+ "\n"
-                    + "dans documents"+ "\n"
-                    + "copier le fichier data"+ "\n"
-                    + "ouvrez l'application Drive"+ "\n"
-                    + "allez dans le dossier mydrive et coller"+ "\n"
-                    + "si vous ne connaissez pas Drive je vous invite"+ "\n"
-                    + "a vous familliarisez avec se outil de google"+ "\n");
-
-            builder.setPositiveButton("ok", (dialog, which) -> {
-
-            });
-            builder.create().show();
-        });
-
-    }
-
-    private void restorationPremierPas(){
-        binding.importPremier.setOnClickListener(view -> {
-            SpannableString titre_amovible = new SpannableString("restoration support amovible");
-            titre_amovible.setSpan(new StyleSpan(Typeface.BOLD), 0, titre_amovible.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            titre_amovible.setSpan(new StyleSpan(Typeface.ITALIC), 9, titre_amovible.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            SpannableString titre_drive = new SpannableString("restoration support Drive");
-            titre_drive.setSpan(new StyleSpan(Typeface.BOLD), 0, titre_drive.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            titre_drive.setSpan(new StyleSpan(Typeface.ITALIC), 9, titre_drive.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("Premiers pas");
-            builder.setMessage("cette section decrit la restoration"+ "\n"
-                    + titre_amovible + "\n"
-                    + "inserrer le support"+ "\n"
-                    + "copier le fichier gestioncredit"+ "\n"
-                    + "aller dans gestionnaire de fichiers"+ "\n"
-                    + "dans android"+ "\n"
-                    + "dans data"+ "\n"
-                    + "dans com.jay.easygest"+ "\n"
-                    + "dans files"+ "\n"
-                    + "dans documents puis coller"+ "\n"
-                    + "cliquer sur restorer"+ "\n"
-                    + titre_drive+ "\n"
-                    + "les étapes precedentes sont valables"+ "\n");
-
-            builder.setPositiveButton("ok", (dialog, which) -> {
-
-            });
-            builder.create().show();
-        });
-
-
-    }
-
-    private void restorationDeconnecter(){
-        binding.importDeconnecter.setOnClickListener(view -> {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("consigne de deconnection");
-            builder.setMessage("pour parfaire la restoration apres les premieres pas"+ "\n"
-                    + "deconnecter l'application est neccessaire");
-
-            builder.setPositiveButton("ok", (dialog, which) -> {
-
-            });
-            builder.create().show();
-        });
-
-
-
-
-    }
-
-
-    private void restorationReconnecter(){
-
-        binding.importReconnecter.setOnClickListener(view -> {
-
-            SpannableString titre_content = new SpannableString("consigne de deconnection");
-//            titre_content.setSpan(new boldS());
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle(titre_content);
-            builder.setMessage("apres la deconnection ouvrir"+ "\n"
-                    + "a nouveau l'application pour prendre"+ "\n"
-                    + "en compte la mise a jour");
-
-            builder.setPositiveButton("ok", (dialog, which) -> {
-            });
-            builder.create().show();
-        });
-
-    }
 
     /**
      * creation de la savegarde
      */
-   private void exportDB() {
+//   private void exportDB() {}
 
-        File path = this.requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        File file = new File(path, VariablesStatique.BACKUP_DATABASE_NAME);
+    public void launchsignInIntent(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (ActivityCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                    PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(requireContext(),
+                            Manifest.permission.GET_ACCOUNTS) !=
+                            PackageManager.PERMISSION_GRANTED
 
-        String currentDBPath = getDatabasePath();
-        File currentDB = new File(currentDBPath);
-
-        try {
-
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_REMOVED) ) {
-                Toast.makeText(getContext(), "inserer une carte memoire", Toast.LENGTH_SHORT).show();
-
-            } else if (Environment.getExternalStorageState().equals(Environment.MEDIA_UNMOUNTED)) {
-                Toast.makeText(getContext(), "une carte memoire non montee", Toast.LENGTH_SHORT).show();
-
-            }else {
-                InputStream is = new FileInputStream(currentDB);
-                OutputStream os = new FileOutputStream(file);
-                byte[] data = new byte[is.available()];
-                is.read(data);
-                os.write(data);
-                is.close();
-                os.close();
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle("consigne de sauvegarde");
-                builder.setMessage("cette action constitue la premiere étape"+ "\n"
-                        + "- étape 2 savegarde sur un support amovible"+ "\n"
-                        + "- étape 3 sauvegarde sur Drive"+ "\n"
-                        + "consulter le dictatiel pour connaitre chaque procedure");
-
-                builder.setPositiveButton("ok", (dialog, which) -> {
-                    MediaScannerConnection.scanFile(getContext(),
-                            new String[] { file.toString() }, null,
-                            (path1, uri) -> {
-                                Log.i("ExternalStorage", "Scanned " + path1 + ":");
-                                Log.i("ExternalStorage", "-> uri=" + uri);
-                            });
-                });
-                builder.create().show();
-
-            }
-
-        } catch (IOException e) {
-            Toast.makeText(getContext(), "inserer une carte memoire", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * la restoration
-     */
-    private void importDB() {
-
-        File currentDBPath = this.requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        File currentDB = new File(currentDBPath, VariablesStatique.BACKUP_DATABASE_NAME);
-
-        String path = this.getDatabasePath();
-        File file = new File(path);
-
-        try {
-
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_REMOVED) ) {
-                Toast.makeText(getContext(), "inserer une carte memoire", Toast.LENGTH_SHORT).show();
-
-            } else if (Environment.getExternalStorageState().equals(Environment.MEDIA_UNMOUNTED)) {
-                Toast.makeText(getContext(), "une carte memoire non montee", Toast.LENGTH_SHORT).show();
+            ) {
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
+                        MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }else {
-                InputStream is = new FileInputStream(currentDB);
-                OutputStream os = new FileOutputStream(file);
-                byte[] data = new byte[is.available()];
-                is.read(data);
-                os.write(data);
-                is.close();
-                os.close();
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle("consigne de restoration");
-                builder.setMessage("cette action constitue la premiere étape"+ "\n"
-                        + "- étape 2 deconnecter l'appli"+"\n"
-                        + "- étape 3 relancer l'appli"+"\n"
-                        + "consulter le dictatiel pour connaitre chaque procedure");
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                        .build();
 
-                builder.setPositiveButton("ok", (dialog, which) -> {
+                GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
 
-                });
-                builder.create().show();
+                Intent signInIntent = googleSignInClient.getSignInIntent();
+
+                startActivityForResult(signInIntent,RC_SIGN_IN);
+            }
+        }else {
+
+            if (
+                    ActivityCompat.checkSelfPermission(requireContext(),
+                            Manifest.permission.GET_ACCOUNTS) !=
+                            PackageManager.PERMISSION_GRANTED
+
+            ) {
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{ Manifest.permission.GET_ACCOUNTS},
+                        MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                    .build();
 
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "inserer une carte memoire ou fichier introuvable", Toast.LENGTH_SHORT).show();
+            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+
+            startActivityForResult(signInIntent,RC_SIGN_IN);
         }
+
+
+
     }
+
+
+
+
+
+//### 4. Handle the Sign-In Result
+//**a. Override onActivityResult:**
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == RC_SIGN_IN) {
+//                    try {
+                        handleSignInResult(data);
+//                    }catch (Exception e){
+//                        Log.d("onActivityResult", "onActivityResult: "+e.getMessage());
+//                        binding.importConsigne1.setText(e.getMessage());
+//                    }
+
+            }
+        }
+
+
+        private void handleSignInResult(Intent data) {
+//            try {
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+                        .addOnSuccessListener(googleSignInAccount -> {
+                            GoogleAccountCredential credential = GoogleAccountCredential
+                                    .usingOAuth2(getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                            credential.setSelectedAccount(googleSignInAccount.getAccount());
+                            binding.importConsigne2.setText("google credential account name: "+credential.getSelectedAccountName());
+                            Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credential)
+                                    .setApplicationName("easygest")
+                                    .build();
+
+                            driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
+                            if (driveServiceHelper != null ){
+                                binding.importConsigne3.setText("drive service helper n'est pas null: ");
+                            }else {
+                                binding.importConsigne3.setText("drive service helper est null: ");
+                            }
+
+                            try {
+                                String drive_file_id = preferedServiceHelper.getDriveSession();
+                                binding.exportConsigne.setText("mainUploadMethod : "+drive_file_id);
+                                if (drive_file_id.length() == 0){
+                                    uploadFileToDrive();
+
+                                }else {
+                                    updateDriveFile();
+                                }
+                            }catch (Exception e){
+                                Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
+                                binding.exportConsigne.setText(e.getMessage());
+                            }
+
+
+                        }).addOnFailureListener(e -> {
+                            binding.importConsigne3.setText("addOnFailureListener handleSignInResult : "+e.getMessage());
+
+                        });
+//            }
+//            catch (Exception e){
+//                Log.d("handleSignInResult", "handleSignInResult: "+e.getMessage());
+//                binding.importConsigne3.setText(" handleSignInResult exeception : "+e.getMessage());
+//            }
+
+
+        }
+        //### end 4. Handle the Sign-In Result
+
+        private void uploadFileToDrive() {
+            String mon_fichier = new java.io.File(getDatabasePath()).getPath();
+            binding.importConsigne4.setText(" uploadFileToDrive  : "+mon_fichier);
+            driveServiceHelper.createFile(mon_fichier)
+                    .addOnSuccessListener(s -> {
+                        Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show();
+                        try {
+                            preferedServiceHelper.saveDriveSession(s.getId());
+                        }catch (Exception e){
+                            Toast.makeText(requireContext(), "echec saveDriveSession "  +e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
+
+        }
+
+
+
+        private void updateDriveFile()  {
+
+                String mon_fichier = new java.io.File(getDatabasePath()).getPath();
+                driveServiceHelper.updateFile(mon_fichier)
+                        .addOnSuccessListener(s -> Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show() )
+                        .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
+
+        }
+
+    public void mainUploadMethod(){
+
+        binding.btnexport.setOnClickListener(v -> {
+          launchsignInIntent();
+
+        });
+
+    }
+
+//        public void mainUploadMethod(){
+//
+//            binding.btnexport.setOnClickListener(v -> {
+//
+//                try {
+//                    String drive_file_id = preferedServiceHelper.getDriveSession();
+//                    binding.exportConsigne.setText("mainUploadMethod : "+drive_file_id);
+//                    if (drive_file_id.length() == 0){
+//                        uploadFileToDrive();
+//
+//                    }else {
+//                        updateDriveFile();
+//                    }
+//                }catch (Exception e){
+//                    Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
+//                    binding.exportConsigne.setText(e.getMessage());
+//                }
+//
+//            });
+//
+//        }
+
+        public void mainRestoreMethod(){
+
+            binding.btnimport.setOnClickListener(v -> {
+                String drive_file_id = preferedServiceHelper.getDriveSession();
+                if (drive_file_id.length() != 0){
+                    retiveFileToDrive(drive_file_id);
+
+                }else {
+                    binding.importConsigne3.setText("drive file id  vide: "+drive_file_id);
+                }
+            });
+
+        }
+
+        private void retiveFileToDrive(String drive_file_id) {
+            driveServiceHelper.retriveFile(drive_file_id,getDatabasePath())
+                    .addOnSuccessListener(s -> Toast.makeText(getContext(), "donnees restorees", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e ->Toast.makeText(getContext(), "echec dla restoration", Toast.LENGTH_SHORT).show());
+        }
+
+
+//    ### end 5. Use the Signed-In Account to Access Google Drive
 
 
 
