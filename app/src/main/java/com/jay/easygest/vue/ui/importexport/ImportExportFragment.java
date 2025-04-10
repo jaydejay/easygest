@@ -89,14 +89,10 @@ public class ImportExportFragment extends Fragment {
         transport = new NetHttpTransport();
         googleApiAvailability =  GoogleApiAvailability.getInstance();
 
-//        launchsignInIntent();
         mainUploadMethod();
         mainRestoreMethod();
-
-
         return binding.getRoot();
     }
-
 
 
     /**
@@ -105,29 +101,21 @@ public class ImportExportFragment extends Fragment {
      */
     public String getDatabasePath(){
       return  this.requireContext().getDatabasePath(VariablesStatique.DATABASE_NAME).getPath();
-
     }
-
-
-
-    /**
-     * creation de la savegarde
-     */
-//   private void exportDB() {}
 
     public void launchsignInIntent(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             if (ActivityCompat.checkSelfPermission(requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                    PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.GET_ACCOUNTS) !=
-                            PackageManager.PERMISSION_GRANTED
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.GET_ACCOUNTS) !=
+                    PackageManager.PERMISSION_GRANTED
 
             ) {
                 ActivityCompat.requestPermissions(requireActivity(),
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
-                        MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
+                    MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }else {
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -144,14 +132,14 @@ public class ImportExportFragment extends Fragment {
         }else {
 
             if (
-                    ActivityCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.GET_ACCOUNTS) !=
-                            PackageManager.PERMISSION_GRANTED
+                ActivityCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.GET_ACCOUNTS) !=
+                    PackageManager.PERMISSION_GRANTED
 
             ) {
                 ActivityCompat.requestPermissions(requireActivity(),
-                        new String[]{ Manifest.permission.GET_ACCOUNTS},
-                        MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
+                    new String[]{ Manifest.permission.GET_ACCOUNTS},
+                    MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -166,13 +154,7 @@ public class ImportExportFragment extends Fragment {
             startActivityForResult(signInIntent,RC_SIGN_IN);
         }
 
-
-
     }
-
-
-
-
 
 //### 4. Handle the Sign-In Result
 //**a. Override onActivityResult:**
@@ -182,79 +164,52 @@ public class ImportExportFragment extends Fragment {
             super.onActivityResult(requestCode, resultCode, data);
 
             if (requestCode == RC_SIGN_IN) {
-//                    try {
-                        handleSignInResult(data);
-//                    }catch (Exception e){
-//                        Log.d("onActivityResult", "onActivityResult: "+e.getMessage());
-//                        binding.importConsigne1.setText(e.getMessage());
-//                    }
-
+                handleSignInResult(data);
             }
         }
 
-
         private void handleSignInResult(Intent data) {
-//            try {
-                GoogleSignIn.getSignedInAccountFromIntent(data)
-                        .addOnSuccessListener(googleSignInAccount -> {
-                            GoogleAccountCredential credential = GoogleAccountCredential
-                                    .usingOAuth2(getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
-                            credential.setSelectedAccount(googleSignInAccount.getAccount());
-                            binding.importConsigne2.setText("google credential account name: "+credential.getSelectedAccountName());
-                            Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credential)
-                                    .setApplicationName("easygest")
-                                    .build();
+            GoogleSignIn.getSignedInAccountFromIntent(data)
+                .addOnSuccessListener(googleSignInAccount -> {
+                    GoogleAccountCredential credential = GoogleAccountCredential
+                            .usingOAuth2(getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                    credential.setSelectedAccount(googleSignInAccount.getAccount());
+                    Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credential)
+                        .setApplicationName("easygest")
+                        .build();
 
-                            driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
-                            if (driveServiceHelper != null ){
-                                binding.importConsigne3.setText("drive service helper n'est pas null: ");
-                            }else {
-                                binding.importConsigne3.setText("drive service helper est null: ");
-                            }
+                    driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
 
-                            try {
-                                String drive_file_id = preferedServiceHelper.getDriveSession();
-                                binding.exportConsigne.setText("mainUploadMethod : "+drive_file_id);
-                                if (drive_file_id.length() == 0){
-                                    uploadFileToDrive();
+                    try {
+                        String drive_file_id = preferedServiceHelper.getDriveSession();
+                        if (drive_file_id.length() == 0){
+                            uploadFileToDrive();
 
-                                }else {
-                                    updateDriveFile();
-                                }
-                            }catch (Exception e){
-                                Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
-                                binding.exportConsigne.setText(e.getMessage());
-                            }
+                        }else {
+                            updateDriveFile();
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
+                    }
 
-
-                        }).addOnFailureListener(e -> {
-                            binding.importConsigne3.setText("addOnFailureListener handleSignInResult : "+e.getMessage());
-
-                        });
-//            }
-//            catch (Exception e){
-//                Log.d("handleSignInResult", "handleSignInResult: "+e.getMessage());
-//                binding.importConsigne3.setText(" handleSignInResult exeception : "+e.getMessage());
-//            }
-
+                }).addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show());
 
         }
         //### end 4. Handle the Sign-In Result
 
         private void uploadFileToDrive() {
             String mon_fichier = new java.io.File(getDatabasePath()).getPath();
-            binding.importConsigne4.setText(" uploadFileToDrive  : "+mon_fichier);
             driveServiceHelper.createFile(mon_fichier)
-                    .addOnSuccessListener(s -> {
-                        Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show();
-                        try {
-                            preferedServiceHelper.saveDriveSession(s.getId());
-                        }catch (Exception e){
-                            Toast.makeText(requireContext(), "echec saveDriveSession "  +e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                .addOnSuccessListener(s -> {
+                    Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show();
+                    try {
+                        preferedServiceHelper.saveDriveSession(s.getId());
+                    }catch (Exception e){
+                        Toast.makeText(requireContext(), "echec save Drive Session "  +e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
 
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
+                })
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
 
         }
 
@@ -262,10 +217,10 @@ public class ImportExportFragment extends Fragment {
 
         private void updateDriveFile()  {
 
-                String mon_fichier = new java.io.File(getDatabasePath()).getPath();
-                driveServiceHelper.updateFile(mon_fichier)
-                        .addOnSuccessListener(s -> Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show() )
-                        .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
+            String mon_fichier = new java.io.File(getDatabasePath()).getPath();
+            driveServiceHelper.updateFile(mon_fichier)
+                .addOnSuccessListener(s -> Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show() )
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
 
         }
 
@@ -278,53 +233,25 @@ public class ImportExportFragment extends Fragment {
 
     }
 
-//        public void mainUploadMethod(){
-//
-//            binding.btnexport.setOnClickListener(v -> {
-//
-//                try {
-//                    String drive_file_id = preferedServiceHelper.getDriveSession();
-//                    binding.exportConsigne.setText("mainUploadMethod : "+drive_file_id);
-//                    if (drive_file_id.length() == 0){
-//                        uploadFileToDrive();
-//
-//                    }else {
-//                        updateDriveFile();
-//                    }
-//                }catch (Exception e){
-//                    Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
-//                    binding.exportConsigne.setText(e.getMessage());
-//                }
-//
-//            });
-//
-//        }
 
-        public void mainRestoreMethod(){
+    public void mainRestoreMethod(){
+        binding.btnimport.setOnClickListener(v -> {
+            String drive_file_id = preferedServiceHelper.getDriveSession();
+            if (drive_file_id.length() != 0){
+                retiveFileToDrive(drive_file_id);
+            }
+        });
 
-            binding.btnimport.setOnClickListener(v -> {
-                String drive_file_id = preferedServiceHelper.getDriveSession();
-                if (drive_file_id.length() != 0){
-                    retiveFileToDrive(drive_file_id);
+    }
 
-                }else {
-                    binding.importConsigne3.setText("drive file id  vide: "+drive_file_id);
-                }
-            });
-
-        }
-
-        private void retiveFileToDrive(String drive_file_id) {
-            driveServiceHelper.retriveFile(drive_file_id,getDatabasePath())
-                    .addOnSuccessListener(s -> Toast.makeText(getContext(), "donnees restorees", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->Toast.makeText(getContext(), "echec dla restoration", Toast.LENGTH_SHORT).show());
-        }
+    private void retiveFileToDrive(String drive_file_id) {
+        driveServiceHelper.retriveFile(drive_file_id,getDatabasePath())
+            .addOnSuccessListener(s -> Toast.makeText(getContext(), "donnees restorees", Toast.LENGTH_SHORT).show())
+            .addOnFailureListener(e ->Toast.makeText(getContext(), "echec dla restoration", Toast.LENGTH_SHORT).show());
+    }
 
 
 //    ### end 5. Use the Signed-In Account to Access Google Drive
-
-
-
 
 
 }
