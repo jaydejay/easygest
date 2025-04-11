@@ -36,47 +36,16 @@
                     android:id="@+id/export_Consigne"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/export_consigne" />
+                    android:text="@string/export_consigne"
+                    android:layout_marginBottom="25dp" />
                 <TextView
                     android:id="@+id/import_Consigne"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
-                <TextView
-                    android:id="@+id/import_Consigne1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
-                <TextView
-                    android:id="@+id/import_Consigne2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
-                <TextView
-                    android:id="@+id/import_Consigne3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
-                <TextView
-                    android:id="@+id/import_Consigne4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
-                <TextView
-                    android:id="@+id/import_Consigne5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
-                <TextView
-                    android:id="@+id/import_Consigne7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
-                <TextView
-                    android:id="@+id/import_Consigne8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/import_Consigne" />
+                    android:text="@string/import_Consigne"
+                    android:layout_marginBottom="25dp"/>
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -84,7 +53,7 @@
                 style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="100dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"

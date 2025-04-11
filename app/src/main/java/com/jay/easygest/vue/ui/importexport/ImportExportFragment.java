@@ -88,6 +88,8 @@ public class ImportExportFragment extends Fragment {
         preferedServiceHelper = new PreferedServiceHelper(requireContext());
         transport = new NetHttpTransport();
         googleApiAvailability =  GoogleApiAvailability.getInstance();
+        binding.exportConsigne.setText(EXPORT_CONSIGNE);
+        binding.importConsigne.setText(IMPORT_CONSIGNE);
 
         mainUploadMethod();
         mainRestoreMethod();

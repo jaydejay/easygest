@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DriveServiceHelper {
-//    public static final String DRIVE_FILE_NAME = "easygestdata.db";
     private final Drive mdriveservice;
     private final PreferedServiceHelper preferedServiceHelper;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -105,7 +104,5 @@ public class DriveServiceHelper {
         });
 
     }
-
-
 
 }
