@@ -1,6 +1,7 @@
 #les fichiers gradel
 *.iml
 .gradle
+.idea/*
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -17,4 +18,6 @@ local.properties
 
 #le dosier release
 app/release/
+app/debug/
+app/build/
 

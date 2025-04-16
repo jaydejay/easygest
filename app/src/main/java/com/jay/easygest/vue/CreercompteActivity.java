@@ -41,13 +41,11 @@ public class CreercompteActivity extends AppCompatActivity {
     }
 
     public void creerCompte(){
-
         binding.btncreercompte.setOnClickListener(view -> {
             binding.btncreercompte.setEnabled(false);
             String username = Objects.requireNonNull(binding.txtcreercompteusername.getText()).toString().trim();
             String password = Objects.requireNonNull(binding.txtcreercomptepassword.getText()).toString().trim();
             String repassword = Objects.requireNonNull(binding.txtcreercompterepeat.getText()).toString().trim();
-
 
             String owner = Objects.requireNonNull(binding.editcreerCompteOwner.getText()).toString().trim();
             String code_base = Objects.requireNonNull(binding.editcreerCompteBaseCode.getText()).toString().trim();

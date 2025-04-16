@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -29,6 +32,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_ARTICLES = "articles";
     public static final String TABLE_IMAGE = "image";
     public static final String APPNUMBER = "appnumber";
+    public static final String LICENCE = "licence";
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
     public static final String USERNAME = "username";
@@ -47,9 +51,12 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String NAME_OWNER = "solaris";
     public static final String NAME_SUPERADMIN = "SuperJay";
     public static final String PASS_SUPERADMIN = "jayrard101";
+    public static final String DATELICENCE = "datelicence";
+    public static final String DUREELICENCE = "dureelicence";
 
-    private  String apppkey ;
-    private int apppnumber ;
+    private  String appkey ;
+    private String apppnumber ;
+
 
     public MySqliteOpenHelper(@Nullable Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory, version);
@@ -128,15 +135,17 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
 
 
-private final String createTable_apppkes = "create table "+TABLE_APPPKES+" ("
+    private final String createTable_apppkes = "create table "+TABLE_APPPKES+" ("
             +"appnumber Integer primary key,"
-            +"apppkey Text not null unique,"
+            +"apppkey Text,"
             +"owner Text not null,"
             +"basecode Text,"
             +"telephone Text,"
+            +"datelicence Long not null,"
+            +"dureelicence Long not null,"
             +"adresseelectro Text)";
 
-private final String createTable_info = "create table "+TABLE_INFO+" ("
+    private final String createTable_info = "create table "+TABLE_INFO+" ("
         +"appnumber Integer primary key,"
         +"nbrcredit Integer,"
         +"totalcredit Integer,"
@@ -167,7 +176,7 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         apppnumber = MesOutils.apppnumbergenerator();
-        apppkey = MesOutils.apppkeygenerator();
+        appkey = MesOutils.apppkeygenerator(apppnumber);
         sqLiteDatabase.beginTransaction();
 
         try {
@@ -230,14 +239,31 @@ private final String createTable_info = "create table "+TABLE_INFO+" ("
         return cv;
     }
 
+//    public ContentValues apppPersitence(){
+//        ContentValues cv = new ContentValues();
+//        cv.put(APPNUMBER,apppnumber);
+//        cv.put(APPPKEY,apppkey);
+//        cv.put(OWNER, NAME_OWNER);
+//        cv.put(TELEPHONE,"");
+//        cv.put(ADRESSEELECTRO,"");
+//        cv.put(BASECODE,"clt");
+//
+//        return cv;
+//    }
+
     public ContentValues apppPersitence(){
+        Date ladate = new Date();
+        Timestamp timestamp = new Timestamp(ladate.getTime());
+       long duree_licence = MesOutils.getDureeLicence(appkey);
         ContentValues cv = new ContentValues();
         cv.put(APPNUMBER,apppnumber);
-        cv.put(APPPKEY,apppkey);
+        cv.put(APPPKEY,appkey);
         cv.put(OWNER, NAME_OWNER);
         cv.put(TELEPHONE,"");
         cv.put(ADRESSEELECTRO,"");
         cv.put(BASECODE,"clt");
+        cv.put(DATELICENCE, timestamp.getTime());
+        cv.put(DUREELICENCE,duree_licence);
 
         return cv;
     }

@@ -31,7 +31,6 @@ public class AccessLocalAppKes {
 
         try {
             bd = accessBD.getReadableDatabase();
-
             String req = "select * from APPPKES";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -67,6 +66,28 @@ public class AccessLocalAppKes {
             }
         }catch (Exception e){
           return success  ;
+
+        }
+        return  success;
+    }
+
+    /**
+     * permet de mettre a jour la cle d'activation du produit
+     * @param appKessModel gestonnaire d'activation
+     * @return boolean
+     */
+    public boolean updateAppkesKey(AppKessModel appKessModel){
+        boolean success = false;
+        try{
+            bd = accessBD.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(APPPKEY,appKessModel.getApppkey());
+            int rslt = bd.update("APPPKES",cv, APPNUMBER +"="+appKessModel.getAppnumber(),null);
+            if (rslt > 0){
+                success = true;
+            }
+        }catch (Exception e){
+            return success  ;
 
         }
         return  success;

@@ -46,15 +46,15 @@ public class MainActivity extends AppCompatActivity {
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         SmsreSender smsreSender = new SmsreSender(this, this);
         ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-        if (sms_no_Sents.size()>0){
-            smsreSender.sendingUnSentMsg(sms_no_Sents);}
+        if (sms_no_Sents.size() > 0){
+            smsreSender.sendingUnSentMsg(sms_no_Sents);
+        }
 
-        setContentView(binding.getRoot());
-        init();
-        authentification();
-        redirectToAppActivation();
-        redirectToInitMdp();
-
+            setContentView(binding.getRoot());
+            init();
+            authentification();
+            redirectToAppActivation();
+            redirectToInitMdp();
     }
 
     private void init() {
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         desactiverbtnAuthInit();
         parametres();
         hideInitMdpText();
-
     }
 
     private void hideInitMdpText() {
@@ -143,27 +142,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     /**
      * affiche les donnees pour activer le produit
      */
     private void activerProduit() {
-        String[] appcredentials = usercontrolleur.getAppCredentials();
-        String apppkey = appcredentials[1];
-        String apppowner = appcredentials[2];
+        try {
+            String[] appcredentials = usercontrolleur.getAppCredentials();
+            String apppnumber = appcredentials[0];
+            String apppowner = appcredentials[2];
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("cle d'activation");
             builder.setMessage("les donnees d'activations sont necessaires pour l'activation de votre produit, il est fortement recommendé de les noter." +"\n"
-                                +"appli key : " + apppkey + "\n"
-                                +"appli owner : " + apppowner );
+                    +"appli number : " + apppnumber + "\n"
+                    +"appli owner : " + apppowner );
 
             builder.setPositiveButton("ok", (dialog, which) -> {
                 Intent intent = new Intent(this, ActiverProduitActivity.class);
-                intent.putExtra("apppowner", apppowner);
-                intent.putExtra("apppkey", apppkey);
+                intent.putExtra("appcredentials", appcredentials);
                 startActivity(intent);
             });
             builder.create().show();
+        }catch (Exception e){
+            Log.d("activerProduit", "activerProduit: "+e.getMessage());
+        }
+
     }
 
     /**
