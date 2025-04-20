@@ -25,6 +25,8 @@ public class AccessLocal {
     public static final String TELEPHONE = "telephone";
     public static final String ADRESSEELECTRO = "adresseelectro";
     public static final String BASECODE = "basecode";
+    public static final String DATELICENCE = "datelicence";
+    public static final String DUREELICENCE = "dureelicence";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
     private PasswordHascher passwordHascher;
@@ -214,7 +216,15 @@ public class AccessLocal {
         Cursor cursor = bd.rawQuery(req,null);
         cursor.moveToFirst();
         if (!cursor.isBeforeFirst()){
-            credentials = new String[]{cursor.getString(cursor.getColumnIndexOrThrow(APPNUMBER)),cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)),cursor.getString(cursor.getColumnIndexOrThrow(OWNER)),cursor.getString(cursor.getColumnIndexOrThrow(TELEPHONE)),cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO))};
+            credentials = new String[]{
+                    cursor.getString(cursor.getColumnIndexOrThrow(APPNUMBER)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(OWNER)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(BASECODE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(TELEPHONE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DATELICENCE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DUREELICENCE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO))};
 
         }
         cursor.close();

@@ -162,5 +162,6 @@
     <string name="repeat_nouveau_username">repeter username</string>
     <string name="export_consigne">export Consigne</string>
     <string name="import_Consigne">import Consigne</string>
+    <string name="free_compte">connection directe</string>
 
 </resources>

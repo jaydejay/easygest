@@ -15,10 +15,12 @@ import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityMainBinding;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.UserModel;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsreSender;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -28,33 +30,47 @@ public class MainActivity extends AppCompatActivity {
     private SessionManagement sessionManagement;
     private Usercontrolleur usercontrolleur;
     private UserModel user;
-
+    private String[] appcredentials;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        sessionManagement = new SessionManagement(this);
-        boolean is_authenticated = sessionManagement.getSession();
-        if (is_authenticated){
-            Intent intent = new Intent(MainActivity.this, GestionActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        }
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-        SmsreSender smsreSender = new SmsreSender(this, this);
-        ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-        if (sms_no_Sents.size() > 0){
-            smsreSender.sendingUnSentMsg(sms_no_Sents);
+         user = usercontrolleur.getUser();
+        appcredentials = usercontrolleur.getAppCredentials();
+        if (getIntent().getExtras() != null && getIntent().getExtras().getString("msgactivation") != null){
+            Toast.makeText(this, getIntent().getExtras().getString("msgactivation"), Toast.LENGTH_LONG).show();
         }
+        if (MesOutils.isLicenceExpired(appcredentials)){
+            Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("appcredentials",appcredentials);
+            intent.putExtra("code_msg",1);            startActivity(intent);
+            finish();
+        }else {
+            sessionManagement = new SessionManagement(this);
+            boolean is_authenticated = sessionManagement.getSession();
+            if (is_authenticated){
+                Intent intent = new Intent(MainActivity.this, GestionActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+            binding = ActivityMainBinding.inflate(getLayoutInflater());
+            SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
+
+            SmsreSender smsreSender = new SmsreSender(this, this);
+            ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
+            if (sms_no_Sents.size() > 0){
+                smsreSender.sendingUnSentMsg(sms_no_Sents);
+            }
 
             setContentView(binding.getRoot());
             init();
             authentification();
             redirectToAppActivation();
             redirectToInitMdp();
+        }
+
     }
 
     private void init() {
@@ -65,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         hideInitMdpText();
     }
 
+    /**
+     * hide le bouton d'initialisation du mdp
+     */
     private void hideInitMdpText() {
 
         try {
@@ -97,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                     if (username.length() >= 6 && password.length() >= 8) {
 
                         if (usercontrolleur.isAuthenticated(username, password)) {
-                            UserModel user = usercontrolleur.getUser();
+
                             UserModel userModel = new UserModel(user.getId(), user.getUsername(), user.getPassword(), user.getDateInscription(), user.getStatus(), user.isActif(), 0);
                             usercontrolleur.modifierUser(userModel);
                             usercontrolleur.setUser(user);
@@ -148,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void activerProduit() {
         try {
-            String[] appcredentials = usercontrolleur.getAppCredentials();
+
             String apppnumber = appcredentials[0];
             String apppowner = appcredentials[2];
 
@@ -161,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("ok", (dialog, which) -> {
                 Intent intent = new Intent(this, ActiverProduitActivity.class);
                 intent.putExtra("appcredentials", appcredentials);
+                intent.putExtra("code_msg",2);
                 startActivity(intent);
             });
             builder.create().show();

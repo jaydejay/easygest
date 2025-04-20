@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.jay.easygest.model.AppKessModel;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AccessLocalAppKes {
 
@@ -17,6 +19,9 @@ public class AccessLocalAppKes {
     public static final String BASECODE = "basecode";
     public static final String TELEPHONE = "telephone";
     public static final String ADRESSEELECTRO = "adresseelectro";
+
+    public static final String DATELICENCE = "datelicence";
+    public static final String DUREELICENCE = "dureelicence";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
 
@@ -81,7 +86,11 @@ public class AccessLocalAppKes {
         try{
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
+            Timestamp timestamp = new Timestamp(new Date().getTime());
+            long duree_licence = MesOutils.getDureeLicence(appKessModel.getApppkey());
             cv.put(APPPKEY,appKessModel.getApppkey());
+            cv.put(DATELICENCE, timestamp.getTime());
+            cv.put(DUREELICENCE,duree_licence);
             int rslt = bd.update("APPPKES",cv, APPNUMBER +"="+appKessModel.getAppnumber(),null);
             if (rslt > 0){
                 success = true;
