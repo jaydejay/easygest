@@ -2,12 +2,6 @@ package com.jay.easygest.outils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.view.View;
-import android.widget.Switch;
-import android.widget.Toast;
-
-import com.jay.easygest.controleur.Usercontrolleur;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -208,7 +202,7 @@ public abstract  class MesOutils {
         Date ladate = new Date();
         Timestamp timestamp = new Timestamp(ladate.getTime());
         long millisecondsToAdd =0;
-        long duree_licence = 0;
+        long duree_licence;
         switch(level) {
             case LOW:
                 // code block  licence 2 mois

@@ -54,7 +54,7 @@ public class DriveServiceHelper {
 
     }
 
-    public Task<ByteArrayOutputStream> retriveFile(String fileid, String databasePath){
+    public Task<OutputStream> retriveFile(String fileid, String databasePath){
 
         return Tasks.call(executor,()->{
 
@@ -63,10 +63,10 @@ public class DriveServiceHelper {
             try {
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    outStream = Files.newOutputStream(Paths.get(databasePath+"/"+VariablesStatique.DATABASE_NAME));
+                    outStream = Files.newOutputStream(Paths.get(databasePath));
                     mdriveservice.files().get(fileid).executeMediaAndDownloadTo(outStream);
                 }else {
-                    outStream = new FileOutputStream(databasePath+"/"+VariablesStatique.DATABASE_NAME);
+                    outStream = new FileOutputStream(databasePath);
                     mdriveservice.files().get(fileid).executeMediaAndDownloadTo(outStream);
 
                 }
@@ -74,7 +74,7 @@ public class DriveServiceHelper {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return (ByteArrayOutputStream) outStream;
+            return outStream;
         });
 
     }

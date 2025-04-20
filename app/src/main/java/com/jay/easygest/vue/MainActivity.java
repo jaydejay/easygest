@@ -20,7 +20,6 @@ import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsreSender;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 
 
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                             + "vous avez fait 3 tentatives de fausse connection"+"\n"
                             +"acceder aux paramettres pour"+"\n"
                             +"debloquer votre compte utilisateur";
-                    binding.textVConnection.setTextColor(getResources().getColor(R.color.red));
+                    binding.textVConnection.setTextColor(getColor(R.color.red));
                     binding.textVConnection.setTextSize(12);
                 }
 

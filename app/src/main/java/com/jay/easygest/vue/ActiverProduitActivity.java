@@ -3,7 +3,6 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,16 +16,8 @@ import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 public class ActiverProduitActivity extends AppCompatActivity {
-
-    public static final String APPPOWNER = "apppowner";
-    public static final String APPPKEY = "apppkey";
-    public static final String APPNUMBER = "apppnumber";
     private ActivityActiverProduitBinding binding;
-    private String appkey;
     private String[] appcredentials;
     private Usercontrolleur usercontrolleur;
 
@@ -87,19 +78,17 @@ public class ActiverProduitActivity extends AppCompatActivity {
                                boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel);
                                if (success){
                                    UserModel user = usercontrolleur.recupProprietaire();
+                                   Intent intent;
                                    if (user!= null){
-                                       Intent intent = new Intent(ActiverProduitActivity.this, MainActivity.class);
+                                       intent = new Intent(ActiverProduitActivity.this, MainActivity.class);
                                        intent.putExtra("msgactivation","félicitation produit réactivé");
-                                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                       startActivity(intent);
-                                       finish();
                                    }else {
-                                       Intent intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
+                                       intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
                                        intent.putExtra("msgactivation","félicitation produit activé");
-                                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                       startActivity(intent);
-                                       finish();
                                    }
+                                   intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                   startActivity(intent);
+                                   finish();
 
                                }else {
                                    Toast.makeText(ActiverProduitActivity.this, "un probleme est survenue", Toast.LENGTH_SHORT).show();
