@@ -29,7 +29,7 @@ public class AccessLocal {
     public static final String DUREELICENCE = "dureelicence";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
-    private PasswordHascher passwordHascher;
+    private final PasswordHascher passwordHascher;
 
 
 
@@ -170,6 +170,7 @@ public class AccessLocal {
             cv.put(ACTIF, true);
             cv.put(COMPTEUR, 0);
             bd.update(UTILISATEUR, cv, STATUS + "=" + 1, null);
+            bd.close();
         }catch (Exception e){
             //do nothing
         }
@@ -183,6 +184,7 @@ public class AccessLocal {
         cv.put(ACTIF,true);
         cv.put(COMPTEUR,0);
         bd.update(UTILISATEUR,cv,STATUS+"="+0,null);
+        bd.close();
 
     }
 
@@ -228,7 +230,7 @@ public class AccessLocal {
 
         }
         cursor.close();
-
+        bd.close();
         return credentials;
     }
 

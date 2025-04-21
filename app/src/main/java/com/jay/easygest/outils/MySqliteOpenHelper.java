@@ -3,11 +3,14 @@ package com.jay.easygest.outils;
 import android.content.ContentValues;
 import android.content.Context;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+
+import com.jay.easygest.controleur.Usercontrolleur;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -16,7 +19,7 @@ import java.util.Date;
 public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
 
-    public static final int version = 1;
+    public static final int version = 2;
     public static final String name = "gestioncredit.db";
     public static final String TABLE_UTILISATEUR = "utilisateur";
     public static final String TABLE_APPPKES = "APPPKES";
@@ -212,6 +215,30 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldversion, int newversion) {
+        sqLiteDatabase.beginTransaction();
+
+//        +
+        try {
+
+            sqLiteDatabase.execSQL("alter table APPPKES add datelicence Long not null default 1000");
+            sqLiteDatabase.execSQL("alter table APPPKES add dureelicence Long not null default 1000");
+
+            Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
+
+            if (cursor.moveToFirst()){
+                String app_number = String.valueOf(cursor.getInt(0)) ;
+                appkey = MesOutils.apppkeygenerator(app_number);
+                sqLiteDatabase.update(TABLE_APPPKES,apppUdateCv(),"appnumber =?",new String[]{app_number});
+
+            }
+
+            sqLiteDatabase.setTransactionSuccessful();
+
+
+        }finally {
+            sqLiteDatabase.endTransaction();
+
+        }
 
     }
 
@@ -262,6 +289,18 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         cv.put(TELEPHONE,"");
         cv.put(ADRESSEELECTRO,"");
         cv.put(BASECODE,"clt");
+        cv.put(DATELICENCE, timestamp.getTime());
+        cv.put(DUREELICENCE,duree_licence);
+
+        return cv;
+    }
+
+    public ContentValues apppUdateCv(){
+        Date ladate = new Date();
+        Timestamp timestamp = new Timestamp(ladate.getTime());
+        long duree_licence = MesOutils.getDureeLicence(appkey);
+        ContentValues cv = new ContentValues();
+        cv.put(APPPKEY,appkey);
         cv.put(DATELICENCE, timestamp.getTime());
         cv.put(DUREELICENCE,duree_licence);
 
