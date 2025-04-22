@@ -124,12 +124,9 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         }
 
 
-        if (fragment != null){
-
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frame_client_layout,fragment);
-            ft.commit();
-        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_client_layout,fragment);
+        ft.commit();
 
         return fragment;
     }

@@ -258,7 +258,6 @@ public class AccessLocalCredit {
             }
             while (cursor.moveToNext());
             cursor.close();
-//            bd.close();
         }catch(Exception e){
             return credits;
         }

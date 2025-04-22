@@ -2,7 +2,6 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -184,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             });
             builder.create().show();
         }catch (Exception e){
-            Log.d("activerProduit", "activerProduit: "+e.getMessage());
+            Toast.makeText(this, "activation interrumpue", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -220,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
                 binding.textVConnection.setText(msg_texte);
             }
         }catch (Exception e){
-            Log.d("mainactivity", "fillTxtVConnectionError: erreur");
+            Toast.makeText(this, "une erreur est survenu", Toast.LENGTH_SHORT).show();
         }
 
     }

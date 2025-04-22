@@ -131,7 +131,6 @@ public class CreercompteActivity extends AppCompatActivity {
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
         if(nbrutilisateur >=3){
             binding.btncreercompte.setVisibility(View.GONE);
-//            binding.btncreercompte.setEnabled(false);
         }
     }
 

@@ -156,6 +156,7 @@ public class AccessLocal {
             ContentValues cv = new ContentValues();
             cv.put(ACTIF, false);
             bd.update(UTILISATEUR, cv, STATUS + "=" + 1, null);
+            bd.close();
         }catch (Exception e){
             //do nothing
         }
@@ -230,7 +231,6 @@ public class AccessLocal {
 
         }
         cursor.close();
-        bd.close();
         return credentials;
     }
 

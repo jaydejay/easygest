@@ -83,7 +83,6 @@ public class ModifierArticleActivity extends AppCompatActivity {
                 ArticlesModel articlesModel1 = articlescontrolleur.updateArticle(article);
                 if (articlesModel1 != null){
                     Intent intent = new Intent(this,GestionActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 }else {

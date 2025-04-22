@@ -78,7 +78,9 @@ public class VersementaccAdapter extends BaseAdapter{
             try{
                 int position1 = (int) v.getTag();
                 ((AfficherCreditsClientActivity)contexte).redirectToAfficheversementaccActivity(versements.get(position1),position1,this.getCount());
-            } catch (Exception e){}
+            } catch (Exception e){
+                //do nothing
+            }
         });
 
         return view;

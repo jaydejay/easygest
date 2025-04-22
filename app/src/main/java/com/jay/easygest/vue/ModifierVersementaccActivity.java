@@ -135,7 +135,6 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                                     int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
                                     String destinationAdress = "+225"+client.getTelephone();
-//                                    String destinationAdress = "5556";
                                     String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                             + client.getNom() + " "+client.getPrenoms() +"\n"
                                             +"vous avez modifier un versement pour votre account"+"\n"
@@ -146,7 +145,6 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                                     SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
                                     smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                                     smsSender.sentReiceiver(smsnoSentModel);
-
 
                                 }else {
                                     Intent intent = new Intent(ModifierVersementaccActivity.this, AfficherversementaccActivity.class);
@@ -169,8 +167,6 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
                     }
                 }
 
-
-//                }else {Toast.makeText(this, "le verement doit etre de 1000 F minimum", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -181,10 +177,8 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
         super.onResume();
         if (!sessionManagement.getSession()){
             Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
-//        smsSender.sentReiceiver();
     }
 
     @Override

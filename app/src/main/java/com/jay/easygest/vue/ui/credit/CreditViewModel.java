@@ -17,8 +17,6 @@ public class  CreditViewModel extends ViewModel {
     private  MutableLiveData<ArrayList<CreditModel>> credits_client_soldes_ou_non ;
     private  MutableLiveData<Integer> totalcreditsclient ;
     private final MutableLiveData<Integer> totalrestesclient  ;
-    public  MutableLiveData<Integer> idmenu = new MutableLiveData<>() ;
-
 
     public CreditViewModel() {
 
@@ -34,16 +32,6 @@ public class  CreditViewModel extends ViewModel {
         credits = creditcontrolleur.getMCredits();
         credits_client_soldes_ou_non = creditcontrolleur.getMCredits();
 
-
-//        totalcredits = new MutableLiveData<>(0);
-//        totalversements = new MutableLiveData<>(0);
-//        totalrestes = new MutableLiveData<>();
-//
-//        totalcreditsclient = new MutableLiveData<>(0);
-//        totalrestesclient = new MutableLiveData<>(0);
-//        credit = new MutableLiveData<>();
-//        credits = new MutableLiveData<>();
-//        credits_client_soldes_ou_non = new MutableLiveData<>();
 
     }
 
@@ -71,7 +59,4 @@ public class  CreditViewModel extends ViewModel {
         return totalrestesclient;
     }
 
-    public MutableLiveData<Integer> getIdmenu() {
-        return idmenu;
-    }
 }

@@ -16,7 +16,7 @@ import java.util.Random;
 
 public abstract  class MesOutils {
 
-    public static String versionapp ="1.0";
+
 
     public enum Level {
         LOW,

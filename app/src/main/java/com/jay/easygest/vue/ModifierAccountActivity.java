@@ -55,7 +55,6 @@ public class ModifierAccountActivity extends AppCompatActivity {
         accountViewModel= new ViewModelProvider(this).get(AccountViewModel.class);
         clientViewModel= new ViewModelProvider(this).get(ClientViewModel.class);
         account = accountViewModel.getAccount().getValue();
-//        client = account.getClient();
         client = clientViewModel.getClient().getValue();
         AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
         smsSender = new SmsSender(this, this);

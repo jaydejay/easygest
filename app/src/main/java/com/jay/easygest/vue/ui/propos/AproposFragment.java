@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.jay.easygest.databinding.FragmentAproposBinding;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.VariablesStatique;
 
 
 /**
@@ -50,7 +51,7 @@ public class AproposFragment extends Fragment {
 
         try {
 
-            String version ="EasyGest version : " + MesOutils.versionapp;
+            String version ="EasyGest version : " + VariablesStatique.versionapp;
             binding.txteasygestversion.setText(version);
 
         } catch (Exception e) {

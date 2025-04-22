@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jay.easygest.R;
 import com.jay.easygest.databinding.ActivitySettingsBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
@@ -106,11 +107,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding.txtsettingToggleOwnerEdit.setOnClickListener(view ->{
            if (hiden.get()){
-               binding.txtsettingToggleOwnerEdit.setText("modifier");
+               binding.txtsettingToggleOwnerEdit.setText(R.string.modifier);
                binding.llsettingOwnerEdit.setVisibility(View.GONE);
                hiden.set(false);
            }else {
-               binding.txtsettingToggleOwnerEdit.setText("annuller");
+               binding.txtsettingToggleOwnerEdit.setText(R.string.annuller);
                binding.llsettingOwnerEdit.setVisibility(View.VISIBLE);
                hiden.set(true);
            }
@@ -139,7 +140,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (success){
                     settingsViewModel.getOwner().postValue(setting_owner);
                     binding.llsettingOwnerEdit.setVisibility(View.GONE);
-                    binding.txtsettingToggleOwnerEdit.setText("modifier");
+                    binding.txtsettingToggleOwnerEdit.setText(R.string.modifier);
 
                 }else {
                     binding.lleditsettingOwner.setError("enregistrement avorté");
@@ -155,11 +156,11 @@ public class SettingsActivity extends AppCompatActivity {
         AtomicBoolean hiden = new AtomicBoolean(false);
         binding.txtsettingToggleBaseCodeEdit.setOnClickListener(view -> {
             if (hiden.get()){
-                binding.txtsettingToggleBaseCodeEdit.setText("modifier");
+                binding.txtsettingToggleBaseCodeEdit.setText(R.string.modifier);
                 binding.llsettingBaseCodeEdit.setVisibility(View.GONE);
                 hiden.set(false);
             }else {
-                binding.txtsettingToggleBaseCodeEdit.setText("annuller");
+                binding.txtsettingToggleBaseCodeEdit.setText(R.string.annuller);
                 binding.llsettingBaseCodeEdit.setVisibility(View.VISIBLE);
                 hiden.set(true);
             }
@@ -183,7 +184,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (success){
                     binding.llsettingBaseCodeEdit.setVisibility(View.GONE);
                     settingsViewModel.getBase_code().postValue(setting_base_code);
-                    binding.txtsettingToggleBaseCodeEdit.setText("modifier");
+                    binding.txtsettingToggleBaseCodeEdit.setText(R.string.modifier);
 
                 }else {
                     binding.lleditsettingBaseCode.setError("enregistrement avorté");
@@ -198,11 +199,11 @@ public class SettingsActivity extends AppCompatActivity {
         binding.txtsettingToggleTelephoneEdit.setOnClickListener(view -> {
 
             if (hiden.get()){
-                binding.txtsettingToggleTelephoneEdit.setText("modifier");
+                binding.txtsettingToggleTelephoneEdit.setText(R.string.modifier);
                 binding.llsettingTelephoneEdit.setVisibility(View.GONE);
                 hiden.set(false);
             }else {
-                binding.txtsettingToggleTelephoneEdit.setText("annuller");
+                binding.txtsettingToggleTelephoneEdit.setText(R.string.annuller);
                 binding.llsettingTelephoneEdit.setVisibility(View.VISIBLE);
                 hiden.set(true);
             }
@@ -226,7 +227,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (success){
                     settingsViewModel.getTelephone().postValue(setting_telephone);
                     binding.llsettingTelephoneEdit.setVisibility(View.GONE);
-                    binding.txtsettingToggleTelephoneEdit.setText("modifier");
+                    binding.txtsettingToggleTelephoneEdit.setText(R.string.modifier);
                 }else {
                     binding.lleditsettingTelephone.setError("enregistrement avorté");
                 }
@@ -238,11 +239,11 @@ public class SettingsActivity extends AppCompatActivity {
         AtomicBoolean hiden = new AtomicBoolean(false);
         binding.txtsettingToggleMailEdit.setOnClickListener(view ->{
             if (hiden.get()){
-                binding.txtsettingToggleMailEdit.setText("modifier");
+                binding.txtsettingToggleMailEdit.setText(R.string.modifier);
                 binding.llsettingMailEdit.setVisibility(View.GONE);
                 hiden.set(false);
             }else {
-                binding.txtsettingToggleMailEdit.setText("annuller");
+                binding.txtsettingToggleMailEdit.setText(R.string.annuller);
                 binding.llsettingMailEdit.setVisibility(View.VISIBLE);
                 hiden.set(true);
             }
@@ -262,7 +263,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (success){
                     settingsViewModel.getEmail().postValue(setting_mail);
                     binding.llsettingMailEdit.setVisibility(View.GONE);
-                    binding.txtsettingToggleMailEdit.setText("modifier");
+                    binding.txtsettingToggleMailEdit.setText(R.string.modifier);
 
                 }else {
                     binding.lleditsettingMail.setError("enregistrement avorté");
@@ -275,11 +276,11 @@ public class SettingsActivity extends AppCompatActivity {
         AtomicBoolean hiden = new AtomicBoolean(false);
         binding.txtsettingTogglePasswordEdit.setOnClickListener(view ->{
             if (hiden.get()){
-                binding.txtsettingTogglePasswordEdit.setText("modifier");
+                binding.txtsettingTogglePasswordEdit.setText(R.string.modifier);
                 binding.llsettingPasswordEdit.setVisibility(View.GONE);
                 hiden.set(false);
             }else {
-                binding.txtsettingTogglePasswordEdit.setText("annuller");
+                binding.txtsettingTogglePasswordEdit.setText(R.string.annuller);
                 binding.llsettingPasswordEdit.setVisibility(View.VISIBLE);
                 hiden.set(true);
             }
@@ -298,7 +299,7 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_setting_password).commit();
                 settingsViewModel.getSetting_password().postValue(setting_password);
                 binding.llsettingPasswordEdit.setVisibility(View.GONE);
-                binding.txtsettingTogglePasswordEdit.setText("modifier");
+                binding.txtsettingTogglePasswordEdit.setText(R.string.modifier);
             }
         });
     }

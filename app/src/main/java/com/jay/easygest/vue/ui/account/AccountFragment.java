@@ -153,11 +153,9 @@ public class  AccountFragment extends Fragment {
                             accountViewModel.getAccount().setValue(accountModel);
                             accountcontroller.setRecapTresteClient(clientModel);
                             accountcontroller.setRecapTaccountClient(clientModel);
-//                            int total_account_client = accountViewModel.getTotalaccountsclient().getValue();
                             int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
                             String destinationAdress = "+225"+clientModel.getTelephone();
-//                        String destinationAdress = "5556";
 
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"
                                     +"bienvenu(e) "+clientModel.getNom() + " "+clientModel.getPrenoms()+"\n"
@@ -205,9 +203,7 @@ public class  AccountFragment extends Fragment {
         if (!sessionManagement.getSession()){
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
-
         }
-//        smsSender.sentReiceiver(smsnoSentModel);
     }
 
 }

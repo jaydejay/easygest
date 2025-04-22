@@ -78,7 +78,9 @@ public class ListeversementAdapter extends BaseAdapter {
                 if (activity.contains("GestionActivity")){
                     ((GestionActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());
                 }else {((AfficherCreditsClientActivity)contexte).redirectToAfficheversementActivity(versements.get(position1),position1,this.getCount());}
-            }catch (Exception e){}
+            }catch (Exception e){
+                //do nothing
+            }
 
 
         });

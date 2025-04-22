@@ -40,7 +40,13 @@ public class AccessLocalAppKes {
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
             do {
-                AppKessModel appKes = new AppKessModel(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5) );
+                AppKessModel appKes = new AppKessModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(APPNUMBER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(OWNER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(BASECODE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TELEPHONE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO)));
                 _appKessModels.add(appKes);
             }
             while (cursor.moveToNext());

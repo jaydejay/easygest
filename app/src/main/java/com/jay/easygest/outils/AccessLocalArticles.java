@@ -81,7 +81,6 @@ public class AccessLocalArticles {
 //            bd.close();
         }catch (Exception e){
             articleModel = null;
-            bd.close();
         }
 
         return articleModel;
@@ -126,7 +125,7 @@ public class AccessLocalArticles {
             cursor.close();
 //            bd.close();
         } catch (Exception e) {
-            e.printStackTrace();
+           //do nothing
         }
         return articlesModels;
     }
