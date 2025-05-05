@@ -25,20 +25,14 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_ACCOUNT = "account";
     public static final String TABLE_INFO = "infos";
     public static final String TABLE_SMSFAILLED = "smsfailled";
-    public static final String NAME_ADMIN = "JayAdmine";
-    public static final String PASS_ADMIN = "jayrard10";
     private static final String TABLE_VERSEMENTACC = "versementacc";
     public static final String TABLE_ARTICLES = "articles";
     public static final String TABLE_IMAGE = "image";
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
-    public static final String DATE_INSCRIPTION = "dateInscription";
     public static final String STATUS = "status";
-    public static final String ACTIF = "actif";
-    public static final String COMPTEUR = "compteur";
+
     public static final String NBR_CREDIT = "nbrcredit";
     public static final String TOTAL_CREDIT = "totalcredit";
     public static final String NBR_ACCOUNT = "nbraccount";
@@ -47,8 +41,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String ADRESSEELECTRO = "adresseelectro";
     public static final String BASECODE = "basecode";
     public static final String NAME_OWNER = "solaris";
-    public static final String NAME_SUPERADMIN = "SuperJay";
-    public static final String PASS_SUPERADMIN = "jayrard101";
     public static final String DATELICENCE = "datelicence";
     public static final String DUREELICENCE = "dureelicence";
 
@@ -176,8 +168,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                     + "foreign key(articleid) references articles(id) on delete cascade)";
             sqLiteDatabase.execSQL(createTable_image);
 
-            sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerSuperUser());
-            sqLiteDatabase.insert(TABLE_UTILISATEUR,null,creerAdministrateur());
             sqLiteDatabase.insert(TABLE_APPPKES,null,apppPersitence());
             sqLiteDatabase.insert(TABLE_INFO,null,creeeinfo());
 
@@ -186,11 +176,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
         }finally {
             sqLiteDatabase.endTransaction();
-
         }
-
-
-
 
     }
 
@@ -198,24 +184,22 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldversion, int newversion) {
         sqLiteDatabase.beginTransaction();
 
-//        +
         try {
 
             sqLiteDatabase.execSQL("alter table APPPKES add datelicence Long not null default 1000");
             sqLiteDatabase.execSQL("alter table APPPKES add dureelicence Long not null default 1000");
 
             Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
-
             if (cursor.moveToFirst()){
                 String app_number = String.valueOf(cursor.getInt(0)) ;
                 appkey = MesOutils.apppkeygenerator(app_number);
                 sqLiteDatabase.update(TABLE_APPPKES,apppUdateCv(),"appnumber =?",new String[]{app_number});
 
             }
-
             cursor.close();
-            sqLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
 
+            sqLiteDatabase.setTransactionSuccessful();
 
         }finally {
             sqLiteDatabase.endTransaction();
@@ -224,29 +208,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
     }
 
-    private ContentValues creerSuperUser(){
-        ContentValues cv = new ContentValues();
-        cv.put(USERNAME, NAME_SUPERADMIN);
-        cv.put(PASSWORD, PASS_SUPERADMIN);
-        cv.put(DATE_INSCRIPTION,new Date().getTime());
-        cv.put(STATUS,3);
-        cv.put(ACTIF,true);
-        cv.put(COMPTEUR,0);
-        return cv;
-
-    }
-
-    private ContentValues creerAdministrateur(){
-
-        ContentValues cv = new ContentValues();
-        cv.put(USERNAME,NAME_ADMIN);
-        cv.put(PASSWORD,PASS_ADMIN);
-        cv.put(DATE_INSCRIPTION,new Date().getTime());
-        cv.put(STATUS,0);
-        cv.put(ACTIF,true);
-        cv.put(COMPTEUR,0);
-        return cv;
-    }
 
     public ContentValues apppPersitence(){
         Date ladate = new Date();

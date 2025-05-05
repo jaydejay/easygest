@@ -159,6 +159,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * redirection pour activer le produit
+     */
+    private void redirectToAppActivation() {
+        binding.txtCreateCompte.setOnClickListener(view -> activerProduit());
+
+    }
+
 
     /**
      * affiche les donnees pour activer le produit
@@ -188,13 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * redirection pour activer le produit
-     */
-    private void redirectToAppActivation() {
-        binding.txtCreateCompte.setOnClickListener(view -> activerProduit());
 
-    }
 
 
     /**
@@ -231,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void desactivatetxtCreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
-        if (nbrutilisateur >= 3){
+        if (nbrutilisateur >= 1){
             binding.txtCreateCompte.setVisibility(View.GONE);
         }
     }

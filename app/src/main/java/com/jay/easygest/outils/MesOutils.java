@@ -87,8 +87,7 @@ public abstract  class MesOutils {
         int chif2 = random.nextInt(10);
         int chif3 = random.nextInt(10);
         int chif4 = random.nextInt(10);
-        String numletter = chif1+""+chif2+""+chif3+""+chif4;
-        return numletter;
+        return chif1+""+chif2+""+chif3+""+chif4;
     }
 
 
@@ -201,7 +200,7 @@ public abstract  class MesOutils {
         Level level = getLicenceLevel(key);
         Date ladate = new Date();
         Timestamp timestamp = new Timestamp(ladate.getTime());
-        long millisecondsToAdd =0;
+        long millisecondsToAdd ;
         long duree_licence;
         switch(level) {
             case LOW:

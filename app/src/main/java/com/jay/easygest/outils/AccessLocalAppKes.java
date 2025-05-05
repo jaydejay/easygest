@@ -76,7 +76,7 @@ public class AccessLocalAppKes {
                 success = true;
             }
         }catch (Exception e){
-          return success  ;
+          // do nothing
 
         }
         return  success;
@@ -102,7 +102,7 @@ public class AccessLocalAppKes {
                 success = true;
             }
         }catch (Exception e){
-            return success  ;
+         // do nothing
 
         }
         return  success;

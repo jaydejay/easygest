@@ -141,7 +141,6 @@ public class CreditFragment extends Fragment {
                             creditcontrolleur.setRecapTcreditClient(client);
                             clientViewModel.getClient().setValue(client);
 
-//                            int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
                             int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
                            String destinationAdress = "+225"+client.getTelephone();

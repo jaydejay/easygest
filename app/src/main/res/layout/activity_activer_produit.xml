@@ -76,7 +76,7 @@
             android:id="@+id/txtCompte_free"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:text="@string/free_compte"
             android:textColor="@color/design_default_color_primary_dark"
             android:textStyle="bold" />

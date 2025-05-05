@@ -94,7 +94,7 @@ public class CreercompteActivity extends AppCompatActivity {
                         try {
 
                             int nbrutilisateur = usercontrolleur.nbrUtilisateur();
-                            if (nbrutilisateur < 3){
+                            if (nbrutilisateur < 1){
                                 AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);
                                 AppKessModel appKessModel = accessLocalAppKes.getAppkes();
                                 String _password = passwordHascher.getHashingPass(password,VariablesStatique.MY_SALT);
@@ -129,7 +129,7 @@ public class CreercompteActivity extends AppCompatActivity {
 
     public void desactivatebtncreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
-        if(nbrutilisateur >=3){
+        if(nbrutilisateur >=1){
             binding.btncreercompte.setVisibility(View.GONE);
         }
     }

@@ -36,10 +36,12 @@ public class ActiverProduitActivity extends AppCompatActivity {
 
     private void init(){
         int  code_msg =  getIntent().getExtras().getInt("code_msg");
+        String msg_expire = "votre licence a expirer contacter le proprietaire pour la renouveller";
+        String activation_texte = "ACTIVATION DU PRODUIT";
         if (code_msg == 1 ){
-            binding.txtMsgExpired.setText("votre licence a expirer contacter le proprietaire pour la renouveller");
+            binding.txtMsgExpired.setText(msg_expire);
         }else {
-            binding.txtMsgExpired.setText("ACTIVATION DU PRODUIT");
+            binding.txtMsgExpired.setText(activation_texte);
             binding.txtMsgExpired.setTextColor(getColor(R.color.bleue_brillant) );
         }
         MesOutils.Level level = MesOutils.getLicenceLevel(appcredentials[1]);
