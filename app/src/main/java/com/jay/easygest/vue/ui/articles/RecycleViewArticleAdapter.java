@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,13 +70,29 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
 
                 }
                 if (item.getItemId()== R.id.article_popup_supprimer ){
-                    Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
-                    int rslt = articlescontrolleur.deleteArticle(articles.get(position));
-                    if (rslt > 0){
-                        articles.remove(position);
-                        articlescontrolleur.listeArticles2();
-                        articlescontrolleur.setAdaptermarticles(articles);
-                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(contexte);
+                    builder.setTitle("supprimer un article");
+                    builder.setMessage("vous etes sur le point de supprimer l'article");
+
+                    builder.setPositiveButton("oui", (dialog, which) -> {
+                        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+                        int rslt = articlescontrolleur.deleteArticle(articles.get(position));
+                        if (rslt > 0){
+                            articles.remove(position);
+                            articlescontrolleur.listeArticles2();
+                            articlescontrolleur.setAdaptermarticles(articles);
+                        }
+
+                    });
+
+                    builder.setNegativeButton("non", (dialog, which) -> {
+
+
+                    });
+
+                    builder.create().show();
+
                 }
 
                 if (item.getItemId()== R.id.article_popup_detail ){
