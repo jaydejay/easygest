@@ -1,11 +1,14 @@
 package com.jay.easygest.model;
 
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 public class Image {
 
     private Integer id;
+    private Bitmap image;
     private byte[] image2;
     private Integer articleid;
 
@@ -16,11 +19,11 @@ public class Image {
     }
 
 
-
     public Image(byte[] image2,Integer articleid) {
         this.image2 = image2;
         this.articleid = articleid;
     }
+
 
 
     public Image(Integer id, byte[] image2, Integer articleid) {
@@ -33,6 +36,9 @@ public class Image {
         return id;
     }
 
+    public Bitmap getImage() {
+        return image;
+    }
 
     public Integer getArticleid() {
         return articleid;
