@@ -54,6 +54,7 @@
     <string name="appkey">cle du produit</string>
     <string name="app_owner">proprietaire</string>
     <string name="menu_a_propos">a propos</string>
+    <string name="menu_upgrade">upgrade</string>
     <string name="nom_structurestandard">EasyGest gestionnaire de la clientelle</string>
     <string name="slogan_structurestandard">simplicité et efficacité</string>
     <string name="info_solaris">"EasyGest est un produit de solaris systeme structure de the solaris groupe systeme cooporation intervenant dans plusieurs domaines dont l'informatique : conception d'applications mobiles android ,ios conception d'application web (creation de site web ) concception d'application bureatique installation et maintenance de reseaux informatiques maintenance informatique installation de reseaux electrique, les TP et bien d'autres"</string>
@@ -163,5 +164,7 @@
     <string name="export_consigne">export Consigne</string>
     <string name="import_Consigne">import Consigne</string>
     <string name="free_compte">connection directe</string>
-
+    <string name="upgrade_fragment">hello upgrade fragment</string>
+    <string name="app_id">application id</string>
+    <string name="app_key">cle validation </string>
 </resources>

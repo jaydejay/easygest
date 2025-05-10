@@ -77,16 +77,16 @@ public class ActiverProduitActivity extends AppCompatActivity {
                                        appcredentials[4],
                                        appcredentials[7]);
                                AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
-                               boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel);
+                               boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel, appcredentials);
                                if (success){
                                    UserModel user = usercontrolleur.recupProprietaire();
                                    Intent intent;
                                    if (user!= null){
                                        intent = new Intent(ActiverProduitActivity.this, MainActivity.class);
-                                       intent.putExtra("msgactivation","félicitation produit réactivé");
+                                       intent.putExtra("msgactivation","félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ "activée");
                                    }else {
                                        intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
-                                       intent.putExtra("msgactivation","félicitation produit activé");
+                                       intent.putExtra("msgactivation","félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ "activée");
                                    }
                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                    startActivity(intent);

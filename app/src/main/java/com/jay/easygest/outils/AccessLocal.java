@@ -178,21 +178,11 @@ public class AccessLocal {
     }
 
 
-    public void activerAdministrateur(){
-
-        bd = accessBD.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(ACTIF,true);
-        cv.put(COMPTEUR,0);
-        bd.update(UTILISATEUR,cv,STATUS+"="+0,null);
-        bd.close();
-
-    }
-
     public boolean authapp(String proprietaire, String cleproduit) {
+        boolean success = false;
       try{
           bd = accessBD.getReadableDatabase();
-        boolean success = false;
+
         String req ="select * from APPPKES";
         Cursor cursor = bd.rawQuery(req,null);
         cursor.moveToFirst();
@@ -206,8 +196,12 @@ public class AccessLocal {
         }
         cursor.close();
         bd.close();
-        return success;
-      }catch (Exception e){return false;}
+
+      }catch (Exception e){
+          // do nohing
+      }
+
+      return success;
     }
 
 
@@ -215,22 +209,26 @@ public class AccessLocal {
 
         bd = accessBD.getReadableDatabase();
         String[] credentials =null;
-        String req ="select * from APPPKES";
-        Cursor cursor = bd.rawQuery(req,null);
-        cursor.moveToFirst();
-        if (!cursor.isBeforeFirst()){
-            credentials = new String[]{
-                    cursor.getString(cursor.getColumnIndexOrThrow(APPNUMBER)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(OWNER)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(BASECODE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(TELEPHONE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DATELICENCE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DUREELICENCE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO))};
+        try{
+            String req ="select * from APPPKES";
+            Cursor cursor = bd.rawQuery(req,null);
+            cursor.moveToFirst();
+            if (!cursor.isBeforeFirst()){
+                credentials = new String[]{
+                        cursor.getString(cursor.getColumnIndexOrThrow(APPNUMBER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(OWNER)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(BASECODE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TELEPHONE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DATELICENCE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DUREELICENCE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO))};
 
+            }
+            cursor.close();
+        } catch (Exception e) {
+            // do nothing
         }
-        cursor.close();
         return credentials;
     }
 

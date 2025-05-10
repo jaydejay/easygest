@@ -53,6 +53,11 @@
         android:label="@string/menu_a_propos"
         tools:layout="@layout/fragment_apropos" />
     <fragment
+        android:id="@+id/nav_upgrade_app"
+        android:name="com.jay.easygest.vue.ui.upgrade.UpgradeFragment"
+        android:label="@string/menu_upgrade"
+        tools:layout="@layout/fragment_upgrade" />
+    <fragment
         android:id="@+id/nav_versement"
         android:name="com.jay.easygest.vue.ui.versement.VersementFragment"
         android:label="@string/menu_versement"

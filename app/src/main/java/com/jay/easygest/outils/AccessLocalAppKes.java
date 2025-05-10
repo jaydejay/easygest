@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jay.easygest.model.AppKessModel;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class AccessLocalAppKes {
@@ -60,13 +62,16 @@ public class AccessLocalAppKes {
         return appKessModel;
     }
 
+    /**
+     * permet de mettre a jour les infos generales
+     * @param appKessModel e model
+     * @return true si reussi sinon faux
+     */
     public boolean updateAppkes(AppKessModel appKessModel){
         boolean success = false;
         try{
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(APPNUMBER,appKessModel.getAppnumber());
-            cv.put(APPPKEY,appKessModel.getApppkey());
             cv.put(OWNER,appKessModel.getOwner());
             cv.put(BASECODE,appKessModel.getBasecode());
             cv.put(TELEPHONE,appKessModel.getTelephone());
@@ -84,16 +89,20 @@ public class AccessLocalAppKes {
 
     /**
      * permet de mettre a jour la cle d'activation du produit
-     * @param appKessModel gestonnaire d'activation
+     * @param appKessModel   gestonnaire d'activation
+     * @param appcredentials es credentials
      * @return boolean
      */
-    public boolean updateAppkesKey(AppKessModel appKessModel){
+    public boolean updateAppkesKey(AppKessModel appKessModel, String[] appcredentials){
         boolean success = false;
         try{
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             Timestamp timestamp = new Timestamp(new Date().getTime());
-            long duree_licence = MesOutils.getDureeLicence(appKessModel.getApppkey());
+
+            long temp_restant = Long.parseLong(appcredentials[6]) - (new Date().getTime());
+            long duree_licence =  MesOutils.getDureeLicence(appKessModel.getApppkey()) + temp_restant;
+
             cv.put(APPPKEY,appKessModel.getApppkey());
             cv.put(DATELICENCE, timestamp.getTime());
             cv.put(DUREELICENCE,duree_licence);

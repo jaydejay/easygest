@@ -131,8 +131,6 @@ public abstract  class MesOutils {
         stringBuilder3.append(VariablesStatique.STR.charAt(c3+c4));//
         stringBuilder3.append(VariablesStatique.STR.charAt(c3+23));
 
-
-
         return stringBuilder1+"-"+stringBuilder2+"-"+stringBuilder3;
     }
 
@@ -165,6 +163,10 @@ public abstract  class MesOutils {
 
     public static boolean retrieveAppNumber(String appKey, String appnumber){
 
+        boolean is_app_number_same = false;
+
+        try{
+
         int app_number1 = Integer.parseInt(String.valueOf(appnumber.charAt(0)));
         int app_number2 = Integer.parseInt(String.valueOf(appnumber.charAt(1)));
         int app_number3 = Integer.parseInt(String.valueOf(appnumber.charAt(2)));
@@ -180,8 +182,6 @@ public abstract  class MesOutils {
         String zone3 = zone_array[2];
         int c3 = VariablesStatique.STR.indexOf(zone3.charAt(3));
 
-        boolean is_app_number_same = false;
-
         if (c1 == app_number1  ){
 
             if (c2 == app_number2 ){
@@ -190,6 +190,10 @@ public abstract  class MesOutils {
                     is_app_number_same = true;
                 }
             }
+        }
+
+        }catch (Exception e){
+            // do nothing
         }
 
 
@@ -238,46 +242,49 @@ public abstract  class MesOutils {
 
     public static Level getLicenceLevel(String key){
         Level level = null ;
+        try{
+            String[] zone_array = key.split("-");
+            if (zone_array.length == 3 ){
+                String zone1 = zone_array[0];
+                String zone2 = zone_array[1];
+                String zone3 = zone_array[2];
+                if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
 
-        String[] zone_array = key.split("-");
-        if (zone_array.length == 3 ){
-            String zone1 = zone_array[0];
-            String zone2 = zone_array[1];
-            String zone3 = zone_array[2];
-            if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
+                    String low = String.valueOf(zone1.charAt(2));
+                    String medium = String.valueOf(zone2.charAt(0));
+                    String free = String.valueOf(zone2.charAt(4));
+                    String hight = String.valueOf(zone3.charAt(1));
+                    String permanent = String.valueOf(zone3.charAt(4));
 
-                String low = String.valueOf(zone1.charAt(2));
-                String medium = String.valueOf(zone2.charAt(0));
-                String free = String.valueOf(zone2.charAt(4));
-                String hight = String.valueOf(zone3.charAt(1));
-                String permanent = String.valueOf(zone3.charAt(4));
-
-                if (low.equals("1") ){
-                    level = Level.LOW;
-                }else {
-                    if (medium.equals("7") ){
-                        level = Level.MEDIUM;
-                    } else {
-                        if (free.equals("3") ){
-                            level = Level.FREE;
-                        }else {
-                            if (hight.equals("5") ){
-                                level = Level.HIGH;
+                    if (low.equals("1") ){
+                        level = Level.LOW;
+                    }else {
+                        if (medium.equals("7") ){
+                            level = Level.MEDIUM;
+                        } else {
+                            if (free.equals("3") ){
+                                level = Level.FREE;
                             }else {
-                                if (permanent.equals("9")){
-                                    level = Level.PERMANENT;
+                                if (hight.equals("5") ){
+                                    level = Level.HIGH;
                                 }else {
-                                    level = Level.INCONNU;
-                                }
+                                    if (permanent.equals("9")){
+                                        level = Level.PERMANENT;
+                                    }else {
+                                        level = Level.INCONNU;
+                                    }
 
+                                }
                             }
                         }
                     }
                 }
+
             }
-
+        }catch (Exception e){
+            //do nothing
+            level = Level.INCONNU;
         }
-
         return level;
     }
 
@@ -292,12 +299,14 @@ public abstract  class MesOutils {
 
 
     public static boolean verifyApppkeyFree(String appkey, String appnumber){
+        boolean is_appkey_free = false;
+
+        try{
+
         String[] zone_array = appkey.split("-");
         String zone1 = zone_array[0];
         String zone2 = zone_array[1];
         String zone3 = zone_array[2];
-
-        boolean is_appkey_free = false;
 
         if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
 
@@ -336,16 +345,21 @@ public abstract  class MesOutils {
 
             }
         }
+        }catch (Exception e){
+            // do nohing
+        }
         return is_appkey_free;
     }
 
 
     public static boolean verifyApppkeyLow(String appkey, String appnumber){
+        boolean is_appkey_low = false;
+
+       try {
         String[] zone_array = appkey.split("-");
         String zone1 = zone_array[0];
         String zone2 = zone_array[1];
         String zone3 = zone_array[2];
-        boolean is_appkey_low = false;
 
         if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
 
@@ -397,129 +411,133 @@ public abstract  class MesOutils {
             }
         }
 
+   }catch (Exception e){
+           // do nohing
+       }
+
 
         return is_appkey_low;
     }
 
 
     public static boolean verifyApppkeyMedium(String appkey, String appnumber){
-        String[] zone_array = appkey.split("-");
-        String zone1 = zone_array[0];
-        String zone2 = zone_array[1];
-        String zone3 = zone_array[2];
-
         boolean is_appkey_medium = false;
+        try{
 
-        if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
-            int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
-            int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));
-            int c3 =Integer.parseInt(String.valueOf(appnumber.charAt(2)));
-            int c4 =Integer.parseInt(String.valueOf(appnumber.charAt(3)));
+            String[] zone_array = appkey.split("-");
+            String zone1 = zone_array[0];
+            String zone2 = zone_array[1];
+            String zone3 = zone_array[2];
 
-            int z11 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
-            int z12 = VariablesStatique.STR.indexOf(zone1.charAt(1)) ;
-            int z13 = VariablesStatique.STR.indexOf(zone1.charAt(2)) ;
-            int z14 = VariablesStatique.STR.indexOf(zone1.charAt(3)) ;
-            int z15 = VariablesStatique.STR.indexOf(zone1.charAt(4)) ;
+            if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
+                int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
+                int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));
+                int c3 =Integer.parseInt(String.valueOf(appnumber.charAt(2)));
+                int c4 =Integer.parseInt(String.valueOf(appnumber.charAt(3)));
 
-            if (z11 == c1 && z12 == c1+25 && z14 == c1+1 ){
+                int z11 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
+                int z12 = VariablesStatique.STR.indexOf(zone1.charAt(1)) ;
+                int z13 = VariablesStatique.STR.indexOf(zone1.charAt(2)) ;
+                int z14 = VariablesStatique.STR.indexOf(zone1.charAt(3)) ;
+                int z15 = VariablesStatique.STR.indexOf(zone1.charAt(4)) ;
 
-                if (z15 == z13-11 || z15 == z13 + 9  ){
+                if (z11 == c1 && z12 == c1+25 && z14 == c1+1 ){
 
-                    int z21 = 7 ;
-                    int z22 = VariablesStatique.STR.indexOf(zone2.charAt(1)) ;
-                    int z23 = VariablesStatique.STR.indexOf(zone2.charAt(2)) ;
-                    int z24 = VariablesStatique.STR.indexOf(zone2.charAt(3)) ;
-                    int z25 = VariablesStatique.STR.indexOf(zone2.charAt(4)) ;
+                    if (z15 == z13-11 || z15 == z13 + 9  ){
 
-                    if (z21 == 7 && z22 == c1+c2 && z23 == c3+20 ){
-                        if (z25 == z24-9 || z25 == z24 + 7  ){
+                        int z21 = 7 ;
+                        int z22 = VariablesStatique.STR.indexOf(zone2.charAt(1)) ;
+                        int z23 = VariablesStatique.STR.indexOf(zone2.charAt(2)) ;
+                        int z24 = VariablesStatique.STR.indexOf(zone2.charAt(3)) ;
+                        int z25 = VariablesStatique.STR.indexOf(zone2.charAt(4)) ;
 
-                            int z31 = VariablesStatique.STR.indexOf(zone3.charAt(0)) ;
-                            int z32 = VariablesStatique.STR.indexOf(zone3.charAt(1)) ;
-                            int z33 = VariablesStatique.STR.indexOf(zone3.charAt(2)) ;
-                            int z34 = VariablesStatique.STR.indexOf(zone3.charAt(3)) ;
-                            int z35 = VariablesStatique.STR.indexOf(zone3.charAt(4)) ;
+                        if (z21 == 7 && z22 == c1+c2 && z23 == c3+20 ){
+                            if (z25 == z24-9 || z25 == z24 + 7  ){
 
-                            if ( z33 == c4+24 && z34 == c3+c4 && z35 == c2+20){
-                                if (z32 == z31-15 || z32 == z31+12 ){
-                                    is_appkey_medium = true;
+                                int z31 = VariablesStatique.STR.indexOf(zone3.charAt(0)) ;
+                                int z32 = VariablesStatique.STR.indexOf(zone3.charAt(1)) ;
+                                int z33 = VariablesStatique.STR.indexOf(zone3.charAt(2)) ;
+                                int z34 = VariablesStatique.STR.indexOf(zone3.charAt(3)) ;
+                                int z35 = VariablesStatique.STR.indexOf(zone3.charAt(4)) ;
+
+                                if ( z33 == c4+24 && z34 == c3+c4 && z35 == c2+20){
+                                    if (z32 == z31-15 || z32 == z31+12 ){
+                                        is_appkey_medium = true;
+                                    }
+
                                 }
-
                             }
+
                         }
-
-
                     }
-                }
 
+                }
             }
+        } catch (NumberFormatException e) {
+            // do nothing
         }
 
         return is_appkey_medium;
     }
 
     public static boolean verifyApppkeyHigh(String appkey, String appnumber){
-        String[] zone_array = appkey.split("-");
-        String zone1 = zone_array[0];
-        String zone2 = zone_array[1];
-        String zone3 = zone_array[2];
-
         boolean is_appkey_high = false;
+        try{
+            String[] zone_array = appkey.split("-");
+            String zone1 = zone_array[0];
+            String zone2 = zone_array[1];
+            String zone3 = zone_array[2];
 
-        if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
+            if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
 
-            int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
-            int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));
-            int c3 =Integer.parseInt(String.valueOf(appnumber.charAt(2)));
-            int c4 =Integer.parseInt(String.valueOf(appnumber.charAt(3)));
+                int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
+                int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));
+                int c3 =Integer.parseInt(String.valueOf(appnumber.charAt(2)));
+                int c4 =Integer.parseInt(String.valueOf(appnumber.charAt(3)));
 
-            int z11 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
-            int z12 = VariablesStatique.STR.indexOf(zone1.charAt(1)) ;
-            int z13 = VariablesStatique.STR.indexOf(zone1.charAt(2)) ;
-            int z14 = VariablesStatique.STR.indexOf(zone1.charAt(3)) ;
-            int z15 = VariablesStatique.STR.indexOf(zone1.charAt(4)) ;
+                int z11 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
+                int z12 = VariablesStatique.STR.indexOf(zone1.charAt(1)) ;
+                int z13 = VariablesStatique.STR.indexOf(zone1.charAt(2)) ;
+                int z14 = VariablesStatique.STR.indexOf(zone1.charAt(3)) ;
+                int z15 = VariablesStatique.STR.indexOf(zone1.charAt(4)) ;
 
-//            if (z11 == c1 && z12 == c1+15 && z13 == c2+17 && z14 == c1+19 && z15 == c4+3 ){
-            if (z11 == c1 && z13 == c2+17 && z14 == c1+19 ){
+                if (z11 == c1 && z13 == c2+17 && z14 == c1+19 ){
 
-                if (z15 == z12-7 || z15 == z12 + 13  ){
-
-
-                    int z21 = VariablesStatique.STR.indexOf(zone2.charAt(0)) ;
-                    int z22 = VariablesStatique.STR.indexOf(zone2.charAt(1)) ;
-                    int z23 = VariablesStatique.STR.indexOf(zone2.charAt(2)) ;
-                    int z24 = VariablesStatique.STR.indexOf(zone2.charAt(3)) ;
-                    int z25 = VariablesStatique.STR.indexOf(zone2.charAt(4)) ;
+                    if (z15 == z12-7 || z15 == z12 + 13  ){
 
 
-//                if (z21 == c3+c2 && z22 == c1+c2 && z23 == c2+5 && z24 == c1+11 && z25 == c4+c2){
-                    if ( z22 == c1+c2 && z24 == c1+11 && z25 == c4+c2){
-                        if (z23 == z21-16 || z23 == z21 + 5  ){
+                        int z21 = VariablesStatique.STR.indexOf(zone2.charAt(0)) ;
+                        int z22 = VariablesStatique.STR.indexOf(zone2.charAt(1)) ;
+                        int z23 = VariablesStatique.STR.indexOf(zone2.charAt(2)) ;
+                        int z24 = VariablesStatique.STR.indexOf(zone2.charAt(3)) ;
+                        int z25 = VariablesStatique.STR.indexOf(zone2.charAt(4)) ;
 
-                            int z31 = VariablesStatique.STR.indexOf(zone3.charAt(0)) ;
-                            int z32 = 5;
-                            int z33 = VariablesStatique.STR.indexOf(zone3.charAt(2)) ;
-                            int z34 = VariablesStatique.STR.indexOf(zone3.charAt(3)) ;
-                            int z35 = VariablesStatique.STR.indexOf(zone3.charAt(4)) ;
+                        if ( z22 == c1+c2 && z24 == c1+11 && z25 == c4+c2){
+                            if (z23 == z21-16 || z23 == z21 + 5  ){
 
-//                    if (z31 == c4+25 && z32 == 5 && z34 == c3+c4 && z35 == c3+13){
-                            if (z32 == 5 && z34 == c3+c4 && z35 == c3+13){
+                                int z31 = VariablesStatique.STR.indexOf(zone3.charAt(0)) ;
+                                int z32 = 5;
+                                int z33 = VariablesStatique.STR.indexOf(zone3.charAt(2)) ;
+                                int z34 = VariablesStatique.STR.indexOf(zone3.charAt(3)) ;
+                                int z35 = VariablesStatique.STR.indexOf(zone3.charAt(4)) ;
 
-                                if (z31 == z33-6 || z31 == z33+6  ){
-                                    is_appkey_high = true;
+                                if (z32 == 5 && z34 == c3+c4 && z35 == c3+13){
+
+                                    if (z31 == z33-6 || z31 == z33+6  ){
+                                        is_appkey_high = true;
+                                    }
+
                                 }
-
-
                             }
+
                         }
 
                     }
 
                 }
-
-
             }
+        } catch (NumberFormatException e) {
+            //do nothing
         }
 
         return is_appkey_high;
@@ -527,49 +545,52 @@ public abstract  class MesOutils {
 
 
     public static boolean verifyApppkeyPermanent(String appkey, String appnumber){
-        String[] zone_array = appkey.split("-");
-        String zone1 = zone_array[0];
-        String zone2 = zone_array[1];
-        String zone3 = zone_array[2];
-
         boolean is_appkey_permanent = false;
+        try{
 
-        if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
-            int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
-            int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));
-            int c3 =Integer.parseInt(String.valueOf(appnumber.charAt(2)));
-            int c4 =Integer.parseInt(String.valueOf(appnumber.charAt(3)));
+            String[] zone_array = appkey.split("-");
+            String zone1 = zone_array[0];
+            String zone2 = zone_array[1];
+            String zone3 = zone_array[2];
 
-            int z11 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
-            int z12 = VariablesStatique.STR.indexOf(zone1.charAt(1)) ;
-            int z13 = VariablesStatique.STR.indexOf(zone1.charAt(2)) ;
-            int z14 = VariablesStatique.STR.indexOf(zone1.charAt(3)) ;
-            int z15 = VariablesStatique.STR.indexOf(zone1.charAt(4)) ;
+            if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
+                int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
+                int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));
+                int c3 =Integer.parseInt(String.valueOf(appnumber.charAt(2)));
+                int c4 =Integer.parseInt(String.valueOf(appnumber.charAt(3)));
 
-            if (z11 == c1 && z12 == c1+14 && z13 == c1+20 && z14 == c4+7 && z15 == c3+15 ){
+                int z11 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
+                int z12 = VariablesStatique.STR.indexOf(zone1.charAt(1)) ;
+                int z13 = VariablesStatique.STR.indexOf(zone1.charAt(2)) ;
+                int z14 = VariablesStatique.STR.indexOf(zone1.charAt(3)) ;
+                int z15 = VariablesStatique.STR.indexOf(zone1.charAt(4)) ;
 
-                int z21 = VariablesStatique.STR.indexOf(zone2.charAt(0)) ;
-                int z22 = VariablesStatique.STR.indexOf(zone2.charAt(1)) ;
-                int z23 = VariablesStatique.STR.indexOf(zone2.charAt(2)) ;
-                int z24 = VariablesStatique.STR.indexOf(zone2.charAt(3)) ;
-                int z25 = VariablesStatique.STR.indexOf(zone2.charAt(4)) ;
+                if (z11 == c1 && z12 == c1+14 && z13 == c1+20 && z14 == c4+7 && z15 == c3+15 ){
 
-                if ( z21 == c1+c4 && z22 == c1+c2 && z23 == c3+c3 && z24 == c4+c4 && z25 == c2+c2 ){
+                    int z21 = VariablesStatique.STR.indexOf(zone2.charAt(0)) ;
+                    int z22 = VariablesStatique.STR.indexOf(zone2.charAt(1)) ;
+                    int z23 = VariablesStatique.STR.indexOf(zone2.charAt(2)) ;
+                    int z24 = VariablesStatique.STR.indexOf(zone2.charAt(3)) ;
+                    int z25 = VariablesStatique.STR.indexOf(zone2.charAt(4)) ;
 
-                    int z31 = VariablesStatique.STR.indexOf(zone3.charAt(0)) ;
-                    int z32 = VariablesStatique.STR.indexOf(zone3.charAt(1)) ;
-                    int z33 = VariablesStatique.STR.indexOf(zone3.charAt(2)) ;
-                    int z34 = VariablesStatique.STR.indexOf(zone3.charAt(3)) ;
-                    int z35 = 9 ;
+                    if ( z21 == c1+c4 && z22 == c1+c2 && z23 == c3+c3 && z24 == c4+c4 && z25 == c2+c2 ){
 
+                        int z31 = VariablesStatique.STR.indexOf(zone3.charAt(0)) ;
+                        int z32 = VariablesStatique.STR.indexOf(zone3.charAt(1)) ;
+                        int z33 = VariablesStatique.STR.indexOf(zone3.charAt(2)) ;
+                        int z34 = VariablesStatique.STR.indexOf(zone3.charAt(3)) ;
+                        int z35 = 9 ;
 
-                    if (z31 == c1+c4 && z32 == c3+c4+10 && z33 == c1+c2+15 && z34 == c3+c4 && z35 == 9 ){
-                        is_appkey_permanent = true;
+                        if (z31 == c1+c4 && z32 == c3+c4+10 && z33 == c1+c2+15 && z34 == c3+c4 && z35 == 9 ){
+                            is_appkey_permanent = true;
+                        }
+
                     }
 
                 }
-
             }
+        } catch (NumberFormatException e) {
+            // do nothing
         }
 
         return is_appkey_permanent;

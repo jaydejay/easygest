@@ -47,6 +47,10 @@
     </group>
     <group>
         <item
+            android:id="@+id/nav_upgrade_app"
+            android:icon="@drawable/baseline_upgrade_24"
+            android:title="@string/menu_upgrade" />
+        <item
             android:id="@+id/nav_a_propos"
             android:icon="@drawable/ic_baseline_info_24"
             android:title="@string/menu_a_propos" />
