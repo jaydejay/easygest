@@ -15,12 +15,16 @@ public class PreferedServiceHelper {
         editor = sharedPreferences.edit();
     }
 
-    public void saveDriveSession(String drivefileId){
-        editor.putString(DRIVE_FILE_ID,drivefileId).commit();
+    public void saveDriveSession(String driveFileId){
+        editor.putString(DRIVE_FILE_ID,driveFileId).commit();
     }
 
     public String getDriveSession(){
         return sharedPreferences.getString(DRIVE_FILE_ID,"");
+    }
+
+    public void deleteDriveSession(){
+        editor.remove(DRIVE_FILE_ID);
     }
 
 }

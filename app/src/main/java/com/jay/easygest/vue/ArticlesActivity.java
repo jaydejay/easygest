@@ -79,7 +79,7 @@ public class ArticlesActivity extends AppCompatActivity {
                     }
 
                 }catch (IOException e) {
-//                    Log.d("articleactivity", "onCreate: "+e.getMessage());
+                   // do nothing
                 }
             }
         });
@@ -101,7 +101,7 @@ public class ArticlesActivity extends AppCompatActivity {
                     }
 
                 }catch (IOException e) {
-                    Log.d("articleactivity", "onCreate: "+e.getMessage());
+                    // do nothing
                 }
             }
         });
@@ -122,7 +122,7 @@ public class ArticlesActivity extends AppCompatActivity {
                     }
 
                 } catch (IOException e) {
-                    Log.d("articleactivity", "onCreate right: "+e.getMessage());
+                    // do nothing
                 }
             }
         });
@@ -145,7 +145,7 @@ public class ArticlesActivity extends AppCompatActivity {
 
 
                 } catch (IOException e) {
-                    Log.d("articleactivity", "onCreate: "+e.getMessage());
+                    // do nothing;
                 }
             }
         });

@@ -35,14 +35,19 @@ public class MainActivity extends AppCompatActivity {
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
          user = usercontrolleur.getUser();
         appcredentials = usercontrolleur.getAppCredentials();
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("msgactivation") != null){
             Toast.makeText(this, getIntent().getExtras().getString("msgactivation"), Toast.LENGTH_LONG).show();
         }
+
         if (MesOutils.isLicenceExpired(appcredentials)){
             Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("appcredentials",appcredentials);
-            intent.putExtra("code_msg",1);            startActivity(intent);
+            intent.putExtra("code_msg",1);
+            startActivity(intent);
             finish();
         }else {
             sessionManagement = new SessionManagement(this);
@@ -53,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-            binding = ActivityMainBinding.inflate(getLayoutInflater());
+
             SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
 
             SmsreSender smsreSender = new SmsreSender(this, this);
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 smsreSender.sendingUnSentMsg(sms_no_Sents);
             }
 
-            setContentView(binding.getRoot());
+
             init();
             authentification();
             redirectToAppActivation();

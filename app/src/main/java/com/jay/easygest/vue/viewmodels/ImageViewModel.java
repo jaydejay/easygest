@@ -12,12 +12,12 @@ import java.util.ArrayList;
 
 public class ImageViewModel extends ViewModel {
 
-    private  MutableLiveData<Image> image;
-    private MutableLiveData<ArrayList<Image>> images ;
-    private MutableLiveData<Bitmap> bitmapimageface ;
-    private MutableLiveData<Bitmap> bitmapimageleft ;
-    private MutableLiveData<Bitmap> bitmapimageright ;
-    private MutableLiveData<Bitmap> bitmapimageback ;
+    private final MutableLiveData<Image> image;
+    private final MutableLiveData<ArrayList<Image>> images ;
+    private final MutableLiveData<Bitmap> bitmapimageface ;
+    private final MutableLiveData<Bitmap> bitmapimageleft ;
+    private final MutableLiveData<Bitmap> bitmapimageright ;
+    private final MutableLiveData<Bitmap> bitmapimageback ;
 
     public ImageViewModel() {
         Imagecontrolleur imagecontrolleur = Imagecontrolleur.getImagecontrolleurInstance(null);

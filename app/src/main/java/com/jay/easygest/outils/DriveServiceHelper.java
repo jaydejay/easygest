@@ -53,6 +53,8 @@ public class DriveServiceHelper {
 
     }
 
+
+
     public Task<OutputStream> retriveFile(String fileid, String databasePath){
 
         return Tasks.call(executor,()->{
@@ -82,7 +84,7 @@ public class DriveServiceHelper {
     public Task<File> updateFile(String path){
 
         return Tasks.call(executor,()->{
-            String drivefileid = preferedServiceHelper.getDriveSession();
+            String driveFileId = preferedServiceHelper.getDriveSession();
 
             java.io.File file = new java.io.File(path);
             FileContent mediaContent = new FileContent("application/db", file);
@@ -90,7 +92,7 @@ public class DriveServiceHelper {
             File myfile = null;
 
             try {
-                myfile = mdriveservice.files().update(drivefileid,null, mediaContent).execute();
+                myfile = mdriveservice.files().update(driveFileId,null, mediaContent).execute();
 
             } catch (Exception e) {
                 Log.d("excter", "uploadFileToDrive: "+e.getMessage());
