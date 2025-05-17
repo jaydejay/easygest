@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +78,6 @@ public class ImportExportFragment extends Fragment {
         binding = FragmentImportExportBinding.inflate(inflater,container,false);
 
         preferedServiceHelper = new PreferedServiceHelper(requireContext());
-        Log.i("importexportfragment", "onCreateView: "+preferedServiceHelper.getDriveSession().length());
         transport = new NetHttpTransport();
         binding.exportConsigne.setText(EXPORT_CONSIGNE);
         binding.importConsigne.setText(IMPORT_CONSIGNE);
@@ -321,10 +319,10 @@ public class ImportExportFragment extends Fragment {
                     try {
                         String drive_file_id = preferedServiceHelper.getDriveSession();
                         if (drive_file_id.length() != 0){
-
                             retriveFileToDrive(drive_file_id);
                         }else {
                             binding.layoutBtnReinsta.setVisibility(View.VISIBLE);
+                            binding.btnimport.setEnabled(false);
                         }
                     }catch (Exception e){
                         Toast.makeText(requireContext(), "echec 1 : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
@@ -385,13 +383,17 @@ public class ImportExportFragment extends Fragment {
 
                         });
                         builder.create().show();
-
+                        binding.btnexport.setEnabled(true);
                     }catch (Exception e){
                         Toast.makeText(requireContext(), "echec save Drive Session "  +e.getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.btnexport.setEnabled(true);
                     }
 
                 })
-                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show();
+                    binding.btnexport.setEnabled(true);
+                });
         }
 
 
@@ -408,18 +410,26 @@ public class ImportExportFragment extends Fragment {
 
                     builder.setPositiveButton("ok", (dialog, which) -> Toast.makeText(requireContext(), "succes de la mise  a jour ", Toast.LENGTH_SHORT).show());
                     builder.create().show();
+                    binding.btnexport.setEnabled(true);
                 } )
-                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show();
+                    binding.btnexport.setEnabled(true);
+                });
 
         }
 
     public void mainUploadMethod(){
-        binding.btnexport.setOnClickListener(v -> launchsignInIntent());
+        binding.btnexport.setOnClickListener(v -> {
+            binding.btnexport.setEnabled(false);
+            launchsignInIntent();
+        });
     }
 
 
     public void mainRestoreMethod(){
         binding.btnimport.setOnClickListener(v -> {
+            binding.btnimport.setEnabled(false);
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setTitle("restoration de donnees");
             builder.setMessage("vous etes sur le point de restorer des donnees." +"\n"
@@ -431,16 +441,18 @@ public class ImportExportFragment extends Fragment {
                 main_restore_btn_clicked = 1;
                 launchRestoresignInIntent();
             });
-            builder.setNegativeButton("non",(dialog, which) -> {});
+            builder.setNegativeButton("non",(dialog, which) -> binding.btnimport.setEnabled(true));
             builder.create().show();
         }); }
 
     public void mainRestoreReinstallMethod(){
         binding.btnImportReinsta.setOnClickListener(v ->{
+            binding.btnImportReinsta.setEnabled(false);
             main_restore_btn_clicked = 2;
            drive_db_key  = binding.editKeyReinsta.getText().toString().trim();
            if (drive_db_key.isEmpty()){
                Toast.makeText(getContext(), "champ obligatoire", Toast.LENGTH_SHORT).show();
+               binding.btnimport.setEnabled(true);
            }else {
                launchRestoreReinstasignInIntent();
            }
@@ -454,8 +466,15 @@ public class ImportExportFragment extends Fragment {
                     preferedServiceHelper.saveDriveSession(drive_file_id);
                 }
                 Toast.makeText(getContext(), "donnees restorees", Toast.LENGTH_SHORT).show();
+                binding.btnimport.setEnabled(true);
+                binding.btnImportReinsta.setEnabled(true);
+                binding.layoutBtnReinsta.setVisibility(View.GONE);
             })
-            .addOnFailureListener(e -> Toast.makeText(getContext(), "echec de la restoration", Toast.LENGTH_SHORT).show());
+            .addOnFailureListener(e -> {
+                Toast.makeText(getContext(), "echec de la restoration", Toast.LENGTH_SHORT).show();
+                binding.btnimport.setEnabled(true);
+                binding.btnImportReinsta.setEnabled(true);
+            });
     }
 
 
