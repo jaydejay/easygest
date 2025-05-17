@@ -67,7 +67,7 @@
     <string name="Mes_credits">Mes credits</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="somme_article2">somme article 2</string>
+    <string name="somme_article2">somme article </string>
     <string name="prenoms_client">prenoms client</string>
     <string name="zero">0</string>
     <string name="somme">somme</string>
@@ -169,4 +169,5 @@
     <string name="app_key">cle validation </string>
     <string name="drive_doc_id">document id </string>
     <string name="enregistrer_un_credit">ENREGISTRER UN CREDIT</string>
+    <string name="enregistrer_un_account">enregistrer un account</string>
 </resources>

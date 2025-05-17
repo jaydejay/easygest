@@ -114,8 +114,7 @@
                                     android:ems="10"
                                     android:gravity="center_horizontal|center_vertical"
                                     android:hint="@string/somme_article2"
-                                    android:inputType="number"
-                                    android:text="@string/zero" />
+                                    android:inputType="number" />
 
                                 <EditText
                                     android:id="@+id/edittxtcreerNbrarticle1"
@@ -155,9 +154,8 @@
                                     android:autofillHints="@string/somme_article2"
                                     android:ems="10"
                                     android:gravity="center_horizontal|center_vertical"
-                                    android:hint="@string/zero"
-                                    android:inputType="number"
-                                    android:text="@string/zero" />
+                                    android:hint="@string/somme_article2"
+                                    android:inputType="number" />
 
                                 <EditText
                                     android:id="@+id/edittxtcreerNbrarticle2"

@@ -29,21 +29,32 @@
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
 
+            <TextView
+
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="@string/enregistrer_un_account"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
             <LinearLayout
-                android:id="@+id/linearLayoutaccnom"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
                     android:id="@+id/edittxtcreeaccrnom"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:autofillHints="@string/nom_client"
                     android:ems="10"
                     android:gravity="center_horizontal|center_vertical"
@@ -60,64 +71,50 @@
                     android:gravity="center" />
             </LinearLayout>
 
+            <EditText
+                android:id="@+id/edittxtcreeraccprenoms"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:autofillHints="@string/prenoms"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/prenoms_client"
+                android:inputType="textPersonName"
+                android:maxLength="20" />
+
+            <EditText
+                android:id="@+id/edittxtcreeraccarticle1"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_marginTop="25dp"
+                android:autofillHints="@string/article_1"
+                android:ems="10"
+                android:hint="@string/article_1"
+                android:inputType="textPersonName" />
+
             <LinearLayout
-                android:id="@+id/linearLayoutaccprenoms"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccnom">
-
-                <EditText
-                    android:id="@+id/edittxtcreeraccprenoms"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/prenoms"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/prenoms_client"
-                    android:inputType="textPersonName"
-                    android:maxLength="20" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayoutaccarticle1"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccprenoms">
-
-                <EditText
-                    android:id="@+id/edittxtcreeraccarticle1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/article_1"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/article_1"
-                    android:inputType="textPersonName" />
+                app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
                     android:id="@+id/edittxtcreeraccarticle1somme"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
                     android:layout_weight="2"
                     android:autofillHints="@string/somme_article2"
                     android:ems="10"
                     android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/zero"
-                    android:inputType="number"
-                    android:text="@string/zero" />
+                    android:hint="@string/somme_article2"
+                    android:inputType="number" />
 
                 <EditText
                     android:id="@+id/edittxtcreeraccNbrarticle1"
@@ -131,26 +128,26 @@
 
             </LinearLayout>
 
+            <EditText
+                android:id="@+id/edittxtcreeraccarticle2"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:autofillHints="@string/article_2"
+                android:ems="10"
+                android:layout_marginTop="25dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/article_2"
+                android:inputType="textPersonName" />
+
             <LinearLayout
-                android:id="@+id/linearLayoutaccarticle2"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccarticle1">
-
-                <EditText
-                    android:id="@+id/edittxtcreeraccarticle2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/article_2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/article_2"
-                    android:inputType="textPersonName" />
+                app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
                     android:id="@+id/edittxtcreeraccarticle2somme"
@@ -160,9 +157,8 @@
                     android:autofillHints="@string/somme_article2"
                     android:ems="10"
                     android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/zero"
-                    android:inputType="number"
-                    android:text="@string/zero" />
+                    android:hint="@string/somme_article2"
+                    android:inputType="number" />
 
                 <EditText
                     android:id="@+id/edittxtcreeraccNbrarticle2"
@@ -176,14 +172,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayoutacc5"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
+                android:layout_marginTop="25dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutaccarticle2">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
                     android:id="@+id/editTextaccDate"
@@ -209,51 +205,25 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayoutacctelephone"
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/edittxtcreeracctelephone"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutacc5">
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:autofillHints="@string/telephone"
+                android:ems="10"
+                android:hint="@string/telephone"
+                android:inputType="phone"
+                android:maxLength="10" />
 
-                <EditText
-                    android:id="@+id/edittxtcreeracctelephone"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:autofillHints="@string/telephone"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="@string/telephone"
-                    android:inputType="phone"
-                    android:maxLength="10" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
+            <Button
+                android:id="@+id/btncreeraccount"
                 android:layout_width="wrap_content"
-                android:layout_height="58dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="3dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutacctelephone">
-
-                <Button
-                    android:id="@+id/btncreeraccount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/enregistrer" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/enregistrer" />
         </LinearLayout>
     </ScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
