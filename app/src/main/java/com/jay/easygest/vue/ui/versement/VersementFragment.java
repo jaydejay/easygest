@@ -154,7 +154,6 @@ public class VersementFragment extends Fragment {
         clientViewModel.getClient().observe(getViewLifecycleOwner(),clientModel -> {
             if (clientModel != null){
                 binding.editversementcodeclt.setText(clientModel.getCodeclient());
-                binding.editversementcodeclt.setEnabled(false);
             }
         });
 

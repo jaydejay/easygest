@@ -11,7 +11,7 @@
         android:id="@+id/edit_key"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="50dp"
         android:autofillHints="@string/app_key"
         android:ems="10"
         android:gravity="center_horizontal"

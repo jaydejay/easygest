@@ -14,11 +14,10 @@
 
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
             android:paddingBottom="20dp">
@@ -37,8 +36,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtcreercompteusername"
-                android:layout_width="221dp"
-                android:layout_height="70dp"
+                android:layout_width="250dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:autofillHints="@string/username"
@@ -52,10 +51,10 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtcreercomptepassword"
-                android:layout_width="221dp"
-                android:layout_height="70dp"
+                android:layout_width="250dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:autofillHints="@string/password"
                 android:ems="10"
                 android:gravity="center"
@@ -67,10 +66,10 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtcreercompterepeat"
-                android:layout_width="221dp"
-                android:layout_height="70dp"
+                android:layout_width="250dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:autofillHints="@string/repete_password"
                 android:ems="10"
                 android:gravity="center"
@@ -83,7 +82,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/lleditcreer_compte_owner"
-                android:layout_width="221dp"
+                android:layout_width="250dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
@@ -99,13 +98,14 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editcreer_compte_owner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/lleditcreer_compte_base_code"
-                android:layout_width="221sp"
+                android:layout_width="250sp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
@@ -126,7 +126,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/llcreer_compte_telephone"
-                android:layout_width="221sp"
+                android:layout_width="250sp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
@@ -144,12 +144,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
-                    android:textColor="#101010" />
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/llcreer_compte_mail"
-                android:layout_width="221dp"
+                android:layout_width="250dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
@@ -174,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/creer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

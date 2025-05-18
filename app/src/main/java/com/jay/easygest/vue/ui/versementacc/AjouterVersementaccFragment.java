@@ -40,7 +40,7 @@ public class AjouterVersementaccFragment extends Fragment {
     private SessionManagement sessionManagement;
 
     private FragmentAjouterVersementaccBinding binding;
-   private SmsSender smsSender ;
+    private SmsSender smsSender ;
     private ClientViewModel clientViewModel;
     private ClientModel client;
     private AccountViewModel accountViewModel;
@@ -172,7 +172,6 @@ public class AjouterVersementaccFragment extends Fragment {
         clientViewModel.getClient().observe(getViewLifecycleOwner(),clientModel -> {
             if (clientModel != null){
                 binding.ajoutervrsmtacccodeclt.setText(clientModel.getCodeclient());
-                binding.ajoutervrsmtacccodeclt.setEnabled(false);
             }
         });
 

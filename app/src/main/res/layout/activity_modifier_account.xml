@@ -24,11 +24,12 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/llayoutmodifaccnom"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -50,47 +51,36 @@
                     android:gravity="center" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/modifaccprenoms"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal|center_vertical"/>
+
+
+            <EditText
+                android:id="@+id/modifaccarticle1"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:autofillHints="@string/article_1"
+                android:ems="10"
+                android:layout_marginTop="25dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/article_1"
+                android:inputType="textPersonName" />
+
             <LinearLayout
-                android:id="@+id/llayoutmodifaccprenoms"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llayoutaccnom">
-
-                <TextView
-                    android:id="@+id/modifaccprenoms"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llayoutmodifaccarticle1"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llayoutmodifaccprenoms">
-
-                <EditText
-                    android:id="@+id/modifaccarticle1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/article_1"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/article_1"
-                    android:inputType="textPersonName" />
+                app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
                     android:id="@+id/modifaccarticle1somme"
@@ -117,26 +107,25 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llayoutmodifaccarticle2"
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/modifaccarticle2"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
-                android:gravity="center_horizontal"
+                android:autofillHints="@string/article_2"
+                android:layout_marginTop="25dp"
+                android:ems="10"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal|center_vertical"
+                android:hint="@string/article_2"
+                android:inputType="textPersonName" />
+
+            <LinearLayout
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llayoutmodifaccarticle1">
-
-                <EditText
-                    android:id="@+id/modifaccarticle2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/article_2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/article_2"
-                    android:inputType="textPersonName" />
+                app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
                     android:id="@+id/modifaccarticle2somme"
@@ -161,48 +150,26 @@
                     android:inputType="number" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llayoutmodifaccdate"
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/modifaccDate"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llayoutmodifaccarticle2">
-
-                <EditText
-                    android:id="@+id/modifaccDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/date"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/date"
-                    android:inputType="textPersonName" />
-            </LinearLayout>
-
-
-
-            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:ems="10"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal|center_vertical"
+                android:hint="@string/date"
+                android:autofillHints="@string/date"
+                android:inputType="textPersonName" />
+            <Button
+                android:id="@+id/btnmodifaccount"
                 android:layout_width="wrap_content"
-                android:layout_height="58dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="3dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llayoutmodifaccdate">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:text="@string/modifier" />
 
-                <Button
-                    android:id="@+id/btnmodifaccount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/modifier" />
 
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
