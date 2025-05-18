@@ -39,7 +39,7 @@ public class ModifierVersementActivity extends AppCompatActivity {
     private AccessLocalAppKes accessLocalAppKes;
     private SmsSender smsSender;
     Button bouton_modifier;
-    EditText EDTcodeclient ;
+    TextView EDTcodeclient ;
     EditText EDTsomme ;
     EditText EDTdatecredit;
     TextView title;

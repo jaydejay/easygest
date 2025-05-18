@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,7 +47,7 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
     private AppKessModel appKessModel;
     private VersementsaccModel versement;
     private ClientModel client;
-   EditText EDTcodeclient;
+   TextView EDTcodeclient;
    EditText EDTsomme;
    EditText EDTdateaccount;
    Button bouton_modifier;

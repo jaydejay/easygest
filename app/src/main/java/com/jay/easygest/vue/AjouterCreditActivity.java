@@ -38,7 +38,7 @@ public class AjouterCreditActivity extends AppCompatActivity {
     private CreditViewModel creditViewModel;
     private ClientViewModel clientViewModel;
     private ClientModel client;
-    private   SmsSender smsSender;
+    private  SmsSender smsSender;
     private AppKessModel appKessModel;
 
     @Override
@@ -105,7 +105,7 @@ public class AjouterCreditActivity extends AppCompatActivity {
                 int sommearticle2 = 0 ;
                 int nbrarticle2 = 0 ;
                 if (!designationarticle2.isEmpty()){
-                    sommearticle2 =Integer.parseInt(article2somme);
+                    sommearticle2 = Integer.parseInt(article2somme);
                     nbrarticle2 = Integer.parseInt(article2qte);
                 }
 
