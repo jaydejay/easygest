@@ -119,7 +119,7 @@
     <string name="reinitialiser">reinitialiser</string>
     <string name="mdp_init">reinitialisation du mot de passe</string>
     <string name="menu_sms_resent">revoie msg</string>
-    <string name="loading">loading...</string>
+    <string name="loading">loading…</string>
     <string name="sending_finish">tous les messages ont étés envoyés</string>
     <string name="not_sms">pas de messages à envoyer</string>
 
@@ -169,5 +169,5 @@
     <string name="app_key">cle validation </string>
     <string name="drive_doc_id">document id </string>
     <string name="enregistrer_un_credit">ENREGISTRER UN CREDIT</string>
-    <string name="enregistrer_un_account">enregistrer un account</string>
+    <string name="enregistrer_un_account">ENREGISTRER UN ACCOUNT</string>
 </resources>
