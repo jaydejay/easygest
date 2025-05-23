@@ -95,7 +95,6 @@ public final class Usercontrolleur {
     public boolean authApp(String proprietaire, String cleproduit) {
 
            if (accessLocal.authapp(proprietaire,cleproduit)){
-//               accessLocal.activerAdministrateur();
                accessLocal.activerProprietaire();
            }
         return accessLocal.authapp(proprietaire,cleproduit);

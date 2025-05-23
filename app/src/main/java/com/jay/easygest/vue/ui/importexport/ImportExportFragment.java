@@ -26,13 +26,18 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.jay.easygest.databinding.FragmentImportExportBinding;
 import com.jay.easygest.model.AppKessModel;
+import com.jay.easygest.model.ArticlesModel;
+import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.AccessLocalArticles;
+import com.jay.easygest.outils.AccessLocalClient;
 import com.jay.easygest.outils.DriveServiceHelper;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.PreferedServiceHelper;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 /**
@@ -81,11 +86,21 @@ public class ImportExportFragment extends Fragment {
         transport = new NetHttpTransport();
         binding.exportConsigne.setText(EXPORT_CONSIGNE);
         binding.importConsigne.setText(IMPORT_CONSIGNE);
-
+        init();
         mainUploadMethod();
         mainRestoreMethod();
         mainRestoreReinstallMethod();
         return binding.getRoot();
+    }
+
+    private void init(){
+        AccessLocalClient accessLocalClient = new AccessLocalClient(getContext());
+        AccessLocalArticles accessLocalArticles = new AccessLocalArticles(getContext());
+        ArrayList<ClientModel> clients = accessLocalClient.listeClients();
+        ArrayList<ArticlesModel> articles = accessLocalArticles.listeArticles();
+        if (!MesOutils.isDataPresent(clients,articles)){
+            binding.btnexport.setVisibility(View.GONE);
+        }
     }
 
 
@@ -349,9 +364,13 @@ public class ImportExportFragment extends Fragment {
 
                     }catch (Exception e){
                         Toast.makeText(requireContext(), "echec : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
+                        binding.btnImportReinsta.setEnabled(true);
                     }
 
-                }).addOnFailureListener(e -> Toast.makeText(requireContext(), "echec : "+e.getMessage(), Toast.LENGTH_LONG).show());
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "echec : "+e.getMessage(), Toast.LENGTH_LONG).show();
+                    binding.btnImportReinsta.setEnabled(true);
+                });
 
     }
         //### end 4. Handle the Sign-In Result
@@ -383,17 +402,14 @@ public class ImportExportFragment extends Fragment {
 
                         });
                         builder.create().show();
-                        binding.btnexport.setEnabled(true);
+
                     }catch (Exception e){
                         Toast.makeText(requireContext(), "echec save Drive Session "  +e.getMessage(), Toast.LENGTH_SHORT).show();
-                        binding.btnexport.setEnabled(true);
+
                     }
 
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show();
-                    binding.btnexport.setEnabled(true);
-                });
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show());
         }
 
 
@@ -410,12 +426,8 @@ public class ImportExportFragment extends Fragment {
 
                     builder.setPositiveButton("ok", (dialog, which) -> Toast.makeText(requireContext(), "succes de la mise  a jour ", Toast.LENGTH_SHORT).show());
                     builder.create().show();
-                    binding.btnexport.setEnabled(true);
                 } )
-                .addOnFailureListener(e -> {
-                    Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show();
-                    binding.btnexport.setEnabled(true);
-                });
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show());
 
         }
 
@@ -423,6 +435,7 @@ public class ImportExportFragment extends Fragment {
         binding.btnexport.setOnClickListener(v -> {
             binding.btnexport.setEnabled(false);
             launchsignInIntent();
+            binding.btnexport.setEnabled(true);
         });
     }
 
@@ -440,6 +453,7 @@ public class ImportExportFragment extends Fragment {
             builder.setPositiveButton("oui", (dialog, which) -> {
                 main_restore_btn_clicked = 1;
                 launchRestoresignInIntent();
+                binding.btnimport.setEnabled(true);
             });
             builder.setNegativeButton("non",(dialog, which) -> binding.btnimport.setEnabled(true));
             builder.create().show();
@@ -452,9 +466,10 @@ public class ImportExportFragment extends Fragment {
            drive_db_key  = binding.editKeyReinsta.getText().toString().trim();
            if (drive_db_key.isEmpty()){
                Toast.makeText(getContext(), "champ obligatoire", Toast.LENGTH_SHORT).show();
-               binding.btnimport.setEnabled(true);
+               binding.btnImportReinsta.setEnabled(true);
            }else {
                launchRestoreReinstasignInIntent();
+
            }
 
     }); }
@@ -466,15 +481,10 @@ public class ImportExportFragment extends Fragment {
                     preferedServiceHelper.saveDriveSession(drive_file_id);
                 }
                 Toast.makeText(getContext(), "donnees restorees", Toast.LENGTH_SHORT).show();
-                binding.btnimport.setEnabled(true);
-                binding.btnImportReinsta.setEnabled(true);
                 binding.layoutBtnReinsta.setVisibility(View.GONE);
+                binding.btnexport.setEnabled(true);
             })
-            .addOnFailureListener(e -> {
-                Toast.makeText(getContext(), "echec de la restoration", Toast.LENGTH_SHORT).show();
-                binding.btnimport.setEnabled(true);
-                binding.btnImportReinsta.setEnabled(true);
-            });
+            .addOnFailureListener(e -> Toast.makeText(getContext(), "echec de la restoration", Toast.LENGTH_SHORT).show());
     }
 
 

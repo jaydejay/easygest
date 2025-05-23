@@ -138,7 +138,7 @@ public class AccessLocalClient {
             cursor.close();
 
         }catch(Exception e){
-//            do nothing
+            return clients;
         }
         return clients;
     }

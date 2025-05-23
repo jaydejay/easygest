@@ -285,7 +285,7 @@ public class AccessLocalAccount {
             accountController.setAccounts(accounts);
 
         }catch(Exception e){
-            return null;
+            return accounts;
         }
         return accounts;
 

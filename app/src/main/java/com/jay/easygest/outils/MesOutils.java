@@ -3,13 +3,18 @@ package com.jay.easygest.outils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.jay.easygest.model.ArticlesModel;
+import com.jay.easygest.model.ClientModel;
+
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -627,6 +632,19 @@ public abstract  class MesOutils {
         }
 
         return success;
+    }
+
+    public static boolean isDataPresent(ArrayList<ClientModel> clients, ArrayList<ArticlesModel> articles){
+        boolean is_data_present = false;
+
+        if (clients != null || articles != null){
+
+            if (Objects.requireNonNull(clients).size() > 0 || articles.size() > 0 ){
+                is_data_present = true;
+            }
+        }
+
+        return is_data_present;
     }
 
 

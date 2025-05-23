@@ -1,7 +1,6 @@
 package com.jay.easygest.vue.ui.upgrade;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 
-import java.util.Arrays;
-
 public class UpgradeFragment extends Fragment {
 
     private FragmentUpgradeBinding binding;
@@ -30,7 +27,6 @@ public class UpgradeFragment extends Fragment {
         binding = FragmentUpgradeBinding.inflate(inflater, container, false);
         Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(requireContext());
         appcredentials = usercontrolleur.getAppCredentials();
-        Log.i("accesappkess", "updateAppkesKey: "+ Arrays.toString(appcredentials));
         upgradeAppli();
         return  binding.getRoot();
     }

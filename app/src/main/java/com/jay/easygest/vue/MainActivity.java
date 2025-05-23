@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * desavtive la creation de compte utilisateur
-     * le nbr d'utilisateur est limité a 3
+     * le nbr d'utilisateur est limité a 1
      */
     private void desactivatetxtCreation(){
         int nbrutilisateur = usercontrolleur.nbrUtilisateur();
