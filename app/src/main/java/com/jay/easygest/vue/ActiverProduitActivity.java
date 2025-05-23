@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jay.easygest.R;
@@ -121,11 +122,20 @@ public class ActiverProduitActivity extends AppCompatActivity {
     public void getFreeAccount(){
 
         binding.txtCompteFree.setOnClickListener(v -> {
-            Intent intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
-            intent.putExtra("msgactivation","félicitation et bienvenu(e)");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("CLE DU PRODUIT");
+            builder.setMessage("noter la cle elle vous sera utile"+"\n"
+                    +" cle : "+appcredentials[1] );
+            builder.setPositiveButton("ok",(dialog, which) -> {
+                Intent intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
+                intent.putExtra("msgactivation","félicitation et bienvenu(e)");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
+            builder.create().show();
+
         });
 
     }

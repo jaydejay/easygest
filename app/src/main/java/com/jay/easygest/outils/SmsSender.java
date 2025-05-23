@@ -66,5 +66,32 @@ public class SmsSender {
 
     }
 
+    public void sentReiceiverGeneric(SmsnoSentModel sms, Intent intent_to){
+        BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+//
+                int sms_id  =intent.getIntExtra("sms_id",1);
+                if (getResultCode() == Activity.RESULT_OK && sms.getSmsid() == sms_id ) {
+                    intent_to.putExtra("smssentmessge"," client notifier");
+                    startActivity(context, intent_to, null);
+                }
+
+                if (getResultCode() == SmsManager.RESULT_ERROR_GENERIC_FAILURE && sms.getSmsid() == sms_id) {
+                    SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(context);
+                    boolean success = smsSendercontrolleur.insert(sms);
+                    if(success){
+                        intent_to.putExtra("smssentmessge","message non envoye,un probleme de reseau ou vos sms sont épuisés");
+                        startActivity(context, intent_to, null);
+                    }
+                }
+
+            }
+        };
+        registerReceiver(context, smsSentReceiver, new IntentFilter(SMS_SENT),RECEIVER_NOT_EXPORTED);
+
+    }
+
 
 }

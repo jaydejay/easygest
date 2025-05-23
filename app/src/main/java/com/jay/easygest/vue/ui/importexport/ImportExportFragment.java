@@ -396,9 +396,10 @@ public class ImportExportFragment extends Fragment {
                                     +"proprietaire "+appKessModel.getOwner() +"\n"
                                     +"application id "+appKessModel.getAppnumber() +"\n"
                                     +"telephone proprietaire  "+appKessModel.getTelephone() +"\n"
+                                    +"email proprietaire : "+appKessModel.getAdresseelectro() +"\n"
+                                    +"base code du client : "+appKessModel.getBasecode() +"\n"
                                     +"document id "+s.getId()+"\n";
-                            String destinationAddress = VariablesStatique.DEVELOPER_PHONE;
-                            smsSender.smsSendwithInnerClass(messageBody,destinationAddress, MesOutils.smsidnumbergenerator());
+                            smsSender.smsSendwithInnerClass(messageBody,VariablesStatique.DEVELOPER_PHONE, MesOutils.smsidnumbergenerator());
 
                         });
                         builder.create().show();

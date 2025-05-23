@@ -66,7 +66,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void initField(){
         try {
-
+            String appnumber_text = "application id : "+ appkess.getAppnumber();
+            binding.textSettingAppnumber.setText(appnumber_text);
             settingsViewModel.getOwner().observe(this,owner->{
                 String proprietaire = "Proprietaire "+"\n"+owner;
                 binding.txtsettingOwner.setText(proprietaire);
