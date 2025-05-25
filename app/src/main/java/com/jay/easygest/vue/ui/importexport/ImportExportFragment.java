@@ -1,10 +1,13 @@
 package com.jay.easygest.vue.ui.importexport;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +18,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.identity.AuthorizationRequest;
+import com.google.android.gms.auth.api.identity.AuthorizationResult;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
@@ -33,7 +37,9 @@ import com.jay.easygest.outils.PreferedServiceHelper;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
 
-import java.util.Collections;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,10 +59,11 @@ public class ImportExportFragment extends Fragment {
             +"La restoration ne conserne que" + "\n"
             +"la dernière version sauvegardée." +"\n"
             +"cliquer sur sauvegarder pour amorcer une sauvegarde";
-    private static final int RC_SIGN_IN = 100;
-    private static final int RC_RESTORE_SIGN_IN = 101;
-    private static final int RC_RESTORE_reinsta_SIGN_IN = 102;
+    private static final int REQUEST_SIGN_IN_AUTHORIZE = 100;
+    private static final int RREQUEST_RESTORE_AUTHORIZE = 101;
+    private static final int RRREQUEST_RESTORE_REINSTA_AUTHORIZE = 102;
     private static final int MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE = 2;
+
     private String drive_db_key = "" ;
     private NetHttpTransport transport ;
     private static final GsonFactory JSON_FACTORY = new GsonFactory();
@@ -82,6 +89,7 @@ public class ImportExportFragment extends Fragment {
         binding.exportConsigne.setText(EXPORT_CONSIGNE);
         binding.importConsigne.setText(IMPORT_CONSIGNE);
 
+//        mainUploadMethod2();
         mainUploadMethod();
         mainRestoreMethod();
         mainRestoreReinstallMethod();
@@ -100,54 +108,70 @@ public class ImportExportFragment extends Fragment {
     public void launchsignInIntent(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             if (ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(requireContext(),
-                    Manifest.permission.GET_ACCOUNTS) !=
-                    PackageManager.PERMISSION_GRANTED
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                    PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(requireContext(),
+                            Manifest.permission.GET_ACCOUNTS) !=
+                            PackageManager.PERMISSION_GRANTED
 
             ) {
                 ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
-                    MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
+                        MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }else {
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
+                requestGoogleDriveSaveAuthorization();
 
-                GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-
-                Intent signInIntent = googleSignInClient.getSignInIntent();
-
-                startActivityForResult(signInIntent,RC_SIGN_IN);
             }
         }else {
 
             if (
-                ActivityCompat.checkSelfPermission(requireContext(),
-                    Manifest.permission.GET_ACCOUNTS) !=
-                    PackageManager.PERMISSION_GRANTED
+                    ActivityCompat.checkSelfPermission(requireContext(),
+                            Manifest.permission.GET_ACCOUNTS) !=
+                            PackageManager.PERMISSION_GRANTED
 
             ) {
                 ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{ Manifest.permission.GET_ACCOUNTS},
-                    MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
+                        new String[]{ Manifest.permission.GET_ACCOUNTS},
+                        MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                    .build();
-
-            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-
-            startActivityForResult(signInIntent,RC_SIGN_IN);
+            requestGoogleDriveSaveAuthorization();
         }
 
+    }
+
+    public void requestGoogleDriveSaveAuthorization(){
+
+        List<Scope> requestedScopes = Arrays.asList(new Scope(DriveScopes.DRIVE_FILE));
+        AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
+                .setRequestedScopes(requestedScopes)
+                .build();
+        Identity.getAuthorizationClient(requireActivity())
+            .authorize(authorizationRequest)
+            .addOnSuccessListener(
+                authorizationResult -> {
+                    if (authorizationResult.hasResolution()) {
+                        // Access needs to be granted by the user
+                        PendingIntent pendingIntent = authorizationResult.getPendingIntent();
+                        try {
+                            if (pendingIntent != null) {
+                                startIntentSenderForResult(pendingIntent.getIntentSender(),
+                                        REQUEST_SIGN_IN_AUTHORIZE, null, 0, 0, 0, null);
+                            }
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
+                        }
+                    } else {
+                        // Access already granted, continue with user action
+                        try {
+                            saveToDriveAppFolder(authorizationResult);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+            .addOnFailureListener(e -> Log.e("importexpor", "Failed to authorize", e.getCause()));
     }
 
 
@@ -166,16 +190,8 @@ public class ImportExportFragment extends Fragment {
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }else {
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
+                requestGoogleDriveRestoreAuthorization();
 
-                GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-
-                Intent signInIntent = googleSignInClient.getSignInIntent();
-
-                startActivityForResult(signInIntent,RC_RESTORE_SIGN_IN);
             }
         }else {
 
@@ -190,18 +206,42 @@ public class ImportExportFragment extends Fragment {
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                    .build();
-
-            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-
-            startActivityForResult(signInIntent,RC_RESTORE_SIGN_IN);
+            requestGoogleDriveRestoreAuthorization();
         }
 
+    }
+
+    public void requestGoogleDriveRestoreAuthorization(){
+
+        List<Scope> requestedScopes = Arrays.asList(new Scope(DriveScopes.DRIVE_FILE));
+        AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
+                .setRequestedScopes(requestedScopes)
+                .build();
+        Identity.getAuthorizationClient(requireActivity())
+                .authorize(authorizationRequest)
+                .addOnSuccessListener(
+                        authorizationResult -> {
+                            if (authorizationResult.hasResolution()) {
+                                // Access needs to be granted by the user
+                                PendingIntent pendingIntent = authorizationResult.getPendingIntent();
+                                try {
+                                    if (pendingIntent != null) {
+                                        startIntentSenderForResult(pendingIntent.getIntentSender(),
+                                                RREQUEST_RESTORE_AUTHORIZE, null, 0, 0, 0, null);
+                                    }
+                                } catch (IntentSender.SendIntentException e) {
+                                    Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
+                                }
+                            } else {
+                                // Access already granted, continue with user action
+                               try {
+                                    retriveToDriveAppFolder(authorizationResult);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            }
+                        })
+                .addOnFailureListener(e -> Log.e("importexpor", "Failed to authorize", e.getCause()));
     }
 
     public void launchRestoreReinstasignInIntent(){
@@ -219,23 +259,14 @@ public class ImportExportFragment extends Fragment {
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }else {
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
-
-                GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-
-                Intent signInIntent = googleSignInClient.getSignInIntent();
-
-                startActivityForResult(signInIntent,RC_RESTORE_reinsta_SIGN_IN);
+                requestGoogleDriveRestoreReinstaAuthorization();
             }
         }else {
 
             if (
-                    ActivityCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.GET_ACCOUNTS) !=
-                            PackageManager.PERMISSION_GRANTED
+                ActivityCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.GET_ACCOUNTS) !=
+                        PackageManager.PERMISSION_GRANTED
 
             ) {
                 ActivityCompat.requestPermissions(requireActivity(),
@@ -243,18 +274,42 @@ public class ImportExportFragment extends Fragment {
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
 
             }
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                    .build();
-
-            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-
-            startActivityForResult(signInIntent,RC_RESTORE_reinsta_SIGN_IN);
+            requestGoogleDriveRestoreReinstaAuthorization();
         }
 
+    }
+
+    public void requestGoogleDriveRestoreReinstaAuthorization(){
+
+        List<Scope> requestedScopes = Arrays.asList(new Scope(DriveScopes.DRIVE_FILE));
+        AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
+                .setRequestedScopes(requestedScopes)
+                .build();
+        Identity.getAuthorizationClient(requireActivity())
+                .authorize(authorizationRequest)
+                .addOnSuccessListener(
+                        authorizationResult -> {
+                            if (authorizationResult.hasResolution()) {
+                                // Access needs to be granted by the user
+                                PendingIntent pendingIntent = authorizationResult.getPendingIntent();
+                                try {
+                                    if (pendingIntent != null) {
+                                        startIntentSenderForResult(pendingIntent.getIntentSender(),
+                                                RRREQUEST_RESTORE_REINSTA_AUTHORIZE, null, 0, 0, 0, null);
+                                    }
+                                } catch (IntentSender.SendIntentException e) {
+                                    Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
+                                }
+                            } else {
+                                // Access already granted, continue with user action
+                                try {
+                                    retriveReinstaToDriveAppFolder(authorizationResult);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        })
+                .addOnFailureListener(e -> Log.e("importexpor", "Failed to authorize", e.getCause()));
     }
 
 //### 4. Handle the Sign-In Result
@@ -264,85 +319,126 @@ public class ImportExportFragment extends Fragment {
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
 
-            if (requestCode == RC_SIGN_IN) {
-                handleSignInResult(data);
+            if (requestCode == REQUEST_SIGN_IN_AUTHORIZE) {
+                AuthorizationResult authorizationResult;
+                try {
+                    authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(data);
+                } catch (ApiException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    saveToDriveAppFolder(authorizationResult);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
-            if (requestCode == RC_RESTORE_SIGN_IN) {
-                handleSignInRestoreResult(data);
+            if (requestCode == RREQUEST_RESTORE_AUTHORIZE) {
+                AuthorizationResult authorizationResult ;
+                try {
+                    authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(data);
+                } catch (ApiException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    retriveToDriveAppFolder(authorizationResult);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
 
-            if (requestCode == RC_RESTORE_reinsta_SIGN_IN) {
-                handleSignInRestoreReinstallResult(data);
+            if (requestCode == RRREQUEST_RESTORE_REINSTA_AUTHORIZE) {
+                AuthorizationResult authorizationResult ;
+                try {
+                    authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(data);
+                } catch (ApiException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    retriveReinstaToDriveAppFolder(authorizationResult);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
 
         }
 
-        private void handleSignInResult(Intent data) {
-            GoogleSignIn.getSignedInAccountFromIntent(data)
-                .addOnSuccessListener(googleSignInAccount -> {
-                    GoogleAccountCredential credential = GoogleAccountCredential
-                            .usingOAuth2(getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
-                    credential.setSelectedAccount(googleSignInAccount.getAccount());
-                    Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credential)
-                        .setApplicationName("easygest")
-                        .build();
+    private void saveToDriveAppFolder(AuthorizationResult authorizationResult) throws IOException  {
+        if (authorizationResult.toGoogleSignInAccount() != null){
 
-                    driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
+         GoogleCredential credentials  =  new GoogleCredential.Builder()
+                        .setJsonFactory(JSON_FACTORY)
+                        .setTransport(transport)
+                        .build()
+                        .setAccessToken(authorizationResult.getAccessToken()) ;
 
-                    try {
-                        String drive_file_id = preferedServiceHelper.getDriveSession();
-                        if (drive_file_id.length() == 0){
-                            uploadFileToDrive();
+            Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credentials)
+                    .setApplicationName("easygest")
+                    .build();
+            driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
 
-                        }else {
-                            updateDriveFile();
-                        }
-                    }catch (Exception e){Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show() ;}
+            try {
+                String drive_file_id = preferedServiceHelper.getDriveSession();
+                if (drive_file_id.length() == 0){
+                    uploadFileToDrive();
 
-                }).addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show());
-
+                }else {
+                    updateDriveFile();
+                }
+            }catch (Exception e){Toast.makeText(requireContext(), "echec de la sauvegarde : "+e.getMessage(), Toast.LENGTH_LONG).show() ;}
         }
-
-    private void handleSignInRestoreResult(Intent data) {
-        GoogleSignIn.getSignedInAccountFromIntent(data)
-                .addOnSuccessListener(googleSignInAccount -> {
-                    GoogleAccountCredential credential = GoogleAccountCredential
-                            .usingOAuth2(getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
-                    credential.setSelectedAccount(googleSignInAccount.getAccount());
-                    Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credential)
-                            .setApplicationName("easygest")
-                            .build();
-
-                    driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
-
-                    try {
-                        String drive_file_id = preferedServiceHelper.getDriveSession();
-                        if (drive_file_id.length() != 0){
-                            retriveFileToDrive(drive_file_id);
-                        }else {
-                            binding.layoutBtnReinsta.setVisibility(View.VISIBLE);
-                            binding.btnimport.setEnabled(false);
-                        }
-                    }catch (Exception e){
-                        Toast.makeText(requireContext(), "echec 1 : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
-                    }
-
-                }).addOnFailureListener(e -> Toast.makeText(requireContext(), "echec 2 : "+e.getMessage(), Toast.LENGTH_LONG).show());
 
     }
 
-    private void handleSignInRestoreReinstallResult(Intent data) {
-        GoogleSignIn.getSignedInAccountFromIntent(data)
-                .addOnSuccessListener(googleSignInAccount -> {
-                    GoogleAccountCredential credential = GoogleAccountCredential
-                            .usingOAuth2(getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
-                    credential.setSelectedAccount(googleSignInAccount.getAccount());
-                    Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credential)
-                            .setApplicationName("easygest")
-                            .build();
+    private void retriveToDriveAppFolder(AuthorizationResult authorizationResult) throws IOException {
 
-                    driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
+        if (authorizationResult.toGoogleSignInAccount() != null){
+            GoogleCredential credentials  =  new GoogleCredential.Builder()
+                    .setJsonFactory(JSON_FACTORY)
+                    .setTransport(transport)
+                    .build()
+                    .setAccessToken(authorizationResult.getAccessToken());
+
+            Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credentials)
+                    .setApplicationName("easygest")
+                    .build();
+
+            driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
+
+            try {
+                String drive_file_id = preferedServiceHelper.getDriveSession();
+                if (drive_file_id.length() != 0){
+                    retriveFileToDrive(drive_file_id);
+                }else {
+                    binding.layoutBtnReinsta.setVisibility(View.VISIBLE);
+                    binding.btnimport.setEnabled(false);
+                }
+            }catch (Exception e){
+                Toast.makeText(requireContext(), "echec 1 : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
+            }
+
+        }
+
+    }
+
+    private void retriveReinstaToDriveAppFolder(AuthorizationResult authorizationResult) throws IOException {
+        if (authorizationResult.toGoogleSignInAccount() != null){
+            GoogleCredential credentials  =  new GoogleCredential.Builder()
+                    .setJsonFactory(JSON_FACTORY)
+                    .setTransport(transport)
+                    .build()
+                    .setAccessToken(authorizationResult.getAccessToken());
+
+            Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credentials)
+                    .setApplicationName("easygest")
+                    .build();
+
+            driveServiceHelper = new DriveServiceHelper(driveService, preferedServiceHelper);
 
                     try {
                        retriveFileToDrive(drive_db_key);
@@ -351,12 +447,12 @@ public class ImportExportFragment extends Fragment {
                         Toast.makeText(requireContext(), "echec : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
                     }
 
-                }).addOnFailureListener(e -> Toast.makeText(requireContext(), "echec : "+e.getMessage(), Toast.LENGTH_LONG).show());
-
+            }
     }
         //### end 4. Handle the Sign-In Result
 
         private void uploadFileToDrive() {
+            Log.d("uploadFileToDrive", "je suis ds uploadFileToDrive: ");
             String mon_fichier = new java.io.File(getDatabasePath()).getPath();
             driveServiceHelper.createFile(mon_fichier)
                 .addOnSuccessListener(s -> {
@@ -392,6 +488,7 @@ public class ImportExportFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show();
+                    Log.d("iportexport", "uploadFileToDrive: "+e.getMessage());
                     binding.btnexport.setEnabled(true);
                 });
         }
@@ -414,6 +511,8 @@ public class ImportExportFragment extends Fragment {
                 } )
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show();
+                    Log.d("iportexport", "updateDriveFile: addOnFailureListener "+e.getMessage());
+                    Log.d("iportexport", "updateDriveFile: addOnFailureListener cause "+e.getCause());
                     binding.btnexport.setEnabled(true);
                 });
 

@@ -29,7 +29,6 @@ public class DriveServiceHelper {
     }
 
     public Task<File> createFile(String path){
-
         return Tasks.call(executor,()->{
             File fileMetadata = new File();
             fileMetadata.setName(VariablesStatique.BACKUP_DATABASE_NAME);
@@ -85,17 +84,16 @@ public class DriveServiceHelper {
 
         return Tasks.call(executor,()->{
             String driveFileId = preferedServiceHelper.getDriveSession();
-
             java.io.File file = new java.io.File(path);
             FileContent mediaContent = new FileContent("application/db", file);
 
             File myfile = null;
 
             try {
-                myfile = mdriveservice.files().update(driveFileId,null, mediaContent).execute();
+              myfile = mdriveservice.files().update(driveFileId,null, mediaContent).execute();
 
             } catch (Exception e) {
-                Log.d("excter", "uploadFileToDrive: "+e.getMessage());
+                Log.d("excter2", "uploadFileToDrive: "+e.getMessage());
             }
             if (myfile == null){
                 throw new IOException("ioexception when requesting file creation");
