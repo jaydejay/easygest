@@ -419,7 +419,7 @@ public class ImportExportFragment extends Fragment {
         //### end 4. Handle the Sign-In Result
 
         private void uploadFileToDrive() {
-            Log.d("uploadFileToDrive", "je suis ds uploadFileToDrive: ");
+
             String mon_fichier = new java.io.File(getDatabasePath()).getPath();
             driveServiceHelper.createFile(mon_fichier)
                 .addOnSuccessListener(s -> {
@@ -455,7 +455,6 @@ public class ImportExportFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show();
-                    Log.d("iportexport", "uploadFileToDrive: "+e.getMessage());
                     binding.btnexport.setEnabled(true);
                 });
         }
@@ -478,8 +477,6 @@ public class ImportExportFragment extends Fragment {
                 } )
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show();
-                    Log.d("iportexport", "updateDriveFile: addOnFailureListener "+e.getMessage());
-                    Log.d("iportexport", "updateDriveFile: addOnFailureListener cause "+e.getCause());
                     binding.btnexport.setEnabled(true);
                 });
 
