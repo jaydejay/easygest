@@ -1,9 +1,9 @@
 package com.jay.easygest.vue.ui.importexport;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -43,7 +46,7 @@ import com.jay.easygest.outils.VariablesStatique;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,9 +67,6 @@ public class ImportExportFragment extends Fragment {
             +"La restoration ne conserne que" + "\n"
             +"la dernière version sauvegardée." +"\n"
             +"cliquer sur sauvegarder pour amorcer une sauvegarde";
-    private static final int REQUEST_SIGN_IN_AUTHORIZE = 100;
-    private static final int RREQUEST_RESTORE_AUTHORIZE = 101;
-    private static final int RRREQUEST_RESTORE_REINSTA_AUTHORIZE = 102;
     private static final int MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE = 2;
 
     private String drive_db_key = "" ;
@@ -77,6 +77,9 @@ public class ImportExportFragment extends Fragment {
 
     private FragmentImportExportBinding binding;
     private int main_restore_btn_clicked;
+    private ActivityResultLauncher<IntentSenderRequest> activityResultLaunchersave;
+    private ActivityResultLauncher<IntentSenderRequest> activityResultLauncherrestore;
+    private ActivityResultLauncher<IntentSenderRequest> activityResultLauncherreinstall;
 
     public ImportExportFragment() {
         // Required empty public constructor
@@ -94,11 +97,14 @@ public class ImportExportFragment extends Fragment {
         binding.exportConsigne.setText(EXPORT_CONSIGNE);
         binding.importConsigne.setText(IMPORT_CONSIGNE);
 
-//        mainUploadMethod2();
         init();
         mainUploadMethod();
         mainRestoreMethod();
         mainRestoreReinstallMethod();
+
+        activityLauncherlistenersave();
+        activityLauncherlistenerrestore();
+        activityLauncherlistenerreintall();
         return binding.getRoot();
     }
 
@@ -134,6 +140,7 @@ public class ImportExportFragment extends Fragment {
                 ActivityCompat.requestPermissions(requireActivity(),
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
+                binding.btnexport.setEnabled(true);
 
             }else {
                 requestGoogleDriveSaveAuthorization();
@@ -150,6 +157,7 @@ public class ImportExportFragment extends Fragment {
                 ActivityCompat.requestPermissions(requireActivity(),
                         new String[]{ Manifest.permission.GET_ACCOUNTS},
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
+                binding.btnexport.setEnabled(true);
 
             }
             requestGoogleDriveSaveAuthorization();
@@ -159,7 +167,7 @@ public class ImportExportFragment extends Fragment {
 
     public void requestGoogleDriveSaveAuthorization(){
 
-        List<Scope> requestedScopes = Arrays.asList(new Scope(DriveScopes.DRIVE_FILE));
+        List<Scope> requestedScopes = Collections.singletonList(new Scope(DriveScopes.DRIVE_FILE));
         AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
                 .setRequestedScopes(requestedScopes)
                 .build();
@@ -172,10 +180,10 @@ public class ImportExportFragment extends Fragment {
                                 PendingIntent pendingIntent = authorizationResult.getPendingIntent();
                                 try {
                                     if (pendingIntent != null) {
-                                        startIntentSenderForResult(pendingIntent.getIntentSender(),
-                                                REQUEST_SIGN_IN_AUTHORIZE, null, 0, 0, 0, null);
+                                        IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(pendingIntent).build();
+                                        activityResultLaunchersave.launch(intentSenderRequest);
                                     }
-                                } catch (IntentSender.SendIntentException e) {
+                                } catch (Exception e) {
                                     Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
                                 }
                             } else {
@@ -204,7 +212,7 @@ public class ImportExportFragment extends Fragment {
                 ActivityCompat.requestPermissions(requireActivity(),
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
-
+                    binding.btnimport.setEnabled(true);
             }else {
                 requestGoogleDriveRestoreAuthorization();
 
@@ -220,6 +228,7 @@ public class ImportExportFragment extends Fragment {
                 ActivityCompat.requestPermissions(requireActivity(),
                         new String[]{ Manifest.permission.GET_ACCOUNTS},
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
+                binding.btnimport.setEnabled(true);
 
             }
             requestGoogleDriveRestoreAuthorization();
@@ -229,7 +238,7 @@ public class ImportExportFragment extends Fragment {
 
     public void requestGoogleDriveRestoreAuthorization(){
 
-        List<Scope> requestedScopes = Arrays.asList(new Scope(DriveScopes.DRIVE_FILE));
+        List<Scope> requestedScopes = Collections.singletonList(new Scope(DriveScopes.DRIVE_FILE));
         AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
                 .setRequestedScopes(requestedScopes)
                 .build();
@@ -242,10 +251,10 @@ public class ImportExportFragment extends Fragment {
                                 PendingIntent pendingIntent = authorizationResult.getPendingIntent();
                                 try {
                                     if (pendingIntent != null) {
-                                        startIntentSenderForResult(pendingIntent.getIntentSender(),
-                                                RREQUEST_RESTORE_AUTHORIZE, null, 0, 0, 0, null);
+                                        IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(pendingIntent).build();
+                                        activityResultLauncherrestore.launch(intentSenderRequest);
                                     }
-                                } catch (IntentSender.SendIntentException e) {
+                                } catch (Exception e) {
                                     Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
                                 }
                             } else {
@@ -297,7 +306,7 @@ public class ImportExportFragment extends Fragment {
 
     public void requestGoogleDriveRestoreReinstaAuthorization(){
 
-        List<Scope> requestedScopes = Arrays.asList(new Scope(DriveScopes.DRIVE_FILE));
+        List<Scope> requestedScopes = Collections.singletonList(new Scope(DriveScopes.DRIVE_FILE));
         AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
                 .setRequestedScopes(requestedScopes)
                 .build();
@@ -310,10 +319,10 @@ public class ImportExportFragment extends Fragment {
                                 PendingIntent pendingIntent = authorizationResult.getPendingIntent();
                                 try {
                                     if (pendingIntent != null) {
-                                        startIntentSenderForResult(pendingIntent.getIntentSender(),
-                                                RRREQUEST_RESTORE_REINSTA_AUTHORIZE, null, 0, 0, 0, null);
+                                        IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(pendingIntent).build();
+                                        activityResultLauncherreinstall.launch(intentSenderRequest);
                                     }
-                                } catch (IntentSender.SendIntentException e) {
+                                } catch (Exception e) {
                                     Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
                                 }
                             } else {
@@ -331,58 +340,7 @@ public class ImportExportFragment extends Fragment {
 //### 4. Handle the Sign-In Result
 //**a. Override onActivityResult:**
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_SIGN_IN_AUTHORIZE) {
-            AuthorizationResult authorizationResult;
-            try {
-                authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(data);
-            } catch (ApiException e) {
-                throw new RuntimeException(e);
-            }
-
-            try {
-                saveToDriveAppFolder(authorizationResult);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        if (requestCode == RREQUEST_RESTORE_AUTHORIZE) {
-            AuthorizationResult authorizationResult ;
-            try {
-                authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(data);
-            } catch (ApiException e) {
-                throw new RuntimeException(e);
-            }
-
-            try {
-                retriveToDriveAppFolder(authorizationResult);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-
-        if (requestCode == RRREQUEST_RESTORE_REINSTA_AUTHORIZE) {
-            AuthorizationResult authorizationResult ;
-            try {
-                authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(data);
-            } catch (ApiException e) {
-                throw new RuntimeException(e);
-            }
-
-            try {
-                retriveReinstaToDriveAppFolder(authorizationResult);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-
-    }
 
     private void saveToDriveAppFolder(AuthorizationResult authorizationResult) throws IOException  {
         if (authorizationResult.toGoogleSignInAccount() != null){
@@ -594,6 +552,52 @@ public class ImportExportFragment extends Fragment {
 
 
 //    ### end 5. Use the Signed-In Account to Access Google Drive
+
+    public void activityLauncherlistenersave(){
+
+        activityResultLaunchersave = registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result ->{
+            if (result.getData() != null && result.getResultCode() == RESULT_OK){
+                try {
+                    AuthorizationResult authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(result.getData());
+                    saveToDriveAppFolder(authorizationResult);
+                } catch (ApiException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
+    public void activityLauncherlistenerrestore(){
+
+        activityResultLauncherrestore = registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result ->{
+            if (result.getData() != null && result.getResultCode() == RESULT_OK){
+
+                try {
+                    AuthorizationResult  authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(result.getData());
+                    retriveToDriveAppFolder(authorizationResult);
+                } catch (ApiException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        });
+    }
+
+    public void activityLauncherlistenerreintall(){
+
+        activityResultLauncherreinstall = registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result ->{
+            if (result.getData() != null && result.getResultCode() == RESULT_OK){
+
+                try {
+                    AuthorizationResult  authorizationResult = Identity.getAuthorizationClient(requireActivity()).getAuthorizationResultFromIntent(result.getData());
+                    retriveToDriveAppFolder(authorizationResult);
+                } catch (ApiException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        });
+    }
 
 
 }
