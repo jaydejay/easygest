@@ -429,7 +429,6 @@ public class ImportExportFragment extends Fragment {
                     builder.create().show();
                 } )
                 .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show());
-
         }
 
     public void mainUploadMethod(){
