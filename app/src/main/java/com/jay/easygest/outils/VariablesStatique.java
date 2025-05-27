@@ -2,7 +2,7 @@ package com.jay.easygest.outils;
 
 public abstract class VariablesStatique {
 
-    public static String versioning ="1.1.1";
+    public static String versioning ="1.1.2";
     public static final String SETTING_SHARED_PREF_NAME = "setting_shared";
     public static final String AUTH_SHARED_PREF_NAME = "auth_shared";
     public static final String AUTH_SHARED_PREF_VARIABLE = "is_authenticated";

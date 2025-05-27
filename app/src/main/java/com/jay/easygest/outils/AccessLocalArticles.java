@@ -125,7 +125,7 @@ public class AccessLocalArticles {
             cursor.close();
 //            bd.close();
         } catch (Exception e) {
-           //do nothing
+            return articlesModels;
         }
         return articlesModels;
     }
