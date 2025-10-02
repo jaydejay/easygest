@@ -49,7 +49,7 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
         String designation = articles.get(position).getDesignation();
         ArrayList<Image> images = articles.get(position).getImages();
 
-        if (images.size() > 0){
+        if (!images.isEmpty()){
             Bitmap img_bit = MesOutils.convertByterryToBitmap(images.get(0).getImage2());
             holder.articleImage.setImageBitmap(img_bit);
         }

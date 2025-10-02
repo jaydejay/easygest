@@ -94,8 +94,8 @@ public class AjouterCreditActivity extends AppCompatActivity {
             } else if (date_account == null) {
                 Toast.makeText(AjouterCreditActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
                 binding.btnajoutcredit.setEnabled(true);
-            }else if (binding.ajoutcredarticle2.getText().toString().trim().length() != 0 && binding.ajoutcredarticle2somme.getText().toString().trim().isEmpty() ||
-                    binding.ajoutcredarticle2.getText().toString().trim().length() != 0 & binding.ajoutcredNbrarticle2.getText().toString().trim().isEmpty()) {
+            }else if (!binding.ajoutcredarticle2.getText().toString().trim().isEmpty() && binding.ajoutcredarticle2somme.getText().toString().trim().isEmpty() ||
+                    !binding.ajoutcredarticle2.getText().toString().trim().isEmpty() & binding.ajoutcredNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(AjouterCreditActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
                 binding.btnajoutcredit.setEnabled(true);
             } else {

@@ -170,4 +170,16 @@
     <string name="drive_doc_id">document id </string>
     <string name="enregistrer_un_credit">ENREGISTRER UN CREDIT</string>
     <string name="enregistrer_un_account">ENREGISTRER UN ACCOUNT</string>
+    <string name="action_ask_key">activation</string>
+    <string name="demande_cle">demande cle d\'activation</string>
+    <string name="exemple">texte d\'exemple</string>
+    <string name="low">low</string>
+    <string name="medium">medium</string>
+    <string name="high">high</string>
+    <string name="permanent">permanent</string>
+    <string name="permanent_legend">permanent : licence permanente</string>
+    <string name="high_legend">high : 12 mois de licence</string>
+    <string name="medium_legend">medium : 6 mois de licence</string>
+    <string name="low_legend">low : 2 mois de licence</string>
+    <string name="appli_key">appli key</string>
 </resources>

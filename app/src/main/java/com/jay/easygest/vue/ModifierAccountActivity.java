@@ -99,8 +99,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
             } else if (date_credit == null) {
                 Toast.makeText(ModifierAccountActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
                 binding.btnmodifaccount.setEnabled(true);
-            }else if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifaccarticle2somme.getText().toString().trim().isEmpty() ||
-                    binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifaccNbrarticle2.getText().toString().trim().isEmpty()) {
+            }else if (!binding.modifaccarticle2.getText().toString().trim().isEmpty() && binding.modifaccarticle2somme.getText().toString().trim().isEmpty() ||
+                    !binding.modifaccarticle2.getText().toString().trim().isEmpty() & binding.modifaccNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(ModifierAccountActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
                 binding.btnmodifaccount.setEnabled(true);
             } else {
@@ -124,8 +124,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
                     String somme_article2 ;
                     String nbr_article2 ;
 
-                    if (binding.modifaccarticle2.getText().toString().trim().length() != 0 && binding.modifaccarticle2somme.getText().toString().trim().equals("0") ||
-                            binding.modifaccarticle2.getText().toString().trim().length() != 0 & binding.modifaccNbrarticle2.getText().toString().trim().equals("0")){
+                    if (!binding.modifaccarticle2.getText().toString().trim().isEmpty() && binding.modifaccarticle2somme.getText().toString().trim().equals("0") ||
+                            !binding.modifaccarticle2.getText().toString().trim().isEmpty() & binding.modifaccNbrarticle2.getText().toString().trim().equals("0")){
                         designation_article2 = "";
                         somme_article2 = "0";
                         nbr_article2 = "0";

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+//import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -111,10 +112,17 @@ public class ImportExportFragment extends Fragment {
     private void init(){
         AccessLocalClient accessLocalClient = new AccessLocalClient(getContext());
         AccessLocalArticles accessLocalArticles = new AccessLocalArticles(getContext());
+//        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
+        AppKessModel appKessModel = new AccessLocalAppKes(getContext()).getAppkes();
         ArrayList<ClientModel> clients = accessLocalClient.listeClients();
         ArrayList<ArticlesModel> articles = accessLocalArticles.listeArticles();
         if (!MesOutils.isDataPresent(clients,articles)){
             binding.btnexport.setVisibility(View.GONE);
+
+        }
+
+        if (MesOutils.getLicenceLevel(appKessModel.getApppkey()) != MesOutils.Level.FREE && !MesOutils.isDataPresent(clients,articles)){
+            binding.btnimport.setVisibility(View.VISIBLE);
         }
     }
 
@@ -443,7 +451,7 @@ public class ImportExportFragment extends Fragment {
                                 +s.getId() );
 
                         builder.setPositiveButton("ok", (dialog, which) -> {
-                            String messageBody = "" +"\n"
+                            String messageBody = "\n"
                                     +"proprietaire "+appKessModel.getOwner() +"\n"
                                     +"application id "+appKessModel.getAppnumber() +"\n"
                                     +"telephone proprietaire  "+appKessModel.getTelephone() +"\n"

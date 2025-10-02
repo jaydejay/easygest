@@ -136,7 +136,7 @@ public class CreercompteActivity extends AppCompatActivity {
 
     public void afficherMesage(){
         String msg = getIntent().getExtras().getString("msgactivation");
-        if ( msg.length() != 0){
+        if (msg != null && !msg.isEmpty()) {
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
     }

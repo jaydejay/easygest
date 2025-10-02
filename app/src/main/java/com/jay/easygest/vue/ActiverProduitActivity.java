@@ -31,7 +31,7 @@ public class ActiverProduitActivity extends AppCompatActivity {
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         setContentView(binding.getRoot());
         init();
-        activerproduit();
+//        activerproduit();
         getFreeAccount();
     }
 
@@ -62,7 +62,7 @@ public class ActiverProduitActivity extends AppCompatActivity {
                String apppowner = appcredentials[2];
               boolean is_appnuber_right = MesOutils.retrieveAppNumber(cleproduit,appnumber);
 
-               if (proprietaire.length() != 0 && cleproduit.length() != 0) {
+               if (!proprietaire.isEmpty() && !cleproduit.isEmpty()) {
                    if (apppowner.equals(proprietaire) && is_appnuber_right) {
                        if (appcredentials[1].equals(cleproduit) ){
                            Toast.makeText(ActiverProduitActivity.this, "un probleme est survenue", Toast.LENGTH_SHORT).show();

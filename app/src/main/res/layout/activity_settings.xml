@@ -29,8 +29,12 @@
                 android:id="@+id/text_setting_appnumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                />
+                android:layout_marginTop="10dp" />
+            <TextView
+                android:id="@+id/text_setting_appkey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:id="@+id/llsetting_owner"

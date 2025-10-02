@@ -51,6 +51,7 @@ public class SmsSender {
                 }
 
                 if (getResultCode() == SmsManager.RESULT_ERROR_GENERIC_FAILURE && sms.getSmsid() == sms_id) {
+
                     SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(context);
                     boolean success = smsSendercontrolleur.insert(sms);
                     if(success){
@@ -79,12 +80,12 @@ public class SmsSender {
                 }
 
                 if (getResultCode() == SmsManager.RESULT_ERROR_GENERIC_FAILURE && sms.getSmsid() == sms_id) {
-                    SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(context);
-                    boolean success = smsSendercontrolleur.insert(sms);
-                    if(success){
+//                    SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(context);
+//                    boolean success = smsSendercontrolleur.insert(sms);
+//                    if(success){
                         intent_to.putExtra("smssentmessge","message non envoye,un probleme de reseau ou vos sms sont épuisés");
                         startActivity(context, intent_to, null);
-                    }
+//                    }
                 }
 
             }

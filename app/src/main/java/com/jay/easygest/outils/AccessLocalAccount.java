@@ -232,7 +232,7 @@ public class AccessLocalAccount {
 
         try {
             bd = accessBD.getReadableDatabase();
-            String req = "select * from account where " + ID + "="+accountId+"";
+            String req = "select * from account where " + ID + "="+accountId;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {
@@ -385,7 +385,7 @@ public class AccessLocalAccount {
 
         ArrayList<AccountModel> accounts = this.listeAccountsClient(clientModel);
 
-        if (accounts.size() == 0){
+        if (accounts.isEmpty()){
             return false;
         }else {return true;}
 

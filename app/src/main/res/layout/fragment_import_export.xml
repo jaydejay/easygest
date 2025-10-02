@@ -71,7 +71,8 @@
                     android:backgroundTint="@color/teal_700"
                     android:text="@string/exporter"
                     android:textColor="@color/design_default_color_background"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
                 <Button
                     android:id="@+id/btnimport"
@@ -81,7 +82,8 @@
                     android:backgroundTint="@color/teal_700"
                     android:text="@string/importer"
                     android:textColor="@color/design_default_color_background"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout

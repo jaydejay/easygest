@@ -10,6 +10,7 @@ public class SettingsViewModel extends ViewModel {
     private final MutableLiveData<String> base_code ;
     private final MutableLiveData<String> telephone ;
     private final MutableLiveData<String> email ;
+    private final MutableLiveData<String> cle ;
     private final MutableLiveData<String> setting_password ;
 
     public SettingsViewModel() {
@@ -18,6 +19,7 @@ public class SettingsViewModel extends ViewModel {
         base_code = new MutableLiveData<>();
         telephone = new MutableLiveData<>();
         email = new MutableLiveData<>();
+        cle = new MutableLiveData<>();
         setting_password = new MutableLiveData<>();
     }
 
@@ -37,6 +39,7 @@ public class SettingsViewModel extends ViewModel {
     public MutableLiveData<String> getEmail() {
         return email;
     }
+
 
     public MutableLiveData<String> getSetting_password() {
         return setting_password;

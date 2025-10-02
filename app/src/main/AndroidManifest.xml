@@ -8,6 +8,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -28,7 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
-
+        <activity
+            android:name=".vue.DemandeCleActivity"
+            android:exported="false"
+            android:label="@string/demande_cle"/>
         <activity
             android:name=".vue.ArticleDetailsActivity"
             android:exported="false"

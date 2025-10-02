@@ -5,14 +5,14 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/settings_passw"
+        android:id="@+id/upgrade_appli_key"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
-        android:autofillHints="@string/password"
-        android:hint="@string/password"
+        android:autofillHints="@string/appli_key"
+        android:hint="@string/appli_key"
         android:ems="10"
-        android:inputType="textPassword"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

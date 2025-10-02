@@ -51,6 +51,13 @@ public class SettingsActivity extends AppCompatActivity {
         settingsViewModel.getSetting_password().setValue(getIntent().getExtras().get("mdp").toString());
 
         setContentView(binding.getRoot());
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         initField();
         afficherOwnerForm();
         afficherBasecodeForm();
@@ -62,12 +69,16 @@ public class SettingsActivity extends AppCompatActivity {
         updateSettingTelephone();
         updateSettingMail();
         updateSettingPassword();
+
+
     }
 
     public void initField(){
         try {
             String appnumber_text = "application id : "+ appkess.getAppnumber();
+            String appkey_text = "cle du produit : "+ appkess.getApppkey();
             binding.textSettingAppnumber.setText(appnumber_text);
+            binding.textSettingAppkey.setText(appkey_text);
             settingsViewModel.getOwner().observe(this,owner->{
                 String proprietaire = "Proprietaire "+"\n"+owner;
                 binding.txtsettingOwner.setText(proprietaire);

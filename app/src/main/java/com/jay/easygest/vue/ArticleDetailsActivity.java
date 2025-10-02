@@ -239,7 +239,7 @@ public class ArticleDetailsActivity extends AppCompatActivity {
 
 
     private void initDetails() {
-        if (article.getImages().size() > 0 ){
+        if (!article.getImages().isEmpty()){
             Bitmap img_bit = MesOutils.convertByterryToBitmap(article.getImages().get(0).getImage2());
             binding.articleDetailImageView.setImageBitmap(img_bit);
         }
@@ -258,7 +258,7 @@ public class ArticleDetailsActivity extends AppCompatActivity {
    private void showArticlesPhotos(ArrayList<Image> photos){
 
         try {
-            if (photos.size() > 0 ){
+            if (!photos.isEmpty()){
                 Bitmap img_bit = MesOutils.convertByterryToBitmap(article.getImages().get(0).getImage2());
                 binding.articleDetailFace.setImageBitmap(img_bit);
                 binding.articleDetailImageView.setImageBitmap(img_bit);
@@ -288,7 +288,7 @@ public class ArticleDetailsActivity extends AppCompatActivity {
      */
     private void showArticlesPhotoclick(){
         try {
-            if (article.getImages().size() > 0 ){
+            if (!article.getImages().isEmpty()){
                 binding.articleDetailFace.setOnClickListener(view -> {
                     Bitmap img_bit = MesOutils.convertByterryToBitmap(article.getImages().get(0).getImage2());
                     binding.articleDetailImageView.setImageBitmap(img_bit);

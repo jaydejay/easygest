@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+//import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,7 @@ import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.SmsSender;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.MainActivity;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 
@@ -98,8 +100,8 @@ public class CreditFragment extends Fragment {
             } else if (date_ouverture == null) {
                 Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_SHORT).show();
                 binding.btncreercredit.setEnabled(true);
-            } else if  (binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreerarticle2somme.getText().toString().trim().isEmpty() ||
-                    binding.edittxtcreerarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreerNbrarticle2.getText().toString().trim().isEmpty()) {
+            } else if  (!binding.edittxtcreerarticle2.getText().toString().trim().isEmpty() && binding.edittxtcreerarticle2somme.getText().toString().trim().isEmpty() ||
+                    !binding.edittxtcreerarticle2.getText().toString().trim().isEmpty() & binding.edittxtcreerNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(getActivity(), "renseigner le nombre et le prix du deuxieme article", Toast.LENGTH_SHORT).show();
                 binding.btncreercredit.setEnabled(true);
             } else if (telephone.length() < 10) {
@@ -144,6 +146,7 @@ public class CreditFragment extends Fragment {
                             int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
 
                            String destinationAdress = "+225"+client.getTelephone();
+
 //                            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
 
                             String messageBody = appKessModel.getOwner() +"\n"+"\n"

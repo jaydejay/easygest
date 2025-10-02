@@ -106,8 +106,8 @@ public class  AccountFragment extends Fragment {
                 Toast.makeText(getActivity(), "format de date incorrect", Toast.LENGTH_SHORT).show();
                 binding.btncreeraccount.setEnabled(true);
 
-            } else if  (binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 && binding.edittxtcreeraccarticle2somme.getText().toString().trim().isEmpty() ||
-                    binding.edittxtcreeraccarticle2.getText().toString().trim().length() != 0 & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().isEmpty()) {
+            } else if  (!binding.edittxtcreeraccarticle2.getText().toString().trim().isEmpty() && binding.edittxtcreeraccarticle2somme.getText().toString().trim().isEmpty() ||
+                    !binding.edittxtcreeraccarticle2.getText().toString().trim().isEmpty() & binding.edittxtcreeraccNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(getActivity(), "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
                 binding.btncreeraccount.setEnabled(true);
             } else if (telephone.length() < 10) {

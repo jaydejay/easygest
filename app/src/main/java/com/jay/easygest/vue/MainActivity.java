@@ -33,11 +33,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-         user = usercontrolleur.getUser();
+        user = usercontrolleur.getUser();
         appcredentials = usercontrolleur.getAppCredentials();
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("msgactivation") != null){
             Toast.makeText(this, getIntent().getExtras().getString("msgactivation"), Toast.LENGTH_LONG).show();
         }
@@ -59,21 +59,24 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
 
-            SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
-
-            SmsreSender smsreSender = new SmsreSender(this, this);
-            ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-            if (sms_no_Sents.size() > 0){
-                smsreSender.sendingUnSentMsg(sms_no_Sents);
-            }
-
-
-            init();
-            authentification();
-            redirectToAppActivation();
-            redirectToInitMdp();
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        init();
+        SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
+
+        SmsreSender smsreSender = new SmsreSender(this, this);
+        ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
+        if (!sms_no_Sents.isEmpty()){
+            smsreSender.sendingUnSentMsg(sms_no_Sents);
+        }
+        authentification();
+        redirectToAppActivation();
+        redirectToInitMdp();
     }
 
     private void init() {
@@ -172,6 +175,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+//    /**
+//     * redirection pour activer le produit
+//     */
+//    private void redirectToAppActivation() {
+//        binding.txtCreateCompte.setOnClickListener(view -> activerProduit());
+//
+//    }
+
 
     /**
      * affiche les donnees pour activer le produit
@@ -196,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             });
             builder.create().show();
         }catch (Exception e){
-            Toast.makeText(this, "activation interrumpue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "activation interrompue", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -313,10 +324,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+
 
     @Override
     protected void onResume() {

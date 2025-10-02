@@ -95,8 +95,8 @@ public class AjouterAccountActivity extends AppCompatActivity {
 
                 Toast.makeText(AjouterAccountActivity.this, "format de date incorrect", Toast.LENGTH_SHORT).show();
                 binding.btnajoutaccount.setEnabled(true);
-            }else if (binding.ajoutaccarticle2.getText().toString().trim().length() != 0 && binding.ajoutaccarticle2somme.getText().toString().trim().isEmpty() ||
-                    binding.ajoutaccarticle2.getText().toString().trim().length() != 0 & binding.ajoutaccNbrarticle2.getText().toString().trim().isEmpty()) {
+            }else if (!binding.ajoutaccarticle2.getText().toString().trim().isEmpty() && binding.ajoutaccarticle2somme.getText().toString().trim().isEmpty() ||
+                    !binding.ajoutaccarticle2.getText().toString().trim().isEmpty() & binding.ajoutaccNbrarticle2.getText().toString().trim().isEmpty()) {
                 Toast.makeText(AjouterAccountActivity.this, "renseigner le nombre ou le prix du deuxieme article", Toast.LENGTH_SHORT).show();
                 binding.btnajoutaccount.setEnabled(true);
             } else {

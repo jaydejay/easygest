@@ -78,7 +78,7 @@ public class InitMdpActivity extends AppCompatActivity {
         builder.setMessage("votre mot de passe a été reinitialisé, il est fortement recommender de le noter." +
                 "vous pouvez le changer en accedant à modifier mot de passe dans le menu." +
                 "ceci est une alerte elle diparaitra lorsque vous aurez cliquer sur ok." +
-                "mot de passe : "+usercontrolleur.getProprietaireMdpInit()+"");
+                "mot de passe : "+usercontrolleur.getProprietaireMdpInit());
 
         builder.setPositiveButton("ok", (dialog, which) -> {
             Intent intent = new Intent(InitMdpActivity.this,MainActivity.class);

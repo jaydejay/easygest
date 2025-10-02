@@ -37,7 +37,7 @@ public class  ParametresActivity extends AppCompatActivity {
             String proprietaire = binding.editAppowner.getText().toString().trim();
             String cleproduit = binding.editAppKey.getText().toString().trim();
 
-            if (proprietaire.length() != 0 && cleproduit.length() != 0){
+            if (!proprietaire.isEmpty() && !cleproduit.isEmpty()){
                 if (usercontrolleur.authApp(proprietaire,cleproduit)){
                     afficherAlerte();
                 }else {

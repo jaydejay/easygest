@@ -178,6 +178,11 @@ public class GestionActivity extends AppCompatActivity {
 
             return true;
 
+        } else if (item.getItemId() == R.id.action_ask_key) {
+            Intent intent = new Intent(this, DemandeCleActivity.class);
+            startActivity(intent);
+            return true;
+
         } else if (item.getItemId() == R.id.action_deconnecter) {
             sessionManagement.removeSession();
             finish();
