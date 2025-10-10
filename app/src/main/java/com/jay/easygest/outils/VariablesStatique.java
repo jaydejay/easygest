@@ -3,6 +3,20 @@ package com.jay.easygest.outils;
 public abstract class VariablesStatique {
 
     public static String versioning ="1.1.2";
+
+
+    public static final String name = "gestioncredit.db";
+    public static final String TABLE_UTILISATEUR = "utilisateur";
+    public static final String TABLE_APPPKES = "APPPKES";
+    public static final String TABLE_VERSEMENT = "versement";
+    public static final String TABLE_CLIENT = "client";
+    public static final String TABLE_CREDIT = "credit";
+    public static final String TABLE_ACCOUNT = "account";
+    public static final String TABLE_INFO = "infos";
+    public static final String TABLE_SMSFAILLED = "smsfailled";
+    public static final String TABLE_VERSEMENTACC = "versementacc";
+    public static final String TABLE_ARTICLES = "articles";
+    public static final String TABLE_IMAGE = "image";
     public static final String SETTING_SHARED_PREF_NAME = "setting_shared";
     public static final String AUTH_SHARED_PREF_NAME = "auth_shared";
     public static final String AUTH_SHARED_PREF_VARIABLE = "is_authenticated";

@@ -4,13 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.jay.easygest.model.AppKessModel;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class AccessLocalAppKes {
@@ -28,10 +26,10 @@ public class AccessLocalAppKes {
     private SQLiteDatabase bd;
 
     public AccessLocalAppKes(Context context) {
-        accessBD = new MySqliteOpenHelper(context,null);
+        accessBD = new MySqliteOpenHelper(context, null);
     }
 
-    public AppKessModel getAppkes(){
+    public AppKessModel getAppkes() {
 
         ArrayList<AppKessModel> _appKessModels = new ArrayList<>();
         AppKessModel appKessModel;
@@ -56,7 +54,7 @@ public class AccessLocalAppKes {
 
             appKessModel = _appKessModels.get(0);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             appKessModel = null;
         }
         return appKessModel;
@@ -64,56 +62,105 @@ public class AccessLocalAppKes {
 
     /**
      * permet de mettre a jour les infos generales
-     * @param appKessModel e model
+     *
+     * @param appKessModel Le model
      * @return true si reussi sinon faux
      */
-    public boolean updateAppkes(AppKessModel appKessModel){
+    public boolean updateAppkes(AppKessModel appKessModel) {
         boolean success = false;
-        try{
+        try {
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(OWNER,appKessModel.getOwner());
-            cv.put(BASECODE,appKessModel.getBasecode());
-            cv.put(TELEPHONE,appKessModel.getTelephone());
-            cv.put(ADRESSEELECTRO,appKessModel.getAdresseelectro());
-            int rslt = bd.update("APPPKES",cv, APPNUMBER +"="+appKessModel.getAppnumber(),null);
-            if (rslt > 0){
+            cv.put(OWNER, appKessModel.getOwner());
+            cv.put(BASECODE, appKessModel.getBasecode());
+            cv.put(TELEPHONE, appKessModel.getTelephone());
+            cv.put(ADRESSEELECTRO, appKessModel.getAdresseelectro());
+            int rslt = bd.update("APPPKES", cv, APPNUMBER + "=" + appKessModel.getAppnumber(), null);
+            if (rslt > 0) {
                 success = true;
             }
-        }catch (Exception e){
-          // do nothing
-
+        } catch (Exception e) {
+            // do nothing
+            return false;
         }
-        return  success;
+        return success;
     }
 
     /**
      * permet de mettre a jour la cle d'activation du produit
-     * @param appKessModel   gestonnaire d'activation
-     * @param appcredentials es credentials
+     *
+     * @param appKessModel   gestIonnaire d'activation
+     * @param appcredentials Les credentials
      * @return boolean
      */
-    public boolean updateAppkesKey(AppKessModel appKessModel, String[] appcredentials){
+    public boolean updateAppkesKey(AppKessModel appKessModel, String[] appcredentials) {
         boolean success = false;
-        try{
+        try {
             bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             Timestamp timestamp = new Timestamp(new Date().getTime());
 
             long temp_restant = Long.parseLong(appcredentials[6]) - (new Date().getTime());
-            long duree_licence =  MesOutils.getDureeLicence(appKessModel.getApppkey()) + temp_restant;
+            long duree_licence = MesOutils.getDureeLicence(appKessModel.getApppkey()) + temp_restant;
 
-            cv.put(APPPKEY,appKessModel.getApppkey());
+            cv.put(APPNUMBER, appKessModel.getApppkey());
+            cv.put(APPPKEY, appKessModel.getApppkey());
             cv.put(DATELICENCE, timestamp.getTime());
-            cv.put(DUREELICENCE,duree_licence);
-            int rslt = bd.update("APPPKES",cv, APPNUMBER +"="+appKessModel.getAppnumber(),null);
-            if (rslt > 0){
+            cv.put(DUREELICENCE, duree_licence);
+            int rslt = bd.update(VariablesStatique.TABLE_APPPKES, cv, APPNUMBER + "= ?", new String[] {appcredentials[0]} );
+            if (rslt > 0) {
                 success = true;
             }
-        }catch (Exception e){
-         // do nothing
-
+        } catch (Exception e) {
+            // do nothing
+            return false;
         }
-        return  success;
+        return success;
+    }
+
+
+    /**
+     * permet de mettre a jour la cle d'activation du produit
+     *
+     * @param appcredentials Les credentials
+     * @return boolean
+     */
+    public boolean newupdateAppkesKey(String cleproduit, String _appnumber, String[] appcredentials) {
+        boolean success = false;
+        bd = accessBD.getWritableDatabase();
+        bd.beginTransaction();
+        try {
+
+            ContentValues cv = new ContentValues();
+            Timestamp timestamp = new Timestamp(new Date().getTime());
+
+            long temp_restant = Long.parseLong(appcredentials[6]) - (new Date().getTime());
+            long duree_licence = MesOutils.getDureeLicence(cleproduit) + temp_restant;
+
+            cv.put(APPNUMBER, _appnumber);
+            cv.put(APPPKEY, cleproduit);
+            cv.put(DATELICENCE, timestamp.getTime());
+            cv.put(DUREELICENCE, duree_licence);
+            cv.put(OWNER, appcredentials[2]);
+            cv.put(TELEPHONE,appcredentials[4]);
+            cv.put(ADRESSEELECTRO,appcredentials[7]);
+            cv.put(BASECODE,appcredentials[3]);
+
+//            int rslt = bd.update("APPPKES", cv, APPNUMBER + "=" + Integer.parseInt(appcredentials[0]), null);
+            long rslt = bd.insertOrThrow(VariablesStatique.TABLE_APPPKES,null,cv);
+            if (rslt != -1) {
+                bd.delete(VariablesStatique.TABLE_APPPKES,APPNUMBER + "= ?", new String[] {appcredentials[0]});
+                success = true;
+
+                bd.setTransactionSuccessful();
+            }
+        } catch (Exception e) {
+            // do nothing
+            return false ;
+
+        }finally {
+            bd.endTransaction();
+        }
+        return success;
     }
 }

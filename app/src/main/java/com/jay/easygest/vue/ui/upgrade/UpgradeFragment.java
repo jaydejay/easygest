@@ -55,22 +55,21 @@ public class UpgradeFragment extends Fragment {
                     }else {
                         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_upgrade_appkey,null);
                         EditText editext_app_number = view.findViewById(R.id.upgrade_appli_key);
-                        String app_number = editext_app_number.getText().toString().trim();
 
                         AlertDialog.Builder builder = getBuilder(view);
 
                         builder.setPositiveButton("upgrade",(dialog, which) -> {
+                            String app_number = editext_app_number.getText().toString().trim();
+
                             if ( MesOutils.retrieveAppNumber(cleproduit,app_number)){
-                                getUpgrade(cleproduit,app_number);
+                                getNewUpgrade(cleproduit,app_number);
                             }else {
                                 binding.btnValidateKey.setEnabled(true);
                                 Toast.makeText(getContext(), " produit non conforme", Toast.LENGTH_SHORT).show();
                             }
 
                         });
-                        builder.setNegativeButton("annuller",(dialog, which) ->{
-                            binding.btnValidateKey.setEnabled(true);
-                        });
+                        builder.setNegativeButton("annuller",(dialog, which) -> binding.btnValidateKey.setEnabled(true));
                         builder.create().show();
                     }
 
@@ -102,6 +101,28 @@ public class UpgradeFragment extends Fragment {
 
             AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
             boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel, appcredentials);
+            if (success){
+                binding.editKey.setText("");
+                binding.btnValidateKey.setEnabled(true);
+                Toast.makeText(getContext(), "félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ " activée", Toast.LENGTH_SHORT).show();
+
+            }else {
+                Toast.makeText(getContext(), "un probleme est survenue", Toast.LENGTH_SHORT).show();
+                binding.btnValidateKey.setEnabled(true);
+            }
+
+        }else {
+            Toast.makeText(getContext(), "produit non conforme", Toast.LENGTH_SHORT).show();
+            binding.btnValidateKey.setEnabled(true);
+        }
+    }
+
+
+    private void getNewUpgrade(String cleproduit, String _appnumber) {
+        if ( MesOutils.isKeyvalide(cleproduit, _appnumber)){
+
+            AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
+            boolean success =  accessLocalAppKes.newupdateAppkesKey(cleproduit,_appnumber, appcredentials);
             if (success){
                 binding.editKey.setText("");
                 binding.btnValidateKey.setEnabled(true);

@@ -1,5 +1,18 @@
 package com.jay.easygest.outils;
 
+import static com.jay.easygest.outils.VariablesStatique.TABLE_ACCOUNT;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_APPPKES;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_ARTICLES;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_CLIENT;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_CREDIT;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_IMAGE;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_INFO;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_SMSFAILLED;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_UTILISATEUR;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_VERSEMENT;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_VERSEMENTACC;
+import static com.jay.easygest.outils.VariablesStatique.name;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,18 +29,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
 
     public static final int version = 2;
-    public static final String name = "gestioncredit.db";
-    public static final String TABLE_UTILISATEUR = "utilisateur";
-    public static final String TABLE_APPPKES = "APPPKES";
-    public static final String TABLE_VERSEMENT = "versement";
-    public static final String TABLE_CLIENT = "client";
-    public static final String TABLE_CREDIT = "credit";
-    public static final String TABLE_ACCOUNT = "account";
-    public static final String TABLE_INFO = "infos";
-    public static final String TABLE_SMSFAILLED = "smsfailled";
-    private static final String TABLE_VERSEMENTACC = "versementacc";
-    public static final String TABLE_ARTICLES = "articles";
-    public static final String TABLE_IMAGE = "image";
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
