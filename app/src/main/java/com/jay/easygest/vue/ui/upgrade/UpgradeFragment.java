@@ -1,21 +1,22 @@
 package com.jay.easygest.vue.ui.upgrade;
 
+import static com.jay.easygest.outils.VariablesStatique.TABLE_USEDKEY;
+
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 //import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.jay.easygest.R;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.FragmentUpgradeBinding;
 import com.jay.easygest.model.AppKessModel;
+import com.jay.easygest.outils.AccesLocalUsedKey;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 
@@ -46,47 +47,27 @@ public class UpgradeFragment extends Fragment {
             }else {
                 boolean is_appnuber_right = MesOutils.retrieveAppNumber(cleproduit,appnumber);
                 if (is_appnuber_right){
-                    getUpgrade(cleproduit, appnumber);
+                    AccesLocalUsedKey accesLocalUsedKey = new AccesLocalUsedKey(getContext());
+                    if (!accesLocalUsedKey.iscleExiste(cleproduit)){
+                        getUpgrade(cleproduit, appnumber);
 
-                }else {
-                    if ( MesOutils.getLicenceLevel(appcredentials[1]) != MesOutils.Level.FREE ){
-                        binding.btnValidateKey.setEnabled(true);
-                        Toast.makeText(getContext(), "verifiez les informations fournies", Toast.LENGTH_SHORT).show();
                     }else {
-                        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_upgrade_appkey,null);
-                        EditText editext_app_number = view.findViewById(R.id.upgrade_appli_key);
-
-                        AlertDialog.Builder builder = getBuilder(view);
-
-                        builder.setPositiveButton("upgrade",(dialog, which) -> {
-                            String app_number = editext_app_number.getText().toString().trim();
-
-                            if ( MesOutils.retrieveAppNumber(cleproduit,app_number)){
-                                getNewUpgrade(cleproduit,app_number);
-                            }else {
-                                binding.btnValidateKey.setEnabled(true);
-                                Toast.makeText(getContext(), " produit non conforme", Toast.LENGTH_SHORT).show();
-                            }
-
-                        });
-                        builder.setNegativeButton("annuller",(dialog, which) -> binding.btnValidateKey.setEnabled(true));
-                        builder.create().show();
+                        Toast.makeText(getContext(), "clé deja utilisée", Toast.LENGTH_SHORT).show();
+                        binding.btnValidateKey.setEnabled(true);
                     }
 
 
+                }else {
+                    binding.btnValidateKey.setEnabled(true);
+//                    Toast.makeText(getContext(), "verifiez les informations fournies", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), " produit non conforme", Toast.LENGTH_SHORT).show();
                 }
 
             }
 
         });
     }
-    @NonNull
-    private AlertDialog. Builder getBuilder(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext()) ;
-        builder.setTitle("entree l'application id ");
-        builder.setView(view);
-        return builder;
-    }
+
 
     private void getUpgrade(String cleproduit, String _appnumber) {
         if ( MesOutils.isKeyvalide(cleproduit, _appnumber)){
@@ -101,6 +82,7 @@ public class UpgradeFragment extends Fragment {
 
             AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
             boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel, appcredentials);
+
             if (success){
                 binding.editKey.setText("");
                 binding.btnValidateKey.setEnabled(true);
@@ -118,24 +100,4 @@ public class UpgradeFragment extends Fragment {
     }
 
 
-    private void getNewUpgrade(String cleproduit, String _appnumber) {
-        if ( MesOutils.isKeyvalide(cleproduit, _appnumber)){
-
-            AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
-            boolean success =  accessLocalAppKes.newupdateAppkesKey(cleproduit,_appnumber, appcredentials);
-            if (success){
-                binding.editKey.setText("");
-                binding.btnValidateKey.setEnabled(true);
-                Toast.makeText(getContext(), "félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ " activée", Toast.LENGTH_SHORT).show();
-
-            }else {
-                Toast.makeText(getContext(), "un probleme est survenue", Toast.LENGTH_SHORT).show();
-                binding.btnValidateKey.setEnabled(true);
-            }
-
-        }else {
-            Toast.makeText(getContext(), "produit non conforme", Toast.LENGTH_SHORT).show();
-            binding.btnValidateKey.setEnabled(true);
-        }
-    }
 }

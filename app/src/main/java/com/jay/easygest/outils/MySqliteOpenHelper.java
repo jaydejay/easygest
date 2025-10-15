@@ -11,6 +11,7 @@ import static com.jay.easygest.outils.VariablesStatique.TABLE_SMSFAILLED;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_UTILISATEUR;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_VERSEMENT;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_VERSEMENTACC;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_USEDKEY;
 import static com.jay.easygest.outils.VariablesStatique.name;
 
 import android.content.ContentValues;
@@ -28,7 +29,7 @@ import java.util.Date;
 public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
 
-    public static final int version = 2;
+    public static final int version = 3;
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
@@ -169,6 +170,11 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                     + "foreign key(articleid) references articles(id) on delete cascade)";
             sqLiteDatabase.execSQL(createTable_image);
 
+            String createTable_usedkey = "create table " + TABLE_USEDKEY + " ("
+                    + "id Integer primary key,"
+                    + "cle Text not null unique)";
+            sqLiteDatabase.execSQL(createTable_usedkey);
+
             sqLiteDatabase.insert(TABLE_APPPKES,null,apppPersitence());
             sqLiteDatabase.insert(TABLE_INFO,null,creeeinfo());
 
@@ -186,19 +192,15 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.beginTransaction();
 
         try {
+                if (oldversion == 1 ){
+                    version1To2(sqLiteDatabase);
+                    version2To3(sqLiteDatabase);
+                }
 
-            sqLiteDatabase.execSQL("alter table APPPKES add datelicence Long not null default 1000");
-            sqLiteDatabase.execSQL("alter table APPPKES add dureelicence Long not null default 1000");
-
-            Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
-            if (cursor.moveToFirst()){
-                String app_number = String.valueOf(cursor.getInt(0)) ;
-                appkey = MesOutils.apppkeygenerator(app_number);
-                sqLiteDatabase.update(TABLE_APPPKES,apppUdateCv(),"appnumber =?",new String[]{app_number});
-
+            if (oldversion == 2 ){
+                version2To3(sqLiteDatabase);
             }
-            cursor.close();
-            sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
+
 
             sqLiteDatabase.setTransactionSuccessful();
 
@@ -206,6 +208,42 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             sqLiteDatabase.endTransaction();
 
         }
+
+    }
+
+
+    public void version1To2(SQLiteDatabase sqLiteDatabase){
+
+        sqLiteDatabase.execSQL("alter table APPPKES add datelicence Long not null default 1000");
+        sqLiteDatabase.execSQL("alter table APPPKES add dureelicence Long not null default 1000");
+
+        Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
+        if (cursor.moveToFirst()){
+            String app_number = String.valueOf(cursor.getInt(0)) ;
+            appkey = MesOutils.apppkeygenerator(app_number);
+            sqLiteDatabase.update(TABLE_APPPKES,apppUpdateCv(),"appnumber =?",new String[]{app_number});
+
+        }
+        cursor.close();
+        sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
+    }
+
+    public void version2To3(SQLiteDatabase sqLiteDatabase){
+
+        String createTable_usedkey = "create table " + TABLE_USEDKEY + " ("
+                + "id Integer primary key,"
+                + "cle Text not null unique)";
+        sqLiteDatabase.execSQL(createTable_usedkey);
+
+        Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
+        if (cursor.moveToFirst()){
+            String cle = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
+            ContentValues usedkey_cv = new ContentValues();
+            usedkey_cv.put("cle",cle);
+            sqLiteDatabase.insert(TABLE_USEDKEY,null,usedkey_cv);
+
+        }
+        cursor.close();
 
     }
 
@@ -227,7 +265,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         return cv;
     }
 
-    public ContentValues apppUdateCv(){
+    public ContentValues apppUpdateCv(){
         Date ladate = new Date();
         Timestamp timestamp = new Timestamp(ladate.getTime());
         long duree_licence = MesOutils.getDureeLicence(appkey);

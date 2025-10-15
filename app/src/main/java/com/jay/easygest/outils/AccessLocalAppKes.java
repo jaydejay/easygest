@@ -1,9 +1,12 @@
 package com.jay.easygest.outils;
 
+import static com.jay.easygest.outils.VariablesStatique.TABLE_USEDKEY;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jay.easygest.model.AppKessModel;
 
@@ -95,25 +98,35 @@ public class AccessLocalAppKes {
      */
     public boolean updateAppkesKey(AppKessModel appKessModel, String[] appcredentials) {
         boolean success = false;
+        bd = accessBD.getWritableDatabase();
+        bd.beginTransaction();
         try {
-            bd = accessBD.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            Timestamp timestamp = new Timestamp(new Date().getTime());
 
+            ContentValues cv = new ContentValues();
+            ContentValues usedkey_cv = new ContentValues();
+
+            Timestamp timestamp = new Timestamp(new Date().getTime());
             long temp_restant = Long.parseLong(appcredentials[6]) - (new Date().getTime());
             long duree_licence = MesOutils.getDureeLicence(appKessModel.getApppkey()) + temp_restant;
 
-            cv.put(APPNUMBER, appKessModel.getApppkey());
             cv.put(APPPKEY, appKessModel.getApppkey());
             cv.put(DATELICENCE, timestamp.getTime());
             cv.put(DUREELICENCE, duree_licence);
             int rslt = bd.update(VariablesStatique.TABLE_APPPKES, cv, APPNUMBER + "= ?", new String[] {appcredentials[0]} );
             if (rslt > 0) {
-                success = true;
+                usedkey_cv.put("cle",appKessModel.getApppkey());
+                long rslt2 = bd.insertOrThrow(TABLE_USEDKEY,null,usedkey_cv);
+                if (rslt2 != -1) {
+                    success = true;
+                    bd.setTransactionSuccessful();
+                }
+
             }
         } catch (Exception e) {
             // do nothing
             return false;
+        }finally {
+            bd.endTransaction();
         }
         return success;
     }

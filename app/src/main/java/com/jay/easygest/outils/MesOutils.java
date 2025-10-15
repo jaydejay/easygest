@@ -417,7 +417,8 @@ public abstract  class MesOutils {
 
    }catch (Exception e){
            // do nohing
-       }
+           return false;
+   }
 
 
         return is_appkey_low;
@@ -604,31 +605,35 @@ public abstract  class MesOutils {
 
       Level level =  MesOutils.getLicenceLevel(appkey);
       boolean success ;
-
-        switch(level) {
-            case LOW:
-                success =  verifyApppkeyLow(appkey,appnumber);
-                break;
-            case MEDIUM:
-                // code block 6 mois
-                success = verifyApppkeyMedium(appkey,appnumber);
-                break;
-            case HIGH:
-                // code block 12 mois
-                success = verifyApppkeyHigh(appkey,appnumber);
-                break;
-            case PERMANENT:
-                // code block 49 ans
-                success = verifyApppkeyPermanent(appkey,appnumber);
-                break;
-            case FREE:
-                // code block 10 jours
-                success = verifyApppkeyFree(appkey,appnumber);
-                break;
-            default:
-                // code block
-                success = false ;
+        try{
+            switch(level) {
+                case LOW:
+                    success =  verifyApppkeyLow(appkey,appnumber);
+                    break;
+                case MEDIUM:
+                    // code block 6 mois
+                    success = verifyApppkeyMedium(appkey,appnumber);
+                    break;
+                case HIGH:
+                    // code block 12 mois
+                    success = verifyApppkeyHigh(appkey,appnumber);
+                    break;
+                case PERMANENT:
+                    // code block 49 ans
+                    success = verifyApppkeyPermanent(appkey,appnumber);
+                    break;
+                case FREE:
+                    // code block 10 jours
+                    success = verifyApppkeyFree(appkey,appnumber);
+                    break;
+                default:
+                    // code block
+                    success = false ;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
 
         return success;
     }
@@ -636,11 +641,16 @@ public abstract  class MesOutils {
     public static boolean isDataPresent(ArrayList<ClientModel> clients, ArrayList<ArticlesModel> articles){
         boolean is_data_present = false;
 
-        if (clients != null || articles != null){
+        try{
+            if (clients != null || articles != null){
 
-            if (!clients.isEmpty() || !articles.isEmpty()){
-                is_data_present = true;
+                if (!clients.isEmpty() || !articles.isEmpty()){
+                    is_data_present = true;
+                }
             }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         return is_data_present;
