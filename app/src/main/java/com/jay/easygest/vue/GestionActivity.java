@@ -425,6 +425,10 @@ public class GestionActivity extends AppCompatActivity {
         super.onRestart();
         sessionManagement.removeSession();
         creditViewModel.getCredits().setValue(creditcontrolleur.listecredits());
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().getString("smssentmessge") != null){
+            Toast.makeText(this, getIntent().getExtras().getString("smssentmessge"), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

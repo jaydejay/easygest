@@ -1,6 +1,10 @@
 package com.jay.easygest.vue;
 
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS_2;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -8,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,18 +33,17 @@ public class DemandeCleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         binding = ActivityDemandeCleBinding.inflate(getLayoutInflater());
-//        setContentView(R.layout.activity_demande_cle);
+
         binding.rgKeyLevel.check(binding.checkBoxPermanent.getId());
 
         executeIntent();
         setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
     }
 
     private void executeIntent() {
@@ -59,12 +63,23 @@ public class DemandeCleActivity extends AppCompatActivity {
 //            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
             String destinationAdress = VariablesStatique.DEVELOPER_PHONE;
 
-            SmsnoSentModel smsnoSentModel = new SmsnoSentModel(1,messageBody);
-            SmsSender smsSender = new SmsSender(this,this);
-            Intent intent = new Intent(DemandeCleActivity.this,DemandeCleActivity.class);
+            if (ActivityCompat.checkSelfPermission(this,
+                    android.Manifest.permission.SEND_SMS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS_2);
+                binding.btnDemandeKey.setEnabled(true);
+            }else {
+                SmsnoSentModel smsnoSentModel = new SmsnoSentModel(1,messageBody);
+                SmsSender smsSender = new SmsSender(this,this);
+                Intent intent = new Intent(DemandeCleActivity.this,GestionActivity.class);
 
-            smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
-            smsSender.sentReiceiverGeneric(smsnoSentModel,intent);
+                smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
+                smsSender.sentReiceiverGeneric(smsnoSentModel,intent);
+            }
+
+
 
         });
     }

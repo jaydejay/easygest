@@ -155,6 +155,7 @@ public class CreditFragment extends Fragment {
                                     +"pris le "+date+"\n"
                                     +"reste à payer : "+total_reste_client+"\n"
                                     +"votre code "+client.getCodeclient();
+
                             SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
                             smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                             smsSender.sentReiceiver(smsnoSentModel);

@@ -76,6 +76,7 @@ public class SmsSender {
                 int sms_id  =intent.getIntExtra("sms_id",1);
                 if (getResultCode() == Activity.RESULT_OK && sms.getSmsid() == sms_id ) {
                     intent_to.putExtra("smssentmessge"," client notifier");
+
                     startActivity(context, intent_to, null);
                 }
 

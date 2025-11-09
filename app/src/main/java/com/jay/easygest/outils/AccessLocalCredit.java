@@ -301,7 +301,7 @@ public class AccessLocalCredit {
 
     public boolean isClientOwnCredit(ClientModel client){
         ArrayList<CreditModel> credits = this.listeCreditsclient(client);
-         if (credits.size() == 0){
+         if (credits.isEmpty()){
              return false;
          }
             return true;
