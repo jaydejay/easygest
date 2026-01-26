@@ -29,7 +29,7 @@
         android:gravity="center"
         android:hint="@string/app_owner"
         android:inputType="textPersonName"
-        android:maxLength="8"
+        android:maxLength="25"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_msg_expired" />

@@ -42,8 +42,8 @@ public class UpgradeFragment extends Fragment {
             String cleproduit = binding.editKey.getText().toString().trim();
             String appnumber = appcredentials[0];
             if (cleproduit.isEmpty()){
-                binding.btnValidateKey.setEnabled(true);
                 Toast.makeText(getContext(), "champ obligatoire", Toast.LENGTH_SHORT).show();
+                binding.btnValidateKey.setEnabled(true);
             }else {
                 boolean is_appnuber_right = MesOutils.retrieveAppNumber(cleproduit,appnumber);
                 if (is_appnuber_right){

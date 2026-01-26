@@ -96,7 +96,6 @@ public abstract  class MesOutils {
 
 
     public static String apppkeygenerator(String appnumber){
-
         int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
         int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));
         int c3 =Integer.parseInt(String.valueOf(appnumber.charAt(2)));

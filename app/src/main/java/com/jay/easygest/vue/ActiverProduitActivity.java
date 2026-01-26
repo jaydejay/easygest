@@ -31,7 +31,7 @@ public class ActiverProduitActivity extends AppCompatActivity {
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         setContentView(binding.getRoot());
         init();
-//        activerproduit();
+        activerproduit();
         getFreeAccount();
     }
 

@@ -65,8 +65,8 @@ public class CreercompteActivity extends AppCompatActivity {
                 binding.lleditcreerCompteOwner.setError("5 minimum");
                 binding.btncreercompte.setEnabled(true);
 
-            }else if (owner.length() > 50 ) {
-                binding.lleditcreerCompteOwner.setError("16 maximum");
+            }else if (owner.length() > 25 ) {
+                binding.lleditcreerCompteOwner.setError("25 maximum");
                 binding.btncreercompte.setEnabled(true);
 
             }else if (code_base.isEmpty()){
