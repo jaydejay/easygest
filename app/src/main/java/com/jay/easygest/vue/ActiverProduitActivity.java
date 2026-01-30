@@ -3,6 +3,7 @@ package com.jay.easygest.vue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityActiverProduitBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
+import com.jay.easygest.outils.AccesLocalUsedKey;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 
@@ -26,7 +28,6 @@ public class ActiverProduitActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appcredentials = (String[]) getIntent().getExtras().get("appcredentials");
-
         binding = ActivityActiverProduitBinding.inflate(getLayoutInflater());
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         setContentView(binding.getRoot());
@@ -64,7 +65,8 @@ public class ActiverProduitActivity extends AppCompatActivity {
 
                if (!proprietaire.isEmpty() && !cleproduit.isEmpty()) {
                    if (apppowner.equals(proprietaire) && is_appnuber_right) {
-                       if (appcredentials[1].equals(cleproduit) ){
+                       AccesLocalUsedKey accesLocalUsedKey = new AccesLocalUsedKey(this);
+                       if (accesLocalUsedKey.iscleExiste(cleproduit) ){
                            Toast.makeText(ActiverProduitActivity.this, "un probleme est survenue", Toast.LENGTH_SHORT).show();
                            binding.btnactiverproduit.setEnabled(true);
 

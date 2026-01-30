@@ -1,5 +1,6 @@
 package com.jay.easygest.outils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,16 +12,18 @@ import java.util.ArrayList;
 public class AccesLocalUsedKey {
 
     private final MySqliteOpenHelper accessBD;
-
+    private SQLiteDatabase bd ;
 
     public AccesLocalUsedKey(Context context) {
+
         accessBD = new MySqliteOpenHelper(context, null);
+        bd = accessBD.getWritableDatabase();
     }
 
     public ArrayList<CleModel> listeCles(){
         ArrayList<CleModel> cles = new ArrayList<>();
         try {
-            SQLiteDatabase bd = accessBD.getReadableDatabase();
+            //SQLiteDatabase bd = accessBD.getReadableDatabase();
 //            String req = "select * from usedkey";
             String req = "select cle from usedkey";
             Cursor cursor = bd.rawQuery(req, null);
@@ -42,7 +45,7 @@ public class AccesLocalUsedKey {
     public ArrayList<String> listeDesCles(){
         ArrayList<String> cles = new ArrayList<>();
         try {
-            SQLiteDatabase bd = accessBD.getReadableDatabase();
+            //SQLiteDatabase bd = accessBD.getReadableDatabase();
 //            String req = "select * from usedkey";
             String req = "select cle from usedkey";
             Cursor cursor = bd.rawQuery(req, null);
@@ -60,14 +63,32 @@ public class AccesLocalUsedKey {
     }
 
     public boolean iscleExiste(String cle) {
-        boolean success = false;
+//        boolean success = false;
         ArrayList<String> cles = listeDesCles();
 
-        if (cles.contains(cle)){
-            success = true;
+//        if (cles.contains(cle)){
+//            success = true;
+//        }
+
+        return cles.contains(cle);
+    }
+
+    public boolean iscleExiste2(String cle) {
+        boolean success = false;
+        try {
+            bd = accessBD.getReadableDatabase();
+            String req = "select * from usedkey where cle = cle";
+            Cursor cursor = bd.rawQuery(req, null);
+            int nbrcle = cursor.getCount();
+            if ( nbrcle > 0){
+                success = true;
+            }
+            cursor.close();
+            return success;
+        }catch (Exception e){
+            return success;
         }
 
-        return success;
     }
 
     public boolean isPermanentKey(String cle){
@@ -82,5 +103,11 @@ public class AccesLocalUsedKey {
 
         return is_permanent_key;
 
+    }
+
+    public long ajouterCle(String cle){
+      ContentValues cle_cv = new ContentValues();
+      cle_cv.put("cle",cle);
+      return bd.insertOrThrow("usedkey",null,cle_cv);
     }
 }

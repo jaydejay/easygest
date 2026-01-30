@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-
+import java.util.regex.Pattern;
 
 
 public abstract  class MesOutils {
@@ -653,6 +653,10 @@ public abstract  class MesOutils {
         }
 
         return is_data_present;
+    }
+
+    public static boolean asDigit(String chaine) {
+        return Pattern.compile("\\d").matcher(chaine).find();
     }
 
 

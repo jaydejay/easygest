@@ -14,6 +14,7 @@ import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityCreercompteBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.VariablesStatique;
 
@@ -87,36 +88,45 @@ public class CreercompteActivity extends AppCompatActivity {
             }else if (email.isEmpty()){
                 binding.llcreerCompteMail.setError("obligatoire");
                 binding.btncreercompte.setEnabled(true);
-            } else{
+            }
+            else{
                 if (username.length() >= 6 && password.length() >= 8 && repassword.length() >= 8){
 
-                    if (repassword.equals(password)){
-                        try {
+                    if (MesOutils.asDigit(password)){
+                        if (repassword.equals(password)){
 
-                            int nbrutilisateur = usercontrolleur.nbrUtilisateur();
-                            if (nbrutilisateur < 1){
-                                AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);
-                                AppKessModel appKessModel = accessLocalAppKes.getAppkes();
-                                String _password = passwordHascher.getHashingPass(password,VariablesStatique.MY_SALT);
-                               boolean success = usercontrolleur.creerUser(username, _password,appKessModel, owner,code_base,telephone,email);
-                               if (success){
-                                   editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_password).commit();
-                                   Intent intent = new Intent(CreercompteActivity.this, MainActivity.class);
-                                   startActivity(intent);
-                               }
+                            try {
 
-                            }else {
-                                Toast.makeText(CreercompteActivity.this, "action non autorisée", Toast.LENGTH_SHORT).show();
+                                int nbrutilisateur = usercontrolleur.nbrUtilisateur();
+                                if (nbrutilisateur < 1){
+                                    AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);
+                                    AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+                                    String _password = passwordHascher.getHashingPass(password,VariablesStatique.MY_SALT);
+                                    boolean success = usercontrolleur.creerUser(username, _password,appKessModel, owner,code_base,telephone,email);
+                                    if (success){
+                                        editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_password).commit();
+                                        Intent intent = new Intent(CreercompteActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }
+
+                                }else {
+                                    Toast.makeText(CreercompteActivity.this, "action non autorisée", Toast.LENGTH_SHORT).show();
+                                    binding.btncreercompte.setEnabled(true);
+                                }
+
+                            }catch (SQLiteConstraintException e){
+                                Toast.makeText(CreercompteActivity.this, "formulaire invalde", Toast.LENGTH_SHORT).show();
                                 binding.btncreercompte.setEnabled(true);
                             }
-
-                        }catch (SQLiteConstraintException e){
-                            Toast.makeText(CreercompteActivity.this, "formulaire invalde", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(CreercompteActivity.this, "mot de passes différents", Toast.LENGTH_SHORT).show();
                             binding.btncreercompte.setEnabled(true);
                         }
+
                     }else {
-                        Toast.makeText(CreercompteActivity.this, "mot de passes différents", Toast.LENGTH_SHORT).show();}
+                        Toast.makeText(CreercompteActivity.this, "mot de passe doit contenir au moins un chiffre", Toast.LENGTH_SHORT).show();
                         binding.btncreercompte.setEnabled(true);
+                    }
 
                 }else{
                     Toast.makeText(CreercompteActivity.this, "username ou mot de passe trop court", Toast.LENGTH_SHORT).show();

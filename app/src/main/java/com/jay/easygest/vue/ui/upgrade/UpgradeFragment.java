@@ -59,7 +59,6 @@ public class UpgradeFragment extends Fragment {
 
                 }else {
                     binding.btnValidateKey.setEnabled(true);
-//                    Toast.makeText(getContext(), "verifiez les informations fournies", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), " produit non conforme", Toast.LENGTH_SHORT).show();
                 }
 

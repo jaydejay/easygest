@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         init();
         SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
-
         SmsreSender smsreSender = new SmsreSender(this, this);
         ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
         if (!sms_no_Sents.isEmpty()){

@@ -64,7 +64,7 @@ public class AccessLocalAppKes {
     }
 
     /**
-     * permet de mettre a jour les infos generales
+     * permet de mettre a jour les infos generales sans la cle et app number
      *
      * @param appKessModel Le model
      * @return true si reussi sinon faux
@@ -102,17 +102,17 @@ public class AccessLocalAppKes {
         bd.beginTransaction();
         try {
 
-            ContentValues cv = new ContentValues();
+            ContentValues appkey_cv = new ContentValues();
             ContentValues usedkey_cv = new ContentValues();
 
             Timestamp timestamp = new Timestamp(new Date().getTime());
             long temp_restant = Long.parseLong(appcredentials[6]) - (new Date().getTime());
             long duree_licence = MesOutils.getDureeLicence(appKessModel.getApppkey()) + temp_restant;
 
-            cv.put(APPPKEY, appKessModel.getApppkey());
-            cv.put(DATELICENCE, timestamp.getTime());
-            cv.put(DUREELICENCE, duree_licence);
-            int rslt = bd.update(VariablesStatique.TABLE_APPPKES, cv, APPNUMBER + "= ?", new String[] {appcredentials[0]} );
+            appkey_cv.put(APPPKEY, appKessModel.getApppkey());
+            appkey_cv.put(DATELICENCE, timestamp.getTime());
+            appkey_cv.put(DUREELICENCE, duree_licence);
+            int rslt = bd.update(VariablesStatique.TABLE_APPPKES, appkey_cv, APPNUMBER + "= ?", new String[] {appcredentials[0]} );
             if (rslt > 0) {
                 usedkey_cv.put("cle",appKessModel.getApppkey());
                 long rslt2 = bd.insertOrThrow(TABLE_USEDKEY,null,usedkey_cv);

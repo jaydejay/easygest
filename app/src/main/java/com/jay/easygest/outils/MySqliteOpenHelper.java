@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.sql.Timestamp;
@@ -177,6 +178,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
             sqLiteDatabase.insert(TABLE_APPPKES,null,apppPersitence());
             sqLiteDatabase.insert(TABLE_INFO,null,creeeinfo());
+            sqLiteDatabase.insert(TABLE_USEDKEY,null,getUsedkeyCv(appkey));
 
             sqLiteDatabase.setTransactionSuccessful();
 
@@ -220,7 +222,8 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
         if (cursor.moveToFirst()){
             String app_number = String.valueOf(cursor.getInt(0)) ;
-            appkey = MesOutils.apppkeygenerator(app_number);
+//            appkey = MesOutils.apppkeygenerator(app_number);
+             appkey = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
             sqLiteDatabase.update(TABLE_APPPKES,apppUpdateCv(),"appnumber =?",new String[]{app_number});
 
         }
@@ -238,8 +241,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
         if (cursor.moveToFirst()){
             String cle = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
-            ContentValues usedkey_cv = new ContentValues();
-            usedkey_cv.put("cle",cle);
+            ContentValues usedkey_cv = getUsedkeyCv(cle);
             sqLiteDatabase.insert(TABLE_USEDKEY,null,usedkey_cv);
 
         }
@@ -247,11 +249,18 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
     }
 
+    @NonNull
+    private ContentValues getUsedkeyCv(String cle) {
+        ContentValues usedkey_cv = new ContentValues();
+        usedkey_cv.put("cle", cle);
+        return usedkey_cv;
+    }
+
 
     public ContentValues apppPersitence(){
         Date ladate = new Date();
         Timestamp timestamp = new Timestamp(ladate.getTime());
-       long duree_licence = MesOutils.getDureeLicence(appkey);
+        long duree_licence = MesOutils.getDureeLicence(appkey);
         ContentValues cv = new ContentValues();
         cv.put(APPNUMBER,apppnumber);
         cv.put(APPPKEY,appkey);
