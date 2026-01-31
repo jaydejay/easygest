@@ -18,6 +18,7 @@ import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccesLocalUsedKey;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.SessionManagement;
 
 public class ActiverProduitActivity extends AppCompatActivity {
     private ActivityActiverProduitBinding binding;
@@ -82,14 +83,17 @@ public class ActiverProduitActivity extends AppCompatActivity {
                                AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
                                boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel, appcredentials);
                                if (success){
+                                   SessionManagement sessionManagement = new SessionManagement(this);
+                                   sessionManagement.savekeyActivated(true);
+                                   sessionManagement.saveLicenceExpiredStatus(false);
                                    UserModel user = usercontrolleur.recupProprietaire();
                                    Intent intent;
                                    if (user!= null){
                                        intent = new Intent(ActiverProduitActivity.this, MainActivity.class);
-                                       intent.putExtra("msgactivation","félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ "activée");
+                                       intent.putExtra("msgactivation","félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ " activée");
                                    }else {
                                        intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
-                                       intent.putExtra("msgactivation","félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ "activée");
+                                       intent.putExtra("msgactivation","félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ " activée");
                                    }
                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                    startActivity(intent);

@@ -16,6 +16,7 @@ import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.PasswordHascher;
+import com.jay.easygest.outils.SessionManagement;
 import com.jay.easygest.outils.VariablesStatique;
 
 import java.util.Objects;
@@ -105,6 +106,8 @@ public class CreercompteActivity extends AppCompatActivity {
                                     boolean success = usercontrolleur.creerUser(username, _password,appKessModel, owner,code_base,telephone,email);
                                     if (success){
                                         editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_password).commit();
+                                        SessionManagement sessionManagement = new SessionManagement(this);
+                                        sessionManagement.saveUtilisateurCreated(true);
                                         Intent intent = new Intent(CreercompteActivity.this, MainActivity.class);
                                         startActivity(intent);
                                     }

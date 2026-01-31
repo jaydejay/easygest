@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         user = usercontrolleur.getUser();
         appcredentials = usercontrolleur.getAppCredentials();
+        sessionManagement = new SessionManagement(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -43,23 +44,46 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (MesOutils.isLicenceExpired(appcredentials)){
+           sessionManagement.saveLicenceExpiredStatus(true);
+        }
+
+        if (sessionManagement.getLicenceExpiredStatus()){
             Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("appcredentials",appcredentials);
             intent.putExtra("code_msg",1);
             startActivity(intent);
             finish();
-        }else {
-            sessionManagement = new SessionManagement(this);
-            boolean is_authenticated = sessionManagement.getSession();
-            if (is_authenticated){
-                Intent intent = new Intent(MainActivity.this, GestionActivity.class);
+        }
+
+        boolean  is_key_activated = sessionManagement.getkeyActivated();
+//        if (!is_key_activated){
+//            Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.putExtra("appcredentials",appcredentials);
+//            intent.putExtra("code_msg",2);
+//            startActivity(intent);
+//            finish();
+//        }else {
+
+            if (is_key_activated && !sessionManagement.getUtilisateurCreated()){
+                Intent intent = new Intent(MainActivity.this, CreercompteActivity.class);
+                intent.putExtra("msgactivation","félicitation licence activée creer un compte utilisateur");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+            }else {
+                boolean is_authenticated = sessionManagement.getSession();
+                if (is_authenticated){
+                    Intent intent = new Intent(MainActivity.this, GestionActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
             }
+//        }
 
-        }
+
 
     }
 
@@ -174,14 +198,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    /**
-//     * redirection pour activer le produit
-//     */
-//    private void redirectToAppActivation() {
-//        binding.txtCreateCompte.setOnClickListener(view -> activerProduit());
-//
-//    }
-
 
     /**
      * affiche les donnees pour activer le produit
@@ -244,11 +260,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * desavtive la creation de compte utilisateur
-     * le nbr d'utilisateur est limité a 1
+     * le nbr d'utilisateur est limité a 1 par application
      */
     private void desactivatetxtCreation(){
-        int nbrutilisateur = usercontrolleur.nbrUtilisateur();
-        if (nbrutilisateur >= 1){
+        if (sessionManagement.getkeyActivated()){
             binding.txtCreateCompte.setVisibility(View.GONE);
         }
     }
@@ -273,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * desactive le bouton authentification pour un utilisateur au demarrage
+     * s'il realise 3 tentatives de connection infructueuses
      */
     private void desactiverbtnAuthInit(){
         try {

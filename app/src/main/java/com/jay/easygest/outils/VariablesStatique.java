@@ -2,6 +2,9 @@ package com.jay.easygest.outils;
 
 public abstract class VariablesStatique {
 
+    public static final String AUTH_SHARED_PREF_COMPTE_CREATED = "is_compte_utilisateur_created";
+    public static final String AUTH_SHARED_PREF_KEY_ACTIVATED = "is_key_activated";
+    public static final String AUTH_SHARED_PREF_LICENCE_STATUS = "is_licence_expired";
     public static String versioning ="1.1.3";
 
 
@@ -20,7 +23,7 @@ public abstract class VariablesStatique {
     public static final String TABLE_USEDKEY = "usedkey";
     public static final String SETTING_SHARED_PREF_NAME = "setting_shared";
     public static final String AUTH_SHARED_PREF_NAME = "auth_shared";
-    public static final String AUTH_SHARED_PREF_VARIABLE = "is_authenticated";
+    public static final String AUTH_SHARED_PREF_IS_AUTHENTICATED = "is_authenticated";
     public static final String SETTING_SHARED_PREF_VARIABLE = "setting_password";
 
     public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
