@@ -92,7 +92,7 @@ public class AffichercreditActivity extends AppCompatActivity {
         String versement ="VERSEMENT : "+credit.getVersement();
         String reste ="RESTE : "+credit.getReste();
 
-        if (c_article2.getDesignation().length() == 0){
+        if (c_article2.getDesignation().isEmpty()){
             cardaffichercreditarticle2.setVisibility(View.GONE);
         }
         cardaffichercredittitle.setText(credit.toString3());

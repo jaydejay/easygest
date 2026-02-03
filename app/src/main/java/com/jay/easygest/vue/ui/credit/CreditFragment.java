@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.gson.Gson;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.FragmentCreditBinding;
@@ -55,7 +53,7 @@ public class CreditFragment extends Fragment {
     private AppKessModel appKessModel;
     private Spinner spinnerArt1;
     private Spinner spinnerArt2;
-    private ArrayList<Article> listeArticles = new ArrayList<>();
+    private final ArrayList<Article> listeArticles = new ArrayList<>();
     private ArticlesViewModel articlesViewModel;
     private ArrayList<Article> liste_article_selectionne;
     private Article article1;
@@ -180,8 +178,6 @@ public class CreditFragment extends Fragment {
      * elle cree un client avec son premier credit
      */
     public void ajouterCredit(){
-
-
         binding.btncreercredit.setOnClickListener(v -> {
             binding.btncreercredit.setEnabled(false);
             String nomclient = binding.edittxtcreernom.getText().toString().trim();

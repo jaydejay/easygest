@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import androidx.annotation.NonNull;
+
 import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
@@ -134,22 +136,7 @@ public class AccessLocalCredit {
     public CreditModel ajouterCredit(CreditModel credit,ClientModel client){
         bd = accessBD.getWritableDatabase();
         accessLocalVersement = new AccessLocalVersement(contexte);
-        ContentValues client_cv= new ContentValues();
-        client_cv.put(ID,client.getId());
-        client_cv.put(CODECLIENT,client.getCodeclient());
-        client_cv.put(NOM,client.getNom());
-        client_cv.put(PRENOMS,client.getPrenoms());
-        client_cv.put(TELEPHONE,client.getTelephone());
-        client_cv.put(ADRESSEELECTRO,client.getEmail());
-        client_cv.put(RESIDENCE,client.getResidence());
-        client_cv.put(CNI,client.getCni());
-        client_cv.put(PERMIS,client.getPermis());
-        client_cv.put(PASSPORT,client.getPassport());
-        client_cv.put(SOCIETE,client.getSociete());
-        client_cv.put(NBRCREDIT,client.getNbrcredit() + 1);
-        client_cv.put(TOTALCREDIT,client.getTotalcredit() + credit.getSommecredit());
-        client_cv.put(NBRACCOUNT,client.getNbraccount());
-        client_cv.put(TOTALACCOUNT,client.getTotalaccount());
+        ContentValues client_cv = getClientCv(credit, client);
         bd.beginTransaction();
         CreditModel creditModel;
 
@@ -169,6 +156,27 @@ public class AccessLocalCredit {
 
         return creditModel;
 
+    }
+
+    @NonNull
+    private ContentValues getClientCv(CreditModel credit, ClientModel client) {
+        ContentValues client_cv= new ContentValues();
+        client_cv.put(ID, client.getId());
+        client_cv.put(CODECLIENT, client.getCodeclient());
+        client_cv.put(NOM, client.getNom());
+        client_cv.put(PRENOMS, client.getPrenoms());
+        client_cv.put(TELEPHONE, client.getTelephone());
+        client_cv.put(ADRESSEELECTRO, client.getEmail());
+        client_cv.put(RESIDENCE, client.getResidence());
+        client_cv.put(CNI, client.getCni());
+        client_cv.put(PERMIS, client.getPermis());
+        client_cv.put(PASSPORT, client.getPassport());
+        client_cv.put(SOCIETE, client.getSociete());
+        client_cv.put(NBRCREDIT, client.getNbrcredit() + 1);
+        client_cv.put(TOTALCREDIT, client.getTotalcredit() + credit.getSommecredit());
+        client_cv.put(NBRACCOUNT, client.getNbraccount());
+        client_cv.put(TOTALACCOUNT, client.getTotalaccount());
+        return client_cv;
     }
 
 
@@ -339,7 +347,7 @@ public class AccessLocalCredit {
         CreditModel credit = null;
         try {
             bd = accessBD.getReadableDatabase();
-            String req = "select * from credit where " + ID + "="+creditId+"";
+            String req = "select * from credit where " + ID + "="+creditId;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {

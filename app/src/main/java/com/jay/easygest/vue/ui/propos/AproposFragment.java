@@ -1,6 +1,9 @@
 package com.jay.easygest.vue.ui.propos;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,15 +50,15 @@ public class AproposFragment extends Fragment {
     }
 
     private void init(){
-
+        PackageInfo packageInfo = null;
         try {
+            packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
 
-            String version ="EasyGest version : " + VariablesStatique.versioning;
-            binding.txteasygestversion.setText(version);
-
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "erreure de donnees", Toast.LENGTH_SHORT).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
         }
-
+        String versionName = packageInfo.versionName;
+        String version ="EasyGest version : " + versionName;
+        binding.txteasygestversion.setText(version);
     }
 }
