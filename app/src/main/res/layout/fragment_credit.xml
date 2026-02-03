@@ -93,6 +93,14 @@
                             android:gravity="center_horizontal|center_vertical"
                             android:hint="@string/article_1"
                             android:inputType="textPersonName" />
+                        <Spinner
+                            android:id="@+id/spinnerArticle1"
+                            android:layout_width="250dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="25dp"
+                            android:background="@android:drawable/btn_dropdown"
+                            android:spinnerMode="dropdown" />
 
                         <LinearLayout
                             android:layout_width="250dp"
@@ -105,7 +113,7 @@
                             app:layout_constraintStart_toStartOf="parent">
 
                                 <EditText
-                                    android:id="@+id/edittxtcreerarticle1somme"
+                                    android:id="@+id/edittxtcreerarticle1prix"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center_horizontal"
@@ -139,6 +147,14 @@
                             android:layout_marginTop="25dp"
                             android:hint="@string/article_2"
                             android:inputType="textPersonName" />
+                        <Spinner
+                            android:id="@+id/spinnerArticle2"
+                            android:layout_width="250dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="25dp"
+                            android:background="@android:drawable/btn_dropdown"
+                            android:spinnerMode="dropdown" />
 
                         <LinearLayout
                             android:layout_width="250dp"
@@ -147,7 +163,7 @@
                             android:layout_gravity="center_horizontal">
 
                                 <EditText
-                                    android:id="@+id/edittxtcreerarticle2somme"
+                                    android:id="@+id/edittxtcreerarticle2prix"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="2"

@@ -61,7 +61,7 @@ public class ArticlesFragment extends Fragment {
  public void redirectToArticleActivity(){
         binding.btnRedirectToAricle.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(),ArticlesActivity.class);
-           int itemid = binding.btnRedirectToAricle.getId();
+            int itemid = binding.btnRedirectToAricle.getId();
             intent.putExtra("itemclickedId",itemid);
             startActivity(intent);
         });
@@ -71,7 +71,7 @@ public class ArticlesFragment extends Fragment {
         try {
                articlesViewModel.getArticleAdapterlivedatas().observe(getViewLifecycleOwner(),articlesAdapterModels -> {
                    adapter = new RecycleViewArticleAdapter(getContext(),articlesAdapterModels);
-                   adapter.notifyDataSetChanged();
+//                   adapter.notifyDataSetChanged();
                    recyclerView.setAdapter(adapter);
                });
 

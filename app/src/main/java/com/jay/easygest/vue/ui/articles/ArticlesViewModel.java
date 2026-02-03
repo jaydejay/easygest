@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.jay.easygest.controleur.Articlescontrolleur;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ArticlesModel;
 
 import java.util.ArrayList;
@@ -41,13 +42,26 @@ public class ArticlesViewModel extends ViewModel {
             }
 
         }
-//        articlelivedatas.setValue(filteredliste);
         articleAdapterlivedatas.setValue(filteredliste);
     }
 
-    public MutableLiveData<ArrayList<ArticlesModel>> getArticleAdapterlivedatas() {
-        return articleAdapterlivedatas;
+    public MutableLiveData<ArrayList<Article>> getLesArticleInstocklivedatas() {
+        ArrayList<Article> filteredliste = new ArrayList<>();
+        MutableLiveData<ArrayList<Article>> Mfilteredliste = new MutableLiveData<>();
+        for (ArticlesModel articleModel : Objects.requireNonNull(getArticlelivedatas().getValue())) {
+            if (articleModel.getId() != null){
+                if (articleModel.getQuantite() > 0 ){
+                    Article article = new Article(articleModel.getDesignation(),articleModel.getPrix(),articleModel.getQuantite());
+                    filteredliste.add(article);
+
+                }
+            }
+
+        }
+        Mfilteredliste.setValue(filteredliste);
+        return Mfilteredliste;
     }
+
 
     public void getArticleOutStocklivedatas() {
         ArrayList<ArticlesModel> filteredliste = new ArrayList<>();
@@ -60,7 +74,9 @@ public class ArticlesViewModel extends ViewModel {
             }
 
         }
-//        articlelivedatas.setValue(filteredliste);
         articleAdapterlivedatas.setValue(filteredliste);
+    }
+    public MutableLiveData<ArrayList<ArticlesModel>> getArticleAdapterlivedatas() {
+        return articleAdapterlivedatas;
     }
 }

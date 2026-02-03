@@ -6,10 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 public class AccessLocalCredit {
@@ -27,6 +29,7 @@ public class AccessLocalCredit {
     public static final String RESTE = "reste";
     public static final String DATECREDIT = "datecredit";
     public static final String TABLE_CREDIT = "credit";
+    public static final String TABLE_ARTICLE = "articles";
     public static final String ID = "id";
     public static final String NUMEROCREDIT = "numerocredit";
     public static final String NBRCREDIT = "nbrcredit";
@@ -77,19 +80,38 @@ public class AccessLocalCredit {
        return cv;
     }
 
-    public CreditModel creerCompteCredit(CreditModel premiercredit, String codeclt,String nom,String prenoms,String telephone, String sommeversee ){
+    public CreditModel creerCompteCredit(CreditModel premiercredit, Map<String, Object> data){
         bd = accessBD.getWritableDatabase();
         accessLocalVersement = new AccessLocalVersement(contexte);
         accessLocalClient = new AccessLocalClient(contexte);
-
         bd.beginTransaction();
         CreditModel creditModel;
+
+        ContentValues article1_cv = new ContentValues();
+        Article article1 = (Article) data.get("article1");
+        Article article1vendu = (Article) data.get("article1vendu");
+        assert article1 != null;
+        assert article1vendu != null;
+        int nbr_articles1_restant = article1.getNbrarticle() - article1vendu.getNbrarticle();
+        article1_cv.put("quantite",nbr_articles1_restant);
+
+        ContentValues article2_cv = new ContentValues();
+        Article article2 = (Article) data.get("article2");
+        Article article2vendu = (Article) data.get("article2vendu");
+
         try {
 
-            long client_reslt = bd.insertOrThrow(TABLE_CLIENT,null,accessLocalClient.ajouterClient(codeclt, nom, prenoms,telephone,1,premiercredit.getSommecredit(),0,0));
+            long client_reslt = bd.insertOrThrow(TABLE_CLIENT,null,accessLocalClient.ajouterClient((String) data.get("codeclient"), (String) data.get("nomclient"), (String) data.get("prenomclient"), (String) data.get("telephone"),1,premiercredit.getSommecredit(),0,0));
             long credit_rslt = bd.insertOrThrow(TABLE_CREDIT,null,this.creerCredit(premiercredit,client_reslt));
-            if (Integer.parseInt(sommeversee) != 0){
-                bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt(sommeversee), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()));
+            if (Integer.parseInt((String) data.get("versement")) != 0){
+                bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt((String) data.get("versement")), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()));
+            }
+
+            bd.update(TABLE_ARTICLE,article1_cv,"designation =?", new String[] {article1.getDesignation()});
+            if (article2 != null && article2vendu != null ){
+                int nbr_articles2_restant = article2.getNbrarticle() - article2vendu.getNbrarticle();
+                article2_cv.put("quantite",nbr_articles2_restant);
+                bd.update(TABLE_ARTICLE,article2_cv,"designation =?", new String[] {article2.getDesignation()});
             }
             creditModel = this.recupCreditById((int) credit_rslt);
             bd.setTransactionSuccessful();

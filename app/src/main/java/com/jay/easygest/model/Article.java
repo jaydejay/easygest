@@ -43,9 +43,14 @@ public class Article {
     }
 
     @NonNull
+    public String toString2() {
+        return  designation + ": " + somme;
+    }
+
+    @NonNull
     @Override
     public String toString() {
-        return  "" + designation + ": " + somme;
+        return  designation ;
     }
 
 

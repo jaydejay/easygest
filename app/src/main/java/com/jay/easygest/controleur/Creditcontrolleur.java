@@ -15,6 +15,9 @@ import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public final class Creditcontrolleur {
 
@@ -88,16 +91,18 @@ public final class Creditcontrolleur {
 
     public void setMCredits(ArrayList<CreditModel> credits) {this.mcredits.setValue(credits); }
 
-    public CreditModel creerCredit(String codeclt, String nomclient, String prenomsclient, String telephone , Article c_article1, Article c_article2, String versement, long datecredit){
+    public CreditModel creerCredit( Map<String, Object> data){
 
-        String article1 = new Gson().toJson(c_article1);
-        String article2 = new Gson().toJson(c_article2);
+        String article1vendu = new Gson().toJson(data.get("article1vendu"));
+        String article2vendu = new Gson().toJson(data.get("article2vendu"));
 
-        int sommecredit = c_article1.getSomme() + c_article2.getSomme();
-        int reste = sommecredit - Integer.parseInt(versement);
+        int sommecredit = (int) data.get("sommecredit");
+        int reste = sommecredit - Integer.parseInt((String) Objects.requireNonNull(data.get("versement")));
 
-        CreditModel premiercredit = new CreditModel( codeclt,nomclient,prenomsclient,article1, article2,sommecredit, Integer.parseInt(versement), reste,datecredit,1);
-        CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,codeclt,nomclient,prenomsclient,telephone,versement);
+        CreditModel premiercredit = new CreditModel((String) data.get("codeclient"), (String) data.get("nomclient"),
+                (String) data.get("prenomclient"),article1vendu, article2vendu,sommecredit, Integer.parseInt((String) data.get("versement")),
+                reste, (Long) data.get("dateouverture"),1);
+        CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,data);
 
         if (credit != null){
              accessLocalInfo.updateCreditInfos(sommecredit);

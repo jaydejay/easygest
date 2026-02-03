@@ -70,6 +70,11 @@ public class ArticlesModel {
     @NonNull
     @Override
     public String toString() {
-        return  "" + designation + ": " + prix;
+        return  designation + " : " + prix;
+    }
+
+    @NonNull
+    public String toString2() {
+        return  designation ;
     }
 }
