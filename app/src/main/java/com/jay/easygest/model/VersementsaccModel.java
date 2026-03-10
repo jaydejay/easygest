@@ -3,11 +3,11 @@ package com.jay.easygest.model;
 import androidx.annotation.NonNull;
 
 public class VersementsaccModel {
-    private Integer id;
-    private ClientModel client;
-    private  AccountModel account;
-    private Long sommeverse;
-    private Long dateversement;
+    private final Integer id;
+    private final ClientModel client;
+    private final AccountModel account;
+    private final Long sommeverse;
+    private final Long dateversement;
 
 
     public VersementsaccModel(int id, ClientModel client, AccountModel account, Long sommeverse, Long dateversement) {

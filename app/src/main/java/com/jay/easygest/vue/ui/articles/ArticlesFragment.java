@@ -40,8 +40,9 @@ public class ArticlesFragment extends Fragment {
         binding = FragmentArticlesBinding.inflate(inflater,container,false);
         Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(getContext());
         articlescontrolleur.listeArticles2();
+        articlescontrolleur.listeArticlescredit();
         articlesViewModel = new ViewModelProvider(this).get(ArticlesViewModel.class);
-        articlesViewModel.getArticleInstocklivedatas();
+        articlesViewModel.getArticleslivedatas();
 
         recyclerView = binding.articleListView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -49,6 +50,7 @@ public class ArticlesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         creerliste();
+        getArticles();
         getArticleInStock();
         getArticleOutStock();
         rechercherArticle();
@@ -71,7 +73,6 @@ public class ArticlesFragment extends Fragment {
         try {
                articlesViewModel.getArticleAdapterlivedatas().observe(getViewLifecycleOwner(),articlesAdapterModels -> {
                    adapter = new RecycleViewArticleAdapter(getContext(),articlesAdapterModels);
-//                   adapter.notifyDataSetChanged();
                    recyclerView.setAdapter(adapter);
                });
 
@@ -93,9 +94,7 @@ public class ArticlesFragment extends Fragment {
                             filteredliste.add(article);
                         }
                     }
-
                 }
-
             });
             return filteredliste;
 
@@ -130,13 +129,40 @@ public class ArticlesFragment extends Fragment {
         });
     }
 
-    public void getArticleInStock(){
-        binding.btnAricleStock.setOnClickListener(view -> articlesViewModel.getArticleInstocklivedatas());
+    /**
+     * afficher tous les articles
+     */
+    public void getArticles(){
+        binding.btnListeAricles.setOnClickListener(view -> articlesViewModel.getArticleslivedatas());
     }
 
-    public void getArticleOutStock(){
-        binding.btnListeAricle.setOnClickListener(view -> articlesViewModel.getArticleOutStocklivedatas());
+    /**
+     * afficher les articles en stock
+     */
+    public void getArticleInStock(){
+        binding.btnArticleStock.setOnClickListener(view -> articlesViewModel.getArticlesInStocklivedatas());
+    }
 
+    /**
+     * afficher les articles hors stock
+     */
+    public void getArticleOutStock(){
+        binding.btnArticleHorsStock.setOnClickListener(view -> articlesViewModel.getArticleOutStocklivedatas());
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        creerliste();
+//        getArticleInStock();
+        getArticleOutStock();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
 }

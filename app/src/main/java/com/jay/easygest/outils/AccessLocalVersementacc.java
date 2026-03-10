@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ClientModel;
@@ -33,7 +36,8 @@ public class AccessLocalVersementacc {
     private final AccessLocalClient accessLocalClient;
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
-    private  Context contexte;
+    private final Context contexte;
+    private final Gson gson = new Gson();
 
     public AccessLocalVersementacc(Context contexte) {
         this.contexte = contexte;
@@ -61,18 +65,17 @@ public class AccessLocalVersementacc {
         Accountcontroller accountcontroller = Accountcontroller.getAccountcontrolleurInstance(contexte);
         ArrayList<AccountModel> accountsunclient =  accessLocalAccount.listeAccountsClient(client);
 
-        if (accountsunclient.size() > 0){
+        if (!accountsunclient.isEmpty()){
             for (AccountModel account : accountsunclient) {
-
                 bd.beginTransaction();
                 try{
                     if (sommeverse > 0){
-                        int somme_a_verse;
-                        if (sommeverse >= account.getReste()){
-                            somme_a_verse = account.getReste();
-                        }else {
-                            somme_a_verse = (int)sommeverse;
-                        }
+//                        int somme_a_verse;
+//                        if (sommeverse >= account.getReste()){
+                            int  somme_a_verse = sommeverse >= account.getReste() ? account.getReste() : (int)sommeverse  ;
+//                        }else {
+//                            somme_a_verse = (int)sommeverse;
+//                        }
 
                         int reste = account.getReste() - somme_a_verse;
                         int versements = account.getVersement() + somme_a_verse;
@@ -86,8 +89,8 @@ public class AccessLocalVersementacc {
                         ContentValues account_cv = new ContentValues();
                         account_cv.put(ID,account.getId());
                         account_cv.put(CLIENTID,client.getId());
-                        account_cv.put(ARTICLE_1,account.getArticle1());
-                        account_cv.put(ARTICLE_2,account.getArticle2());
+                        account_cv.put(ARTICLE_1,gson.toJson(account.getArticle1()));
+                        account_cv.put(ARTICLE_2,gson.toJson(account.getArticle2()));
                         account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
                         account_cv.put(VERSEMENTS,versements);
                         account_cv.put(RESTE,reste);
@@ -134,11 +137,10 @@ public class AccessLocalVersementacc {
                date_de_solde = dateversement;
             }else {date_de_solde = 0L;}
             account.setSoldedat(date_de_solde);
-
             account_cv.put(ID,account.getId());
-            account_cv.put(CLIENTID,account.getClientid());
-            account_cv.put(ARTICLE_1,account.getArticle1());
-            account_cv.put(ARTICLE_2,account.getArticle2());
+            account_cv.put(CLIENTID,account.getClient().getId());
+            account_cv.put(ARTICLE_1,gson.toJson(account.getArticle1()));
+            account_cv.put(ARTICLE_2,gson.toJson(account.getArticle2()));
             account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
             account_cv.put(VERSEMENTS,nouveau_total_versement);
             account_cv.put(RESTE,reste);
@@ -171,17 +173,7 @@ public class AccessLocalVersementacc {
 
         account.setSoldedat(0L);
 
-        ContentValues account_cv = new ContentValues();
-        account_cv.put(ID,account.getId());
-        account_cv.put(CLIENTID,account.getClientid());
-        account_cv.put(ARTICLE_1,account.getArticle1());
-        account_cv.put(ARTICLE_2,account.getArticle2());
-        account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
-        account_cv.put(VERSEMENTS,nouveau_versement_du_account);
-        account_cv.put(RESTE,reste);
-        account_cv.put(DATEACCOUNT,account.getDateaccount());
-        account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
-        account_cv.put(SOLDEDAT,0L);
+        ContentValues account_cv = getAccountContentValues(account, nouveau_versement_du_account, reste);
         bd.beginTransaction();
         try {
             bd.delete(TABLE_VERSEMENTACC,ID+"=?",new String[]{String.valueOf(versementacc.getId())});
@@ -194,6 +186,22 @@ public class AccessLocalVersementacc {
             bd.endTransaction();
         }
         return success;
+    }
+
+    @NonNull
+    private ContentValues getAccountContentValues(AccountModel account, long nouveau_versement_du_account, long reste) {
+        ContentValues account_cv = new ContentValues();
+        account_cv.put(ID, account.getId());
+        account_cv.put(CLIENTID, account.getClient().getId());
+        account_cv.put(ARTICLE_1, gson.toJson(account.getArticle1()));
+        account_cv.put(ARTICLE_2, gson.toJson(account.getArticle2()));
+        account_cv.put(SOMMEACCOUNT, account.getSommeaccount());
+        account_cv.put(VERSEMENTS, nouveau_versement_du_account);
+        account_cv.put(RESTE, reste);
+        account_cv.put(DATEACCOUNT, account.getDateaccount());
+        account_cv.put(NUMEROACCOUNT, account.getNumeroaccount());
+        account_cv.put(SOLDEDAT,0L);
+        return account_cv;
     }
 
 
@@ -225,7 +233,7 @@ public class AccessLocalVersementacc {
         VersementsaccModel versement = null;
         try {
             bd = accessBD.getReadableDatabase();
-            String req = "select * from versementacc where " + ID + "="+versementaccid+"";
+            String req = "select * from versementacc where " + ID + "="+versementaccid;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {

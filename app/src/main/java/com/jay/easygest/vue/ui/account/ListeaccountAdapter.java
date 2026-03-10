@@ -12,6 +12,7 @@ import com.jay.easygest.R;
 import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.vue.AfficherCreditsClientActivity;
+import com.jay.easygest.vue.GestionActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,7 +50,6 @@ public class ListeaccountAdapter extends BaseAdapter {
         AccountViewHolder holder;
 
         if (view == null){
-
             holder = new AccountViewHolder();
             view = inflater.inflate(R.layout.layout_liste_accounts,null);
             holder.layoutaccountadapter = view.findViewById(R.id.layoutaccountadapter);
@@ -61,17 +61,31 @@ public class ListeaccountAdapter extends BaseAdapter {
         }else {
             holder = (AccountViewHolder) view.getTag();
         }
-        String content = "account"+"\n"
+        String content = accounts.get(position).getClient().getNom()+ " "+accounts.get(position).getClient().getPrenoms()+"\n"
+                +"account"+"\n"
                 + "du"+"\n"
                 + MesOutils.convertDateToString(new Date(accounts.get(position).getDateaccount())) ;
+
         holder.textViewaccountdate.setText(content);
         holder.textViewaccountsomme.setText(String.valueOf(accounts.get(position).getSommeaccount()));
         holder.textViewaccountreste.setText(String.valueOf(accounts.get(position).getReste()));
         holder.layoutaccountadapter.setTag(position);
-        holder.layoutaccountadapter.setOnClickListener(v->{
 
-            int pos = (int)v.getTag();
-            ((AfficherCreditsClientActivity)contexte).redirectToAfficherAccountActivity(accounts.get(pos));
+        holder.layoutaccountadapter.setOnClickListener(v->{
+            try{
+                int pos = (int)v.getTag();
+                String activity = v.getContext().getClass().getName();
+                if (activity.contains("GestionActivity")){
+                    ((GestionActivity)contexte).redirectToAfficherAccountActivity(accounts.get(pos));
+                }else {
+                    ((AfficherCreditsClientActivity)contexte).redirectToAfficherAccountActivity(accounts.get(pos));
+                }
+
+            }catch (Exception e){
+                //
+            }
+
+
 
         });
 

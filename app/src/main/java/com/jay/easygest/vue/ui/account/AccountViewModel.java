@@ -10,26 +10,34 @@ import java.util.ArrayList;
 
 public class AccountViewModel extends ViewModel {
 
-    private MutableLiveData<ArrayList<AccountModel>> account_solde_ou_non ;
-    private  MutableLiveData<AccountModel> account;
+    private final MutableLiveData<ArrayList<AccountModel>> accounts;
+    private final MutableLiveData<AccountModel> account;
     private final MutableLiveData<Integer> totalaccountsclient ;
     private final MutableLiveData<Integer> totalrestesclient ;
 
     public AccountViewModel() {
         Accountcontroller accountcontroller = Accountcontroller.getAccountcontrolleurInstance(null);
-        this.account_solde_ou_non = new MutableLiveData<>();
-        this.account = new MutableLiveData<>();
-        this.account_solde_ou_non = accountcontroller.getMaccounts();
+        this.accounts = accountcontroller.getMaccounts();
         this.account = accountcontroller.getMaccount();
-        totalaccountsclient = accountcontroller.getRecapTaccounttClient();
+        totalaccountsclient = accountcontroller.getRecapTaccountClient();
         totalrestesclient = accountcontroller.getRecapTresteClient();
 
     }
 
-    public MutableLiveData<ArrayList<AccountModel>> getAccount_solde_ou_non() {
-        return account_solde_ou_non;
+    /**
+     *
+     * @return retourne la liste de tous les accounts soldes ou pas
+     */
+    public MutableLiveData<ArrayList<AccountModel>> getAccounts() {
+        return accounts;
     }
 
+
+
+    /**
+     *
+     * @return retour l'account sauvegardé
+     */
     public MutableLiveData<AccountModel> getAccount() {
         return account;
     }

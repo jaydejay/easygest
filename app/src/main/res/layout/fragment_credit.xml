@@ -81,18 +81,6 @@
                             android:maxWidth="488dp"
                             android:maxLength="20" />
 
-
-                        <EditText
-                            android:id="@+id/edittxtcreerarticle1"
-                            android:layout_width="250dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:autofillHints="@string/article_1"
-                            android:ems="10"
-                            android:layout_marginTop="25dp"
-                            android:gravity="center_horizontal|center_vertical"
-                            android:hint="@string/article_1"
-                            android:inputType="textPersonName" />
                         <Spinner
                             android:id="@+id/spinnerArticle1"
                             android:layout_width="250dp"
@@ -136,17 +124,6 @@
 
                         </LinearLayout>
 
-                        <EditText
-                            android:id="@+id/edittxtcreerarticle2"
-                            android:layout_width="250dp"
-                            android:layout_height="50dp"
-                            android:autofillHints="@string/article_2"
-                            android:ems="10"
-                            android:gravity="center_horizontal|center_vertical"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="25dp"
-                            android:hint="@string/article_2"
-                            android:inputType="textPersonName" />
                         <Spinner
                             android:id="@+id/spinnerArticle2"
                             android:layout_width="250dp"

@@ -9,13 +9,12 @@ import java.util.Date;
 public class AccountModel {
 
     private Integer id ;
-    private Integer clientid;
     private ClientModel client;
     private String codeclient;
     private String nomclient;
     private String prenomsclient;
-    private String article1;
-    private String article2;
+    private Article article1;
+    private Article article2;
     private Integer sommeaccount;
     private Integer versement;
     private Integer reste;
@@ -26,50 +25,35 @@ public class AccountModel {
     public AccountModel() {
     }
 
-    public AccountModel(String codeclient, String nomclient, String prenomsclient, String article1, String article2, Integer sommeaccount, Integer versement, Integer reste, Long dateaccount, Integer numeroaccount) {
+    public AccountModel(String codeclient, String nomclient, String prenomsclient, Article article1, Article article2, Integer versement, Long dateaccount, Integer numeroaccount) {
 
         this.codeclient = codeclient;
         this.nomclient = nomclient;
         this.prenomsclient = prenomsclient;
         this.article1 = article1;
         this.article2 = article2;
-        this.sommeaccount = sommeaccount;
         this.versement = versement;
-        this.reste = reste;
         this.dateaccount = dateaccount;
         this.numeroaccount = numeroaccount;
+        calculSommeAccount();
+        calculResteAccount();
     }
-    public AccountModel(Integer id,ClientModel client, String article1, String article2, int sommeaccount, int versement, int reste, long dateaccount, int numeroaccount) {
+
+    public AccountModel(Integer id,ClientModel client, Article article1, Article article2,int versement, long dateaccount, int numeroaccount) {
         this.id = id;
         this.client = client;
         this.article1 = article1;
         this.article2 = article2;
-        this.sommeaccount = sommeaccount;
         this.versement = versement;
-        this.reste = reste;
         this.dateaccount = dateaccount;
         this.numeroaccount = numeroaccount;
-    }
-
-    public AccountModel(Integer id,int clientid, String article1, String article2, int sommeaccount, int versement, int reste, long dateaccount, int numeroaccount) {
-        this.id = id;
-        this.clientid = clientid;
-        this.article1 = article1;
-        this.article2 = article2;
-        this.sommeaccount = sommeaccount;
-        this.versement = versement;
-        this.reste = reste;
-        this.dateaccount = dateaccount;
-        this.numeroaccount = numeroaccount;
+        calculSommeAccount();
+        calculResteAccount();
     }
 
 
-        public Integer getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public Integer getClientid() {
-        return clientid;
     }
 
     public ClientModel getClient() {
@@ -88,11 +72,11 @@ public class AccountModel {
         return prenomsclient;
     }
 
-    public String getArticle1() {
+    public Article getArticle1() {
         return article1;
     }
 
-    public String getArticle2() {
+    public Article getArticle2() {
         return article2;
     }
 
@@ -111,18 +95,23 @@ public class AccountModel {
     public Long getDateaccount() {
         return dateaccount;
     }
-
     public Integer getNumeroaccount() {
         return numeroaccount;
     }
-
-
     public Long getSoldedat() {
         return soldedat;
     }
 
     public void setSoldedat(long value) {
-        this.soldedat = value;
+        this.soldedat = getReste() == 0 ? value : 0L;
+    }
+
+    private void calculSommeAccount(){
+        this.sommeaccount = article1.getSomme() + article2.getSomme();
+    }
+
+    private void calculResteAccount(){
+        this.reste = sommeaccount - versement;
     }
 
     @NonNull

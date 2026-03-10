@@ -22,8 +22,8 @@ public class AccessLocalArticles {
     public static final String IMAGE = "image";
     public static final String ARTICLEID = "articleid";
     public static final String DESCRIPTION = "description";
-    private Context contexte;
-    private MySqliteOpenHelper accessBD;
+    private final Context contexte;
+    private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
 
 
@@ -106,7 +106,7 @@ public class AccessLocalArticles {
 
     /**
      *
-     * @return la liste des articles
+     * @return la liste des articles avec les images
      */
     public ArrayList<ArticlesModel> listeArticles(){
         ArrayList<ArticlesModel> articlesModels = new ArrayList<>();
@@ -131,6 +131,75 @@ public class AccessLocalArticles {
     }
 
 
+    /**
+     *
+     * @return la liste des articles sans les images
+     */
+    public ArrayList<ArticlesModel> listeArticlescredit(){
+        ArrayList<ArticlesModel> articlesModels = new ArrayList<>();
+        bd = accessBD.getReadableDatabase();
+        try {
+            String req = "select * from articles";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToFirst();
+            do{
+                ArticlesModel articlesModel = new ArticlesModel(cursor.getInt(0),cursor.getString(1), cursor.getInt(2),cursor.getInt(3), cursor.getString(4));
+                articlesModels.add(articlesModel);
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+//            bd.close();
+        } catch (Exception e) {
+            return articlesModels;
+        }
+        return articlesModels;
+    }
 
 
+    public ArticlesModel getArticle(String designation){
+        bd = accessBD.getReadableDatabase();
+        ArticlesModel articlesModel = null;
+        try {
+            String req = "select * from articles where " + DESIGNATION + "='"+designation+"'";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToLast();
+            if (!cursor.isAfterLast()) {
+                articlesModel = new ArticlesModel(cursor.getInt(0),cursor.getString(1), cursor.getInt(2),cursor.getInt(3), cursor.getString(4));
+
+            }
+           cursor.close();
+        } catch (Exception e) {
+            return articlesModel;
+        }
+        return articlesModel;
+    }
+
+    public int updateArticleStandard(ArticlesModel article, String champ, String valeur, String itemId) {
+        bd = accessBD.getWritableDatabase();
+        int rslt;
+        try{
+            ContentValues articles_cv = new ContentValues();
+            if (itemId.equals("article_popup_ajout_stock")){
+                int quantite = article.getQuantite()  + Integer.parseInt(valeur);
+                articles_cv.put(champ,quantite);
+            }
+
+            if (itemId.equals("article_popup_enlever_stock")){
+                int quantite = article.getQuantite() - Integer.parseInt(valeur);
+                articles_cv.put(champ,quantite);
+            }
+            if (itemId.equals("article_popup_modifier_prix")){
+                articles_cv.put(champ,Integer.parseInt(valeur));
+            }
+            if (itemId.equals("article_popup_modifier_designation")){
+                articles_cv.put(champ,valeur);
+            }
+
+            rslt = bd.update(TABLE_ARTICLES, articles_cv, ID+ "= ?", new String[] {String.valueOf(article.getId())});
+
+        }finally {
+            bd.close();
+        }
+        return rslt;
+    }
 }

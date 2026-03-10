@@ -4,18 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/layout_credit_divider_top"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="2"
+        android:layout_marginBottom="2dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <LinearLayout
+        android:id="@+id/ly_list_credits_client"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="3dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:padding="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/layout_credit_divider_top">
 
         <TextView
             android:id="@+id/txtlisteviewdate"
@@ -30,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="center_horizontal"/>
 
         <TextView
@@ -38,27 +50,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="center_horizontal"/>
-
-        <ImageButton
-            android:id="@+id/btnlisteviewmodif"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:contentDescription="@string/modifier"
-            app:srcCompat="@drawable/ic_menu_hive"/>
-
-        <ImageButton
-            android:id="@+id/btnlisteviewannuller"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:contentDescription="@string/annuller"
-            app:srcCompat="@drawable/ic_cancel_black" />
-
     </LinearLayout>
+    <View
+        android:id="@+id/divider_liste_credit_client"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="2"
+        android:layout_marginTop="2dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ly_list_credits_client"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

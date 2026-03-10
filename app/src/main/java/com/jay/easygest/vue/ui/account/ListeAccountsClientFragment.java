@@ -47,7 +47,7 @@ public class ListeAccountsClientFragment extends Fragment {
 
         this.clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         AccountViewModel accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        this.listeaccounts = accountViewModel.getAccount_solde_ou_non().getValue();
+        this.listeaccounts = accountViewModel.getAccounts().getValue();
         creerListe();
         return binding.getRoot();
     }

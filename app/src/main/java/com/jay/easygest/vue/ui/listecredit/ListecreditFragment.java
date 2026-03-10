@@ -54,8 +54,6 @@ public class ListecreditFragment extends Fragment {
         }catch (Exception e){
             //
         }
-
-
     }
 
     public  ArrayList<CreditModel> getFilter(String mtext){
@@ -117,5 +115,11 @@ public class ListecreditFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
     }
 }

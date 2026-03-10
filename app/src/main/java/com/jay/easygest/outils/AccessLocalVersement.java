@@ -19,24 +19,26 @@ public class AccessLocalVersement {
     public static final String VERSEMENTS = "versements";
     public static final String SOMMEVERSE = "sommeverse";
     public static final String RESTE = "reste";
-    public static final String CREDIT = "credit";
+
     public static final String CREDITID = "creditid";
     public static final String CLIENTID = "clientid";
     public static final String DATEVERSEMENT = "dateversement";
     public static final String ID = "id";
-    public static final String ARTICLE_1 = "article1";
-    public static final String ARTICLE_2 = "article2";
-    public static final String SOMMECREDIT = "sommecredit";
-    public static final String DATECREDIT = "datecredit";
-    public static final String NUMEROCREDIT = "numerocredit";
+//    public static final String CREDIT = "credit";
+//    public static final String ARTICLE_1 = "article1";
+//    public static final String ARTICLE_2 = "article2";
+//    public static final String SOMMECREDIT = "sommecredit";
+//    public static final String DATECREDIT = "datecredit";
+//    public static final String NUMEROCREDIT = "numerocredit";
     public static final String TABLE_CREDIT = "credit";
     public static final String SOLDEDAT = "soldedat";
 
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
-    private AccessLocalCredit accessLocalCredit;
+    private final AccessLocalCredit accessLocalCredit;
     private final AccessLocalClient accessLocalClient;
-    private Context contexte;
+    private final Context contexte;
+//    private Gson gson = new Gson();
 
 
     public AccessLocalVersement(Context contexte) {
@@ -63,60 +65,121 @@ public class AccessLocalVersement {
 
 
 
+//    public boolean ajouterversement(ClientModel client, long sommeverse,String dateversement)  {
+//
+//           bd = accessBD.getWritableDatabase();
+//           boolean succes = false;
+//           long date = MesOutils.convertStringToDate(dateversement).getTime();
+//        Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(contexte);
+//        ArrayList<CreditModel> creditsunclient =  creditcontrolleur.listecreditsclient(client);
+//
+//        if (!creditsunclient.isEmpty()){
+//            for (CreditModel credit : creditsunclient) {
+//
+//                bd.beginTransaction();
+//                try{
+//                    if (sommeverse > 0){
+//                        int somme_a_verse;
+//                        if (sommeverse >= credit.getReste()){
+//                            somme_a_verse = credit.getReste();
+//                        }else {
+//                            somme_a_verse = (int)sommeverse;
+//                        }
+////                        int reste = credit.getReste() - somme_a_verse;
+//                        int total_versements = credit.getVersement() + somme_a_verse;
+////                        long date_de_solde;
+////                        if (reste == 0){
+////                            date_de_solde = date;
+////                        }else {date_de_solde = 0L;}
+//                        credit.setSoldedat(date);
+//                        ContentValues credit_cv = new ContentValues();
+////                        credit_cv.put(ID,credit.getId());
+////                        credit_cv.put(CLIENTID,client.getId());
+////                        credit_cv.put(ARTICLE_1,gson.toJson(credit.getArticle1()));
+////                        credit_cv.put(ARTICLE_2,gson.toJson(credit.getArticle2()));
+////                        credit_cv.put(SOMMECREDIT,credit.getSommecredit());
+//                        credit_cv.put(VERSEMENTS,total_versements);
+//                        credit_cv.put(RESTE,credit.getReste());
+////                        credit_cv.put(DATECREDIT,credit.getDatecredit());
+////                        credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
+//                        credit_cv.put(SOLDEDAT,credit.getSoldedat());
+//
+//                        bd.insertOrThrow(TABLE_VERSEMENT,null,creerVersement( somme_a_verse,credit.getId(),client.getId(),date));
+//                        bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=?", new String[] {String.valueOf(credit.getId())},1);
+//                        sommeverse = sommeverse - somme_a_verse;
+//                        bd.setTransactionSuccessful();
+//                        succes =true;
+//                    }
+//                }finally {
+//                    bd.endTransaction();
+//                }
+//
+//            }
+//
+//        }
+//         creditcontrolleur.setRecapTresteClient(client);
+//        return succes;
+//    }
+
+
+    /**
+     * permet de faire un verment pour un credit
+     * @param client le client qui fait le versement
+     * @param sommeverse la somme versée
+     * @param dateversement la date du versement
+     * @return true si le versement s'est deroulé sans probleme sinon false
+     */
     public boolean ajouterversement(ClientModel client, long sommeverse,String dateversement)  {
 
-           bd = accessBD.getWritableDatabase();
-           boolean succes = false;
-           long date = MesOutils.convertStringToDate(dateversement).getTime();
+        bd = accessBD.getWritableDatabase();
+        boolean succes = false;
+        long date = MesOutils.convertStringToDate(dateversement).getTime();
         Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(contexte);
         ArrayList<CreditModel> creditsunclient =  creditcontrolleur.listecreditsclient(client);
-
-        if (creditsunclient.size() > 0){
-            for (CreditModel credit : creditsunclient) {
-
-                bd.beginTransaction();
-                try{
+        try{
+            bd.beginTransaction();
+            if (!creditsunclient.isEmpty()){
+                for (CreditModel credit : creditsunclient) {
                     if (sommeverse > 0){
-                        int somme_a_verse;
-                        if (sommeverse >= credit.getReste()){
-                            somme_a_verse = credit.getReste();
-                        }else {
-                            somme_a_verse = (int)sommeverse;
-                        }
-                        int reste = credit.getReste() - somme_a_verse;
-                        int versements = credit.getVersement() + somme_a_verse;
-                        long date_de_solde;
-                        if (reste == 0){
-                            date_de_solde = date;
-                        }else {date_de_solde = 0L;}
-                        credit.setSoldedat(date_de_solde);
-                        ContentValues credit_cv = new ContentValues();
-                        credit_cv.put(ID,credit.getId());
-                        credit_cv.put(CLIENTID,client.getId());
-                        credit_cv.put(ARTICLE_1,credit.getArticle1());
-                        credit_cv.put(ARTICLE_2,credit.getArticle2());
-                        credit_cv.put(SOMMECREDIT,credit.getSommecredit());
-                        credit_cv.put(VERSEMENTS,versements);
-                        credit_cv.put(RESTE,reste);
-                        credit_cv.put(DATECREDIT,credit.getDatecredit());
-                        credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
-                        credit_cv.put(SOLDEDAT,date_de_solde);
-
+//                        int somme_a_verse;
+//                        if (sommeverse >= credit.getReste()){
+                        int somme_a_verse = sommeverse >= credit.getReste() ? credit.getReste() : (int)sommeverse ;
+//                        }else {
+//                            somme_a_verse = (int)sommeverse;
+//                        }
+                        int total_versements = credit.getVersement() + somme_a_verse;
+                        credit.setSoldedat(date);
+                        ContentValues credit_cv = getCreditContentValues(credit, total_versements);
                         bd.insertOrThrow(TABLE_VERSEMENT,null,creerVersement( somme_a_verse,credit.getId(),client.getId(),date));
-                        bd.replaceOrThrow(CREDIT,null,credit_cv);
+                        bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=?", new String[] {String.valueOf(credit.getId())},1);
                         sommeverse = sommeverse - somme_a_verse;
                         bd.setTransactionSuccessful();
-                        succes =true;
+
                     }
-                }finally {
-                    bd.endTransaction();
                 }
-
+                succes = true;
             }
-
+        }finally {
+            bd.endTransaction();
         }
-         creditcontrolleur.setRecapTresteClient(client);
+        creditcontrolleur.setRecapTresteClient(client);
         return succes;
+    }
+
+    private ContentValues getCreditContentValues(CreditModel credit, int totalVersements) {
+
+        ContentValues credit_cv = new ContentValues();
+//                        credit_cv.put(ID,credit.getId());
+//                        credit_cv.put(CLIENTID,client.getId());
+//                        credit_cv.put(ARTICLE_1,gson.toJson(credit.getArticle1()));
+//                        credit_cv.put(ARTICLE_2,gson.toJson(credit.getArticle2()));
+//                        credit_cv.put(SOMMECREDIT,credit.getSommecredit());
+                        credit_cv.put(VERSEMENTS,totalVersements);
+                        credit_cv.put(RESTE,credit.getReste());
+//                        credit_cv.put(DATECREDIT,credit.getDatecredit());
+//                        credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
+                        credit_cv.put(SOLDEDAT,credit.getSoldedat());
+        return credit_cv;
     }
 
     /**
@@ -129,35 +192,33 @@ public class AccessLocalVersement {
         bd = accessBD.getWritableDatabase();
         ContentValues cv_versement = new ContentValues();
         ContentValues credit_cv = new ContentValues();
-
         bd.beginTransaction();
         try{
-            cv_versement.put(ID,versement_a_modifier.getId());
+//            cv_versement.put(ID,versement_a_modifier.getId());
             cv_versement.put(SOMMEVERSE,nouvellesommeverse);
-            cv_versement.put(CREDITID,credit.getId());
-            cv_versement.put(CLIENTID,versement_a_modifier.getClient().getId());
+//            cv_versement.put(CREDITID,credit.getId());
+//            cv_versement.put(CLIENTID,versement_a_modifier.getClient().getId());
             cv_versement.put(DATEVERSEMENT,dateversement);
+//            int reste = credit.getSommecredit() - nouveau_total_versement;
+//            long date_de_solde;
+//            if (reste == 0){
+//                date_de_solde = dateversement;
+//            }else {date_de_solde = 0L;}
+            credit.setSoldedat(dateversement);
 
-            int reste = credit.getSommecredit() - nouveau_total_versement;
-            long date_de_solde;
-            if (reste == 0){
-                date_de_solde = dateversement;
-            }else {date_de_solde = 0L;}
-            credit.setSoldedat(date_de_solde);
-
-            credit_cv.put(ID,credit.getId());
-            credit_cv.put(CLIENTID,credit.getClientid());
-            credit_cv.put(ARTICLE_1,credit.getArticle1());
-            credit_cv.put(ARTICLE_2,credit.getArticle2());
-            credit_cv.put(SOMMECREDIT,credit.getSommecredit());
+//            credit_cv.put(ID,credit.getId());
+//            credit_cv.put(CLIENTID,credit.getClient().getId());
+//            credit_cv.put(ARTICLE_1,gson.toJson(credit.getArticle1()));
+//            credit_cv.put(ARTICLE_2,credit.getArticle2());
+//            credit_cv.put(SOMMECREDIT,credit.getSommecredit());
             credit_cv.put(VERSEMENTS,nouveau_total_versement);
-            credit_cv.put(RESTE,reste);
-            credit_cv.put(DATECREDIT,credit.getDatecredit());
-            credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
-            credit_cv.put(SOLDEDAT,date_de_solde);
+            credit_cv.put(RESTE,credit.getReste());
+//            credit_cv.put(DATECREDIT,credit.getDatecredit());
+//            credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
+            credit_cv.put(SOLDEDAT,credit.getSoldedat());
 
-            bd.replaceOrThrow(TABLE_VERSEMENT, null, cv_versement);
-            bd.replaceOrThrow(CREDIT,null,credit_cv);
+            bd.updateWithOnConflict(TABLE_VERSEMENT, cv_versement, ID + "=?", new String[] {String.valueOf(versement_a_modifier.getId())},1 );
+            bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=?", new String[] {String.valueOf(credit.getId())},1);
             bd.setTransactionSuccessful();
             success= true;
         }catch (Exception e){success = false;}
@@ -169,31 +230,29 @@ public class AccessLocalVersement {
     }
 
     public boolean annullerversement(VersementsModel versement,CreditModel credit){
-
+        boolean success;
         bd = accessBD.getWritableDatabase();
         long ancienne_sommeversee = versement.getSommeverse();
-        boolean success;
-
         long nouveau_versement_du_credit = credit.getVersement() - ancienne_sommeversee;
-        long reste = credit.getSommecredit() - nouveau_versement_du_credit;
+//        long reste = credit.getSommecredit() - nouveau_versement_du_credit;
 
         credit.setSoldedat(0L);
         ContentValues credit_cv = new ContentValues();
-        credit_cv.put(ID,credit.getId());
-        credit_cv.put(CLIENTID,credit.getClientid());
-        credit_cv.put(ARTICLE_1,credit.getArticle1());
-        credit_cv.put(ARTICLE_2,credit.getArticle2());
-        credit_cv.put(SOMMECREDIT,credit.getSommecredit());
+//        credit_cv.put(ID,credit.getId());
+//        credit_cv.put(CLIENTID,credit.getClientid());
+//        credit_cv.put(ARTICLE_1,credit.getArticle1());
+//        credit_cv.put(ARTICLE_2,credit.getArticle2());
+//        credit_cv.put(SOMMECREDIT,credit.getSommecredit());
         credit_cv.put(VERSEMENTS,nouveau_versement_du_credit);
-        credit_cv.put(RESTE,reste);
-        credit_cv.put(DATECREDIT,credit.getDatecredit());
-        credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
-        credit_cv.put(SOLDEDAT,0L);
+        credit_cv.put(RESTE,credit.getReste());
+//        credit_cv.put(DATECREDIT,credit.getDatecredit());
+//        credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
+        credit_cv.put(SOLDEDAT,credit.getSoldedat());
 
         bd.beginTransaction();
         try {
             bd.delete(TABLE_VERSEMENT,ID+"=?",new String[]{String.valueOf(versement.getId())});
-            bd.replaceOrThrow(TABLE_CREDIT,null,credit_cv);
+            bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=?", new String[] {String.valueOf(credit.getId())},1);
             bd.setTransactionSuccessful();
             success = true;
         }catch (Exception e){
@@ -265,7 +324,7 @@ public class AccessLocalVersement {
         VersementsModel versement = null;
         try {
             bd = accessBD.getReadableDatabase();
-            String req = "select * from versement where " + ID + "="+versementid+"";
+            String req = "select * from versement where " + ID + "="+versementid;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {

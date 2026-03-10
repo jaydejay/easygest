@@ -1,9 +1,11 @@
 package com.jay.easygest.model;
 
+import androidx.annotation.NonNull;
+
 public class CleModel {
 
     private int id ;
-    private String cle;
+    private final String cle;
 
     public CleModel(String cle) {
         this.cle = cle;
@@ -22,6 +24,7 @@ public class CleModel {
         return id;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "cle : " + cle ;

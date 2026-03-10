@@ -26,7 +26,7 @@ public class AccessLocalImage {
         bd = accessBD.getReadableDatabase();
         ArrayList<Image> images = new ArrayList<>();
             try {
-                String req = "select * from image where " + ARTICLEID + "="+articleid+"";
+                String req = "select * from image where " + ARTICLEID + "="+articleid;
                 Cursor cursor = bd.rawQuery(req, null);
                 cursor.moveToFirst();
                 do {
@@ -35,12 +35,9 @@ public class AccessLocalImage {
                 }while (cursor.moveToNext());
                 cursor.close();
             } catch (Exception e) {
-                e.printStackTrace();
-//                bd.close();
+               return images;
             }
-
         return images;
-
     }
 
     public int updateImageInt(Image newImage) {

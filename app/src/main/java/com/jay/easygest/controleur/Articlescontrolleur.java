@@ -12,9 +12,9 @@ import java.util.ArrayList;
 public class Articlescontrolleur {
     private static Articlescontrolleur articlescontrolleurInstance = null;
     private static AccessLocalArticles accessLocalArticles;
-    private  MutableLiveData<ArticlesModel> marticle = new MutableLiveData<>() ;
-    private  MutableLiveData<ArrayList<ArticlesModel>> marticles = new MutableLiveData<>();
-    private  MutableLiveData<ArrayList<ArticlesModel>> adaptermarticles = new MutableLiveData<>();
+    private final MutableLiveData<ArticlesModel> marticle = new MutableLiveData<>() ;
+    private final MutableLiveData<ArrayList<ArticlesModel>> marticles = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<ArticlesModel>> marticlescredit = new MutableLiveData<>();
 
 
     public Articlescontrolleur() {
@@ -38,21 +38,28 @@ public class Articlescontrolleur {
         this.marticle.setValue(marticle);
     }
 
-    public MutableLiveData<ArrayList<ArticlesModel>> getMarticles() {
-        return marticles;
-    }
 
     public void setMarticles(ArrayList<ArticlesModel> marticles) {
         this.marticles.setValue(marticles);
     }
-
-    public MutableLiveData<ArrayList<ArticlesModel>> getAdaptermarticles() {
-        return adaptermarticles;
+    public MutableLiveData<ArrayList<ArticlesModel>> getMarticles() {
+        return marticles;
     }
 
-    public void setAdaptermarticles(ArrayList<ArticlesModel> articles) {
-        this.adaptermarticles.setValue(articles);
+    public void setMarticlescredit(ArrayList<ArticlesModel> marticles) {
+        this.marticlescredit.setValue(marticles);
     }
+    public MutableLiveData<ArrayList<ArticlesModel>> getMarticlesCredit() {
+        return marticlescredit;
+    }
+
+//    public MutableLiveData<ArrayList<ArticlesModel>> getAdaptermarticles() {
+//        return adaptermarticles;
+//    }
+//
+//    public void setAdaptermarticles(ArrayList<ArticlesModel> articles) {
+//        this.adaptermarticles.setValue(articles);
+//    }
 
     public ArticlesModel insertArticle(ArticlesModel article){
         return accessLocalArticles.insertArticle(article);
@@ -74,4 +81,16 @@ public class Articlescontrolleur {
         this.setMarticles(liste_articles);
     }
 
+    public void listeArticlescredit(){
+        ArrayList<ArticlesModel> liste_articles_credit =  accessLocalArticles.listeArticlescredit();
+        this.setMarticlescredit(liste_articles_credit);
+    }
+
+    public ArticlesModel getArticleByDesignation(String designation){
+      return   accessLocalArticles.getArticle(designation);
+    }
+
+    public int modifierArticle(ArticlesModel article, String champ, String valeur, String itemId) {
+        return accessLocalArticles.updateArticleStandard(article,champ,valeur,itemId);
+    }
 }

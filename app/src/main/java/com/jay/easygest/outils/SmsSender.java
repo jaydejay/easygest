@@ -57,7 +57,8 @@ public class SmsSender {
                     if(success){
                         Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
                         intent_to_aff.putExtra("smssentmessge","message non envoye,un probleme de reseau ou vos sms sont épuisés");
-                        startActivity(context, intent_to_aff, null);
+//                        startActivity(context, intent_to_aff, null);
+                        context.startActivity(intent_to_aff);
                     }
                 }
 
@@ -76,8 +77,7 @@ public class SmsSender {
                 int sms_id  =intent.getIntExtra("sms_id",1);
                 if (getResultCode() == Activity.RESULT_OK && sms.getSmsid() == sms_id ) {
                     intent_to.putExtra("smssentmessge"," client notifier");
-
-                    startActivity(context, intent_to, null);
+                    context.startActivity(intent_to);
                 }
 
                 if (getResultCode() == SmsManager.RESULT_ERROR_GENERIC_FAILURE && sms.getSmsid() == sms_id) {
@@ -85,7 +85,8 @@ public class SmsSender {
 //                    boolean success = smsSendercontrolleur.insert(sms);
 //                    if(success){
                         intent_to.putExtra("smssentmessge","message non envoye,un probleme de reseau ou vos sms sont épuisés");
-                        startActivity(context, intent_to, null);
+//                        startActivity(context, intent_to, null);
+                        context.startActivity(intent_to);
 //                    }
                 }
 

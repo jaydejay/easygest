@@ -8,65 +8,49 @@ import java.util.Date;
 
 public class CreditModel {
     private Integer id ;
-     private Integer clientid;
-     private ClientModel client;
+    private ClientModel client;
     private String codeclient;
     private String nomclient;
     private String prenomsclient;
-    private String article1;
-    private String article2;
+    private Article article1;
+    private Article article2;
     private Integer sommecredit;
     private Integer versement;
     private Integer reste;
     private Long datecredit;
     private Long soldedat;
-    private Integer numerocredit;
+    private  Integer numerocredit;
 
+    public CreditModel() {}
 
-    public CreditModel(Integer id,Integer clientid,String article1, String article2, Integer sommecredit, Integer versement, Integer reste, Long datecredit, Integer numerocredit) {
-        this.id = id;
-        this.clientid = clientid;
-        this.article1 = article1;
-        this.article2 = article2;
-        this.sommecredit = sommecredit;
-        this.versement = versement;
-        this.reste = reste;
-        this.datecredit = datecredit;
-        this.numerocredit = numerocredit;
-    }
-
-    public CreditModel(String codeclient,String nomclient,String prenomsclient,String article1, String article2, Integer sommecredit, Integer versement, Integer reste, Long datecredit, Integer numerocredit) {
+    public CreditModel(String codeclient, String nomclient, String prenomsclient, Article article1, Article article2, Integer versement, Long datecredit, Integer numerocredit) {
 
         this.codeclient = codeclient;
         this.nomclient = nomclient;
         this.prenomsclient = prenomsclient;
         this.article1 = article1;
         this.article2 = article2;
-        this.sommecredit = sommecredit;
         this.versement = versement;
-        this.reste = reste;
         this.datecredit = datecredit;
         this.numerocredit = numerocredit;
+        calculSommeCredit();
+        calculResteCredit();
     }
 
-    public CreditModel(Integer id,ClientModel client, String article1, String article2, int sommecredit, int versement, int reste, long datecredit, int numerocredit) {
+    public CreditModel(Integer id, ClientModel client, Article article1, Article article2, int versement, long datecredit, int numerocredit) {
         this.id = id;
         this.client = client;
         this.article1 = article1;
         this.article2 = article2;
-        this.sommecredit = sommecredit;
         this.versement = versement;
-        this.reste = reste;
         this.datecredit = datecredit;
         this.numerocredit = numerocredit;
+        calculSommeCredit();
+        calculResteCredit();
     }
 
     public Integer getId() {
         return id;
-    }
-
-    public Integer getClientid() {
-        return clientid;
     }
 
     public ClientModel getClient() {
@@ -85,49 +69,63 @@ public class CreditModel {
         return prenomsclient;
     }
 
-    public String getArticle1() {
+    public Article getArticle1() {
         return article1;
     }
 
-    public String getArticle2() {
+    public Article getArticle2() {
         return article2;
-    }
-
-    public Integer getSommecredit() {
-        return sommecredit;
     }
 
     public Integer getVersement() {
         return versement;
     }
 
-    public Integer getReste() {
-        return reste;
-    }
-
     public Long getDatecredit() {
         return datecredit;
     }
 
+    public void setSoldedat(long value) {
+        this.soldedat = getReste() == 0 ? value : 0L;
+    }
     public Long getSoldedat() {
         return soldedat;
     }
-
-    public void setSoldedat(long value) {
-
-        this.soldedat = value;
-
-    }
-
     public Integer getNumerocredit() {
         return numerocredit;
+    }
+
+    private void calculSommeCredit(){
+        this.sommecredit = article1.getSomme() + article2.getSomme();
+    }
+
+    public void setSommecredit(Integer sommecredit) {
+        this.sommecredit = sommecredit;
+    }
+
+
+    public Integer getSommecredit() {
+        return sommecredit;
+    }
+
+    private void calculResteCredit(){
+        this.reste = sommecredit - versement;
+    }
+
+    public void setReste(Integer reste) {
+        this.reste = reste;
+    }
+
+
+    public Integer getReste() {
+        return reste;
     }
 
 
 
     @NonNull
     public String toString() {
-        return getCodeclient()+" "+getNomclient()+" "+getPrenomsclient()+"\n"
+        return getCodeclient()+" "+ getNomclient()+" "+getPrenomsclient()+"\n"
                 +"credit du "+ MesOutils.convertDateToString(new Date(datecredit));
     }
 

@@ -9,10 +9,10 @@ public class UserModel {
     private Integer id;
     private String username ;
     private String password;
-    private Date dateInscription;
-    private Integer status;
-    private boolean actif;
-    private Integer compteur;
+    private final Date dateInscription;
+    private final Integer status;
+    private final boolean actif;
+    private final Integer compteur;
 
     public UserModel( Integer id, String username, String password, Date dateInscription, Integer status,boolean actif, Integer compteur) {
         this.id = id;

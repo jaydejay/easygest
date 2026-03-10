@@ -104,10 +104,10 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(createTable_account);
             String createTable_articles = "create table " + TABLE_ARTICLES + " ("
                     + "id Integer primary key,"
-                    + "designation Text not null,"
+                    + "designation Text unique ,"
                     + "prix Integer not null,"
                     + "quantite Integer not null,"
-                    + "description Text)";
+                    + "description Text )";
             sqLiteDatabase.execSQL(createTable_articles);
             String createTable_credit = "create table " + TABLE_CREDIT + "("
                     + "id Integer primary key autoincrement,"
@@ -197,12 +197,16 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                 if (oldversion == 1 ){
                     version1To2(sqLiteDatabase);
                     version2To3(sqLiteDatabase);
+//                    version3To4(sqLiteDatabase);
                 }
 
             if (oldversion == 2 ){
                 version2To3(sqLiteDatabase);
+//                version3To4(sqLiteDatabase);
             }
-
+//            if (oldversion == 3 ){
+//                version3To4(sqLiteDatabase);
+//            }
 
             sqLiteDatabase.setTransactionSuccessful();
 
@@ -248,6 +252,40 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         cursor.close();
 
     }
+
+//    public void version3To4(SQLiteDatabase sqLiteDatabase){
+//        //renommage de la table articles
+//        sqLiteDatabase.execSQL("ALTER TABLE articles RENAME TO articlesold");
+//        //creation d'une nouvelle table articles
+//        String createTable_articles = "create table " + TABLE_ARTICLES + " ("
+//                + "id Integer primary key,"
+//                + "designation Text unique not null,"
+//                + "prix Integer not null,"
+//                + "quantite Integer not null,"
+//                + "description Text not null)";
+//
+//        sqLiteDatabase.execSQL(createTable_articles);
+//
+//        //recuperer les donnees de la table articlesold et les inserer dans la nouvelle table
+//        Cursor cursor = sqLiteDatabase.query("articlesold",null,null,null,"designation",null,null);
+//
+//        if (cursor.moveToFirst()){
+//            do {
+//                String designation = cursor.getString(cursor.getColumnIndexOrThrow("designation"));
+//                String description =  cursor.getString(cursor.getColumnIndexOrThrow("description"));
+//                int prix = cursor.getInt(cursor.getColumnIndexOrThrow("prix"));
+//                int quantite = cursor.getInt(cursor.getColumnIndexOrThrow("quantite"));
+//                ContentValues cv = new ContentValues();
+//                cv.put("designation",designation);
+//                cv.put("description",description);
+//                cv.put("prix",prix);
+//                cv.put("quantite",quantite);
+//                sqLiteDatabase.insert(TABLE_ARTICLES,null,cv);
+//            }while (cursor.moveToNext());
+//            cursor.close();
+//            sqLiteDatabase.execSQL("drop table articlesold");
+//        }
+//    }
 
     @NonNull
     private ContentValues getUsedkeyCv(String cle) {

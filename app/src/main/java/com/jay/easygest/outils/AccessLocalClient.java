@@ -40,7 +40,7 @@ public class AccessLocalClient {
         this.accessBD = new MySqliteOpenHelper(contexte, null);
     }
 
-    public ContentValues ajouterClient(String codeclient,String nom,String prenoms, String telephone,Integer nbrcredit,Integer totalcredit, Integer nbraccount,Integer totalaccount) {
+    public ContentValues ajoutClientContentValue(String codeclient, String nom, String prenoms, String telephone, Integer nbrcredit, Integer totalcredit, Integer nbraccount, Integer totalaccount) {
         ContentValues cv= new ContentValues();
         cv.put(CODECLIENT,codeclient);
         cv.put(NOM,nom);

@@ -65,8 +65,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
     }
 
     public void afficherCredit(){
-        Article article1 = new Gson().fromJson(credit.getArticle1(), Article.class);
-        Article article2 = new Gson().fromJson(credit.getArticle2(), Article.class);
+        Article article1 = credit.getArticle1();
+        Article article2 =credit.getArticle2();
         binding.modifcredrnom.setText(client.getNom());
         binding.modifcredprenoms.setText(client.getPrenoms());
         binding.modifcredcodeclt.setText(client.getCodeclient());
@@ -86,12 +86,12 @@ public class ModifiercreditActivity extends AppCompatActivity {
         binding.btnmodifcredit.setOnClickListener(view -> {
             binding.btnmodifcredit.setEnabled(false);
             String designationarticle1 = binding.modifcredarticle1.getText().toString().trim();
-            String article1somme = binding.modifcredarticle1somme.getText().toString().trim();
-            String article1qte = binding.modifcredNbrarticle1.getText().toString().trim();
+            String prix_article1 = binding.modifcredarticle1somme.getText().toString().trim();
+            String qte_article1 = binding.modifcredNbrarticle1.getText().toString().trim();
             String date = binding.modifcredDate.getText().toString().trim();
             Date date_credit = MesOutils.convertStringToDate(date);
 
-            if ( designationarticle1.isEmpty() || article1somme.isEmpty() ||article1qte.isEmpty()
+            if ( designationarticle1.isEmpty() || prix_article1.isEmpty() ||qte_article1.isEmpty()
                     ||date.isEmpty() )
             {
                 Toast.makeText(ModifiercreditActivity.this, "remplissez les champs obligatoires", Toast.LENGTH_SHORT).show();
@@ -114,8 +114,8 @@ public class ModifiercreditActivity extends AppCompatActivity {
                     binding.btnmodifcredit.setEnabled(true);
                 } else {
 
-                    int sommearticle1 =Integer.parseInt(article1somme) ;
-                    int nbrarticle1 = Integer.parseInt(article1qte);
+                    int sommearticle1 =Integer.parseInt(prix_article1) ;
+                    int nbrarticle1 = Integer.parseInt(qte_article1);
 
                     String designation_article2 ;
                     String designationarticle2 ;
@@ -143,9 +143,9 @@ public class ModifiercreditActivity extends AppCompatActivity {
                     nbrarticle2 = Integer.parseInt(nbr_article2);
                     long datecredit = date_credit.getTime();
 
-                    Article c_article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
-                    Article c_article2 =  new Article(designationarticle2, sommearticle2,nbrarticle2);
-                    int sommecredit = c_article1.getSomme() + c_article2.getSomme();
+                    Article article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
+                    Article article2 =  new Article(designationarticle2, sommearticle2,nbrarticle2);
+                    int sommecredit = article1.getSomme() + article2.getSomme();
 
                     int versement;
 
@@ -157,16 +157,16 @@ public class ModifiercreditActivity extends AppCompatActivity {
 
                     int reste = sommecredit - versement;
 
-                    String article1 = new Gson().toJson(c_article1);
-                    String article2 = new Gson().toJson(c_article2);
+//                    Article article1 = c_article1;
+//                    Article article2 = c_article2;
 
-                    CreditModel nouveau_credit = new CreditModel(credit.getId(),client.getId(),article1,article2,sommecredit,versement,reste,datecredit,credit.getNumerocredit());
+                    CreditModel nouveau_credit = new CreditModel(credit.getId(),client,article1,article2,versement,datecredit,credit.getNumerocredit());
                     int ancienne_somme_credit = credit.getSommecredit();
                     boolean success = creditcontrolleur.modifierCredit(nouveau_credit, client,ancienne_somme_credit);
                     if (success) {
                         ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                         CreditModel credit_modifier = creditViewModel.getCredit().getValue();
-                        CreditModel creditModel = new CreditModel(Objects.requireNonNull(credit_modifier).getId(),clientModel,credit_modifier.getArticle1(),credit_modifier.getArticle2(),credit_modifier.getSommecredit(),credit_modifier.getVersement(),credit_modifier.getReste(),credit_modifier.getDatecredit(),credit_modifier.getNumerocredit());
+                        CreditModel creditModel = new CreditModel(credit_modifier.getId(),clientModel,credit_modifier.getArticle1(),credit_modifier.getArticle2(),credit_modifier.getVersement(),credit_modifier.getDatecredit(),credit_modifier.getNumerocredit());
                         creditViewModel.getCredit().setValue(creditModel);
                         clientViewModel.getClient().setValue(clientModel);
 

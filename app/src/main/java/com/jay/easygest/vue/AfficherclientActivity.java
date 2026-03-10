@@ -1,17 +1,14 @@
 package com.jay.easygest.vue;
 
-import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
-
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jay.easygest.R;
@@ -22,15 +19,11 @@ import com.jay.easygest.controleur.Versementacccontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityAfficherclientBinding;
 import com.jay.easygest.model.AccountModel;
-import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
-import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.VersementsModel;
-import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
-import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
@@ -52,8 +45,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     private VersementViewModel versementViewModel;
     private AccountViewModel accountViewModel;
     private ClientModel client;
-    private AppKessModel appKessModel;
-    private SmsSender smsSender;
     private int id ;
 
 
@@ -62,7 +53,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAfficherclientBinding.inflate(getLayoutInflater());
         sessionManagement = new SessionManagement(this);
-        smsSender = new SmsSender(this, this);
+//        SmsSender smsSender = new SmsSender(this, this);
         clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(this);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         accountcontrolleur = Accountcontroller.getAccountcontrolleurInstance(this);
@@ -73,8 +64,6 @@ public class AfficherclientActivity extends AppCompatActivity {
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         CreditViewModel creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
-        appKessModel = accessLocalAppKes.getAppkes();
         client = clientViewModel.getClient().getValue();
         try {
             creditcontrolleur.setRecapTresteClient(client);
@@ -98,7 +87,7 @@ public class AfficherclientActivity extends AppCompatActivity {
             int TaccountClient = 0;
             int TresteAccClient =0;
 
-            if (accountViewModel.getTotalaccountsclient() != null){
+            if (accountViewModel.getTotalaccountsclient().getValue() != null) {
                 TaccountClient = accountViewModel.getTotalaccountsclient().getValue();
             }
 
@@ -279,26 +268,11 @@ public class AfficherclientActivity extends AppCompatActivity {
             binding.btnAfClientSup.setEnabled(false);
             ArrayList<CreditModel>  credits = creditcontrolleur.listecreditsclient(client);
              accountcontrolleur.listeAccountsClient(client);
-             ArrayList<AccountModel> accounts = accountViewModel.getAccount_solde_ou_non().getValue();
+             ArrayList<AccountModel> accounts = accountViewModel.getAccounts().getValue();
 
-             if (credits.size() == 0 && Objects.requireNonNull(accounts).size() == 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("supprimer un client");
-                builder.setMessage("vous etes sur le point de supprimer le client, son compte seras supprimé");
-
-                builder.setPositiveButton("oui", (dialog, which) -> {
-
-                    boolean success = clientcontrolleur.supprimerclient(client);
-                    if (success){
-                        Intent intent = new Intent(AfficherclientActivity.this, GestionActivity.class);
-                        startActivity(intent);
-                    }else {Toast.makeText(this, "echec de la suppression", Toast.LENGTH_LONG).show();
-                        binding.btnAfClientSup.setEnabled(true);}
-
-                });
-                builder.setNegativeButton("non", (dialog, which) -> binding.btnAfClientSup.setEnabled(true));
-
-                builder.create().show();
+             if (credits.isEmpty() && Objects.requireNonNull(accounts).isEmpty()) {
+                 AlertDialog.Builder builder = getAfficherClientBuilder(client);
+                 builder.create().show();
             }else {
                  Toast.makeText(this, "impossible de supprimer le client il a un credit ou un account en cours", Toast.LENGTH_LONG).show();
                  binding.btnAfClientSup.setEnabled(true);
@@ -309,14 +283,32 @@ public class AfficherclientActivity extends AppCompatActivity {
 
     }
 
+    @NonNull
+    private AlertDialog. Builder getAfficherClientBuilder(ClientModel client) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("supprimer un client");
+        builder.setMessage("vous etes sur le point de supprimer le client, son compte seras supprimé");
+
+        builder.setPositiveButton("oui", (dialog, which) -> {
+
+            boolean success = clientcontrolleur.supprimerclient(client);
+            if (success){
+                Intent intent = new Intent(AfficherclientActivity.this, GestionActivity.class);
+                startActivity(intent);
+            }else {Toast.makeText(this, "echec de la suppression", Toast.LENGTH_LONG).show();
+                binding.btnAfClientSup.setEnabled(true);}
+
+        });
+        builder.setNegativeButton("non", (dialog, which) -> binding.btnAfClientSup.setEnabled(true));
+        return builder;
+    }
+
 
     /**
      * affiche la liste des accounts en cours d'un client
      */
     public void afficherListeAccounts(){
-
         binding.afClientListeAccounts.setOnClickListener(view -> {
-
             id = R.id.af_client_liste_accounts;
             accountcontrolleur.listeAccountsClient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
@@ -332,11 +324,8 @@ public class AfficherclientActivity extends AppCompatActivity {
      * affiche le formulaire pour faire un versement account
      */
     public void afficherAjouterVersementacc(){
-
         binding.afClientTextAccounts.setOnClickListener(view -> {
-
             id = R.id.af_client_text_accounts;
-
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","versement d'account");
@@ -363,9 +352,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
     public void afficherListeAccountsoldes(){
-
         binding.afClientListeHistoAccounts.setOnClickListener(view -> {
-
             id = R.id.af_client_liste_histo_accounts;
             accountcontrolleur.listeAccountsoldeClient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
@@ -392,8 +379,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void afficherListeCredits(){
 
         binding.afClientListeCredits.setOnClickListener(view -> {
-            int admenu = 1;
-            creditcontrolleur.setIdmenu(admenu);
             id = R.id.af_client_liste_credits;
             creditcontrolleur.listecreditsclient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
@@ -411,9 +396,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void afficherAjouterVersement(){
 
         binding.afClientTextVersements.setOnClickListener(view -> {
-
             id = R.id.af_client_text_versements;
-
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","versement credit");
@@ -433,7 +416,6 @@ public class AfficherclientActivity extends AppCompatActivity {
             ArrayList<VersementsModel> liste_versements =  versementViewModel.getVersementsClient(client);
             versementViewModel.getMversements().setValue(liste_versements);
             id = R.id.af_client_liste_versements;
-
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
             intent.putExtra("fragmentid",id);
             intent.putExtra("titre","liste des versements");
@@ -446,8 +428,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void afficherListeCreditsoldes(){
 
         binding.afClientListeHistoCredits.setOnClickListener(view -> {
-            int admenu = 0;
-            creditcontrolleur.setIdmenu(admenu);
             id = R.id.af_client_liste_histo_credits;
             creditcontrolleur.listecreditsSoldesclient(client);
             Intent intent = new Intent(AfficherclientActivity.this, AfficherCreditsClientActivity.class);
@@ -467,73 +447,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     }
 
 
-    public void redirectToModifiercreditActivity(CreditModel credit){
-        creditcontrolleur.setCredit(credit);
-        Intent intent = new Intent(this, ModifiercreditActivity.class);
-        intent.putExtra("Tagx",1);
-        startActivity(intent);
-    }
-
-
-    public void annullerCredit(CreditModel credit){
-        ClientModel client = credit.getClient();
-
-        if (credit.getReste() > 0) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("anuller un credit");
-            builder.setMessage("êtes vous sûre de vouloir annuller le credit"+"\n"
-                    +"tous les versements associés seront également supprimés"+"\n"
-                    +"l'annullation d'un credit est soumise a une pénalité allant de 1000 F à 10%"
-                    +"de la somme du credit");
-
-            builder.setPositiveButton("oui", (dialog, which) -> {
-                boolean success = creditcontrolleur.annullerCredit(credit);
-                clientViewModel.getClient().setValue(client);
-                if (success){
-                    creditcontrolleur.setRecapTresteClient(client);
-                    creditcontrolleur.setRecapTcreditClient(client);
-
-                    int total_credit_client = creditcontrolleur.getRecapTcreditClient().getValue();
-                    int total_reste_client = creditcontrolleur.getRecapTresteClient().getValue();
-
-                      String destinationAdress = "+225"+client.getTelephone();
-//                    String destinationAdress = "5556";
-                    String messageBody = "EXPEDITEUR : "+appKessModel.getOwner() +"\n"+"\n"
-                            + client.getNom() + " "+client.getPrenoms() +"\n"
-                            +"vous avez annuller le credit "+credit.getNumerocredit()+"\n"
-                            +"le "+ MesOutils.convertDateToString(new Date())+"\n"
-                            +"total credit : "+total_credit_client+"\n"
-                            +"reste a payer : "+total_reste_client+"\n";
-
-                    if (ActivityCompat.checkSelfPermission(this,
-                            android.Manifest.permission.SEND_SMS) !=
-                            PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{android.Manifest.permission.SEND_SMS},
-                                MY_PERMISSIONS_REQUEST_SEND_SMS);
-                    } else {
-                        SmsnoSentModel smsnoSentModel = new SmsnoSentModel(client.getId(),messageBody);
-                        smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
-                        smsSender.sentReiceiver(smsnoSentModel);
-                    }
-
-
-                }
-
-            });
-
-            builder.setNegativeButton("non", (dialog, which) -> {
-
-            });
-
-            builder.create().show();
-
-        }
-    }
-
-
-
     public void redirectToAfficherCreditActivity(CreditModel credit) {
 
         creditcontrolleur.setCredit(credit);
@@ -544,7 +457,7 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void supprimerCreditSoldes(){
        ArrayList<CreditModel> listeCreditsSoldes = creditcontrolleur.listecreditsSoldesclient(client);
          long now = new Date().getTime();
-       if (listeCreditsSoldes.size() != 0){
+       if (!listeCreditsSoldes.isEmpty()){
            for (CreditModel credit : listeCreditsSoldes) {
                if (MesOutils.getSppressionDate(credit.getSoldedat()) <= now){
                    creditcontrolleur.supprimeCreditSoldes(credit);
@@ -556,11 +469,11 @@ public class AfficherclientActivity extends AppCompatActivity {
 
     public void supprimerAccountSoldes(){
         accountcontrolleur.listeAccountsoldeClient(client);
-        ArrayList<AccountModel> listeAccountsSoldes = accountViewModel.getAccount_solde_ou_non().getValue();
+        ArrayList<AccountModel> listeAccountsSoldes = accountViewModel.getAccounts().getValue();
         long now = new Date().getTime();
 
         assert listeAccountsSoldes != null;
-        if (listeAccountsSoldes.size() != 0){
+        if (!listeAccountsSoldes.isEmpty()){
             for (AccountModel account : listeAccountsSoldes) {
                 if (MesOutils.getSppressionDate(account.getSoldedat()) <= now ){
                     accountcontrolleur.supprimerAccountsSoldes(account);
@@ -583,7 +496,10 @@ public class AfficherclientActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        sessionManagement.removeSession();
+        if (!sessionManagement.getSession()){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

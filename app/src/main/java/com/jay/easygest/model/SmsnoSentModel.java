@@ -11,7 +11,7 @@ public class SmsnoSentModel {
     private Integer id;
     private Integer clientid;
     private ClientModel client;
-    private String message;
+    private final String message;
     private int smsid;
 
 

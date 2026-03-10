@@ -41,7 +41,7 @@ public class ListecreditsclientFragment extends Fragment {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(getContext());
         listecredits = creditViewModel.getCredits_client_soldes_ou_non().getValue();
-        hideSomeItem();
+//        hideSomeItem();
         creerListe();
         return root;
     }
@@ -56,13 +56,13 @@ public class ListecreditsclientFragment extends Fragment {
 
     }
 
-    private void hideSomeItem(){
-        if (creditcontrolleur.getIdmenu() == 0){
-            binding.textView7.setVisibility(View.GONE);
-            binding.textView8.setVisibility(View.GONE);
-        }
-
-    }
+//    private void hideSomeItem(){
+//        if (creditcontrolleur.getIdmenu() == 0){
+//            binding.textView7.setVisibility(View.GONE);
+//            binding.textView8.setVisibility(View.GONE);
+//        }
+//
+//    }
 
 
 

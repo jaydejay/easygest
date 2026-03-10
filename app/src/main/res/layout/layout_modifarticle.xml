@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="275dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Spinner
+        android:id="@+id/spinnermodifcreditArticle"
+        android:layout_width="250dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editModifCreditArticleprix"
+        android:layout_width="175dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:autofillHints="@string/prix"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
+        android:hint="@string/prix"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnermodifcreditArticle" />
+
+    <EditText
+        android:id="@+id/editModifCreditqte"
+        android:layout_width="50dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="4dp"
+        android:autofillHints="@string/quantite2"
+        android:hint="@string/quantite2"
+        android:gravity="center"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toEndOf="@id/editModifCreditArticleprix"
+        app:layout_constraintTop_toBottomOf="@+id/spinnermodifcreditArticle"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

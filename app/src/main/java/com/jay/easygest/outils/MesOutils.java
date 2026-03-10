@@ -1,7 +1,16 @@
 package com.jay.easygest.outils;
 
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Button;
+
+import androidx.core.app.ActivityCompat;
 
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.ClientModel;
@@ -658,6 +667,50 @@ public abstract  class MesOutils {
     public static boolean asDigit(String chaine) {
         return Pattern.compile("\\d").matcher(chaine).find();
     }
+
+    public static void checkSelfSmsPermission(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{Manifest.permission.SEND_SMS},
+                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+        }
+    }
+
+    public static void grantSmsPermissin(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{Manifest.permission.SEND_SMS},
+                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+        }
+    }
+
+    public static void grantStorageAndAccountPermissin(Context context,int requestcode) {
+        if (ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context,
+                        Manifest.permission.GET_ACCOUNTS) !=
+                        PackageManager.PERMISSION_GRANTED
+
+        ) {
+            ActivityCompat.requestPermissions((Activity)context,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
+                    requestcode);
+
+//            binding.btnexport.setEnabled(true);
+
+        }
+    }
+
+    public static void enableButton(Button button) {
+        button.setEnabled(true);
+    }
+
+    public static void disableButton(Button button) {
+        button.setEnabled(false);
+    }
+
+
 
 
 

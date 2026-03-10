@@ -17,23 +17,28 @@
         tools:layout="@layout/fragment_articles" />
 
     <fragment
+        android:id="@+id/nav_credit"
+        android:name="com.jay.easygest.vue.ui.credit.CreditFragment"
+        android:label="@string/menu_credit"
+        tools:layout="@layout/fragment_credit" />
+
+    <fragment
         android:id="@+id/nav_listecredit"
         android:name="com.jay.easygest.vue.ui.listecredit.ListecreditFragment"
         android:label="@string/menu_listecredit"
         tools:layout="@layout/fragment_listecredit" />
 
     <fragment
-        android:id="@+id/nav_credit"
-        android:name="com.jay.easygest.vue.ui.credit.CreditFragment"
-        android:label="@string/menu_credit"
-        tools:layout="@layout/fragment_credit" />
-
-
-    <fragment
         android:id="@+id/nav_account"
         android:name="com.jay.easygest.vue.ui.account.AccountFragment"
         android:label="@string/menu_account"
         tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/nav_listeaccount"
+        android:name="com.jay.easygest.vue.ui.account.ListeaccountFragment"
+        android:label="@string/menu_listeaccount"
+        tools:layout="@layout/fragment_listeaccount" />
 
     <fragment
         android:id="@+id/nav_changeusername"

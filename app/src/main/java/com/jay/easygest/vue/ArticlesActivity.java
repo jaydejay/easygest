@@ -56,11 +56,10 @@ public class ArticlesActivity extends AppCompatActivity {
         binding = ActivityArticlesBinding.inflate(getLayoutInflater());
         imageViewModel = new ViewModelProvider(this).get(ImageViewModel.class);
        int itemid = this.getIntent().getIntExtra("itemclickedId",1);
-       if (itemid == R.id.article_popup_modifier){
+       if (itemid == R.id.article_popup_modifier_designation){
            binding.llArticleBtn.setVisibility(View.GONE);
        }
         initimagesDrawble();
-
          activityResultLauncherFace = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
             if (result.getData() != null && result.getResultCode() == RESULT_OK){
                 Uri selectedImageUri = result.getData().getData();
@@ -76,7 +75,6 @@ public class ArticlesActivity extends AppCompatActivity {
                         imageViewModel.getImages().setValue(images);
                         binding.articleImageViewFace.setImageBitmap(imageViewModel.getBitmapimageface().getValue());
                     }
-
                 }catch (IOException e) {
                    // do nothing
                 }
@@ -98,7 +96,6 @@ public class ArticlesActivity extends AppCompatActivity {
                         imageViewModel.getImages().setValue(images);
                         binding.articleImageViewLeft.setImageBitmap(imageViewModel.getBitmapimageleft().getValue());
                     }
-
                 }catch (IOException e) {
                     // do nothing
                 }
@@ -129,7 +126,6 @@ public class ArticlesActivity extends AppCompatActivity {
          activityResultLauncherBack = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
             if (result.getData()!= null && result.getResultCode() == RESULT_OK){
                 Uri selectedImageUri = result.getData().getData();
-
                 try {
                     Bitmap bitmapimageback = getBitmapFromUri(selectedImageUri);
                      imageViewModel.getBitmapimageback().setValue(bitmapimageback);

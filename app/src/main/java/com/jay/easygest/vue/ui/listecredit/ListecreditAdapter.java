@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jay.easygest.R;
@@ -21,7 +22,6 @@ public class ListecreditAdapter extends BaseAdapter {
     private final ArrayList<CreditModel> credits;
     private final LayoutInflater inflater;
     private final Context context;
-
     public ListecreditAdapter(Context context, ArrayList<CreditModel> credits) {
         this.credits = credits;
         this.context = context;
@@ -43,8 +43,6 @@ public class ListecreditAdapter extends BaseAdapter {
         return position;
     }
 
-
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder ;
@@ -52,23 +50,19 @@ public class ListecreditAdapter extends BaseAdapter {
         if (convertView == null){
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.layout_liste_credits,null);
-
             holder.txtlisteviewcodeclient = convertView.findViewById(R.id.txtlisteviewcodeclient);
             holder.txtlisteviewsommecredit = convertView.findViewById(R.id.txtlisteviewsommecredit);
             holder.txtlisteviewreste = convertView.findViewById(R.id.txtlisteviewreste);
-            holder.btnlisteviewmodif = convertView.findViewById(R.id.btnlisteviewmodif);
-            holder.btnlisteviewannuller = convertView.findViewById(R.id.btnlisteviewannuller);
-
-
+            holder.ly_list_credits = convertView.findViewById(R.id.ly_list_credits);
+//            holder.btnlisteviewannuller = convertView.findViewById(R.id.btnlisteviewannuller);
             convertView.setTag(holder);
         }else {
             holder = (ViewHolder) convertView.getTag();
         }
         try {
             SpannableString content = new SpannableString(
-                    credits.get(position).toString2()+" ");
+                    credits.get(position).toString2());
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-
             holder.txtlisteviewcodeclient.setText(content);
         }catch(Exception ex){
 //            do nothing
@@ -76,11 +70,11 @@ public class ListecreditAdapter extends BaseAdapter {
 
         holder.txtlisteviewsommecredit.setText(String.valueOf(credits.get(position).getSommecredit()));
         holder.txtlisteviewreste.setText(String.valueOf(credits.get(position).getReste()));
-        holder.btnlisteviewmodif.setTag(position);
-        holder.btnlisteviewannuller.setTag(position);
         holder.txtlisteviewcodeclient.setTag(position);
+        holder.ly_list_credits.setTag(position);
 
-        holder.btnlisteviewmodif.setOnClickListener(v -> {
+
+        /*holder.btnlisteviewmodif.setOnClickListener(v -> {
             try{
                 int position1 = (int)v.getTag();
                 String activity = v.getContext().getClass().getName();
@@ -92,18 +86,10 @@ public class ListecreditAdapter extends BaseAdapter {
                 //
             }
 
-        });
+        });*/
 
-        holder.btnlisteviewannuller.setOnClickListener(v -> {
-            int position12 = (int)v.getTag();
-            String activity = v.getContext().getClass().getName();
-            if (activity.contains("GestionActivity")){
-                ((GestionActivity)context).annullerCredit(credits.get(position12));
-            }else {((AfficherclientActivity)context).annullerCredit(credits.get(position12));}
 
-        });
-
-        holder.txtlisteviewcodeclient.setOnClickListener(v -> {
+        holder.ly_list_credits.setOnClickListener(v -> {
             int position3 = (int)v.getTag();
             String activity = v.getContext().getClass().getName();
             if (activity.contains("GestionActivity")){
@@ -118,7 +104,7 @@ public class ListecreditAdapter extends BaseAdapter {
         TextView txtlisteviewcodeclient;
         TextView txtlisteviewsommecredit;
         TextView txtlisteviewreste;
-        ImageButton btnlisteviewmodif;
+        LinearLayout ly_list_credits;
         ImageButton btnlisteviewannuller;
 
     }

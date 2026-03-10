@@ -24,43 +24,27 @@
             android:padding="5dp">
 
             <TextView
-                android:id="@+id/textView11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2" />
 
             <TextView
-                android:id="@+id/textView10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/menu_credit"
                 android:textScaleX="1"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView9"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/reste"
                 android:textScaleX="1"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
         </LinearLayout>
             <ListView
                 android:id="@+id/lstviewcredits"

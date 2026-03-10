@@ -69,7 +69,6 @@ public class Versementcontrolleur {
 
     public boolean modifierVersement(CreditModel credit,VersementsModel versement_a_modifier,int nouveau_total_versement, int nouvellesommeverse, String date) {
        long dateversement =  MesOutils.convertStringToDate(date).getTime();
-
         boolean succes  = accessLocalVersement.modifierVersement(credit,versement_a_modifier,nouveau_total_versement,nouvellesommeverse,dateversement);
         if (succes){
             VersementsModel versement = accessLocalVersement.recupVersementById(versement_a_modifier.getId());

@@ -5,18 +5,19 @@ import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.gson.Gson;
 import com.jay.easygest.model.Article;
+import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.VersementsModel;
 import com.jay.easygest.outils.AccessLocalCredit;
 import com.jay.easygest.outils.AccessLocalInfo;
 import com.jay.easygest.outils.AccessLocalVersement;
+import com.jay.easygest.outils.MesOutils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public final class Creditcontrolleur {
 
@@ -34,7 +35,8 @@ public final class Creditcontrolleur {
     private final MutableLiveData<Integer> mtotalresteclient = new MutableLiveData<>();
     private final MutableLiveData<Integer> mtotalversementclient = new MutableLiveData<>();
     private final  MutableLiveData<Integer> mtotalcreditClient = new MutableLiveData<>();
-    private Integer idmenu;
+
+//    private Integer idmenu;
 
     /**
      * constructeur
@@ -45,6 +47,7 @@ public final class Creditcontrolleur {
     }
 
     public static Creditcontrolleur getCreditcontrolleurInstance(Context contexte){
+
         if(Creditcontrolleur.creditcontrolleurInstance == null){
             Creditcontrolleur.creditcontrolleurInstance = new Creditcontrolleur();
             accessLocalcredit = new AccessLocalCredit(contexte);
@@ -52,18 +55,9 @@ public final class Creditcontrolleur {
             accessLocalInfo = new AccessLocalInfo(contexte);
         }
 
-
         return creditcontrolleurInstance;
     }
 
-
-    public Integer getIdmenu() {
-        return idmenu;
-    }
-
-    public void setIdmenu(Integer idmenu) {
-        this.idmenu = idmenu;
-    }
 
     public CreditModel getCredit() {
         return credit;
@@ -90,21 +84,18 @@ public final class Creditcontrolleur {
 
     public void setMCredits(ArrayList<CreditModel> credits) {this.mcredits.setValue(credits); }
 
-    public CreditModel creerCredit( Map<String, Object> data){
+    public CreditModel creerCredit( Context context,Map<String, Object> data){
 
-        String article1vendu = new Gson().toJson(data.get("article1vendu"));
-        String article2vendu = new Gson().toJson(data.get("article2vendu"));
-
-        int sommecredit = (int) data.get("sommecredit");
-        int reste = sommecredit - Integer.parseInt((String) Objects.requireNonNull(data.get("versement")));
+        Article article1vendu = (Article) data.get("article1vendu");
+        Article article2vendu = (Article) data.get("article2vendu");
 
         CreditModel premiercredit = new CreditModel((String) data.get("codeclient"), (String) data.get("nomclient"),
-                (String) data.get("prenomclient"),article1vendu, article2vendu,sommecredit, Integer.parseInt((String) data.get("versement")),
-                reste, (Long) data.get("dateouverture"),1);
+                (String) data.get("prenomclient"),article1vendu, article2vendu, Integer.parseInt((String) data.get("versement")),
+                 (Long) data.get("dateouverture"),1);
+        AccessLocalCredit accessLocalcredit = new AccessLocalCredit(context);
         CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,data);
-
         if (credit != null){
-             accessLocalInfo.updateCreditInfos(sommecredit);
+             accessLocalInfo.updateTableInfosWhenCreateOrAddCredit(credit.getSommecredit());
             credits.add(premiercredit);
             this.setCredits(credits);
             this.setCredit(credit);
@@ -112,19 +103,34 @@ public final class Creditcontrolleur {
         return  credit;
     }
 
-    public boolean ajouterCredit(ClientModel client, Article c_article1, Article c_article2, String versement, long datecredit) {
+    public boolean ajouterCredit(Map<String, Object> data) {
 
-        String article1 = new Gson().toJson(c_article1);
-        String article2 = new Gson().toJson(c_article2);
+        Article article1_vendu = (Article)data.get("article1vendu");
+        Article article2_vendu = (Article)data.get("article2vendu");
 
-        int sommecredit = c_article1.getSomme() + c_article2.getSomme();
-        int reste = sommecredit - Integer.parseInt(versement);
+        ArticlesModel article1 = (ArticlesModel)data.get("article1");
+        ArticlesModel article2 = (ArticlesModel) data.get("article2");
+        ClientModel client = (ClientModel)data.get("client");
+        String versement = (String) data.get("versement");
+        long datecredit = (long) data.get("datecredit");
+        int sommecredit =  (int) data.get("sommecredit");
+
+        int nbr_articles1_restant = article1.getQuantite() - article1_vendu.getNbrarticle();
+        int nbr_articles2_restant = article2.getQuantite() - article2_vendu.getNbrarticle();
+
+        Map<String, Object> newdata = new HashMap<>();
+        newdata.put("article1",article1);
+        newdata.put("article2",article2);
+        newdata.put("nbrarticle1restant",nbr_articles1_restant);
+        newdata.put("nbrarticle2restant",nbr_articles2_restant);
+
+        assert client != null;
         int numerocredit = client.getNbrcredit()+1;
-        CreditModel credit = new CreditModel(client.getCodeclient(), client.getNom(), client.getPrenoms(), article1, article2,sommecredit, Integer.parseInt(versement), reste,datecredit,numerocredit);
+        CreditModel credit = new CreditModel(client.getCodeclient(), client.getNom(), client.getPrenoms(), article1_vendu, article2_vendu, Integer.parseInt(versement), datecredit,numerocredit);
         boolean success = false;
-          CreditModel le_credit_ajoute = accessLocalcredit.ajouterCredit(credit,client);
+          CreditModel le_credit_ajoute = accessLocalcredit.ajouterCredit(credit,client,newdata);
         if (le_credit_ajoute != null){
-            accessLocalInfo.updateCreditInfos(sommecredit);
+            accessLocalInfo.updateTableInfosWhenCreateOrAddCredit(sommecredit);
             credits.add(le_credit_ajoute);
             this.setCredits(credits);
             this.setCredit(le_credit_ajoute);
@@ -135,20 +141,17 @@ public final class Creditcontrolleur {
     }
 
 
-    public boolean modifierCredit(CreditModel creditModel, ClientModel client, int ancienne_somme_credit){
+    public boolean modifierCredit(CreditModel nouveau_creditModel, ClientModel client, int ancienne_somme_credit){
 
         boolean success = false;
-        Long date_de_solde;
-        if (creditModel.getReste() == 0){
-            ArrayList<VersementsModel> liste_versements = accessLocalVersement.listeVersementsCredit(creditModel);
-            int last_index  = liste_versements.size()-1;
-            VersementsModel dernier_versemt = liste_versements.get(last_index);
-            date_de_solde = dernier_versemt.getDateversement();
-        }else {date_de_solde = 0L;}
-        creditModel.setSoldedat(date_de_solde);
-        CreditModel credit = accessLocalcredit.modifierCredit(creditModel,client,ancienne_somme_credit);
+        ArrayList<VersementsModel> liste_versements = accessLocalVersement.listeVersementsCredit(nouveau_creditModel);
+        int last_index  = liste_versements.size()-1;
+        VersementsModel dernier_versemt = liste_versements.get(last_index);
+        Long date_de_solde = dernier_versemt.getDateversement();
+        nouveau_creditModel.setSoldedat(date_de_solde);
+        CreditModel credit = accessLocalcredit.modifierCredit(nouveau_creditModel,client,ancienne_somme_credit);
         if (credit != null ){
-            int somme_a_ajoute = creditModel.getSommecredit()-ancienne_somme_credit;
+            int somme_a_ajoute = nouveau_creditModel.getSommecredit()-ancienne_somme_credit;
            accessLocalInfo.modifierCreditInfos(somme_a_ajoute);
             this.setCredit(credit);
             this.listecredits();
@@ -159,10 +162,13 @@ public final class Creditcontrolleur {
     }
 
     public boolean annullerCredit(CreditModel credit){
-      boolean success = accessLocalcredit.anullerCredit(credit);
-        if (success){
-            accessLocalInfo.annullerCreditInfos(credit);
-            this.listecredits();
+        boolean success = false;
+      boolean rslt = accessLocalcredit.anullerCredit(credit);
+        if (rslt){
+           if (accessLocalInfo.updatTableInfosWhenannullerCredit(credit)){
+               success = true;
+               this.listecredits();
+           }
         }
       return success;
     }
@@ -280,4 +286,26 @@ public final class Creditcontrolleur {
             this.listecreditsSoldesclient(credit.getClient());
         }
     }
+
+    public CreditModel modifierArticledunCredit(CreditModel anciencredit, String nouveauprixarticle, String nouvelleqtearticle, String nomarticleAModifier, ArticlesModel articleselectione) {
+        ClientModel client = anciencredit.getClient();
+        CreditModel nouveau_credit = null;
+        Article ancien_article = null;
+        Article nouvel_article = null;
+        if (nomarticleAModifier.equals("article1") ){
+             ancien_article = anciencredit.getArticle1();
+             nouvel_article = new Article(articleselectione.getDesignation(),Integer.parseInt(nouveauprixarticle),Integer.parseInt(nouvelleqtearticle));
+            nouveau_credit = new CreditModel(anciencredit.getId(),client,nouvel_article,anciencredit.getArticle2(),anciencredit.getVersement(),anciencredit.getDatecredit(),anciencredit.getNumerocredit());
+        }
+        if (nomarticleAModifier.equals("article2") ){
+            ancien_article = anciencredit.getArticle2() ;
+            nouvel_article = new Article(articleselectione.getDesignation(),Integer.parseInt(nouveauprixarticle),Integer.parseInt(nouvelleqtearticle));
+            nouveau_credit = new CreditModel(anciencredit.getId(),client,anciencredit.getArticle1(),nouvel_article,anciencredit.getVersement(),anciencredit.getDatecredit(),anciencredit.getNumerocredit());
+        }
+      return  accessLocalcredit.modifierArticledunCredit(nouveau_credit,anciencredit,client,nouvel_article,ancien_article);
+    }
+    public CreditModel modifierDateCredit(CreditModel credit, String date) {
+        return accessLocalcredit.modifierDateCredit(credit, MesOutils.convertStringToDate(date).getTime());
+    }
 }
+

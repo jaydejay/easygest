@@ -118,10 +118,10 @@ public class ModifierVersementActivity extends AppCompatActivity {
                     try {
                         int nouvellesommeverse = Integer.parseInt(edt_somme);
                         CreditModel credit = creditViewModel.getCredit().getValue();
-                        int somme_du_credit = 0;
-                        if (credit != null) {
-                            somme_du_credit = credit.getSommecredit();
-                        }
+//                        int somme_du_credit = 0;
+//                        if (credit != null) {
+                        int somme_du_credit = credit != null ? credit.getSommecredit() : 0;
+//                        }
 
                         int anncien_total_versement = creditViewModel.getCredit().getValue().getVersement();
                         int annciennesommeverse = Integer.parseInt(String.valueOf(versement.getSommeverse())) ;
@@ -133,9 +133,8 @@ public class ModifierVersementActivity extends AppCompatActivity {
                                 VersementsModel versementsModel = new VersementsModel(versement.getId(),client,credit,(long)nouvellesommeverse,credit.getId(), date.getTime());
                                 versementViewModel.getMversement().setValue(versementsModel);
                                 if (annciennesommeverse != nouvellesommeverse ){
-
                                     appKessModel = accessLocalAppKes.getAppkes();
-                                    appKessModel = accessLocalAppKes.getAppkes();
+//                                    appKessModel = accessLocalAppKes.getAppkes();
                                     creditcontrolleur.setRecapTresteClient(client);
                                     creditcontrolleur.setRecapTcreditClient(client);
 

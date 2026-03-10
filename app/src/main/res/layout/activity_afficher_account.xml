@@ -43,23 +43,63 @@
                         android:background="@android:color/holo_green_light"
                         android:orientation="vertical"
                         android:padding="16dp">
+                        <LinearLayout
+                            android:id="@+id/layoutaccountarticle1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginEnd="2dp"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:orientation="horizontal">
                         <TextView
                             android:id="@+id/cardafficheraccountarticle1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_weight="5"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textStyle="bold" />
+                        <ImageButton
+                            android:id="@+id/btnmodifaccountarticle1"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/modifier_article_1"
+                            app:srcCompat="@drawable/mode_edit_outline_24"/>
+                        </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cardafficheraccountarticle2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textStyle="bold" />
+                        <View
+                            android:id="@+id/account_article_divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:background="?android:attr/listDivider"/>
+
+                        <LinearLayout
+                            android:id="@+id/layoutaccountarticle2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginEnd="2dp"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/cardafficheraccountarticle2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="5"
+                                android:textAppearance="?attr/textAppearanceBody2"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:textStyle="bold" />
+                            <ImageButton
+                                android:id="@+id/btnmodifaccountarticle2"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:contentDescription="@string/modifier_article_2"
+                                app:srcCompat="@drawable/mode_edit_outline_24" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
                     <View
@@ -116,18 +156,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardaccount">
 
-                <Button
-                    android:id="@+id/modifier_account"
+                <TextView
+                    android:id="@+id/modifier_account_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:text="@string/modifier" />
+                    android:layout_marginEnd="20dp"
+                    android:textColor="@color/bleu_clair"
+                    android:textSize="16sp"
+                    android:linksClickable="true"
+                    android:text="@string/modifier_date"
+                    android:textStyle="bold" />
 
-                <Button
+                <TextView
                     android:id="@+id/sup_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/annuller" />
+                    android:layout_marginEnd="20dp"
+                    android:textColor="@color/bleu_clair"
+                    android:textSize="16sp"
+                    android:linksClickable="true"
+                    android:text="@string/annuler_account"
+                    android:textStyle="bold" />
 
             </LinearLayout>
             <!-- les deux liens -->

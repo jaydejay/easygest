@@ -118,7 +118,6 @@ public class ImportExportFragment extends Fragment {
         ArrayList<ArticlesModel> articles = accessLocalArticles.listeArticles();
         if (!MesOutils.isDataPresent(clients,articles)){
             binding.btnexport.setVisibility(View.GONE);
-
         }
 
         if (MesOutils.getLicenceLevel(appKessModel.getApppkey()) != MesOutils.Level.FREE && !MesOutils.isDataPresent(clients,articles)){
@@ -182,27 +181,27 @@ public class ImportExportFragment extends Fragment {
         Identity.getAuthorizationClient(requireActivity())
                 .authorize(authorizationRequest)
                 .addOnSuccessListener(
-                        authorizationResult -> {
-                            if (authorizationResult.hasResolution()) {
-                                // Access needs to be granted by the user
-                                PendingIntent pendingIntent = authorizationResult.getPendingIntent();
-                                try {
-                                    if (pendingIntent != null) {
-                                        IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(pendingIntent).build();
-                                        activityResultLaunchersave.launch(intentSenderRequest);
-                                    }
-                                } catch (Exception e) {
-                                    Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
+                    authorizationResult -> {
+                        if (authorizationResult.hasResolution()) {
+                            // Access needs to be granted by the user
+                            PendingIntent pendingIntent = authorizationResult.getPendingIntent();
+                            try {
+                                if (pendingIntent != null) {
+                                    IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(pendingIntent).build();
+                                    activityResultLaunchersave.launch(intentSenderRequest);
                                 }
-                            } else {
-                                // Access already granted, continue with user action
-                                try {
-                                    saveToDriveAppFolder(authorizationResult);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                            } catch (Exception e) {
+                                Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
                             }
-                        })
+                        } else {
+                            // Access already granted, continue with user action
+                            try {
+                                saveToDriveAppFolder(authorizationResult);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                })
                 .addOnFailureListener(e -> Log.e("importexpor", "Failed to authorize", e.getCause()));
     }
 

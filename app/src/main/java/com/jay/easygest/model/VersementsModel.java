@@ -7,9 +7,9 @@ public class VersementsModel {
     private String codeclient;
     private ClientModel client;
     private  CreditModel credit;
-    private Long sommeverse;
-    private Integer credit_id;
-    private Long dateversement;
+    private final Long sommeverse;
+    private final Integer credit_id;
+    private final Long dateversement;
 
 
     public VersementsModel( String codeclient,Long sommeverse, Integer credit_id, Long dateversement) {

@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.gson.Gson;
 import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.databinding.ActivityModifierAccountBinding;
@@ -65,8 +64,8 @@ public class ModifierAccountActivity extends AppCompatActivity {
     }
 
     public void afficherAccount(){
-        Article article1 = new Gson().fromJson(account.getArticle1(), Article.class);
-        Article article2 = new Gson().fromJson(account.getArticle2(), Article.class);
+        Article article1 = account.getArticle1();
+        Article article2 = account.getArticle2();
         binding.modifaccrnom.setText(client.getNom());
         binding.modifaccprenoms.setText(client.getPrenoms());
         binding.modifacccodeclt.setText(client.getCodeclient());
@@ -143,33 +142,23 @@ public class ModifierAccountActivity extends AppCompatActivity {
                     nbrarticle2 = Integer.parseInt(nbr_article2);
                     long dateaccount = date_credit.getTime();
 
-                    Article c_article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
-                    Article c_article2 =  new Article(designationarticle2, sommearticle2,nbrarticle2);
-                    int sommeaccount = c_article1.getSomme() + c_article2.getSomme();
+                    Article article1 = new Article(designationarticle1, sommearticle1,nbrarticle1);
+                    Article article2 =  new Article(designationarticle2, sommearticle2,nbrarticle2);
+                    int sommeaccount = article1.getSomme() + article2.getSomme();
 
-                    int versement;
-                    if (account.getVersement() < sommeaccount){
-                        versement = account.getVersement();
-                    }else {
-                        versement = sommeaccount;
-                    }
-                    int reste = sommeaccount - versement;
-                    String article1 = new Gson().toJson(c_article1);
-                    String article2 = new Gson().toJson(c_article2);
-
-                    AccountModel nouveau_account = new AccountModel(account.getId(),client.getId(),article1,article2,sommeaccount,versement,reste,dateaccount,account.getNumeroaccount());
+                    int versement = account.getVersement() < sommeaccount ? account.getVersement() : sommeaccount;
+                    AccountModel nouveau_account = new AccountModel(account.getId(),client,article1,article2,versement,dateaccount,account.getNumeroaccount());
                     int ancienne_somme_account = account.getSommeaccount();
                     boolean success = accountcontroller.modifierAccount(nouveau_account, client,ancienne_somme_account);
                     if (success) {
                         ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                         AccountModel account_modifier = accountViewModel.getAccount().getValue();
-                        AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_modifier).getId(),clientModel,account_modifier.getArticle1(),account_modifier.getArticle2(),account_modifier.getSommeaccount(),account_modifier.getVersement(),account_modifier.getReste(),account_modifier.getDateaccount(),account_modifier.getNumeroaccount());
+                        AccountModel accountModel = new AccountModel(Objects.requireNonNull(account_modifier).getId(),clientModel,account_modifier.getArticle1(),account_modifier.getArticle2(),account_modifier.getVersement(),account_modifier.getDateaccount(),account_modifier.getNumeroaccount());
                         accountViewModel.getAccount().setValue(accountModel);
                         clientViewModel.getClient().setValue(clientModel);
                         if (sommeaccount != ancienne_somme_account){
                             accountcontroller.setRecapTresteClient(clientModel);
                             accountcontroller.setRecapTaccountClient(clientModel);
-
                             int total_reste_client = accountViewModel.getTotalrestesclient().getValue();
 
                             String destinationAdress = "+225"+clientModel.getTelephone();

@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jay.easygest.R;
@@ -56,57 +56,37 @@ public class ListecreditClientAdapter extends BaseAdapter {
             holder.txtlisteviewdate = convertView.findViewById(R.id.txtlisteviewdate);
             holder.txtlisteviewsommecredit = convertView.findViewById(R.id.txtlisteviewsommecredit);
             holder.txtlisteviewreste = convertView.findViewById(R.id.txtlisteviewreste);
-            holder.btnlisteviewmodif = convertView.findViewById(R.id.btnlisteviewmodif);
-            holder.btnlisteviewannuller = convertView.findViewById(R.id.btnlisteviewannuller);
-
-
+            holder.ly_list_credits_client = convertView.findViewById(R.id.ly_list_credits_client);
             convertView.setTag(holder);
         }else {
             holder = (ViewHolder) convertView.getTag();
         }
-            if (credits.get(position).getReste() == 0){
+//            if (credits.get(position).getReste() == 0){
+//
+//                holder.btnlisteviewannuller.setVisibility(convertView.GONE);
+//                holder.btnlisteviewmodif.setVisibility(convertView.GONE);
+//            }
 
-                holder.btnlisteviewannuller.setVisibility(convertView.GONE);
-                holder.btnlisteviewmodif.setVisibility(convertView.GONE);
-            }
-
-            String content = "credit"+"\n"+" du "+"\n"+ MesOutils.convertDateToString(new Date(credits.get(position).getDatecredit())) ;
+            String content = "credit"+"\n"
+                    +" du "+"\n"+ MesOutils.convertDateToString(new Date(credits.get(position).getDatecredit())) ;
             holder.txtlisteviewdate.setText(content);
             holder.txtlisteviewsommecredit.setText(String.valueOf(credits.get(position).getSommecredit()));
             holder.txtlisteviewreste.setText(String.valueOf(credits.get(position).getReste()));
 
-            holder.btnlisteviewmodif.setTag(position);
-            holder.btnlisteviewannuller.setTag(position);
+            holder.ly_list_credits_client.setTag(position);
 
-        holder.btnlisteviewmodif.setOnClickListener(v -> {
+        holder.ly_list_credits_client.setOnClickListener(v -> {
             try {
                 int position1 = (int)v.getTag();
                  String activity = v.getContext().getClass().getName();
 
                 if (activity.contains("GestionActivity")){
-                    ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
-                }else {((AfficherCreditsClientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
+                    ((GestionActivity)context).redirectToAfficherCreditActivity(credits.get(position1));
+                }else {((AfficherCreditsClientActivity)context).redirectToAfficherCreditActivity(credits.get(position1));}
             }catch (Exception e){
                 //
             }
         });
-
-        holder.btnlisteviewannuller.setOnClickListener(v -> {
-            try{
-                int position12 = (int)v.getTag();
-                String activity = v.getContext().getClass().getName();
-                if (activity.contains("GestionActivity")){
-                    ((GestionActivity)context).annullerCredit(credits.get(position12));
-                }else {
-                    ((AfficherCreditsClientActivity)context).annullerCredit(credits.get(position12));
-                }
-            }catch (Exception e){
-                //
-            }
-
-
-        });
-
 
         return convertView;
     }
@@ -115,8 +95,7 @@ public class ListecreditClientAdapter extends BaseAdapter {
         TextView txtlisteviewdate;
         TextView txtlisteviewsommecredit;
         TextView txtlisteviewreste;
-        ImageButton btnlisteviewmodif;
-        ImageButton btnlisteviewannuller;
+        LinearLayout ly_list_credits_client;
 
     }
 }

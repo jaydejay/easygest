@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +22,7 @@ import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.Image;
 import com.jay.easygest.outils.MesOutils;
+import com.jay.easygest.outils.VariablesStatique;
 import com.jay.easygest.vue.GestionActivity;
 
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
 
     private final Context contexte;
     private final ArrayList<ArticlesModel> articles;
+    private EditText edt_article_modifer;
 
     public RecycleViewArticleAdapter(Context contexte, ArrayList<ArticlesModel> articles) {
         this.contexte = contexte;
@@ -62,43 +66,106 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
             PopupMenu popupMenu = new PopupMenu(contexte, holder.btn_article_popup_menu);
             popupMenu.getMenuInflater().inflate(R.menu.article_menu,popupMenu.getMenu());
 
-
             popupMenu.setOnMenuItemClickListener(item -> {
-                if (item.getItemId()== R.id.article_popup_modifier ){
-
-                    ((GestionActivity)contexte).redirectToModifierArticleActivity(articles.get(position));
-
-                }
                 if (item.getItemId()== R.id.article_popup_supprimer ){
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(contexte);
-                    builder.setTitle("supprimer un article");
-                    builder.setMessage("vous etes sur le point de supprimer l'article");
-
-                    builder.setPositiveButton("oui", (dialog, which) -> {
-                        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
-                        int rslt = articlescontrolleur.deleteArticle(articles.get(position));
-                        if (rslt > 0){
-                            articles.remove(position);
-                            articlescontrolleur.listeArticles2();
-                            articlescontrolleur.setAdaptermarticles(articles);
-                        }
-
-                    });
-
-                    builder.setNegativeButton("non", (dialog, which) -> {
-
-
-                    });
-
+                    AlertDialog.Builder builder = getRecycleViewArticleSuprimerBuider(position);
+                    builder.setNegativeButton("non", (dialog, which) -> {});
                     builder.create().show();
-
                 }
 
                 if (item.getItemId()== R.id.article_popup_detail ){
                     articles.get(position).setImages(images);
-
                     ((GestionActivity)contexte).redirectToArticleDetailsActivity(articles.get(position));
+                }
+                if (item.getItemId()== R.id.article_popup_modifier_designation ){
+                    String title = "modifier l'article";
+                    String message = "voulez vous modifier la designation";
+                    String itemId = "article_popup_modifier_designation";
+                    AlertDialog.Builder builder = getArticleModifierBuilder(title, message,R.layout.layout_article_modifier_designation);
+                    edt_article_modifer.setText(String.valueOf( articles.get(position).getDesignation()));
+                    builder.setPositiveButton("oui", (dialog, which) -> {
+                        String string_prix = edt_article_modifer.getText().toString().trim();
+                        if (string_prix.isEmpty() ) {
+                            Toast.makeText(contexte, "champ obligatoire", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+                            ArticlesModel article = articles.get(position);
+                            String champ = VariablesStatique.DESIGNATION;
+                            int rslt =  articlescontrolleur.modifierArticle(article,champ,string_prix,itemId);
+                            if (rslt > 0){
+                                ((GestionActivity)contexte).refreshPage();
+                            }
+
+                        }
+                    });
+                    builder.create().show();
+                }
+                if (item.getItemId()== R.id.article_popup_modifier_prix ){
+                    String title = "modifier l'article";
+                    String message = "voulez vous modifier le prix";
+                    String itemId = "article_popup_modifier_prix";
+                    AlertDialog.Builder builder = getArticleModifierBuilder(title, message,R.layout.layout_article_modifier);
+                    edt_article_modifer.setText(String.valueOf( articles.get(position).getPrix()));
+                    builder.setPositiveButton("oui", (dialog, which) -> {
+                        String string_prix = edt_article_modifer.getText().toString().trim();
+                        if (string_prix.isEmpty() ) {
+                            Toast.makeText(contexte, "champ obligatoire", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+                            ArticlesModel article = articles.get(position);
+                            String champ = VariablesStatique.PRIX;
+                          int rslt =  articlescontrolleur.modifierArticle(article,champ,string_prix,itemId);
+                            if (rslt > 0){
+                                ((GestionActivity)contexte).refreshPage();
+                            }
+
+                        }
+                    });
+                    builder.create().show();
+                }
+
+                if (item.getItemId()== R.id.article_popup_ajout_stock ){
+                    String title = "modifier l'article";
+                    String message = "voulez vous ajouter des articles ?";
+                    String itemId = "article_popup_ajout_stock";
+                    AlertDialog.Builder builder = getArticleModifierBuilder(title, message,R.layout.layout_article_modifier);
+                    builder.setPositiveButton("oui", (dialog, which) -> {
+                        String string_nbr_article = edt_article_modifer.getText().toString().trim();
+                        if (string_nbr_article.isEmpty() ) {
+                            Toast.makeText(contexte, "champ obligatoire", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+                            ArticlesModel article = articles.get(position);
+                            String champ = VariablesStatique.QUANTITE;
+                            int rslt =  articlescontrolleur.modifierArticle(article,champ,string_nbr_article,itemId);
+                            if (rslt > 0){
+                                ((GestionActivity)contexte).refreshPage();
+                            }
+                        }
+                    });
+                    builder.create().show();
+                }
+
+                if (item.getItemId()== R.id.article_popup_enlever_stock ){
+                    String title = "modifier l'article";
+                    String message = "voulez vous enlever des articles ?";
+                    String itemId = "article_popup_enlever_stock";
+                    AlertDialog.Builder builder = getArticleModifierBuilder(title, message,R.layout.layout_article_modifier);
+                    builder.setPositiveButton("oui", (dialog, which) -> {
+                        String string_nbr_article = edt_article_modifer.getText().toString().trim();
+                        if (string_nbr_article.isEmpty() ) {
+                            Toast.makeText(contexte, "champ obligatoire", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+                            ArticlesModel article = articles.get(position);
+                            String champ = VariablesStatique.QUANTITE;
+                            int rslt =  articlescontrolleur.modifierArticle(article,champ,string_nbr_article,itemId);
+                            if (rslt > 0){
+                                ((GestionActivity)contexte).refreshPage();
+                            }
+                        }
+                    });
+                    builder.create().show();
                 }
 
                 return true;
@@ -107,6 +174,35 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
             popupMenu.show();
         });
 
+    }
+
+    private AlertDialog.Builder getArticleModifierBuilder(String title, String message,int layoutResource) {
+        View view = LayoutInflater.from(contexte).inflate(layoutResource,null);
+        edt_article_modifer = view.findViewById(R.id.edit_articles_modif);
+        AlertDialog.Builder builder = new AlertDialog.Builder(contexte) ;
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setView(view);
+        builder.setNegativeButton("non", (dialog, which) -> {});
+        return builder;
+    }
+
+    @NonNull
+    private AlertDialog. Builder getRecycleViewArticleSuprimerBuider(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(contexte);
+        builder.setTitle("supprimer un article");
+        builder.setMessage("vous etes sur le point de supprimer l'article");
+
+        builder.setPositiveButton("oui", (dialog, which) -> {
+            Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+            int rslt = articlescontrolleur.deleteArticle(articles.get(position));
+            if (rslt > 0){
+                articles.remove(position);
+                articlescontrolleur.listeArticles2();
+//                articlescontrolleur.setAdaptermarticles(articles);
+            }
+        });
+        return builder;
     }
 
     @Override

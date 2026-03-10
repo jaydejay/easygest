@@ -7,10 +7,10 @@ import java.util.ArrayList;
 public class ArticlesModel {
 
     private Integer id ;
-    private String designation;
-    private Integer prix;
-    private Integer quantite;
-    private String description;
+    private final String designation;
+    private final Integer prix;
+    private final Integer quantite;
+    private final String description;
     private ArrayList<Image> images;
 
     public ArticlesModel(String designation, Integer prix, Integer quantite, String description, ArrayList<Image> images) {
@@ -68,13 +68,13 @@ public class ArticlesModel {
     }
 
     @NonNull
-    @Override
-    public String toString() {
+    public String toString2() {
         return  designation + " : " + prix;
     }
 
     @NonNull
-    public String toString2() {
+    @Override
+    public String toString() {
         return  designation ;
     }
 }

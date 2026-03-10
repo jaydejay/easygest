@@ -4,21 +4,21 @@ import androidx.annotation.NonNull;
 
 public class ClientModel {
 
-    private Integer id;
-    private String codeclient;
-    private String nom;
-    private String prenoms;
-    private String telephone;
-    private String email;
-    private String residence;
-    private String cni;
-    private String permis;
-    private String passport;
-    private String societe;
-    private Integer nbrcredit;
-    private Long totalcredit;
-    private Integer nbraccount;
-    private Long totalaccount;
+    private final Integer id;
+    private final String codeclient;
+    private final String nom;
+    private final String prenoms;
+    private final String telephone;
+    private final String email;
+    private final String residence;
+    private final String cni;
+    private final String permis;
+    private final String passport;
+    private final String societe;
+    private final Integer nbrcredit;
+    private final Long totalcredit;
+    private final Integer nbraccount;
+    private final Long totalaccount;
 
 
 

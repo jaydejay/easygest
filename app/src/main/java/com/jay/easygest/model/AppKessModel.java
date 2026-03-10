@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 
 public class AppKessModel {
 
-    private int appnumber;
-    private String apppkey;
-    private String owner;
-    private String basecode;
-    private String telephone;
-    private String adresseelectro;
+    private final int appnumber;
+    private final String apppkey;
+    private final String owner;
+    private final String basecode;
+    private final String telephone;
+    private final String adresseelectro;
 
     public AppKessModel(int appnumber, String apppkey, String owner, String basecode, String telephone, String adresseelectro) {
         this.appnumber = appnumber;

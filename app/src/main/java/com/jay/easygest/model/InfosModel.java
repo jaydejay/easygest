@@ -4,11 +4,11 @@ import androidx.annotation.NonNull;
 
 public class InfosModel {
 
-    private Integer appnumber ;
-    private Integer nbrcredit;
-    private Integer totalcredit ;
-    private Integer nbraccount ;
-    private Integer totalaccount ;
+    private final Integer appnumber ;
+    private final Integer nbrcredit;
+    private final Integer totalcredit ;
+    private final Integer nbraccount ;
+    private final Integer totalaccount ;
 
 
     public InfosModel(Integer appnumber, Integer nbrcredit, Integer totalcredit,  Integer nbraccount, Integer totalaccount) {
