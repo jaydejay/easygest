@@ -109,21 +109,17 @@ public class AccessLocalAppKes {
             appkey_cv.put(APPPKEY, appKessModel.getApppkey());
             appkey_cv.put(DATELICENCE, timestamp.getTime());
             appkey_cv.put(DUREELICENCE, duree_licence);
-            int rslt = bd.update(VariablesStatique.TABLE_APPPKES, appkey_cv, APPNUMBER + "= ?", new String[] {appcredentials[0]} );
+            int rslt = bd.updateWithOnConflict(VariablesStatique.TABLE_APPPKES, appkey_cv, APPNUMBER + "= ?", new String[] {appcredentials[0]},1 );
             if (rslt > 0) {
                 usedkey_cv.put("cle",appKessModel.getApppkey());
-                long rslt2 = bd.insertOrThrow(TABLE_USEDKEY,null,usedkey_cv);
-                if (rslt2 != -1) {
-                    success = true;
-                    bd.setTransactionSuccessful();
-                }
+                 bd.insertWithOnConflict(TABLE_USEDKEY,null,usedkey_cv,1);
+                 bd.setTransactionSuccessful();
+                success = true;
 
             }
         } catch (Exception e) {
             // do nothing
             return false;
-        }finally {
-            bd.endTransaction();
         }
         return success;
     }

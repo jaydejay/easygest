@@ -24,6 +24,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -97,24 +98,21 @@ public class AccessLocalCredit {
 
         try {
 
-            long client_reslt = bd.insertOrThrow(TABLE_CLIENT,null,accessLocalClient.ajoutClientContentValue((String) data.get("codeclient"), (String) data.get("nomclient"), (String) data.get("prenomclient"), (String) data.get("telephone"),1,premiercredit.getSommecredit(),0,0));
-            long credit_rslt = bd.insertOrThrow(TABLE_CREDIT,null,this.creerCreditContentValue(premiercredit,client_reslt));
+            long client_reslt = bd.insertWithOnConflict(TABLE_CLIENT,null,accessLocalClient.ajoutClientContentValue((String) data.get("codeclient"), (String) data.get("nomclient"), (String) data.get("prenomclient"), (String) data.get("telephone"),1,premiercredit.getSommecredit(),0,0),1);
+            long credit_rslt = bd.insertWithOnConflict(TABLE_CREDIT,null,this.creerCreditContentValue(premiercredit,client_reslt),1);
             if (Integer.parseInt((String) data.get("versement")) > 0){
-                bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt((String) data.get("versement")), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()));
+                bd.insertWithOnConflict(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(Integer.parseInt((String) data.get("versement")), (int) credit_rslt,(int) client_reslt,premiercredit.getDatecredit()),1);
             }
 
-            bd.update(TABLE_ARTICLE,article1_cv,"designation =?", new String[] {article1.getDesignation()});
+            bd.updateWithOnConflict(TABLE_ARTICLE,article1_cv,"designation =?", new String[] {article1.getDesignation()},1);
             if (article2 != null && !article2.getDescription().equals("Choisir un article")) {
-                bd.update(TABLE_ARTICLE, article2_cv, "designation =?", new String[]{article2.getDesignation()});
+                bd.updateWithOnConflict(TABLE_ARTICLE, article2_cv, "designation =?", new String[]{article2.getDesignation()},1);
             }
             creditModel = this.recupCreditById((int) credit_rslt);
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
             creditModel = null;
-        }finally {
-            bd.endTransaction();
-
         }
         return creditModel;
 
@@ -146,13 +144,13 @@ public class AccessLocalCredit {
 
         try {
 
-            long credit_rslt =  bd.insertOrThrow(TABLE_CREDIT,null,this.creerCreditContentValue(credit,client.getId()));
+            long credit_rslt =  bd.insertWithOnConflict(TABLE_CREDIT,null,this.creerCreditContentValue(credit,client.getId()),1);
             bd.updateWithOnConflict(TABLE_CLIENT,client_cv, ID + "= ?" ,new String[] {String.valueOf(client.getId())},1);
-            if (credit.getVersement() != 0){bd.insertOrThrow(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(credit.getVersement(), (int) credit_rslt, client.getId(),credit.getDatecredit()));}
+            if (credit.getVersement() != 0){bd.insertWithOnConflict(TABLE_VERSEMENT,null,accessLocalVersement.creerVersement(credit.getVersement(), (int) credit_rslt, client.getId(),credit.getDatecredit()),1);}
 
-            bd.update(TABLE_ARTICLE,article1_cv,"designation =?", new String[] {article1.getDesignation()});
+            bd.updateWithOnConflict(TABLE_ARTICLE,article1_cv,"designation =?", new String[] {article1.getDesignation()},1);
             if (article2 != null && !article2.getDescription().equals("Choisir un article") ){
-                bd.update(TABLE_ARTICLE,article2_cv,"designation =?", new String[] {article2.getDesignation()});
+                bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv,"designation =?", new String[] {article2.getDesignation()},1);
             }
 
             creditModel = this.recupCreditById((int) credit_rslt);
@@ -160,9 +158,6 @@ public class AccessLocalCredit {
 
         }catch (Exception e){
              creditModel = null;
-        }finally {
-            bd.endTransaction();
-            bd.close();
         }
         return creditModel;
     }
@@ -208,9 +203,6 @@ public class AccessLocalCredit {
         }catch (Exception e){
             credit = null;
         }
-        finally {
-            bd.endTransaction();
-        }
         return credit;
     }
 
@@ -220,8 +212,9 @@ public class AccessLocalCredit {
      * @return vrai si l'annulation est faite sinon faux
      */
     public boolean anullerCredit(CreditModel credit){
-        boolean success ;
+        boolean success = false;
         bd = accessBD.getWritableDatabase();
+        bd.setForeignKeyConstraintsEnabled(true);
         bd.beginTransaction();
         try {
             Article article1 = credit.getArticle1();
@@ -238,19 +231,22 @@ public class AccessLocalCredit {
             cvclient.put(NBRCREDIT,credit.getClient().getNbrcredit() - 1);
             cvclient.put(TOTALCREDIT,credit.getClient().getTotalcredit() - credit.getSommecredit());
 
-            bd.delete(TABLE_CREDIT,ID +"=?",new String[]{String.valueOf(credit.getId())});
-            bd.delete(TABLE_VERSEMENT,CREDITID +"=?",new String[]{String.valueOf(credit.getId())});
-            bd.updateWithOnConflict(TABLE_CLIENT,cvclient, ID + "=?" ,new String[]{String.valueOf(credit.getClient().getId())},1);
-            bd.updateWithOnConflict(TABLE_ARTICLE,article1_cv, DESIGNATION + "=?" ,new String[]{article1.getDesignation()},1);
-            if (!article2.getDesignation().equals("Choisir un article")){
-                bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv, DESIGNATION + "=?",new String[]{article2.getDesignation()},1);
+           int rslt  = bd.delete(TABLE_CREDIT,ID +"=?",new String[]{String.valueOf(credit.getId())});
+            if (rslt > 0){
+                //            bd.delete(TABLE_VERSEMENT,CREDITID +"=?",new String[]{String.valueOf(credit.getId())});
+                bd.updateWithOnConflict(TABLE_CLIENT,cvclient, ID + "=?" ,new String[]{String.valueOf(credit.getClient().getId())},1);
+                bd.updateWithOnConflict(TABLE_ARTICLE,article1_cv, DESIGNATION + "=?" ,new String[]{article1.getDesignation()},1);
+                if (!article2.getDesignation().equals("Choisir un article")){
+                    bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv, DESIGNATION + "=?",new String[]{article2.getDesignation()},1);
+                }
+                bd.setTransactionSuccessful();
+                success = true;
+            }else {
+                bd.endTransaction();
             }
-            bd.setTransactionSuccessful();
-            success = true;
+
         }catch (Exception e){
-            success = false;
-        }finally {
-            bd.endTransaction();
+            Toast.makeText(contexte, "un probleme est survenu lors de l'annulation du credit", Toast.LENGTH_SHORT).show();
         }
         return  success;
     }
@@ -264,7 +260,7 @@ public class AccessLocalCredit {
         ArrayList<CreditModel> credits = new ArrayList<>();
         try {
             bd = accessBD.getReadableDatabase();
-            String req = "select * from credit where reste != 0 ";
+            String req = "select * from credit where reste > 0 ";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
             do {

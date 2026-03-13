@@ -67,15 +67,13 @@ public static final String MESSAGE = "message";
         ArrayList<SmsnoSentModel> smsnoSentModels = new ArrayList<>();
         try {
             Cursor cursor = db.query(SMSFAILLED,null,"id > 0",null,null,null,null);
-            if (cursor != null){
-                cursor.moveToFirst();
-                do {
-                    ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
-                    SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2), cursor.getInt(3));
-                    smsnoSentModels.add(sms);
-                }while(cursor.moveToNext());
-                cursor.close();
-            }
+            cursor.moveToFirst();
+            do {
+                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
+                SmsnoSentModel sms = new SmsnoSentModel(cursor.getInt(0), client,cursor.getString(2), cursor.getInt(3));
+                smsnoSentModels.add(sms);
+            }while(cursor.moveToNext());
+            cursor.close();
         }catch (Exception e){
             //do nothing
         }

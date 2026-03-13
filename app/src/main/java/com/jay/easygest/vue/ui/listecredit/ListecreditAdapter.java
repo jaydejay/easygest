@@ -3,6 +3,7 @@ package com.jay.easygest.vue.ui.listecredit;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class ListecreditAdapter extends BaseAdapter {
         }
         try {
             SpannableString content = new SpannableString(
+
                     credits.get(position).toString2());
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
             holder.txtlisteviewcodeclient.setText(content);
@@ -70,29 +72,18 @@ public class ListecreditAdapter extends BaseAdapter {
 
         holder.txtlisteviewsommecredit.setText(String.valueOf(credits.get(position).getSommecredit()));
         holder.txtlisteviewreste.setText(String.valueOf(credits.get(position).getReste()));
-        holder.txtlisteviewcodeclient.setTag(position);
         holder.ly_list_credits.setTag(position);
+//        holder.txtlisteviewcodeclient.setTag(position);
 
 
-        /*holder.btnlisteviewmodif.setOnClickListener(v -> {
-            try{
-                int position1 = (int)v.getTag();
-                String activity = v.getContext().getClass().getName();
-
-                if (activity.contains("GestionActivity")){
-                    ((GestionActivity)context).redirectToModifiercreditActivity(credits.get(position1));
-                }else {((AfficherclientActivity)context).redirectToModifiercreditActivity(credits.get(position1));}
-            }catch (Exception e){
-                //
-            }
-
-        });*/
 
 
         holder.ly_list_credits.setOnClickListener(v -> {
             int position3 = (int)v.getTag();
             String activity = v.getContext().getClass().getName();
             if (activity.contains("GestionActivity")){
+                Log.d("TAG", "getView position3 : "+ position3);
+                Log.d("TAG2", "getView: credit "+ credits.get(position3).getClient());
                 ((GestionActivity)context).redirectToAfficherCreditActivity(credits.get(position3));
             }else {((AfficherclientActivity)context).redirectToAfficherCreditActivity(credits.get(position3));}
 

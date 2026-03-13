@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -235,7 +236,7 @@ public class GestionActivity extends AppCompatActivity {
      * @param credit le credit à détaillé
      */
     public void redirectToAfficherCreditActivity(CreditModel credit) {
-
+        Log.d("TAG3", "getView position3 : "+ credit);
         creditcontrolleur.setCredit(credit);
         Intent intent = new Intent(this, AffichercreditActivity.class);
         startActivity(intent);

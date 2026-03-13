@@ -141,12 +141,7 @@ public class AccessLocalVersement {
             if (!creditsunclient.isEmpty()){
                 for (CreditModel credit : creditsunclient) {
                     if (sommeverse > 0){
-//                        int somme_a_verse;
-//                        if (sommeverse >= credit.getReste()){
                         int somme_a_verse = sommeverse >= credit.getReste() ? credit.getReste() : (int)sommeverse ;
-//                        }else {
-//                            somme_a_verse = (int)sommeverse;
-//                        }
                         int total_versements = credit.getVersement() + somme_a_verse;
                         credit.setSoldedat(date);
                         ContentValues credit_cv = getCreditContentValues(credit, total_versements);
@@ -169,15 +164,8 @@ public class AccessLocalVersement {
     private ContentValues getCreditContentValues(CreditModel credit, int totalVersements) {
 
         ContentValues credit_cv = new ContentValues();
-//                        credit_cv.put(ID,credit.getId());
-//                        credit_cv.put(CLIENTID,client.getId());
-//                        credit_cv.put(ARTICLE_1,gson.toJson(credit.getArticle1()));
-//                        credit_cv.put(ARTICLE_2,gson.toJson(credit.getArticle2()));
-//                        credit_cv.put(SOMMECREDIT,credit.getSommecredit());
                         credit_cv.put(VERSEMENTS,totalVersements);
                         credit_cv.put(RESTE,credit.getReste());
-//                        credit_cv.put(DATECREDIT,credit.getDatecredit());
-//                        credit_cv.put(NUMEROCREDIT,credit.getNumerocredit());
                         credit_cv.put(SOLDEDAT,credit.getSoldedat());
         return credit_cv;
     }

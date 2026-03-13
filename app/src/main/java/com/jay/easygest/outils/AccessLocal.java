@@ -62,19 +62,14 @@ public class AccessLocal {
             appkess_cv.put(TELEPHONE,appKessModel.getTelephone());
             appkess_cv.put(ADRESSEELECTRO,appKessModel.getAdresseelectro());
 
-            bd.insertOrThrow(UTILISATEUR,null,cv);
+            bd.insertWithOnConflict(UTILISATEUR,null,cv,1);
             bd.updateWithOnConflict("APPPKES",appkess_cv, APPNUMBER+"= ?", new String[] { String.valueOf(appKessModel.getAppnumber())},1);
             bd.setTransactionSuccessful();
             success = true;
         }catch (Exception e){
             success = false;
-
-        }finally {
-            bd.endTransaction();
         }
-
         return success;
-
     }
 
     public void modifierUtilisateur(UserModel user){

@@ -70,47 +70,32 @@ public class AccessLocalVersementacc {
                 bd.beginTransaction();
                 try{
                     if (sommeverse > 0){
-//                        int somme_a_verse;
-//                        if (sommeverse >= account.getReste()){
-                            int  somme_a_verse = sommeverse >= account.getReste() ? account.getReste() : (int)sommeverse  ;
-//                        }else {
-//                            somme_a_verse = (int)sommeverse;
-//                        }
-
+                        int  somme_a_verse = sommeverse >= account.getReste() ? account.getReste() : (int)sommeverse  ;
                         int reste = account.getReste() - somme_a_verse;
                         int versements = account.getVersement() + somme_a_verse;
-
-                        long date_de_solde;
-                        if (reste == 0){
-                            date_de_solde = date;
-                        }else {date_de_solde = 0L;}
+                        long date_de_solde = reste == 0 ? date : 0L;
                         account.setSoldedat(date_de_solde);
 
                         ContentValues account_cv = new ContentValues();
-                        account_cv.put(ID,account.getId());
-                        account_cv.put(CLIENTID,client.getId());
-                        account_cv.put(ARTICLE_1,gson.toJson(account.getArticle1()));
-                        account_cv.put(ARTICLE_2,gson.toJson(account.getArticle2()));
+//                        account_cv.put(ID,account.getId());
+//                        account_cv.put(CLIENTID,client.getId());
+//                        account_cv.put(ARTICLE_1,gson.toJson(account.getArticle1()));
+//                        account_cv.put(ARTICLE_2,gson.toJson(account.getArticle2()));
                         account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
                         account_cv.put(VERSEMENTS,versements);
                         account_cv.put(RESTE,reste);
                         account_cv.put(DATEACCOUNT,date);
-                        account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
+//                        account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
                         account_cv.put(SOLDEDAT,date_de_solde);
 
-                        bd.insertOrThrow(TABLE_VERSEMENTACC,null,creerVersement( somme_a_verse,account.getId(),client.getId(),date));
-                        bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
+                        bd.insertWithOnConflict(TABLE_VERSEMENTACC,null,creerVersement( somme_a_verse,account.getId(),client.getId(),date),1);
+                        bd.updateWithOnConflict(TABLE_ACCOUNT,account_cv, ID + "=?", new String[] {String.valueOf(account.getId())},1);
                         sommeverse = sommeverse - somme_a_verse;
                         bd.setTransactionSuccessful();
                         succes =true;
                     }
                 }catch (Exception e){succes=false;}
-                finally {
-                    bd.endTransaction();
-                }
-
             }
-
         }
         accountcontroller.setRecapTresteClient(client);
         return succes;

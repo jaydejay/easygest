@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.model.ClientModel;
 
@@ -59,22 +61,11 @@ public class AccessLocalClient {
         boolean success = false;
         try{
             bd = accessBD.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            cv.put(CODECLIENT,client.getCodeclient());
-            cv.put(NOM,client.getNom());
-            cv.put(PRENOMS,client.getPrenoms());
-            cv.put(TELEPHONE,client.getTelephone());
-            cv.put(ADRESSEELECTRO,client.getEmail());
-            cv.put(RESIDENCE,client.getResidence());
-            cv.put(CNI,client.getCni());
-            cv.put(PERMIS,client.getPermis());
-            cv.put(PASSPORT,client.getPassport());
-            cv.put(SOCIETE,client.getSociete());
+            ContentValues cv = getClientContentValues(client);
             bd.update(CLIENT,cv,CODECLIENT+"='"+client.getCodeclient()+"'",null);
             Clientcontrolleur clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(contexte);
             clientcontrolleur.setClient(client);
             clientcontrolleur.setMclient(client);
-
             success = true;
         }catch (Exception e){
             Toast.makeText(contexte, "un probleme est survenu lors de la modification", Toast.LENGTH_SHORT).show();
@@ -86,22 +77,40 @@ public class AccessLocalClient {
        return success;
     }
 
+    @NonNull
+    private ContentValues getClientContentValues(ClientModel client) {
+        ContentValues cv = new ContentValues();
+        cv.put(CODECLIENT, client.getCodeclient());
+        cv.put(NOM, client.getNom());
+        cv.put(PRENOMS, client.getPrenoms());
+        cv.put(TELEPHONE, client.getTelephone());
+        cv.put(ADRESSEELECTRO, client.getEmail());
+        cv.put(RESIDENCE, client.getResidence());
+        cv.put(CNI, client.getCni());
+        cv.put(PERMIS, client.getPermis());
+        cv.put(PASSPORT, client.getPassport());
+        cv.put(SOCIETE, client.getSociete());
+        return cv;
+    }
+
     public boolean supprimerclient(ClientModel client) {
+
         bd = accessBD.getReadableDatabase();
-        bd.beginTransaction();
+        bd.setForeignKeyConstraintsEnabled(true);
+//        bd.beginTransaction();
         boolean success ;
         try{
             bd.delete(CLIENT,CODECLIENT +"=?",new String[]{client.getCodeclient()});
-            bd.delete(CREDIT,"clientid =?", new String[]{String.valueOf(client.getId())});
-            bd.delete(VERSEMENT,"clientid =?", new String[]{String.valueOf(client.getId())});
-            bd.setTransactionSuccessful();
+//            bd.delete(CREDIT,"clientid =?", new String[]{String.valueOf(client.getId())});
+//            bd.delete(VERSEMENT,"clientid =?", new String[]{String.valueOf(client.getId())});
+//            bd.setTransactionSuccessful();
             success = true;
         }catch (Exception e){
              success = false;
         }
-            finally {
-            bd.endTransaction();
-        }
+//        finally {
+//            bd.endTransaction();
+//        }
 
         return success;
     }

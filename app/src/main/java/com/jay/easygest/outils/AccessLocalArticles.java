@@ -3,8 +3,11 @@ package com.jay.easygest.outils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.Image;
@@ -32,10 +35,9 @@ public class AccessLocalArticles {
         this.accessBD = new MySqliteOpenHelper(contexte,null);
     }
 
-
     public ArticlesModel insertArticle(ArticlesModel article){
         bd = accessBD.getWritableDatabase();
-        ArticlesModel articlesModel ;
+        ArticlesModel articlesModel = null;
         bd.beginTransaction();
         try{
             ArrayList<Image> images = new ArrayList<>();
@@ -55,10 +57,12 @@ public class AccessLocalArticles {
             }
             articlesModel = new ArticlesModel((int)rslt,article.getDesignation(),article.getPrix(),article.getQuantite(), article.getDesignation(), images);
             bd.setTransactionSuccessful();
-        }finally {
-            bd.endTransaction();
+        } catch (SQLiteConstraintException e) {
+            Toast.makeText(contexte, "article existe deja", Toast.LENGTH_LONG).show();
         }
-
+        catch (Exception e) {
+            Toast.makeText(contexte, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
         return articlesModel;
     }
 
@@ -72,7 +76,6 @@ public class AccessLocalArticles {
             articles_cv.put(QUANTITE,article.getQuantite());
             articles_cv.put(DESCRIPTION,article.getDescription());
            int rslt = bd.update(TABLE_ARTICLES, articles_cv, ID+ "= ?", new String[] {String.valueOf(article.getId())});
-
             if (rslt < 1){
                articleModel = null;
            }else {
@@ -148,7 +151,6 @@ public class AccessLocalArticles {
             }
             while (cursor.moveToNext());
             cursor.close();
-//            bd.close();
         } catch (Exception e) {
             return articlesModels;
         }
