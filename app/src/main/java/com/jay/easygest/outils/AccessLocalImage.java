@@ -19,7 +19,7 @@ public class AccessLocalImage {
     private SQLiteDatabase bd;
 
     public AccessLocalImage(Context context) {
-        this.accessBD = new MySqliteOpenHelper(context,null);
+        this.accessBD =  MySqliteOpenHelper.getInstance(context,null);
     }
 
     public ArrayList<Image> imagesDunArticles(int articleid){
@@ -47,10 +47,8 @@ public class AccessLocalImage {
         image_cv.put(IMAGE,newImage.getImage2());
         try {
             rslt = bd.update(TABLE_IMAGE,image_cv,ID+"=?",new String[] {String.valueOf(newImage.getId())});
-//            bd.close();
         }catch (Exception e){
             rslt = 0;
-//            bd.close();
         }
         return rslt;
     }
@@ -63,12 +61,8 @@ public class AccessLocalImage {
             image_cv.put(IMAGE,image.getImage2());
             image_cv.put(ARTICLEID,image.getArticleid());
             rslt = bd.insertOrThrow(TABLE_IMAGE,null,image_cv);
-//            bd.close();
         }catch (Exception e){
             rslt = -1;
-//            bd.close();
-            Log.d("accesslocalimage", "isertImage: SQLException "+e.getMessage());
-
         }
         return rslt;
     }

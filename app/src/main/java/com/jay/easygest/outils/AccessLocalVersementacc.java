@@ -41,7 +41,7 @@ public class AccessLocalVersementacc {
 
     public AccessLocalVersementacc(Context contexte) {
         this.contexte = contexte;
-        this.accessBD = new MySqliteOpenHelper(contexte,null);
+        this.accessBD =  MySqliteOpenHelper.getInstance(contexte,null);
         accessLocalClient = new AccessLocalClient(contexte);
         accessLocalAccount = new AccessLocalAccount(contexte);
 
@@ -77,15 +77,10 @@ public class AccessLocalVersementacc {
                         account.setSoldedat(date_de_solde);
 
                         ContentValues account_cv = new ContentValues();
-//                        account_cv.put(ID,account.getId());
-//                        account_cv.put(CLIENTID,client.getId());
-//                        account_cv.put(ARTICLE_1,gson.toJson(account.getArticle1()));
-//                        account_cv.put(ARTICLE_2,gson.toJson(account.getArticle2()));
                         account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
                         account_cv.put(VERSEMENTS,versements);
                         account_cv.put(RESTE,reste);
                         account_cv.put(DATEACCOUNT,date);
-//                        account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
                         account_cv.put(SOLDEDAT,date_de_solde);
 
                         bd.insertWithOnConflict(TABLE_VERSEMENTACC,null,creerVersement( somme_a_verse,account.getId(),client.getId(),date),1);
@@ -95,6 +90,11 @@ public class AccessLocalVersementacc {
                         succes =true;
                     }
                 }catch (Exception e){succes=false;}
+                finally {
+                    if (bd.inTransaction()){
+                        bd.endTransaction();
+                    }
+                }
             }
         }
         accountcontroller.setRecapTresteClient(client);
@@ -110,36 +110,27 @@ public class AccessLocalVersementacc {
 
         bd.beginTransaction();
         try{
-            cv_versementacc.put(ID,versement_a_modifier.getId());
             cv_versementacc.put(SOMMEVERSE,nouvellesommeverse);
-            cv_versementacc.put(ACCOUNTID,account.getId());
-            cv_versementacc.put(CLIENTID,versement_a_modifier.getClient().getId());
             cv_versementacc.put(DATEVERSEMENT,dateversement);
 
             int reste = account.getSommeaccount() - nouveau_total_versement;
             long date_de_solde;
-            if (reste == 0){
-               date_de_solde = dateversement;
-            }else {date_de_solde = 0L;}
+            date_de_solde = reste == 0 ? dateversement :0L;
             account.setSoldedat(date_de_solde);
-            account_cv.put(ID,account.getId());
-            account_cv.put(CLIENTID,account.getClient().getId());
-            account_cv.put(ARTICLE_1,gson.toJson(account.getArticle1()));
-            account_cv.put(ARTICLE_2,gson.toJson(account.getArticle2()));
-            account_cv.put(SOMMEACCOUNT,account.getSommeaccount());
             account_cv.put(VERSEMENTS,nouveau_total_versement);
             account_cv.put(RESTE,reste);
             account_cv.put(DATEACCOUNT,account.getDateaccount());
-            account_cv.put(NUMEROACCOUNT,account.getNumeroaccount());
             account_cv.put(SOLDEDAT,date_de_solde);
 
-            bd.replaceOrThrow(TABLE_VERSEMENTACC, null, cv_versementacc);
-            bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
+            bd.updateWithOnConflict(TABLE_VERSEMENTACC, cv_versementacc,ID+"=?",new String[]{String.valueOf(versement_a_modifier.getId())},1);
+            bd.updateWithOnConflict(TABLE_ACCOUNT,account_cv,ID + "=?",new String[]{String.valueOf(account.getId())},1);
             bd.setTransactionSuccessful();
             success= true;
         }catch (Exception e){success=false;}
         finally {
-            bd.endTransaction();
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return success;
 
@@ -150,25 +141,29 @@ public class AccessLocalVersementacc {
     public boolean annullerversement(VersementsaccModel versementacc,AccountModel account){
 
         bd = accessBD.getWritableDatabase();
+        bd.setForeignKeyConstraintsEnabled(true);
         long ancienne_sommeversee = versementacc.getSommeverse();
-        boolean success;
-
+        boolean success = false;
         long nouveau_versement_du_account = account.getVersement() - ancienne_sommeversee;
         long reste = account.getSommeaccount() - nouveau_versement_du_account;
-
         account.setSoldedat(0L);
-
         ContentValues account_cv = getAccountContentValues(account, nouveau_versement_du_account, reste);
         bd.beginTransaction();
         try {
-            bd.delete(TABLE_VERSEMENTACC,ID+"=?",new String[]{String.valueOf(versementacc.getId())});
-            bd.replaceOrThrow(TABLE_ACCOUNT,null,account_cv);
-            bd.setTransactionSuccessful();
-            success = true;
+           int rslt = bd.delete(TABLE_VERSEMENTACC,ID+"=?",new String[]{String.valueOf(versementacc.getId())});
+           if (rslt > 0){
+               bd.updateWithOnConflict(TABLE_ACCOUNT,account_cv, ID + "=?",new String[]{String.valueOf(account.getId())},1);
+               bd.setTransactionSuccessful();
+               success = true;
+           }else {
+               bd.endTransaction();
+           }
         }catch (Exception e){
-            success = false;
+            return success ;
         }finally {
-            bd.endTransaction();
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return success;
     }
@@ -201,17 +196,13 @@ public class AccessLocalVersementacc {
                AccountModel account = accessLocalAccount.recupAccountById(cursor.getInt(2));
                 VersementsaccModel versement = new VersementsaccModel(cursor.getInt(0),client,account, cursor.getLong(1), cursor.getLong(4) );
                 versements.add(versement);
-
             }
             while (cursor.moveToNext());
             cursor.close();
-
-
         }catch(Exception e){
-//            do nothing
+            return versements;
         }
         return  versements;
-
     }
 
     public VersementsaccModel recupVersementaccById(Integer versementaccid){
@@ -231,15 +222,12 @@ public class AccessLocalVersementacc {
                 ClientModel client = accessLocalClient.recupUnClient(clientid);
                 AccountModel account = accessLocalAccount.recupAccountById(accountid);
                 versement = new VersementsaccModel(id,client,account, (long) sommeverse,dateversement);
-
             }
             cursor.close();
-
         }catch (Exception e){
             return versement;
         }
         return versement;
-
     }
 
     /**
@@ -260,12 +248,9 @@ public class AccessLocalVersementacc {
                 ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(3));
                 VersementsaccModel versement = new VersementsaccModel(cursor.getInt(0),client,account, cursor.getLong(1), cursor.getLong(4) );
                 versements.add(versement);
-
             }
             while (cursor.moveToNext());
             cursor.close();
-
-
         }catch(Exception e){
             versements = null;
         }

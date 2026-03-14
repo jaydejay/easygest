@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.gson.Gson;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
 import com.jay.easygest.databinding.ActivityModifiercreditBinding;
@@ -27,7 +26,6 @@ import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 
 import java.util.Date;
-import java.util.Objects;
 
 public class ModifiercreditActivity extends AppCompatActivity {
     private Creditcontrolleur creditcontrolleur;
@@ -155,14 +153,9 @@ public class ModifiercreditActivity extends AppCompatActivity {
                         versement = sommecredit;
                     }
 
-                    int reste = sommecredit - versement;
-
-//                    Article article1 = c_article1;
-//                    Article article2 = c_article2;
-
                     CreditModel nouveau_credit = new CreditModel(credit.getId(),client,article1,article2,versement,datecredit,credit.getNumerocredit());
                     int ancienne_somme_credit = credit.getSommecredit();
-                    boolean success = creditcontrolleur.modifierCredit(nouveau_credit, client,ancienne_somme_credit);
+                    boolean success = creditcontrolleur.modifierCredit( nouveau_credit, client,ancienne_somme_credit);
                     if (success) {
                         ClientModel clientModel = clientcontrolleur.recupererClient(client.getId());
                         CreditModel credit_modifier = creditViewModel.getCredit().getValue();

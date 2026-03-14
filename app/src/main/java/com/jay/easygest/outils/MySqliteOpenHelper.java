@@ -35,7 +35,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
     public static final String STATUS = "status";
-
     public static final String NBR_CREDIT = "nbrcredit";
     public static final String TOTAL_CREDIT = "totalcredit";
     public static final String NBR_ACCOUNT = "nbraccount";
@@ -46,12 +45,22 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String NAME_OWNER = "solaris";
     public static final String DATELICENCE = "datelicence";
     public static final String DUREELICENCE = "dureelicence";
+    private static MySqliteOpenHelper sInstance = null;
 
     private  String appkey ;
     private String apppnumber ;
 
 
-    public MySqliteOpenHelper(@Nullable Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
+
+    public static synchronized MySqliteOpenHelper getInstance(@Nullable Context context,@Nullable SQLiteDatabase.CursorFactory factory) {
+        if (sInstance == null) {
+            // Use the application context to ensure we don't leak an Activity's context
+            sInstance = new MySqliteOpenHelper(context != null ? context.getApplicationContext() : null, factory);
+        }
+        return sInstance;
+    }
+
+    private MySqliteOpenHelper(@Nullable Context context, @Nullable SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory, version);
     }
 

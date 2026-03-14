@@ -9,12 +9,11 @@ import java.util.ArrayList;
 
 public class AccesLocalUsedKey {
 
-    private final MySqliteOpenHelper accessBD;
     private final SQLiteDatabase bd ;
 
     public AccesLocalUsedKey(Context context) {
 
-        accessBD = new MySqliteOpenHelper(context, null);
+        MySqliteOpenHelper accessBD = MySqliteOpenHelper.getInstance(context, null);
         bd = accessBD.getWritableDatabase();
     }
 

@@ -33,6 +33,7 @@ public abstract class VariablesStatique {
     public static final String NUMEROCREDIT = "numerocredit";
     public static final String NBRCREDIT = "nbrcredit";
     public static final String TOTALCREDIT = "totalcredit";
+
     public static final String CREDITID = "creditid";
     public static final String SOLDEDAT = "soldedat";
     public static final String DESIGNATION = "designation";

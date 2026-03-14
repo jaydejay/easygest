@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.jay.easygest.model.ArticlesModel;
@@ -32,7 +31,7 @@ public class AccessLocalArticles {
 
     public AccessLocalArticles(Context context) {
         this.contexte = context;
-        this.accessBD = new MySqliteOpenHelper(contexte,null);
+        this.accessBD =  MySqliteOpenHelper.getInstance(contexte,null);
     }
 
     public ArticlesModel insertArticle(ArticlesModel article){
@@ -62,6 +61,10 @@ public class AccessLocalArticles {
         }
         catch (Exception e) {
             Toast.makeText(contexte, e.getMessage(), Toast.LENGTH_LONG).show();
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return articlesModel;
     }
@@ -99,7 +102,6 @@ public class AccessLocalArticles {
         int rslt;
         try{
          rslt =  accessBD.getWritableDatabase().delete(TABLE_ARTICLES, ID +"=?",new String[]{String.valueOf(article.getId())});
-//            bd.close();
         }catch( SQLiteException e) {
             rslt = 0;
             bd.close();

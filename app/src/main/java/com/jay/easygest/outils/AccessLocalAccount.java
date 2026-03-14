@@ -41,7 +41,6 @@ public class AccessLocalAccount {
     public static final String TABLE_ACCOUNT = "account";
     public static final String NBRACCOUNT = "nbraccount";
     public static final String TOTALACCOUNT = "totalaccount";
-    public static final String ACCOUNTID = "accountid";
     public static final String SOLDEDAT = "soldedat";
     private final MySqliteOpenHelper accessBD;
     private final Context contexte;
@@ -54,7 +53,7 @@ public class AccessLocalAccount {
 
     public AccessLocalAccount(Context context) {
         this.contexte = context;
-        this.accessBD = new MySqliteOpenHelper(contexte,null);
+        this.accessBD =  MySqliteOpenHelper.getInstance(contexte,null);
         accessLocalClient = new AccessLocalClient(contexte);
 
     }
@@ -109,9 +108,18 @@ public class AccessLocalAccount {
                 bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv,"designation =?", new String[] {article2.getDesignation()},1);
             }
             accountModel = this.recupAccountById((int) account_rslt);
+            InfosModel info  = this.getInfo(bd);
+            ContentValues infos_cv = new ContentValues();
+            infos_cv.put("nbraccount",info.getNbraccount()+1);
+            infos_cv.put("totalaccount",info.getTotalaccount()+accountModel.getSommeaccount());
+            bd.updateWithOnConflict(TABLE_INFO,infos_cv,"appnumber = ?", new String[] {String.valueOf(info.getAppnumber())},1);
             bd.setTransactionSuccessful();
         }catch (Exception e){
             accountModel = null;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return accountModel;
     }
@@ -149,10 +157,14 @@ public class AccessLocalAccount {
                 bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv,"designation =?", new String[] {article2.getDesignation()},1);
             }
             accountModel = this.recupAccountById((int) account_rslt);
+            InfosModel info  = this.getInfo(bd);
+            ContentValues infos_cv = new ContentValues();
+            infos_cv.put("nbraccount",info.getNbraccount()+1);
+            infos_cv.put("totalaccount",info.getTotalaccount()+accountModel.getSommeaccount());
+            bd.updateWithOnConflict(TABLE_INFO,infos_cv,"appnumber = ?", new String[] {String.valueOf(info.getAppnumber())},1);
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
-
             accountModel = null;
         }
         return accountModel;
@@ -208,9 +220,7 @@ public class AccessLocalAccount {
         bd.setForeignKeyConstraintsEnabled(true);
         bd.beginTransaction();
         try {
-
             ContentValues cvclient = new ContentValues();
-
             Article article1 = account.getArticle1();
             ContentValues article1_cv = new ContentValues();
             ArticlesModel articlesModel1 = this.getArticleidAndDesignation(bd,article1.getDesignation());
@@ -231,6 +241,12 @@ public class AccessLocalAccount {
                 if (!article2.getDesignation().equals("Choisir un article")){
                     bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv, DESIGNATION + "=?",new String[]{article2.getDesignation()},1);
                 }
+
+                InfosModel info  = this.getInfo(bd);
+                ContentValues infos_cv = new ContentValues();
+                infos_cv.put("nbraccount",info.getNbraccount()-1);
+                infos_cv.put("totalaccount",info.getTotalaccount()-account.getSommeaccount());
+                bd.updateWithOnConflict(TABLE_INFO,infos_cv,"appnumber = ?", new String[] {String.valueOf(info.getAppnumber())},1);
                 bd.setTransactionSuccessful();
                 success = true;
             }else {
@@ -239,6 +255,10 @@ public class AccessLocalAccount {
 
         }catch (Exception e){
            return false;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return  success;
     }
@@ -254,9 +274,9 @@ public class AccessLocalAccount {
         boolean success = false;
         try {
             bd.delete(TABLE_ACCOUNT,ID+"=?",new String[]{String.valueOf(client.getId())});
-            success=true;
+            success = true;
         }catch (Exception e){
-           return success ;
+           return success;
         }
         return success;
     }

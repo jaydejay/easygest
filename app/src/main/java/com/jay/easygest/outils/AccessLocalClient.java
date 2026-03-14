@@ -27,19 +27,17 @@ public class AccessLocalClient {
     public static final String PASSPORT = "passport";
     public static final String SOCIETE = "societe";
     public static final String CLIENT = "client";
-    public static final String CREDIT="credit";
     public static final String TOTAL_CREDIT="totalcredit";
     public static final String TOTAL_ACCOUNT="totalaccount";
     public static final String NBRCREDIT = "nbrcredit";
     public static final String NBRACCOUNT="nbraccount";
-    public static final String VERSEMENT = "versement";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
     private final Context contexte;
 
     public AccessLocalClient(Context contexte) {
         this.contexte = contexte;
-        this.accessBD = new MySqliteOpenHelper(contexte, null);
+        this.accessBD =  MySqliteOpenHelper.getInstance(contexte, null);
     }
 
     public ContentValues ajoutClientContentValue(String codeclient, String nom, String prenoms, String telephone, Integer nbrcredit, Integer totalcredit, Integer nbraccount, Integer totalaccount) {
@@ -69,11 +67,7 @@ public class AccessLocalClient {
             success = true;
         }catch (Exception e){
             Toast.makeText(contexte, "un probleme est survenu lors de la modification", Toast.LENGTH_SHORT).show();
-
-        }finally {
-           bd.close();
         }
-
        return success;
     }
 
@@ -97,21 +91,14 @@ public class AccessLocalClient {
 
         bd = accessBD.getReadableDatabase();
         bd.setForeignKeyConstraintsEnabled(true);
-//        bd.beginTransaction();
+
         boolean success ;
         try{
             bd.delete(CLIENT,CODECLIENT +"=?",new String[]{client.getCodeclient()});
-//            bd.delete(CREDIT,"clientid =?", new String[]{String.valueOf(client.getId())});
-//            bd.delete(VERSEMENT,"clientid =?", new String[]{String.valueOf(client.getId())});
-//            bd.setTransactionSuccessful();
             success = true;
         }catch (Exception e){
              success = false;
         }
-//        finally {
-//            bd.endTransaction();
-//        }
-
         return success;
     }
 

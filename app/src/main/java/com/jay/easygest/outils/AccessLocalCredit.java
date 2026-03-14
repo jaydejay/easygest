@@ -1,6 +1,5 @@
 package com.jay.easygest.outils;
 
-import static com.jay.easygest.outils.VariablesStatique.CREDITID;
 import static com.jay.easygest.outils.VariablesStatique.ARTICLE_1;
 import static com.jay.easygest.outils.VariablesStatique.ARTICLE_2;
 import static com.jay.easygest.outils.VariablesStatique.DATECREDIT;
@@ -53,7 +52,7 @@ public class AccessLocalCredit {
 
     public AccessLocalCredit(Context contexte) {
         this.contexte = contexte;
-        this.accessBD = new MySqliteOpenHelper(contexte, null);
+        this.accessBD = MySqliteOpenHelper.getInstance(contexte, null);
         accessLocalClient = new AccessLocalClient(contexte);
     }
 
@@ -109,10 +108,21 @@ public class AccessLocalCredit {
                 bd.updateWithOnConflict(TABLE_ARTICLE, article2_cv, "designation =?", new String[]{article2.getDesignation()},1);
             }
             creditModel = this.recupCreditById((int) credit_rslt);
+
+            InfosModel info = this.getInfo(bd);
+            ContentValues infos_cv = new ContentValues();
+            infos_cv.put(NBRCREDIT,info.getNbrcredit()+1);
+            infos_cv.put(TOTALCREDIT,info.getTotalcredit()+creditModel.getSommecredit());
+            bd.updateWithOnConflict(TABLE_INFO,infos_cv,"appnumber = ?", new String[] {String.valueOf(info.getAppnumber())},1);
+
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
             creditModel = null;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return creditModel;
 
@@ -154,10 +164,20 @@ public class AccessLocalCredit {
             }
 
             creditModel = this.recupCreditById((int) credit_rslt);
+            InfosModel info = this.getInfo(bd);
+            ContentValues infos_cv = new ContentValues();
+            infos_cv.put(NBRCREDIT,info.getNbrcredit()+1);
+            infos_cv.put(TOTALCREDIT,info.getTotalcredit()+creditModel.getSommecredit());
+            bd.updateWithOnConflict(TABLE_INFO,infos_cv,"appnumber = ?", new String[] {String.valueOf(info.getAppnumber())},1);
+
             bd.setTransactionSuccessful();
 
         }catch (Exception e){
              creditModel = null;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return creditModel;
     }
@@ -239,6 +259,11 @@ public class AccessLocalCredit {
                 if (!article2.getDesignation().equals("Choisir un article")){
                     bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv, DESIGNATION + "=?",new String[]{article2.getDesignation()},1);
                 }
+                InfosModel info = this.getInfo(bd);
+                ContentValues infos_cv = new ContentValues();
+                infos_cv.put(NBRCREDIT,info.getNbrcredit()-1);
+                infos_cv.put(TOTALCREDIT,info.getTotalcredit()-credit.getSommecredit());
+                 bd.updateWithOnConflict(TABLE_INFO,infos_cv,"appnumber = ?", new String[] {String.valueOf(info.getAppnumber())},1);
                 bd.setTransactionSuccessful();
                 success = true;
             }else {
@@ -247,6 +272,10 @@ public class AccessLocalCredit {
 
         }catch (Exception e){
             Toast.makeText(contexte, "un probleme est survenu lors de l'annulation du credit", Toast.LENGTH_SHORT).show();
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return  success;
     }
@@ -619,44 +648,13 @@ public class AccessLocalCredit {
         return info;
     }
 
-    private void updatearticlesWhenCancelCredit(SQLiteDatabase bd, CreditModel credit) {
-        bd.beginTransaction();
-//        try{
-//            Type type = new TypeToken<Article>(){}.getType();
-//            Gson gson = new Gson();
-
-            Article c_article1 = credit.getArticle1();
-            ContentValues article1_cv = new ContentValues();
-            ArticlesModel articlesModel1 = this.getArticleidAndDesignation(bd,c_article1.getDesignation());
-            article1_cv.put(QUANTITE,articlesModel1.getQuantite() + c_article1.getNbrarticle());
-
-            Article c_article2 = credit.getArticle2();
-            ContentValues article2_cv = new ContentValues();
-            ArticlesModel articlesModel2 = this.getArticleidAndDesignation(bd,c_article2.getDesignation());
-            article2_cv.put(QUANTITE,articlesModel2.getQuantite() + c_article2.getNbrarticle() );
-
-            bd.updateWithOnConflict(TABLE_ARTICLE,article1_cv, DESIGNATION + "=" +c_article1.getDesignation(),null,1);
-            bd.updateWithOnConflict(TABLE_ARTICLE,article2_cv, DESIGNATION + "=" +c_article2.getDesignation(),null,1);
-        bd.setTransactionSuccessful();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }finally {
-//            bd.endTransaction();
-//        }
-
-    }
-
     public ArticlesModel getArticleidAndDesignation(SQLiteDatabase bd,String designation){
         ArticlesModel articlesModel = null;
         try {
-
-//            String req = "select id, quantite from articles where " + DESIGNATION + "='"+designation+"'";
             Cursor cursor = bd.query(TABLE_ARTICLE, null,DESIGNATION + "=?",new String[]{designation},null,null,null);
-//            Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {
                 articlesModel = new ArticlesModel(cursor.getInt(0),cursor.getString(1), cursor.getInt(2),cursor.getInt(3), cursor.getString(4));
-
             }
             cursor.close();
         } catch (Exception e) {
@@ -676,7 +674,7 @@ public class AccessLocalCredit {
                 creditModel = this.recupCreditaveccclientById(credit.getId());
             }
         } catch (Exception e) {
-           return creditModel  ;
+           return null;
         }
         return creditModel;
     }
@@ -691,7 +689,6 @@ public class AccessLocalCredit {
         long datecredit = credtModelcursor.getLong(7);
         int nbrcredit = credtModelcursor.getInt(8);
 
-        CreditModel credit = new CreditModel(creditId, client, article1, article2, versement, datecredit, nbrcredit);
-        return credit;
+        return new CreditModel(creditId, client, article1, article2, versement, datecredit, nbrcredit);
     }
 }

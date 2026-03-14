@@ -84,7 +84,7 @@ public final class Creditcontrolleur {
 
     public void setMCredits(ArrayList<CreditModel> credits) {this.mcredits.setValue(credits); }
 
-    public CreditModel creerCredit( Context context,Map<String, Object> data){
+    public CreditModel creerCredit(Map<String,Object> data){
 
         Article article1vendu = (Article) data.get("article1vendu");
         Article article2vendu = (Article) data.get("article2vendu");
@@ -92,10 +92,10 @@ public final class Creditcontrolleur {
         CreditModel premiercredit = new CreditModel((String) data.get("codeclient"), (String) data.get("nomclient"),
                 (String) data.get("prenomclient"),article1vendu, article2vendu, Integer.parseInt((String) data.get("versement")),
                  (Long) data.get("dateouverture"),1);
-        AccessLocalCredit accessLocalcredit = new AccessLocalCredit(context);
+
         CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,data);
         if (credit != null){
-             accessLocalInfo.updateTableInfosWhenCreateOrAddCredit(credit.getSommecredit());
+//             accessLocalInfo.updateTableInfosWhenCreateOrAddCredit(credit.getSommecredit());
             credits.add(premiercredit);
             this.setCredits(credits);
             this.setCredit(credit);
@@ -130,7 +130,7 @@ public final class Creditcontrolleur {
         boolean success = false;
           CreditModel le_credit_ajoute = accessLocalcredit.ajouterCredit(credit,client,newdata);
         if (le_credit_ajoute != null){
-            accessLocalInfo.updateTableInfosWhenCreateOrAddCredit(sommecredit);
+//            accessLocalInfo.updateTableInfosWhenCreateOrAddCredit(sommecredit);
             credits.add(le_credit_ajoute);
             this.setCredits(credits);
             this.setCredit(le_credit_ajoute);
@@ -165,10 +165,8 @@ public final class Creditcontrolleur {
         boolean success = false;
       boolean rslt = accessLocalcredit.anullerCredit(credit);
         if (rslt){
-           if (accessLocalInfo.updatTableInfosWhenannullerCredit(credit)){
-               success = true;
-               this.listecredits();
-           }
+           success = true;
+           this.listecredits();
         }
       return success;
     }

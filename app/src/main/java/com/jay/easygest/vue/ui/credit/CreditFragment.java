@@ -81,7 +81,7 @@ public class CreditFragment extends Fragment {
         this.initFragment();
         getSelectedArticle1();
         getSelectedArticle2();
-        this.ajouterCredit();
+        this.creerPremierCredit();
 
         return  binding.getRoot();
     }
@@ -160,9 +160,9 @@ public class CreditFragment extends Fragment {
      * permet d'ajouter le premier credit d'un client
      * elle cree un client avec son premier credit
      */
-    public void ajouterCredit(){
+    public void creerPremierCredit(){
         binding.btncreercredit.setOnClickListener(v -> {
-            try{
+//            try{
                 binding.btncreercredit.setEnabled(false);
                 String nomclient = binding.edittxtcreernom.getText().toString().trim();
                 String prenomsclient = binding.edittxtcreerprenoms.getText().toString().trim();
@@ -257,7 +257,7 @@ public class CreditFragment extends Fragment {
                                                                         data.put("article1",article1);
                                                                         data.put("article2",article2);
 
-                                                                        CreditModel creditModel =  this.creditcontrolleur.creerCredit(getContext(),data);
+                                                                        CreditModel creditModel =  this.creditcontrolleur.creerCredit(data);
                                                                         if (creditModel != null) {
                                                                             ClientModel client = clientcontrolleur.recupererClient(creditModel.getClient().getId());
                                                                             creditcontrolleur.setRecapTresteClient(client);
@@ -294,10 +294,10 @@ public class CreditFragment extends Fragment {
                     }
 
                 }
-            }catch (Exception e){
-                Toast.makeText(getContext(), "probleme interne innattendu", Toast.LENGTH_SHORT).show();
-                binding.btncreercredit.setEnabled(true);
-            }
+//            }catch (Exception e){
+//                Toast.makeText(getContext(), "probleme interne innattendu", Toast.LENGTH_SHORT).show();
+//                binding.btncreercredit.setEnabled(true);
+//            }
         });
     }
 

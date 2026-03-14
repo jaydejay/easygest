@@ -26,7 +26,7 @@ public class AccessLocalAppKes {
     private SQLiteDatabase bd;
 
     public AccessLocalAppKes(Context context) {
-        accessBD = new MySqliteOpenHelper(context, null);
+        accessBD =  MySqliteOpenHelper.getInstance(context, null);
     }
 
     public AppKessModel getAppkes() {

@@ -89,7 +89,7 @@ public class Accountcontroller {
         AccountModel premieraccount = new AccountModel( codeclt,nomclient,prenomsclient,article1vendu, article2vendu, Integer.parseInt(versement),dateaccount,1);
         AccountModel account  = accessLocalAccount.creerCompteAccount(premieraccount,telephone,newdata);
         if (account != null){
-            accessLocalInfo.updateAccountInfos(premieraccount.getSommeaccount());
+//            accessLocalInfo.updateAccountInfos(premieraccount.getSommeaccount());
             this.setAccount(account);
         }
         return  account;
@@ -161,7 +161,7 @@ public class Accountcontroller {
     public boolean annullerAccount(AccountModel account){
         boolean  success = accessLocalAccount.anullerAccount(account);
         if (success){
-            accessLocalInfo.annullerAccountInfos(account);
+//            accessLocalInfo.annullerAccountInfos(account);
             this.listeaccounts();
         }
         return success;

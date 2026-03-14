@@ -35,7 +35,7 @@ public class AccessLocal {
 
     public AccessLocal(Context contexte) {
 
-        this.accessBD = new MySqliteOpenHelper(contexte,null);
+        this.accessBD =  MySqliteOpenHelper.getInstance(contexte,null);
         passwordHascher = new PasswordHascher();
 
     }
@@ -111,7 +111,6 @@ public class AccessLocal {
             utilisateur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
         }
         cursor.close();
-        bd.close();
         return utilisateur;
     }
 

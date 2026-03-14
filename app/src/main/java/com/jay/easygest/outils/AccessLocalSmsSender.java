@@ -24,24 +24,23 @@ public static final String MESSAGE = "message";
 
     public AccessLocalSmsSender(Context context) {
 //        this.context = context;
-     accessBD = new MySqliteOpenHelper(context,null);
+     accessBD =  MySqliteOpenHelper.getInstance(context,null);
      accessLocalClient = new AccessLocalClient(context);
     }
 
     public boolean insert(SmsnoSentModel smsnoSentModel){
         boolean success;
         try{
-        db = accessBD.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(CLIENTID,smsnoSentModel.getClientid());
-        cv.put(MESSAGE,smsnoSentModel.getMessage());
-        cv.put(SMSID,smsnoSentModel.getSmsid());
-        db.insert(SMSFAILLED,null,cv);
-        success = true;
+            db = accessBD.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(CLIENTID,smsnoSentModel.getClientid());
+            cv.put(MESSAGE,smsnoSentModel.getMessage());
+            cv.put(SMSID,smsnoSentModel.getSmsid());
+            db.insert(SMSFAILLED,null,cv);
+            success = true;
         }catch (Exception e){
             success=false;
         }
-
         return success;
     }
 
