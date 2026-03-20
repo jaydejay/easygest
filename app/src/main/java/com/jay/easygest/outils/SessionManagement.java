@@ -28,6 +28,14 @@ public class SessionManagement {
         editor.putBoolean(VariablesStatique.AUTH_SHARED_PREF_KEY_ACTIVATED,status).commit();
     }
 
+    public boolean getFreekeyActivated(){
+        return sharedPreferences.getBoolean(VariablesStatique.AUTH_SHARED_PREF_FREE_KEY_ACTIVATED, false);
+    }
+
+    public void saveFreekeyActivated(boolean status){
+        editor.putBoolean(VariablesStatique.AUTH_SHARED_PREF_FREE_KEY_ACTIVATED,status).commit();
+    }
+
     public boolean getkeyActivated(){
         return sharedPreferences.getBoolean(VariablesStatique.AUTH_SHARED_PREF_KEY_ACTIVATED, false);
     }

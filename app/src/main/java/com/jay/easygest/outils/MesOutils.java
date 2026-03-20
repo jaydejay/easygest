@@ -53,6 +53,28 @@ public abstract  class MesOutils {
         return date;
     }
 
+    public static Date convertStringToDate2(String ladate){
+        String separator1 = "-";
+        String separator2 = "/";
+        String separator3 = ".";
+        if (ladate.contains(separator2)){
+            ladate = ladate.replace(separator2,separator1);
+        }
+        if (ladate.contains(separator3)){
+            ladate = ladate.replace(separator3,separator1);
+        }
+
+        String dateFormat = "dd-MM-yyyy";
+        SimpleDateFormat dateFormater = new SimpleDateFormat(dateFormat, Locale.FRANCE);
+        Date date ;
+        try {
+            date = dateFormater.parse(ladate);
+        } catch (ParseException e) {
+            date = null ;
+        }
+        return date;
+    }
+
     public static String convertDateToString(Date ladate){
         SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy",Locale.FRANCE);
         return date.format(ladate);
@@ -304,9 +326,7 @@ public abstract  class MesOutils {
     public static boolean isLicenceExpired(String[] appcredentials){
         Timestamp maintenant  = new Timestamp(new Date().getTime());
         Timestamp duree_licence  = new Timestamp(Long.parseLong(appcredentials[6]));
-
         return maintenant.after(duree_licence);
-
     }
 
 

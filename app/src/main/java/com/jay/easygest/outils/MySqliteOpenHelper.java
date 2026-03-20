@@ -1,8 +1,13 @@
 package com.jay.easygest.outils;
 
+import static com.jay.easygest.outils.VariablesStatique.CHOISIR_UN_ARTICLE;
+import static com.jay.easygest.outils.VariablesStatique.DESCRIPTION;
+import static com.jay.easygest.outils.VariablesStatique.DESIGNATION;
+import static com.jay.easygest.outils.VariablesStatique.PRIX;
+import static com.jay.easygest.outils.VariablesStatique.QUANTITE;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_ACCOUNT;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_APPPKES;
-import static com.jay.easygest.outils.VariablesStatique.TABLE_ARTICLES;
+import static com.jay.easygest.outils.VariablesStatique.TABLE_ARTICLE;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_CLIENT;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_CREDIT;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_IMAGE;
@@ -111,7 +116,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                     + "soldedat Long,"
                     + "foreign key(clientid) references client(id) on delete cascade )";
             sqLiteDatabase.execSQL(createTable_account);
-            String createTable_articles = "create table " + TABLE_ARTICLES + " ("
+            String createTable_articles = "create table " + TABLE_ARTICLE + " ("
                     + "id Integer primary key,"
                     + "designation Text unique ,"
                     + "prix Integer not null,"
@@ -173,18 +178,19 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                     + "smsid Integer not null,"
                     + "foreign key(clientid) references client(id) on delete cascade)";
             sqLiteDatabase.execSQL(createTable_smsfailled);
-            String createTable_image = "create table " + TABLE_IMAGE + " ("
+            String createTable_image = "create table " + TABLE_IMAGE + "("
                     + "id Integer primary key,"
                     + "image Blob,"
                     + "articleid Integer not null,"
                     + "foreign key(articleid) references articles(id) on delete cascade)";
             sqLiteDatabase.execSQL(createTable_image);
 
-            String createTable_usedkey = "create table " + TABLE_USEDKEY + " ("
+            String createTable_usedkey = "create table " + TABLE_USEDKEY + "("
                     + "id Integer primary key,"
                     + "cle Text not null unique)";
             sqLiteDatabase.execSQL(createTable_usedkey);
 
+            sqLiteDatabase.insert(TABLE_ARTICLE,null, articleVideContentValue());
             sqLiteDatabase.insert(TABLE_APPPKES,null,apppPersitence());
             sqLiteDatabase.insert(TABLE_INFO,null,creeeinfo());
             sqLiteDatabase.insert(TABLE_USEDKEY,null,getUsedkeyCv(appkey));
@@ -266,7 +272,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         //renommage de la table articles
         sqLiteDatabase.execSQL("ALTER TABLE articles RENAME TO articlesold");
         //creation d'une nouvelle table articles
-        String createTable_articles = "create table " + TABLE_ARTICLES + " ("
+        String createTable_articles = "create table " + TABLE_ARTICLE + " ("
                 + "id Integer primary key,"
                 + "designation Text unique,"
                 + "prix Integer not null,"
@@ -274,10 +280,9 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                 + "description Text not null)";
 
         sqLiteDatabase.execSQL(createTable_articles);
-
+        sqLiteDatabase.insert(TABLE_ARTICLE,null, articleVideContentValue());
         //recuperer les donnees de la table articlesold et les inserer dans la nouvelle table
         Cursor cursor = sqLiteDatabase.query("articlesold",null,null,null,"designation",null,null);
-
         if (cursor.moveToFirst()){
             do {
                 String designation = cursor.getString(cursor.getColumnIndexOrThrow("designation"));
@@ -289,7 +294,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                 cv.put("description",description);
                 cv.put("prix",prix);
                 cv.put("quantite",quantite);
-                sqLiteDatabase.insert(TABLE_ARTICLES,null,cv);
+                sqLiteDatabase.insert(TABLE_ARTICLE,null,cv);
             }while (cursor.moveToNext());
             cursor.close();
             sqLiteDatabase.execSQL("drop table articlesold");
@@ -302,7 +307,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         usedkey_cv.put("cle", cle);
         return usedkey_cv;
     }
-
 
     public ContentValues apppPersitence(){
         Date ladate = new Date();
@@ -319,6 +323,15 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         cv.put(DUREELICENCE,duree_licence);
 
         return cv;
+    }
+
+    public ContentValues articleVideContentValue(){
+        ContentValues article_cv = new ContentValues();
+        article_cv.put(DESIGNATION,CHOISIR_UN_ARTICLE);
+        article_cv.put(PRIX,0);
+        article_cv.put(QUANTITE, 100);
+        article_cv.put(DESCRIPTION,CHOISIR_UN_ARTICLE);
+        return article_cv;
     }
 
     public ContentValues apppUpdateCv(){

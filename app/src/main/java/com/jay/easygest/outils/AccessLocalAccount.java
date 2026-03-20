@@ -83,9 +83,7 @@ public class AccessLocalAccount {
     public AccountModel creerCompteAccount(AccountModel premieraccount, String telephone, Map<String, Object> newdata) {
         bd = accessBD.getWritableDatabase();
         accessLocalVersementacc = new AccessLocalVersementacc(contexte);
-
         ContentValues client_cv = accessLocalClient.ajoutClientContentValue(premieraccount.getCodeclient(), premieraccount.getNomclient(),premieraccount.getPrenomsclient(),telephone,0,0,1,premieraccount.getSommeaccount());
-
         ContentValues article1_cv = new ContentValues();
         ArticlesModel article1 = (ArticlesModel) newdata.get("article1");
         int nbrarticle1restant = (int) newdata.get("nbrarticle1restant");
@@ -288,9 +286,8 @@ public class AccessLocalAccount {
      */
     public AccountModel recupAccountById(int accountId) {
         AccountModel account = null;
-
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from account where " + ID + "="+accountId;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
@@ -309,7 +306,6 @@ public class AccessLocalAccount {
     @NonNull
     private AccountModel getAccountModelfromCursor( Cursor cursor,ClientModel client) {
        int accountId = cursor.getInt(0);
-//                Article article1 = gson.fromJson(cursor.getString(2),articletype);
         Article article1 = gson.fromJson(cursor.getString(2),Article.class);
         Article article2 = gson.fromJson(cursor.getString(3),Article.class);
         int versement = cursor.getInt(5);
@@ -320,7 +316,6 @@ public class AccessLocalAccount {
 
     private ClientModel recupUnClient(SQLiteDatabase bd,int clientid) {
         ClientModel client = null;
-
         try {
             String req = "select * from client where " + ID + "='"+clientid+"'";
             Cursor cursor = bd.rawQuery(req, null);
@@ -362,10 +357,8 @@ public class AccessLocalAccount {
 
     public ArrayList<AccountModel> listeAccounts(){
         ArrayList<AccountModel> accounts = new ArrayList<>();
-
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
-
             String req = "select * from account where reste > 0 ";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -389,10 +382,9 @@ public class AccessLocalAccount {
      * @return retourne la liste des accounts en cours du client
      */
     public ArrayList<AccountModel> listeAccountsClient(ClientModel client) {
-
+        bd = accessBD.getReadableDatabase();
         ArrayList<AccountModel> account_dun_client = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from account where  reste > 0 and clientid ='" + client.getId()+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -417,10 +409,9 @@ public class AccessLocalAccount {
      */
 
     public ArrayList<AccountModel> listeDESAccountsSoldesClient(ClientModel client) {
-
+        bd = accessBD.getReadableDatabase();
         ArrayList<AccountModel> accounts = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from account where  reste = 0 and clientid ='" + client.getId()+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -571,7 +562,6 @@ public class AccessLocalAccount {
     }
 
     public AccountModel modifierDateAccount(AccountModel account, long date) {
-
         bd = accessBD.getWritableDatabase();
         AccountModel accountModel = null;
         ContentValues account_cv = new ContentValues();

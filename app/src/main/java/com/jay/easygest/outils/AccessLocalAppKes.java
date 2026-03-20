@@ -33,9 +33,8 @@ public class AccessLocalAppKes {
 
         ArrayList<AppKessModel> _appKessModels = new ArrayList<>();
         AppKessModel appKessModel;
-
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from APPPKES";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -68,8 +67,8 @@ public class AccessLocalAppKes {
      */
     public boolean updateAppkes(AppKessModel appKessModel) {
         boolean success = false;
+        bd = accessBD.getWritableDatabase();
         try {
-            bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(OWNER, appKessModel.getOwner());
             cv.put(BASECODE, appKessModel.getBasecode());
@@ -118,8 +117,11 @@ public class AccessLocalAppKes {
 
             }
         } catch (Exception e) {
-            // do nothing
             return false;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return success;
     }

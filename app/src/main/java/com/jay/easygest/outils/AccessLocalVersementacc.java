@@ -159,7 +159,7 @@ public class AccessLocalVersementacc {
                bd.endTransaction();
            }
         }catch (Exception e){
-            return success ;
+            return false ;
         }finally {
             if (bd.inTransaction()){
                 bd.endTransaction();
@@ -186,9 +186,9 @@ public class AccessLocalVersementacc {
 
 
     public ArrayList<VersementsaccModel> listeVersementsClient(ClientModel client){
+        bd = accessBD.getReadableDatabase();
         ArrayList<VersementsaccModel> versements = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from versementacc where clientid ='" + client.getId()+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -206,9 +206,9 @@ public class AccessLocalVersementacc {
     }
 
     public VersementsaccModel recupVersementaccById(Integer versementaccid){
+        bd = accessBD.getReadableDatabase();
         VersementsaccModel versement = null;
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from versementacc where " + ID + "="+versementaccid;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
@@ -237,10 +237,9 @@ public class AccessLocalVersementacc {
      */
 
     public ArrayList<VersementsaccModel> listeVersementsAccount(AccountModel account) {
-
+        bd = accessBD.getReadableDatabase();
         ArrayList<VersementsaccModel> versements = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from versementacc where " + ACCOUNTID + "='" +account.getId()+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();

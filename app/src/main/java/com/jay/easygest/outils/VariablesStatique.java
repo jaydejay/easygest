@@ -4,6 +4,7 @@ public abstract class VariablesStatique {
 
     public static final String AUTH_SHARED_PREF_COMPTE_CREATED = "is_compte_utilisateur_created";
     public static final String AUTH_SHARED_PREF_KEY_ACTIVATED = "is_key_activated";
+    public static final String AUTH_SHARED_PREF_FREE_KEY_ACTIVATED = "is_free_key_activated";
     public static final String AUTH_SHARED_PREF_LICENCE_STATUS = "is_licence_expired";
     public static final String APPNUMBER = "appnumber";
 
@@ -17,7 +18,7 @@ public abstract class VariablesStatique {
     public static final String TABLE_INFO = "infos";
     public static final String TABLE_SMSFAILLED = "smsfailled";
     public static final String TABLE_VERSEMENTACC = "versementacc";
-    public static final String TABLE_ARTICLES = "articles";
+    public static final String TABLE_ARTICLE = "articles";
     public static final String TABLE_IMAGE = "image";
     public static final String TABLE_USEDKEY = "usedkey";
     public static final String CLIENTID = "clientid";
@@ -28,13 +29,11 @@ public abstract class VariablesStatique {
     public static final String SOMMECREDIT = "sommecredit";
     public static final String RESTE = "reste";
     public static final String DATECREDIT = "datecredit";
-    public static final String TABLE_ARTICLE = "articles";
+
     public static final String ID = "id";
     public static final String NUMEROCREDIT = "numerocredit";
     public static final String NBRCREDIT = "nbrcredit";
     public static final String TOTALCREDIT = "totalcredit";
-
-    public static final String CREDITID = "creditid";
     public static final String SOLDEDAT = "soldedat";
     public static final String DESIGNATION = "designation";
     public static final String PRIX = "prix";
@@ -44,18 +43,16 @@ public abstract class VariablesStatique {
     public static final String AUTH_SHARED_PREF_NAME = "auth_shared";
     public static final String AUTH_SHARED_PREF_IS_AUTHENTICATED = "is_authenticated";
     public static final String SETTING_SHARED_PREF_VARIABLE = "setting_password";
-
+    public static final String CHOISIR_UN_ARTICLE = "Choisir un article";
     public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     public static final int MY_PERMISSIONS_REQUEST_SEND_SMS_2 = 2;
     public static final String MY_SALT = "h4tTC5iHP75EdcLf";
     public static final String EMULATEUR_2_TELEPHONE = "5556";
     public static final String EMULATEUR_1_TELEPHONE = "5554";
-
     public static final String DATABASE_NAME = "gestioncredit.db";
     public static final String BACKUP_DATABASE_NAME = "easygestdata.db";
     public static final String EMU_BACKUP_DATABASE_NAME = "emueasygestdata.db";
     public static final String DEVELOPER_PHONE = "+2250556287703";
-
     public static String  STR = "ABCD1EF3GH0IJKL2MNOP4QRST6UVWX5YZ789";
     public static String STR_MDP = "ABCD1EF3GH0IJKL2MNOP4QRST6UVWX5YZ789abcdefghijklmnopqrstuvwxyz";
 }

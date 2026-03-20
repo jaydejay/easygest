@@ -43,10 +43,10 @@ public class AccessLocal {
 
 
     public boolean ajouterUtilisateur(UserModel user, AppKessModel appKessModel){
+        bd = accessBD.getWritableDatabase();
         bd.beginTransaction();
         boolean success;
         try{
-            bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             ContentValues appkess_cv = new ContentValues();
 
@@ -68,14 +68,19 @@ public class AccessLocal {
             success = true;
         }catch (Exception e){
             success = false;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+                bd.close();
+            }
+
         }
         return success;
     }
 
     public void modifierUtilisateur(UserModel user){
-
+        bd = accessBD.getWritableDatabase();
         try{
-            bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(USERNAME,user.getUsername());
             cv.put(PASSWORD,user.getPassword());
@@ -118,8 +123,8 @@ public class AccessLocal {
 
 
     public Integer nbrUtilisateurs(){
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from utilisateur";
             Cursor cursor = bd.rawQuery(req, null);
             int nbrUtilisateur = cursor.getCount();
@@ -134,8 +139,8 @@ public class AccessLocal {
     public boolean isAuthenticated(String username, String password){
         boolean authenticated = false;
         UserModel proprietaire = this.recupProprietaire();
-        if (passwordHascher.verifyHashingPass(password,proprietaire.getPassword())){
 
+        if (passwordHascher.verifyHashingPass(password,proprietaire.getPassword())){
             if(proprietaire.getUsername().equals(username)){
                 authenticated = true;
             }
@@ -145,8 +150,8 @@ public class AccessLocal {
     }
 
     public void desactiverProprietaire(){
+        bd = accessBD.getWritableDatabase();
         try {
-            bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(ACTIF, false);
             bd.update(UTILISATEUR, cv, STATUS + "=" + 1, null);
@@ -159,8 +164,8 @@ public class AccessLocal {
     }
 
     public void activerProprietaire(){
+        bd = accessBD.getWritableDatabase();
         try {
-            bd = accessBD.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(ACTIF, true);
             cv.put(COMPTEUR, 0);
@@ -174,9 +179,8 @@ public class AccessLocal {
 
     public boolean authapp(String proprietaire, String cleproduit) {
         boolean success = false;
+        bd = accessBD.getReadableDatabase();
       try{
-          bd = accessBD.getReadableDatabase();
-
         String req ="select * from APPPKES";
         Cursor cursor = bd.rawQuery(req,null);
         cursor.moveToFirst();

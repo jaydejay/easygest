@@ -97,7 +97,6 @@ public class CreercompteActivity extends AppCompatActivity {
                         if (repassword.equals(password)){
 
                             try {
-
                                 int nbrutilisateur = usercontrolleur.nbrUtilisateur();
                                 if (nbrutilisateur < 1){
                                     AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);

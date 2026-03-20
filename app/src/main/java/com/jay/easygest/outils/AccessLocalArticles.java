@@ -128,7 +128,7 @@ public class AccessLocalArticles {
             }
             while (cursor.moveToNext());
             cursor.close();
-//            bd.close();
+            bd.close();
         } catch (Exception e) {
             return articlesModels;
         }
@@ -201,6 +201,8 @@ public class AccessLocalArticles {
 
             rslt = bd.update(TABLE_ARTICLES, articles_cv, ID+ "= ?", new String[] {String.valueOf(article.getId())});
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }finally {
             bd.close();
         }

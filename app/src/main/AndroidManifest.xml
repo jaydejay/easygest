@@ -30,9 +30,15 @@
         android:theme="@style/Theme.EasyGest"
         tools:targetApi="31">
         <activity
+            android:name=".vue.ActiverProduitActivity"
+            android:exported="false"
+            android:label="@string/drive_cle"
+            android:parentActivityName=".vue.MainActivity"/>
+        <activity
             android:name=".vue.DemandeCleActivity"
             android:exported="false"
-            android:label="@string/demande_cle"/>
+            android:label="@string/demande_cle"
+            android:parentActivityName=".vue.GestionActivity" />
         <activity
             android:name=".vue.ArticleDetailsActivity"
             android:exported="false"
@@ -106,10 +112,6 @@
             android:name=".vue.AfficheversementActivity"
             android:label="@string/info_versement"
             android:parentActivityName=".vue.GestionActivity" />
-        <activity
-            android:name=".vue.ActiverProduitActivity"
-            android:label="@string/activer_produit"
-            android:parentActivityName=".vue.MainActivity" />
         <activity
             android:name=".vue.ParametresActivity"
             android:label="@string/parametre"

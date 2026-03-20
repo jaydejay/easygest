@@ -126,8 +126,8 @@ public class AccessLocalVersement {
         long date = MesOutils.convertStringToDate(dateversement).getTime();
         Creditcontrolleur creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(contexte);
         ArrayList<CreditModel> creditsunclient =  creditcontrolleur.listecreditsclient(client);
+        bd.beginTransaction();
         try{
-            bd.beginTransaction();
             if (!creditsunclient.isEmpty()){
                 for (CreditModel credit : creditsunclient) {
                     if (sommeverse > 0){
@@ -135,7 +135,7 @@ public class AccessLocalVersement {
                         int total_versements = credit.getVersement() + somme_a_verse;
                         credit.setSoldedat(date);
                         ContentValues credit_cv = getCreditContentValues(credit, total_versements);
-                        bd.insertOrThrow(TABLE_VERSEMENT,null,creerVersement( somme_a_verse,credit.getId(),client.getId(),date));
+                        bd.insertWithOnConflict(TABLE_VERSEMENT,null,creerVersement( somme_a_verse,credit.getId(),client.getId(),date),1);
                         bd.updateWithOnConflict(TABLE_CREDIT,credit_cv, ID + "=?", new String[] {String.valueOf(credit.getId())},1);
                         sommeverse = sommeverse - somme_a_verse;
                         bd.setTransactionSuccessful();
@@ -144,8 +144,13 @@ public class AccessLocalVersement {
                 }
                 succes = true;
             }
-        }finally {
-            bd.endTransaction();
+        } catch (Exception e) {
+            return false;
+        }
+        finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         creditcontrolleur.setRecapTresteClient(client);
         return succes;
@@ -186,7 +191,9 @@ public class AccessLocalVersement {
             success= true;
         }catch (Exception e){success = false;}
         finally {
-            bd.endTransaction();
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return success;
 
@@ -217,9 +224,11 @@ public class AccessLocalVersement {
            }
 
         }catch (Exception e){
-          return   success ;
+          return   false ;
         }finally {
-            bd.endTransaction();
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return success;
     }
@@ -231,8 +240,8 @@ public class AccessLocalVersement {
      */
     public ArrayList<VersementsModel> listeVersement(){
         ArrayList<VersementsModel> versements = new ArrayList<>();
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from versement";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -259,8 +268,8 @@ public class AccessLocalVersement {
      */
     public ArrayList<VersementsModel> listeVersementsCredit(CreditModel creditModel) {
         ArrayList<VersementsModel> versements = new ArrayList<>();
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from versement where " + CREDITID + "='" +creditModel.getId()+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -272,8 +281,6 @@ public class AccessLocalVersement {
             }
             while (cursor.moveToNext());
             cursor.close();
-
-
         }catch(Exception e){
             versements = null;
         }
@@ -283,8 +290,8 @@ public class AccessLocalVersement {
 
     public VersementsModel recupVersementById(Integer versementid){
         VersementsModel versement = null;
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from versement where " + ID + "="+versementid;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
@@ -298,15 +305,12 @@ public class AccessLocalVersement {
                 ClientModel client = accessLocalClient.recupUnClient(clientid);
                 CreditModel credit = accessLocalCredit.recupCreditById(creditid);
                 versement = new VersementsModel(id,client,credit, (long) sommeverse,credit.getId(),dateversement);
-
             }
             cursor.close();
-
         }catch (Exception e){
             return versement;
         }
         return versement;
-
     }
 
 }

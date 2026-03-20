@@ -55,10 +55,9 @@ public class AccessLocalClient {
     }
 
     public boolean modifierclient(ClientModel client) {
-
+        bd = accessBD.getWritableDatabase();
         boolean success = false;
         try{
-            bd = accessBD.getWritableDatabase();
             ContentValues cv = getClientContentValues(client);
             bd.update(CLIENT,cv,CODECLIENT+"='"+client.getCodeclient()+"'",null);
             Clientcontrolleur clientcontrolleur = Clientcontrolleur.getClientcontrolleurInstance(contexte);
@@ -88,10 +87,8 @@ public class AccessLocalClient {
     }
 
     public boolean supprimerclient(ClientModel client) {
-
         bd = accessBD.getReadableDatabase();
         bd.setForeignKeyConstraintsEnabled(true);
-
         boolean success ;
         try{
             bd.delete(CLIENT,CODECLIENT +"=?",new String[]{client.getCodeclient()});
@@ -103,10 +100,9 @@ public class AccessLocalClient {
     }
 
     public ArrayList<ClientModel> listeClients(){
+        bd = accessBD.getReadableDatabase();
         ArrayList<ClientModel> clients = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
-
             String req = "select * from client ";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -130,9 +126,7 @@ public class AccessLocalClient {
                 clients.add(client);
             }
             while (cursor.moveToNext());
-
             cursor.close();
-
         }catch(Exception e){
             return clients;
         }
@@ -142,14 +136,12 @@ public class AccessLocalClient {
 
     public ClientModel recupUnClient(Integer clientid){
         ClientModel client = null;
-
+        bd = accessBD.getReadableDatabase();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from client where " + ID + "='"+clientid+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {
-
                 int id = cursor.getInt(0);
                 String code = cursor.getString(1);
                 String nom = cursor.getString(2);
@@ -165,14 +157,12 @@ public class AccessLocalClient {
                 Long totalcredit = cursor.getLong(12);
                 Integer nbraccount = cursor.getInt(13);
                 Long totalaccount = cursor.getLong(14);
-
                 client = new ClientModel(id, code, nom,prenoms, telephone, email, residence, cni, permis,passport,societe,nbrcredit,totalcredit,nbraccount,totalaccount);
-
             }
             cursor.close();
-
         }catch (Exception e){
             //do nothing
+            return null;
         }
         return client;
 

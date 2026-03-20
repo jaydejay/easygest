@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private Usercontrolleur usercontrolleur;
     private UserModel user;
     private String[] appcredentials;
+   private  AlertDialog.Builder builder ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         appcredentials = usercontrolleur.getAppCredentials();
         sessionManagement = new SessionManagement(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        builder = new AlertDialog.Builder(this);
         setContentView(binding.getRoot());
 
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("msgactivation") != null){
@@ -57,16 +60,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         boolean  is_key_activated = sessionManagement.getkeyActivated();
-//        if (!is_key_activated){
-//            Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            intent.putExtra("appcredentials",appcredentials);
-//            intent.putExtra("code_msg",2);
-//            startActivity(intent);
-//            finish();
-//        }else {
-
-            if (is_key_activated && !sessionManagement.getUtilisateurCreated()){
+        boolean  is_free_key_activated = sessionManagement.getFreekeyActivated();
+            if (is_key_activated && !sessionManagement.getUtilisateurCreated() || is_free_key_activated && !sessionManagement.getUtilisateurCreated()){
                 Intent intent = new Intent(MainActivity.this, CreercompteActivity.class);
                 intent.putExtra("msgactivation","félicitation licence activée creer un compte utilisateur");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -81,10 +76,6 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
             }
-//        }
-
-
-
     }
 
     @Override
@@ -145,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                     if (username.length() >= 6 && password.length() >= 8) {
 
                         if (usercontrolleur.isAuthenticated(username, password)) {
-
                             UserModel userModel = new UserModel(user.getId(), user.getUsername(), user.getPassword(), user.getDateInscription(), user.getStatus(), user.isActif(), 0);
                             usercontrolleur.modifierUser(userModel);
                             usercontrolleur.setUser(user);
@@ -154,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
-
                         } else {
                             binding.btnauth.setEnabled(true);
                             Toast.makeText(MainActivity.this, "username ou mot de passe incorrecte", Toast.LENGTH_SHORT).show();
@@ -208,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
             String apppnumber = appcredentials[0];
             String apppowner = appcredentials[2];
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("cle d'activation");
             builder.setMessage("les donnees d'activations sont necessaires pour l'activation de votre produit, il est fortement recommendé de les noter." +"\n"
                     +"appli number : " + apppnumber + "\n"
@@ -216,11 +204,16 @@ public class MainActivity extends AppCompatActivity {
 
             builder.setPositiveButton("ok", (dialog, which) -> {
                 Intent intent = new Intent(this, ActiverProduitActivity.class);
+//                Intent intent = new Intent(this, DriveKeyValidatorActivity.class);
                 intent.putExtra("appcredentials", appcredentials);
                 intent.putExtra("code_msg",2);
                 startActivity(intent);
             });
-            builder.create().show();
+
+            if (!isFinishing() && !isDestroyed()) {
+                builder.create().show();
+            }
+
         }catch (Exception e){
             Toast.makeText(this, "activation interrompue", Toast.LENGTH_SHORT).show();
         }
@@ -263,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
      * le nbr d'utilisateur est limité a 1 par application
      */
     private void desactivatetxtCreation(){
-        if (sessionManagement.getkeyActivated()){
+        if (sessionManagement.getkeyActivated() || sessionManagement.getFreekeyActivated() ){
             binding.txtCreateCompte.setVisibility(View.GONE);
         }
     }
@@ -346,15 +339,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-
 
     @Override
     protected void onPause() {
+
         super.onPause();
 
     }
@@ -366,8 +354,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         binding = null;
+        super.onDestroy();
+
     }
 
 

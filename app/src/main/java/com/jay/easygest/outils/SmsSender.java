@@ -42,7 +42,6 @@ public class SmsSender {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-//
                int sms_id  =intent.getIntExtra("sms_id",1);
                 if (getResultCode() == Activity.RESULT_OK && sms.getSmsid() == sms_id ) {
                     Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
@@ -57,7 +56,6 @@ public class SmsSender {
                     if(success){
                         Intent intent_to_aff = new Intent(activity, AfficherclientActivity.class);
                         intent_to_aff.putExtra("smssentmessge","message non envoye,un probleme de reseau ou vos sms sont épuisés");
-//                        startActivity(context, intent_to_aff, null);
                         context.startActivity(intent_to_aff);
                     }
                 }

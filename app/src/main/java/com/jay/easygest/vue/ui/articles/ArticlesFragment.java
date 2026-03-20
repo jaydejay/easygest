@@ -19,6 +19,7 @@ import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.databinding.FragmentArticlesBinding;
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.vue.ArticlesActivity;
+import com.jay.easygest.vue.ActiverProduitActivity;
 
 import java.util.ArrayList;
 
@@ -55,14 +56,13 @@ public class ArticlesFragment extends Fragment {
         getArticleOutStock();
         rechercherArticle();
         redirectToArticleActivity();
-
         return binding.getRoot() ;
     }
-
 
  public void redirectToArticleActivity(){
         binding.btnRedirectToAricle.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(),ArticlesActivity.class);
+//            Intent intent = new Intent(getActivity(), DriveKeyValidatorActivity.class);
             int itemid = binding.btnRedirectToAricle.getId();
             intent.putExtra("itemclickedId",itemid);
             startActivity(intent);
@@ -147,7 +147,12 @@ public class ArticlesFragment extends Fragment {
      * afficher les articles hors stock
      */
     public void getArticleOutStock(){
-        binding.btnArticleHorsStock.setOnClickListener(view -> articlesViewModel.getArticleOutStocklivedatas());
+//        binding.btnArticleHorsStock.setOnClickListener(view -> articlesViewModel.getArticleOutStocklivedatas());
+        binding.btnArticleHorsStock.setOnClickListener(view -> {
+//            articlesViewModel.getArticleOutStocklivedatas();
+            Intent intent = new Intent(getContext(), ActiverProduitActivity.class);
+            startActivity(intent);
+        });
 
     }
 

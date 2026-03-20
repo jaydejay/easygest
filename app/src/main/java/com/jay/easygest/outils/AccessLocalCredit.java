@@ -222,6 +222,10 @@ public class AccessLocalCredit {
 
         }catch (Exception e){
             credit = null;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return credit;
     }
@@ -286,9 +290,9 @@ public class AccessLocalCredit {
      */
 
     public ArrayList<CreditModel> listeCredits(){
+        bd = accessBD.getReadableDatabase();
         ArrayList<CreditModel> credits = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from credit where reste > 0 ";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -314,9 +318,9 @@ public class AccessLocalCredit {
      */
 
     public ArrayList<CreditModel> listeCreditsclient(ClientModel client){
+        bd = accessBD.getReadableDatabase();
         ArrayList<CreditModel> credits = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from credit where reste > 0 and clientid =" + client.getId();
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -340,10 +344,9 @@ public class AccessLocalCredit {
      * @return la liste des credits soldés d'un client
      */
     public ArrayList<CreditModel> listeDEScreditsSoldesClient(ClientModel client) {
-
+        bd = accessBD.getReadableDatabase();
         ArrayList<CreditModel> credits = new ArrayList<>();
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from credit where  reste = 0 and clientid ='" + client.getId()+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToFirst();
@@ -360,7 +363,6 @@ public class AccessLocalCredit {
         }
         return credits;
     }
-
 
     /**
      *
@@ -379,9 +381,9 @@ public class AccessLocalCredit {
      * @return retourne le credit associer au client
      */
     public CreditModel recupCreditaveccclientById(Integer creditId){
+        bd = accessBD.getReadableDatabase();
         CreditModel credit = null;
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from credit where " + ID + "="+creditId;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
@@ -402,13 +404,11 @@ public class AccessLocalCredit {
 
     private ClientModel recupUnClient(SQLiteDatabase bd,int clientid) {
         ClientModel client = null;
-
         try {
             String req = "select * from client where " + ID + "='"+clientid+"'";
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
             if (!cursor.isAfterLast()) {
-
                 int id = cursor.getInt(0);
                 String code = cursor.getString(1);
                 String nom = cursor.getString(2);
@@ -430,6 +430,7 @@ public class AccessLocalCredit {
 
         }catch (Exception e){
             //do nothing
+            return client;
         }
         return client;
 
@@ -443,9 +444,9 @@ public class AccessLocalCredit {
      */
 
     public CreditModel recupCreditById(Integer creditId){
+        bd = accessBD.getReadableDatabase();
         CreditModel credit = null;
         try {
-            bd = accessBD.getReadableDatabase();
             String req = "select * from credit where " + ID + "="+creditId;
             Cursor cursor = bd.rawQuery(req, null);
             cursor.moveToLast();
@@ -556,9 +557,11 @@ public class AccessLocalCredit {
     // cette fonction doit etre appeler automatiquement pour supprimer un crdit
     // 6 mois apres que le credit est ete solder
     public boolean supprimerUncredit(CreditModel credit) {
+        bd = accessBD.getWritableDatabase();
+        bd.setForeignKeyConstraintsEnabled(true);
         boolean success;
         try{
-            accessBD.getWritableDatabase().delete(TABLE_CREDIT,ID +"=?",new String[]{String.valueOf(credit.getId())});
+            bd.delete(TABLE_CREDIT,ID +"=?",new String[]{String.valueOf(credit.getId())});
             success=true;
         }catch( SQLiteException e) {
             success=false;
@@ -581,14 +584,11 @@ public class AccessLocalCredit {
         try{
             int nouveau_total_credit_du_client = (int) (( client.getTotalcredit() - ancien_creditModel.getSommecredit()) + nouveau_creditModel.getSommecredit());
             ArticlesModel nouvel_articlemodel = this.getArticleidAndDesignation(bd,nouvel_article.getDesignation());
-
             ContentValues credit_cv = new ContentValues();
             ContentValues client_cv = new ContentValues();
             ContentValues infos_cv = new ContentValues();
             ContentValues ancien_article_cv = new ContentValues();
             ContentValues nouvel_article_cv = new ContentValues();
-
-
 
             credit_cv.put(ARTICLE_1,gson.toJson(nouveau_creditModel.getArticle1()));
             credit_cv.put(ARTICLE_2,gson.toJson(nouveau_creditModel.getArticle2()));
@@ -678,7 +678,6 @@ public class AccessLocalCredit {
         }
         return creditModel;
     }
-
 
     @NonNull
     private CreditModel getCreditModelfromCursor(Cursor credtModelcursor,ClientModel client) {

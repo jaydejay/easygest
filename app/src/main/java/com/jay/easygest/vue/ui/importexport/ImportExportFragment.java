@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,7 @@ public class ImportExportFragment extends Fragment {
             +"La restoration ne conserne que" + "\n"
             +"la dernière version sauvegardée." +"\n"
             +"cliquer sur sauvegarder pour amorcer une sauvegarde";
-    private static final int MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE = 10;
 
     private String drive_db_key = "" ;
     private NetHttpTransport transport ;
@@ -112,14 +111,12 @@ public class ImportExportFragment extends Fragment {
     private void init(){
         AccessLocalClient accessLocalClient = new AccessLocalClient(getContext());
         AccessLocalArticles accessLocalArticles = new AccessLocalArticles(getContext());
-//        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
         AppKessModel appKessModel = new AccessLocalAppKes(getContext()).getAppkes();
         ArrayList<ClientModel> clients = accessLocalClient.listeClients();
         ArrayList<ArticlesModel> articles = accessLocalArticles.listeArticles();
         if (!MesOutils.isDataPresent(clients,articles)){
             binding.btnexport.setVisibility(View.GONE);
         }
-
         if (MesOutils.getLicenceLevel(appKessModel.getApppkey()) != MesOutils.Level.FREE && !MesOutils.isDataPresent(clients,articles)){
             binding.btnimport.setVisibility(View.VISIBLE);
         }
@@ -142,30 +139,25 @@ public class ImportExportFragment extends Fragment {
                     ActivityCompat.checkSelfPermission(requireContext(),
                             Manifest.permission.GET_ACCOUNTS) !=
                             PackageManager.PERMISSION_GRANTED
-
             ) {
                 ActivityCompat.requestPermissions(requireActivity(),
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.GET_ACCOUNTS},
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
                 binding.btnexport.setEnabled(true);
-
             }else {
                 requestGoogleDriveSaveAuthorization();
-
             }
         }else {
 
             if (
-                    ActivityCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.GET_ACCOUNTS) !=
-                            PackageManager.PERMISSION_GRANTED
-
+                ActivityCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.GET_ACCOUNTS) !=
+                        PackageManager.PERMISSION_GRANTED
             ) {
                 ActivityCompat.requestPermissions(requireActivity(),
                         new String[]{ Manifest.permission.GET_ACCOUNTS},
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
                 binding.btnexport.setEnabled(true);
-
             }
             requestGoogleDriveSaveAuthorization();
         }
@@ -191,20 +183,19 @@ public class ImportExportFragment extends Fragment {
                                     activityResultLaunchersave.launch(intentSenderRequest);
                                 }
                             } catch (Exception e) {
-                                Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
+                                Toast.makeText(requireContext(), "Couldn't start Authorization UI: ", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             // Access already granted, continue with user action
                             try {
                                 saveToDriveAppFolder(authorizationResult);
                             } catch (IOException e) {
-                                throw new RuntimeException(e);
+                                Toast.makeText(requireContext(), "une erreur est survenue des serveurs", Toast.LENGTH_SHORT).show();
                             }
                         }
                 })
-                .addOnFailureListener(e -> Log.e("importexpor", "Failed to authorize", e.getCause()));
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de l'autorisation", Toast.LENGTH_SHORT).show());
     }
-
 
     public void launchRestoresignInIntent(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -236,11 +227,9 @@ public class ImportExportFragment extends Fragment {
                         new String[]{ Manifest.permission.GET_ACCOUNTS},
                         MY_PERMISSIONS_REQUEST_UPLOAD_DRIVE_FILE);
                 binding.btnimport.setEnabled(true);
-
             }
             requestGoogleDriveRestoreAuthorization();
         }
-
     }
 
     public void requestGoogleDriveRestoreAuthorization(){
@@ -262,18 +251,18 @@ public class ImportExportFragment extends Fragment {
                                         activityResultLauncherrestore.launch(intentSenderRequest);
                                     }
                                 } catch (Exception e) {
-                                    Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
+                                    Toast.makeText(requireContext(), "echec de l'operation", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 // Access already granted, continue with user action
                                 try {
                                     retriveToDriveAppFolder(authorizationResult);
                                 } catch (IOException e) {
-                                    throw new RuntimeException(e);
+                                    Toast.makeText(requireContext(), "echec de l'operation probleme interne ", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
-                .addOnFailureListener(e -> Log.e("importexpor", "Failed to authorize", e.getCause()));
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "echec de l'autorisation", Toast.LENGTH_SHORT).show());
     }
 
     public void launchRestoreReinstasignInIntent(){
@@ -330,7 +319,7 @@ public class ImportExportFragment extends Fragment {
                                         activityResultLauncherreinstall.launch(intentSenderRequest);
                                     }
                                 } catch (Exception e) {
-                                    Log.e("importexport", "Couldn't start Authorization UI: " + e.getLocalizedMessage());
+                                    Toast.makeText(requireContext(), "Couldn't start Authorization UI:", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 // Access already granted, continue with user action
@@ -341,7 +330,7 @@ public class ImportExportFragment extends Fragment {
                                 }
                             }
                         })
-                .addOnFailureListener(e -> Log.e("importexpor", "Failed to authorize", e.getCause()));
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to authorize", Toast.LENGTH_SHORT).show());
     }
 
 //### 4. Handle the Sign-In Result
@@ -365,7 +354,7 @@ public class ImportExportFragment extends Fragment {
 
             try {
                 String drive_file_id = preferedServiceHelper.getDriveSession();
-                if (drive_file_id.length() == 0){
+                if (drive_file_id.isEmpty()){
                     uploadFileToDrive();
 
                 }else {
@@ -393,7 +382,7 @@ public class ImportExportFragment extends Fragment {
 
             try {
                 String drive_file_id = preferedServiceHelper.getDriveSession();
-                if (drive_file_id.length() != 0){
+                if (!drive_file_id.isEmpty()){
                     retriveFileToDrive(drive_file_id);
                 }else {
                     binding.layoutBtnReinsta.setVisibility(View.VISIBLE);
@@ -425,7 +414,7 @@ public class ImportExportFragment extends Fragment {
                 retriveFileToDrive(drive_db_key);
 
             }catch (Exception e){
-                Toast.makeText(requireContext(), "echec : "+e.getMessage(), Toast.LENGTH_LONG).show() ;
+                Toast.makeText(requireContext(), "echec : ", Toast.LENGTH_LONG).show() ;
             }
 
         }
@@ -433,20 +422,17 @@ public class ImportExportFragment extends Fragment {
     //### end 4. Handle the Sign-In Result
 
     private void uploadFileToDrive() {
-        Log.d("uploadFileToDrive", "je suis ds uploadFileToDrive: ");
         String mon_fichier = new java.io.File(getDatabasePath()).getPath();
         driveServiceHelper.createFile(mon_fichier)
                 .addOnSuccessListener(s -> {
-                    Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show();
                     try {
-
                         preferedServiceHelper.saveDriveSession(s.getId());
                         SmsSender smsSender = new SmsSender(getContext(),getActivity());
                         AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
                         AppKessModel appKessModel = accessLocalAppKes.getAppkes();
                         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                         builder.setTitle("sauvegarde de donnees");
-                        builder.setMessage("ces donnees sont necessaires , noter et les conservées." +"\n"
+                        builder.setMessage("ces donnees sont necessaires , notées et les conservées." +"\n"
                                 +s.getId() );
 
                         builder.setPositiveButton("ok", (dialog, which) -> {
@@ -465,11 +451,11 @@ public class ImportExportFragment extends Fragment {
                         Toast.makeText(requireContext(), "echec save Drive Session "  +e.getMessage(), Toast.LENGTH_SHORT).show();
                         binding.btnexport.setEnabled(true);
                     }
+                    Toast.makeText(requireContext(), "succes de la sauvegarde ", Toast.LENGTH_SHORT).show();
 
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "echec de la sauvegarde ", Toast.LENGTH_SHORT).show();
-                    Log.d("iportexport", "uploadFileToDrive: "+e.getMessage());
                     binding.btnexport.setEnabled(true);
                 });
     }
@@ -483,7 +469,7 @@ public class ImportExportFragment extends Fragment {
                 .addOnSuccessListener(s -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                     builder.setTitle("sauvegarde de donnees");
-                    builder.setMessage("ces donnees sont necessaires , noter et les conservées." +"\n"
+                    builder.setMessage("ces donnees sont necessaires , notées et les conservées." +"\n"
                             +s.getId() );
 
                     builder.setPositiveButton("ok", (dialog, which) -> Toast.makeText(requireContext(), "succes de la mise  a jour ", Toast.LENGTH_SHORT).show());
@@ -492,8 +478,6 @@ public class ImportExportFragment extends Fragment {
                 } )
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show();
-                    Log.d("iportexport", "updateDriveFile: addOnFailureListener "+e.getMessage());
-                    Log.d("iportexport", "updateDriveFile: addOnFailureListener cause "+e.getCause());
                     binding.btnexport.setEnabled(true);
                 });
 
@@ -545,15 +529,15 @@ public class ImportExportFragment extends Fragment {
                     if ( main_restore_btn_clicked ==  2){
                         preferedServiceHelper.saveDriveSession(drive_file_id);
                     }
-                    Toast.makeText(getContext(), "donnees restorees", Toast.LENGTH_SHORT).show();
                     binding.btnimport.setEnabled(true);
                     binding.btnImportReinsta.setEnabled(true);
                     binding.layoutBtnReinsta.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "donnees restorees", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "echec de la restoration", Toast.LENGTH_SHORT).show();
                     binding.btnimport.setEnabled(true);
                     binding.btnImportReinsta.setEnabled(true);
+                    Toast.makeText(getContext(), "echec de la restoration", Toast.LENGTH_SHORT).show();
                 });
     }
 

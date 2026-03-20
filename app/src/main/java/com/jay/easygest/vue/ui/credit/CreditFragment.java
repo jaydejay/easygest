@@ -1,5 +1,7 @@
 package com.jay.easygest.vue.ui.credit;
 
+import static com.jay.easygest.outils.VariablesStatique.CHOISIR_UN_ARTICLE;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -179,7 +181,7 @@ public class CreditFragment extends Fragment {
                     Toast.makeText(getContext(), "nom prenoms date telephone et versement  obligatoires", Toast.LENGTH_SHORT).show();
                     binding.btncreercredit.setEnabled(true);
                 }else {
-                    if (article1.getDesignation().equals("Choisir un article") || article1 == null ){
+                    if (article1.getDesignation().equals(CHOISIR_UN_ARTICLE) || article1 == null ){
                         Toast.makeText(getContext(), "premier article obligatoire", Toast.LENGTH_SHORT).show();
                         binding.btncreercredit.setEnabled(true);
                     }else {
@@ -199,15 +201,15 @@ public class CreditFragment extends Fragment {
                                         Toast.makeText(getContext(), "articles identiques choisissez un autre", Toast.LENGTH_SHORT).show();
                                         binding.btncreercredit.setEnabled(true);
                                     }else {
-                                        if (!article2.getDesignation().equals("Choisir un article") && article2prix.isEmpty()){
+                                        if (!article2.getDesignation().equals(CHOISIR_UN_ARTICLE) && article2prix.isEmpty()){
                                             Toast.makeText(getContext(), "renseignez le prix du deuxieme article", Toast.LENGTH_SHORT).show();
                                             binding.btncreercredit.setEnabled(true);
                                         }else {
-                                            if (!article2.getDesignation().equals("Choisir un article") && article2qte.isEmpty()){
+                                            if (!article2.getDesignation().equals(CHOISIR_UN_ARTICLE) && article2qte.isEmpty()){
                                                 Toast.makeText(getContext(), "renseignez la quantité du deuxieme article", Toast.LENGTH_SHORT).show();
                                                 binding.btncreercredit.setEnabled(true);
                                             }else {
-                                                if (article2.getDesignation().equals("Choisir un article") && !article2qte.isEmpty() || article2.getDesignation().equals("Choisir un article") && !article2prix.isEmpty() ){
+                                                if (article2.getDesignation().equals(CHOISIR_UN_ARTICLE) && !article2qte.isEmpty() || article2.getDesignation().equals(CHOISIR_UN_ARTICLE) && !article2prix.isEmpty() ){
                                                     Toast.makeText(getContext(), "vous devez choisir un article", Toast.LENGTH_SHORT).show();
                                                     binding.btncreercredit.setEnabled(true);
                                                 }else {
@@ -229,7 +231,7 @@ public class CreditFragment extends Fragment {
                                                                 String codeclient = binding.txtcreercodeclt.getText().toString();
                                                                 Article article1_vendu = new Article(article1.getDesignation(),Integer.parseInt(article1prix),Integer.parseInt(article1qte));
 
-                                                                Article article2_vendu = (article2 != null && !article2.getDescription().equals("Choisir un article")) ?
+                                                                Article article2_vendu = (article2 != null && !article2.getDescription().equals(CHOISIR_UN_ARTICLE)) ?
                                                                         new Article(article2.getDesignation(),prixarticle2,nbrarticle2) :
                                                                         new Article(article2.getDesignation(),0,0);
 
