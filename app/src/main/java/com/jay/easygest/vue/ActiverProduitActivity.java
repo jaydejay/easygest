@@ -28,6 +28,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.jay.easygest.BuildConfig;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityDriveKeyValidatorBinding;
@@ -37,6 +38,8 @@ import com.jay.easygest.outils.AccessLocal;
 import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.PasswordDriveServiceHelper;
 import com.jay.easygest.outils.SessionManagement;
+
+
 
 import java.io.IOException;
 import java.util.Collections;
@@ -188,18 +191,14 @@ public class ActiverProduitActivity extends AppCompatActivity {
             passwordDriveServiceHelper = new PasswordDriveServiceHelper(driveService);
 
             try {
-//                String drive_file_id = preferedServiceHelper.getDriveSession();
-                String drive_file_id = "1Hog8wQciE3-RihVAlrL-jNOEJU9ZfnZH";
-                if (!drive_file_id.isEmpty()){
-                    readFileToDrive(drive_file_id,cle_fournie);
-                }
+                    readFileToDrive(cle_fournie);
             }catch (Exception e){
                 binding.btnValidatorKey.setEnabled(true);
                 Toast.makeText(this, "echec de la lecture : "+e.getMessage(), Toast.LENGTH_LONG).show() ;}
         }
     }
-    private void readFileToDrive(String drive_file_id, DriveKeyModel cle_fournie) {
-        passwordDriveServiceHelper.readDriveFile(drive_file_id,cle_fournie, new PasswordDriveServiceHelper.OnFileReadListener() {
+    private void readFileToDrive( DriveKeyModel cle_fournie) {
+        passwordDriveServiceHelper.readDriveFile(BuildConfig.MY_KEY,cle_fournie, new PasswordDriveServiceHelper.OnFileReadListener() {
             @Override
             public void onSuccess(DriveKeyModel content) {
                 onSuccessFunction(content);

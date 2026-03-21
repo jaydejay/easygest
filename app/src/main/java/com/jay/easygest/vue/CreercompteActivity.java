@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jay.easygest.BuildConfig;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityCreercompteBinding;
 import com.jay.easygest.outils.MesOutils;
@@ -64,7 +65,7 @@ public class CreercompteActivity extends AppCompatActivity {
                             try {
                                 int nbrutilisateur = usercontrolleur.nbrUtilisateur();
                                 if (nbrutilisateur < 1){
-                                    String _password = passwordHascher.getHashingPass(password,VariablesStatique.MY_SALT);
+                                    String _password = passwordHascher.getHashingPass(password, BuildConfig.MY_SALT);
                                     boolean success = usercontrolleur.creerUser(username, _password);
                                     if (success){
                                         editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_password).commit();

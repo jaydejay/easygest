@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.core.app.ActivityCompat;
@@ -40,7 +41,7 @@ public abstract  class MesOutils {
         INCONNU
     }
 
-    public static Date convertStringToDate(String ladate){
+    public static Date convertStringToDate2(String ladate){
 
         String dateFormat = "dd-MM-yyyy";
         SimpleDateFormat dateFormater = new SimpleDateFormat(dateFormat, Locale.FRANCE);
@@ -53,7 +54,7 @@ public abstract  class MesOutils {
         return date;
     }
 
-    public static Date convertStringToDate2(String ladate){
+    public static Date convertStringToDate(String ladate){
         String separator1 = "-";
         String separator2 = "/";
         String separator3 = ".";
@@ -63,7 +64,13 @@ public abstract  class MesOutils {
         }
         if (ladate.contains(separator3)){
             la_date = ladate.replace(separator3,separator1);
+
         }
+        if (ladate.contains(separator1)){
+            la_date = ladate;
+        }
+
+        Log.d("TAG", "convertStringToDate: "+la_date);
 
         String dateFormat = "dd-MM-yyyy";
         SimpleDateFormat dateFormater = new SimpleDateFormat(dateFormat, Locale.FRANCE);

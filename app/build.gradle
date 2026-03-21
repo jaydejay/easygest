@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
 }
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace 'com.jay.easygest'
@@ -13,6 +15,8 @@ android {
         versionCode 4
         versionName "2.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "MY_KEY", "\"${localProperties['MY_KEY']}\""
+        buildConfigField "String", "MY_SALT", "\"${localProperties['MY_SALT']}\""
     }
 
     signingConfigs {
@@ -44,6 +48,7 @@ android {
     buildFeatures {
         dataBinding true
         viewBinding true
+        buildConfig = true
     }
     buildToolsVersion '35.0.0 rc3'
 }
