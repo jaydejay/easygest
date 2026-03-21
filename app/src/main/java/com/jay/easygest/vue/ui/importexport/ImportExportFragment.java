@@ -2,6 +2,8 @@ package com.jay.easygest.vue.ui.importexport;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.jay.easygest.outils.VariablesStatique.MY_PERMISSIONS_REQUEST_SEND_SMS;
+
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
@@ -31,6 +33,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
 import com.jay.easygest.databinding.FragmentImportExportBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.ArticlesModel;
@@ -436,14 +439,19 @@ public class ImportExportFragment extends Fragment {
                                 +s.getId() );
 
                         builder.setPositiveButton("ok", (dialog, which) -> {
-                            String messageBody = "\n"
-                                    +"proprietaire "+appKessModel.getOwner() +"\n"
-                                    +"application id "+appKessModel.getAppnumber() +"\n"
-                                    +"telephone proprietaire  "+appKessModel.getTelephone() +"\n"
-                                    +"document id "+s.getId()+"\n";
-                            String destinationAddress = VariablesStatique.DEVELOPER_PHONE;
-                            smsSender.smsSendwithInnerClass(messageBody,destinationAddress, MesOutils.smsidnumbergenerator());
-
+                            if (ActivityCompat.checkSelfPermission(requireContext(),
+                                    Manifest.permission.SEND_SMS) !=
+                                    PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(requireActivity(),
+                                        new String[]{Manifest.permission.SEND_SMS},
+                                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                binding.btnimport.setEnabled(true);
+                            }else {
+                                preferedServiceHelper.saveDriveSession(s.getId());
+                                String messageBody = getSmsMessage(s, appKessModel);
+                                String destinationAddress = VariablesStatique.DEVELOPER_PHONE;
+                                smsSender.smsSendwithInnerClass(messageBody,destinationAddress, MesOutils.smsidnumbergenerator());
+                            }
                         });
                         builder.create().show();
                         binding.btnexport.setEnabled(true);
@@ -460,6 +468,15 @@ public class ImportExportFragment extends Fragment {
                 });
     }
 
+    @NonNull
+    private String getSmsMessage(File s, AppKessModel appKessModel) {
+        return "\n"
+                +"proprietaire "+ appKessModel.getOwner() +"\n"
+                +"application id "+ appKessModel.getAppnumber() +"\n"
+                +"telephone proprietaire  "+ appKessModel.getTelephone() +"\n"
+                +"document id "+ s.getId()+"\n";
+
+    }
 
 
     private void updateDriveFile()  {
@@ -467,14 +484,20 @@ public class ImportExportFragment extends Fragment {
         String mon_fichier = new java.io.File(getDatabasePath()).getPath();
         driveServiceHelper.updateFile(mon_fichier)
                 .addOnSuccessListener(s -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                    builder.setTitle("sauvegarde de donnees");
-                    builder.setMessage("ces donnees sont necessaires , notées et les conservées." +"\n"
-                            +s.getId() );
+                    try {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                        builder.setTitle("sauvegarde de donnees");
+                        builder.setMessage("ces donnees sont necessaires , notées et les conservées." +"\n"
+                                +s.getId() );
 
-                    builder.setPositiveButton("ok", (dialog, which) -> Toast.makeText(requireContext(), "succes de la mise  a jour ", Toast.LENGTH_SHORT).show());
-                    builder.create().show();
-                    binding.btnexport.setEnabled(true);
+                        builder.setPositiveButton("ok", (dialog, which) -> Toast.makeText(requireContext(), "succes de la mise  a jour ", Toast.LENGTH_SHORT).show());
+                        builder.create().show();
+                        binding.btnexport.setEnabled(true);
+                    }catch (Exception e){
+                        Toast.makeText(requireContext(), "echec de la mise  jour : "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.btnexport.setEnabled(true);
+                    }
+
                 } )
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "echec de la mise  jour ", Toast.LENGTH_SHORT).show();

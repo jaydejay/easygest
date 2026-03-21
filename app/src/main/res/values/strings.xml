@@ -200,4 +200,5 @@
     <string name="prix_article2">prix article</string>
     <string name="le_nombre">entre un nombre</string>
     <string name="drive_cle">drive key</string>
+    <string name="app_basecode">base code</string>
 </resources>

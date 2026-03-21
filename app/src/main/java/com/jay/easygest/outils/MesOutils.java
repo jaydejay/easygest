@@ -57,18 +57,19 @@ public abstract  class MesOutils {
         String separator1 = "-";
         String separator2 = "/";
         String separator3 = ".";
+        String la_date = "";
         if (ladate.contains(separator2)){
-            ladate = ladate.replace(separator2,separator1);
+            la_date = ladate.replace(separator2,separator1);
         }
         if (ladate.contains(separator3)){
-            ladate = ladate.replace(separator3,separator1);
+            la_date = ladate.replace(separator3,separator1);
         }
 
         String dateFormat = "dd-MM-yyyy";
         SimpleDateFormat dateFormater = new SimpleDateFormat(dateFormat, Locale.FRANCE);
         Date date ;
         try {
-            date = dateFormater.parse(ladate);
+            date = dateFormater.parse(la_date);
         } catch (ParseException e) {
             date = null ;
         }
@@ -668,10 +669,8 @@ public abstract  class MesOutils {
 
     public static boolean isDataPresent(ArrayList<ClientModel> clients, ArrayList<ArticlesModel> articles){
         boolean is_data_present = false;
-
         try{
             if (clients != null || articles != null){
-
                 if (!clients.isEmpty() || !articles.isEmpty()){
                     is_data_present = true;
                 }

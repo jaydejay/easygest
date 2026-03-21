@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityCreercompteBinding;
-import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
@@ -28,6 +26,7 @@ public class CreercompteActivity extends AppCompatActivity {
    private ActivityCreercompteBinding binding;
    private Usercontrolleur usercontrolleur;
    private PasswordHascher passwordHascher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +36,11 @@ public class CreercompteActivity extends AppCompatActivity {
         passwordHascher = new PasswordHascher();
         setContentView(binding.getRoot());
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+//        recupererIntent();
+        init();
+    }
+
+    public void init(){
         creerCompte();
         afficherMesage();
         desactivatebtncreation();
@@ -49,60 +53,19 @@ public class CreercompteActivity extends AppCompatActivity {
             String password = Objects.requireNonNull(binding.txtcreercomptepassword.getText()).toString().trim();
             String repassword = Objects.requireNonNull(binding.txtcreercompterepeat.getText()).toString().trim();
 
-            String owner = Objects.requireNonNull(binding.editcreerCompteOwner.getText()).toString().trim();
-            String code_base = Objects.requireNonNull(binding.editcreerCompteBaseCode.getText()).toString().trim();
-            String telephone = Objects.requireNonNull(binding.editcreerCompteTelephone.getText()).toString().trim();
-            String email = Objects.requireNonNull(binding.editcreerCompteMail.getText()).toString().trim();
-
-
             if (username.isEmpty() || password.isEmpty() || repassword.isEmpty()){
                 Toast.makeText(CreercompteActivity.this, "champs sont obligatoires", Toast.LENGTH_SHORT).show();
-                binding.btncreercompte.setEnabled(true);
-
-            } else if (owner.isEmpty()) {
-                binding.lleditcreerCompteOwner.setError("obligatoire");
-                binding.btncreercompte.setEnabled(true);
-
-            }else if (owner.length() < 5 ) {
-                binding.lleditcreerCompteOwner.setError("5 minimum");
-                binding.btncreercompte.setEnabled(true);
-
-            }else if (owner.length() > 25 ) {
-                binding.lleditcreerCompteOwner.setError("25 maximum");
-                binding.btncreercompte.setEnabled(true);
-
-            }else if (code_base.isEmpty()){
-                binding.lleditcreerCompteBaseCode.setError("obligatoire");
-                binding.btncreercompte.setEnabled(true);
-            } else if (code_base.length() != 4 ) {
-                binding.lleditcreerCompteBaseCode.setError("4 lettres attendus ");
-                binding.btncreercompte.setEnabled(true);
-
-            }else if (telephone.isEmpty()){
-                binding.llcreerCompteTelephone.setError("obligatoire");
-                binding.btncreercompte.setEnabled(true);
-
-            } else if (telephone.length() != 10) {
-                binding.llcreerCompteTelephone.setError("10 caracteres");
-                binding.btncreercompte.setEnabled(true);
-
-            }else if (email.isEmpty()){
-                binding.llcreerCompteMail.setError("obligatoire");
                 binding.btncreercompte.setEnabled(true);
             }
             else{
                 if (username.length() >= 6 && password.length() >= 8 && repassword.length() >= 8){
-
                     if (MesOutils.asDigit(password)){
                         if (repassword.equals(password)){
-
                             try {
                                 int nbrutilisateur = usercontrolleur.nbrUtilisateur();
                                 if (nbrutilisateur < 1){
-                                    AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(CreercompteActivity.this);
-                                    AppKessModel appKessModel = accessLocalAppKes.getAppkes();
                                     String _password = passwordHascher.getHashingPass(password,VariablesStatique.MY_SALT);
-                                    boolean success = usercontrolleur.creerUser(username, _password,appKessModel, owner,code_base,telephone,email);
+                                    boolean success = usercontrolleur.creerUser(username, _password);
                                     if (success){
                                         editor.putString(VariablesStatique.SETTING_SHARED_PREF_VARIABLE,_password).commit();
                                         SessionManagement sessionManagement = new SessionManagement(this);
@@ -110,7 +73,6 @@ public class CreercompteActivity extends AppCompatActivity {
                                         Intent intent = new Intent(CreercompteActivity.this, MainActivity.class);
                                         startActivity(intent);
                                     }
-
                                 }else {
                                     Toast.makeText(CreercompteActivity.this, "action non autorisée", Toast.LENGTH_SHORT).show();
                                     binding.btncreercompte.setEnabled(true);
@@ -147,10 +109,15 @@ public class CreercompteActivity extends AppCompatActivity {
     }
 
     public void afficherMesage(){
-        String msg = getIntent().getExtras().getString("msgactivation");
-        if (msg != null && !msg.isEmpty()) {
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        Intent intent = getIntent();
+        if (intent.getExtras() != null){
+            String msg = getIntent().getExtras().getString("msgactivation");
+            if (msg != null && !msg.isEmpty()) {
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            }
         }
+
+
     }
 
 

@@ -59,10 +59,10 @@ public final class Usercontrolleur {
         this.setProprietaireMdpInit(mdp);
     }
 
-    public boolean creerUser(String username, String password, AppKessModel appKess, String owner, String code_base, String telephone, String email){
+    public boolean creerUser(String username, String password){
         user = new UserModel(username,password,new Date(),1,true,0);
-        AppKessModel appKessModel = new AppKessModel(appKess.getAppnumber(),appKess.getApppkey(),owner,code_base,telephone,email);
-       return accessLocal.ajouterUtilisateur(user,appKessModel);
+//        AppKessModel appKessModel = new AppKessModel(appKess.getAppnumber(),licence,owner,code_base,telephone,email);
+       return accessLocal.ajouterUtilisateur(user);
     }
 
     public void modifierUser(UserModel user){accessLocal.modifierUtilisateur(user);}
@@ -105,4 +105,8 @@ public final class Usercontrolleur {
     }
 
 
+    public boolean saveAppkeys(String owner, String licence, String email, String telephone, String basecode, String appnumber) {
+        long dureelicence = MesOutils.getDureeLicence(licence);
+      return accessLocal.saveAppkey( owner, licence, email, telephone, basecode,appnumber,dureelicence);
+    }
 }

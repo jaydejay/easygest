@@ -204,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
 
             builder.setPositiveButton("ok", (dialog, which) -> {
                 Intent intent = new Intent(this, ActiverProduitActivity.class);
-//                Intent intent = new Intent(this, DriveKeyValidatorActivity.class);
                 intent.putExtra("appcredentials", appcredentials);
                 intent.putExtra("code_msg",2);
                 startActivity(intent);

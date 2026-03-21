@@ -42,14 +42,11 @@ public class AccessLocal {
 
 
 
-    public boolean ajouterUtilisateur(UserModel user, AppKessModel appKessModel){
+    public boolean ajouterUtilisateur(UserModel user){
         bd = accessBD.getWritableDatabase();
-        bd.beginTransaction();
-        boolean success;
+        boolean success = false;
         try{
             ContentValues cv = new ContentValues();
-            ContentValues appkess_cv = new ContentValues();
-
             cv.put(USERNAME,user.getUsername());
             cv.put(PASSWORD,user.getPassword());
             cv.put(DATE_INSCRIPTION,user.getDateInscription().getTime());
@@ -57,23 +54,20 @@ public class AccessLocal {
             cv.put(ACTIF,user.isActif());
             cv.put(COMPTEUR,user.getCompteur());
 
-            appkess_cv.put(OWNER,appKessModel.getOwner());
-            appkess_cv.put(BASECODE,appKessModel.getBasecode());
-            appkess_cv.put(TELEPHONE,appKessModel.getTelephone());
-            appkess_cv.put(ADRESSEELECTRO,appKessModel.getAdresseelectro());
+//            appkess_cv.put(OWNER,appKessModel.getOwner());
+//            appkess_cv.put(BASECODE,appKessModel.getBasecode());
+//            appkess_cv.put(TELEPHONE,appKessModel.getTelephone());
+//            appkess_cv.put(ADRESSEELECTRO,appKessModel.getAdresseelectro());
+//            appkess_cv.put(APPPKEY,appKessModel.getApppkey());
 
-            bd.insertWithOnConflict(UTILISATEUR,null,cv,1);
-            bd.updateWithOnConflict("APPPKES",appkess_cv, APPNUMBER+"= ?", new String[] { String.valueOf(appKessModel.getAppnumber())},1);
-            bd.setTransactionSuccessful();
-            success = true;
+
+            long rslt = bd.insert(UTILISATEUR,null,cv);
+//            bd.updateWithOnConflict("APPPKES",appkess_cv, APPNUMBER+"= ?", new String[] { String.valueOf(appKessModel.getAppnumber())},1);
+           if (rslt != -1){
+               success = true;
+           }
         }catch (Exception e){
-            success = false;
-        }finally {
-            if (bd.inTransaction()){
-                bd.endTransaction();
-                bd.close();
-            }
-
+            return false;
         }
         return success;
     }
@@ -91,7 +85,7 @@ public class AccessLocal {
             bd.close();
         }catch (Exception e){
 //            do nothing
-
+            bd.close();
         }
 
     }
@@ -204,7 +198,6 @@ public class AccessLocal {
 
 
     public String[] appCredential(){
-
         bd = accessBD.getReadableDatabase();
         String[] credentials =null;
         try{
@@ -228,6 +221,27 @@ public class AccessLocal {
             // do nothing
         }
         return credentials;
+    }
+
+    public boolean saveAppkey(String owner, String licence, String email, String telephone, String basecode, String appnumber, long dureelicence) {
+        bd = accessBD.getReadableDatabase();
+        try{
+
+           ContentValues app_cv = new ContentValues();
+           app_cv.put(OWNER,owner);
+           app_cv.put(BASECODE,basecode);
+           app_cv.put(TELEPHONE,telephone);
+           app_cv.put(ADRESSEELECTRO,email);
+           app_cv.put(DATELICENCE,new Date().getTime());
+           app_cv.put(DUREELICENCE,dureelicence);
+           app_cv.put(APPPKEY,licence);
+
+          int rslt = bd.update("APPPKES",app_cv, APPNUMBER+"= ?", new String[] { String.valueOf(appnumber)});
+            return rslt > 0;
+
+        }catch (Exception e) {
+            return false;
+        }
     }
 
 }

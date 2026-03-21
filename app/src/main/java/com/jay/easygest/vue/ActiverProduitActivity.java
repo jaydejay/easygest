@@ -11,6 +11,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
@@ -28,8 +29,12 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.jay.easygest.R;
+import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityDriveKeyValidatorBinding;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.DriveKeyModel;
+import com.jay.easygest.outils.AccessLocal;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.PasswordDriveServiceHelper;
 import com.jay.easygest.outils.SessionManagement;
 
@@ -47,6 +52,8 @@ public class ActiverProduitActivity extends AppCompatActivity {
     private PasswordDriveServiceHelper passwordDriveServiceHelper;
 
    private DriveKeyModel cle_fournie;
+    private String basecode;
+    private String[] credentials;
 
 
     @Override
@@ -55,6 +62,9 @@ public class ActiverProduitActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityDriveKeyValidatorBinding.inflate(getLayoutInflater());
         transport = new NetHttpTransport();
+        AccessLocal accessLocal = new AccessLocal(this);
+       credentials = accessLocal.appCredential();
+       getFreeAccount();
         verifyKey();
         activityLauncherlistener();
         setContentView(binding.getRoot());
@@ -72,12 +82,29 @@ public class ActiverProduitActivity extends AppCompatActivity {
             String owner = binding.edtValidatorOwner.getText().toString().trim();
             String telephone = binding.edtValidatorPhone.getText().toString().trim();
             String email = binding.edtValidatorEmail.getText().toString().trim();
+             basecode = binding.edtValidatorBasecode.getText().toString().trim();
             if (cle.isEmpty() || owner.isEmpty() || email.isEmpty() || telephone.isEmpty()){
                 Toast.makeText(this, "remplir tous les champs", Toast.LENGTH_SHORT).show();
                 binding.btnValidatorKey.setEnabled(true);
             }else {
-                 cle_fournie = new DriveKeyModel(owner,telephone,email,cle);
-                launchsignInIntent();
+                if (basecode.length() != 4  ) {
+                    Toast.makeText(this, "base code 4 lettres atendues", Toast.LENGTH_SHORT).show();
+                    binding.btnValidatorKey.setEnabled(true);
+                }else {
+                    if (owner.length() < 5 || owner.length() > 25) {
+                        Toast.makeText(this, "5 lettres minimum et 25 lettres maximum", Toast.LENGTH_SHORT).show();
+                        binding.btnValidatorKey.setEnabled(true);
+                    }else {
+                        if (telephone.length() != 10) {
+                            Toast.makeText(this, "10 chiffres attendu", Toast.LENGTH_SHORT).show();
+                            binding.btnValidatorKey.setEnabled(true);
+                        }else {
+                            cle_fournie = new DriveKeyModel(owner,telephone,email,cle);
+                            launchsignInIntent();
+                        }
+                    }
+
+                }
             }
 
         });
@@ -187,17 +214,19 @@ public class ActiverProduitActivity extends AppCompatActivity {
 
     private void onSuccessFunction(DriveKeyModel content) {
         if (content != null){
-            SessionManagement sessionManagement = new SessionManagement(this);
-            sessionManagement.savekeyActivated(true);
-            sessionManagement.saveLicenceExpiredStatus(false);
-            Intent intent = new Intent(this,CreercompteActivity.class);
-            intent.putExtra("owner",content.getOwner());
-            intent.putExtra("telephone",content.getTelephone());
-            intent.putExtra("licence",content.getLicence());
-            intent.putExtra("email",content.getEmail());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
+          boolean success = usercontrolleur.saveAppkeys(content.getOwner(), content.getLicence(), content.getEmail(), content.getTelephone(),basecode,credentials[0]);
+
+          if (success){
+              SessionManagement sessionManagement = new SessionManagement(this);
+              sessionManagement.savekeyActivated(true);
+              sessionManagement.saveLicenceExpiredStatus(false);
+              Intent intent = new Intent(this,CreercompteActivity.class);
+              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+              startActivity(intent);
+              finish();
+          }
+
         }
 
     }
@@ -209,6 +238,60 @@ public class ActiverProduitActivity extends AppCompatActivity {
                 Toast.makeText(ActiverProduitActivity.this,  error , Toast.LENGTH_LONG).show();
                 binding.btnValidatorKey.setEnabled(true);
             }
+
+        });
+
+    }
+
+    public void getFreeAccount(){
+        binding.txtCompteFree.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("CLE DU PRODUIT");
+            builder.setMessage("noter la cle elle vous sera utile"+"\n"
+                    +" cle : "+credentials[1] );
+            builder.setPositiveButton("ok",(dialog, which) -> {
+
+                String owner = binding.edtValidatorOwner.getText().toString().trim();
+                String telephone = binding.edtValidatorPhone.getText().toString().trim();
+                String email = binding.edtValidatorEmail.getText().toString().trim();
+                basecode = binding.edtValidatorBasecode.getText().toString().trim();
+
+                if (basecode.isEmpty() || owner.isEmpty() || email.isEmpty() || telephone.isEmpty()){
+                    Toast.makeText(this, "remplir tous les champs", Toast.LENGTH_SHORT).show();
+                    binding.btnValidatorKey.setEnabled(true);
+                }else {
+                     if (basecode.length() != 4  ) {
+                         Toast.makeText(this, "base code 4 lettres atendues", Toast.LENGTH_SHORT).show();
+                        binding.btnValidatorKey.setEnabled(true);
+                    }else {
+                          if (owner.length() < 5 || owner.length() > 25) {
+                             Toast.makeText(this, "5 lettres minimum et 25 lettres maximum", Toast.LENGTH_SHORT).show();
+                             binding.btnValidatorKey.setEnabled(true);
+                         }else {
+                               if (telephone.length() != 10) {
+                                   Toast.makeText(this, "10 chiffres attendu", Toast.LENGTH_SHORT).show();
+                                    binding.btnValidatorKey.setEnabled(true);
+                              }else {
+                                   AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
+                                   AppKessModel appKessModel = new AppKessModel(Integer.parseInt(credentials[0]),credentials[1],owner,basecode,telephone,email);
+                                   boolean rslt = accessLocalAppKes.updateAppkes(appKessModel);
+                                   if (rslt){
+                                       SessionManagement sessionManagement = new SessionManagement(this);
+                                       sessionManagement.saveFreekeyActivated(true);
+                                       Intent intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
+                                       intent.putExtra("msgactivation","félicitation et bienvenu(e)");
+                                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                       startActivity(intent);
+                                       finish();
+                                   }
+                               }
+
+                          }
+                     }
+
+                }
+            });
+            builder.create().show();
 
         });
 
