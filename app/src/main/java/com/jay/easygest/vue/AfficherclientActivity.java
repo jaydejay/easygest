@@ -102,9 +102,12 @@ public class AfficherclientActivity extends AppCompatActivity {
 
 
         setContentView(binding.getRoot());
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         redirectToModifierClient();
+        redirectToArticles();
         afficherclient();
         afficherListeVersementacc();
         afficherAjouterVersementacc();
@@ -122,8 +125,17 @@ public class AfficherclientActivity extends AppCompatActivity {
         afficherIntentMessage();
     }
 
+    private void redirectToArticles() {
+        binding.afRedirectToArticle.setOnClickListener(view -> {
+            Intent intent = new Intent(this, GestionActivity.class);
+            startActivity(intent);
+        });
 
-        public void  afficherIntentMessage(){
+
+    }
+
+
+    public void  afficherIntentMessage(){
         Bundle intent = getIntent().getExtras();
 
             if ( intent != null){
@@ -136,7 +148,6 @@ public class AfficherclientActivity extends AppCompatActivity {
     public void clientMenuDisabledAndRecpShow(Integer TcreditClient, Integer TresteCreditClient,Integer TaccountClient, Integer TresteAccClient){
 
         if (TresteCreditClient == 0){
-
             binding.afClientTextVersements.setVisibility(View.GONE);
             binding.afClientListeCredits.setVisibility(View.GONE);
 
@@ -448,7 +459,6 @@ public class AfficherclientActivity extends AppCompatActivity {
 
 
     public void redirectToAfficherCreditActivity(CreditModel credit) {
-
         creditcontrolleur.setCredit(credit);
         Intent intent = new Intent(this, AffichercreditActivity.class);
         startActivity(intent);
@@ -459,7 +469,7 @@ public class AfficherclientActivity extends AppCompatActivity {
          long now = new Date().getTime();
        if (!listeCreditsSoldes.isEmpty()){
            for (CreditModel credit : listeCreditsSoldes) {
-               if (MesOutils.getSppressionDate(credit.getSoldedat()) <= now){
+               if (MesOutils.getSppressionDate2(credit.getSoldedat()) <= now){
                    creditcontrolleur.supprimeCreditSoldes(credit);
                }
            }
@@ -475,7 +485,7 @@ public class AfficherclientActivity extends AppCompatActivity {
         assert listeAccountsSoldes != null;
         if (!listeAccountsSoldes.isEmpty()){
             for (AccountModel account : listeAccountsSoldes) {
-                if (MesOutils.getSppressionDate(account.getSoldedat()) <= now ){
+                if (MesOutils.getSppressionDate2(account.getSoldedat()) <= now ){
                     accountcontrolleur.supprimerAccountsSoldes(account);
                 }
             }
@@ -506,6 +516,12 @@ public class AfficherclientActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

@@ -61,6 +61,9 @@ public class ModifierAccountActivity extends AppCompatActivity {
         afficherAccount();
         modifierAccount();
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public void afficherAccount(){
@@ -205,6 +208,12 @@ public class ModifierAccountActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         sessionManagement.removeSession();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

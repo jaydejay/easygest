@@ -22,43 +22,28 @@
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llayoutajoutcrednom"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/ajoutcrednom"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"/>
+                    android:id="@+id/ajoutcredtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="15sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:text="@string/ajouter_un_credit"
+                />
 
                 <TextView
-                    android:id="@+id/ajoutcredcodeclt"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/ajoutcredprenoms"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="5dp"
-                android:ems="10"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"/>
+                    android:id="@+id/ajoutcredclientref"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                />
 
             <Spinner
                 android:id="@+id/spinnerajoutcreditArticle1"
@@ -71,35 +56,45 @@
 
             <LinearLayout
                 android:id="@+id/llayoutajoutcredarticle1"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+           >
 
-                <EditText
-                    android:id="@+id/ajoutcredarticle1prix"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/somme_article2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/somme_article2"
-                    android:inputType="number" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutcredarticle1prix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/ajoutcredNbrarticle1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/quantite1"
-                    android:ems="10"
-                    android:hint="@string/quantite1"
-                    android:inputType="number"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutcredarticle1prix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="180dp"
+                        android:autofillHints="@string/prix_article1"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/prix_article1"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutcredNbrarticle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutcredNbrarticle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="70dp"
+                        android:autofillHints="@string/quantite1"
+                        android:ems="10"
+                        android:hint="@string/quantite1"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -113,8 +108,8 @@
                 android:spinnerMode="dropdown" />
 
             <LinearLayout
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
@@ -122,61 +117,76 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <EditText
-                    android:id="@+id/ajoutcredarticle2prix"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/somme_article2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/somme_article2"
-                    android:inputType="number" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutcredarticle2prix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/ajoutcredNbrarticle2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/quantite1"
-                    android:ems="10"
-                    android:hint="@string/quantite1"
-                    android:inputType="number" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutcredarticle2prix"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minWidth="180dp"
+                        android:autofillHints="@string/prix_article2"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/prix_article2"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutcredNbrarticle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutcredNbrarticle2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="70dp"
+                        android:autofillHints="@string/quantite2"
+                        android:ems="10"
+                        android:hint="@string/quantite2"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llayoutajoutcreddate"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="25dp"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
 
-                <EditText
-                    android:id="@+id/ajoutcredDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/date"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/date"
-                    android:inputType="textPersonName" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutcredDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
 
-                <EditText
-                    android:id="@+id/ajoutcredversement"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/versement"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/versement"
-                    android:inputType="number" />
-            </LinearLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutcredDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="250dp"
+                        android:autofillHints="@string/date"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/date"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutcredversement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutcredversement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="250dp"
+                        android:autofillHints="@string/versement"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/versement"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/btnajoutcredit"
                 android:layout_width="wrap_content"

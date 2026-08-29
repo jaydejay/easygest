@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,7 +31,7 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
 
     private final Context contexte;
     private final ArrayList<ArticlesModel> articles;
-    private EditText edt_article_modifer;
+    private TextInputEditText edt_article_modifer;
 
     public RecycleViewArticleAdapter(Context contexte, ArrayList<ArticlesModel> articles) {
         this.contexte = contexte;
@@ -153,16 +153,21 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
                     AlertDialog.Builder builder = getArticleModifierBuilder(title, message,R.layout.layout_article_modifier);
                     builder.setPositiveButton("oui", (dialog, which) -> {
                         String string_nbr_article = edt_article_modifer.getText().toString().trim();
+                        ArticlesModel article = articles.get(position);
                         if (string_nbr_article.isEmpty() ) {
                             Toast.makeText(contexte, "champ obligatoire", Toast.LENGTH_SHORT).show();
                         }else {
-                            Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
-                            ArticlesModel article = articles.get(position);
-                            String champ = VariablesStatique.QUANTITE;
-                            int rslt =  articlescontrolleur.modifierArticle(article,champ,string_nbr_article,itemId);
-                            if (rslt > 0){
-                                ((GestionActivity)contexte).refreshPage();
+                            if (Integer.parseInt(string_nbr_article) > article.getQuantite()){
+                                Toast.makeText(contexte, "quantite trop grand", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
+                                String champ = VariablesStatique.QUANTITE;
+                                int rslt =  articlescontrolleur.modifierArticle(article,champ,string_nbr_article,itemId);
+                                if (rslt > 0){
+                                    ((GestionActivity)contexte).refreshPage();
+                                }
                             }
+
                         }
                     });
                     builder.create().show();

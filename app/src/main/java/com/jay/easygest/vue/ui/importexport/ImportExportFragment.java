@@ -117,10 +117,9 @@ public class ImportExportFragment extends Fragment {
         AppKessModel appKessModel = new AccessLocalAppKes(getContext()).getAppkes();
         ArrayList<ClientModel> clients = accessLocalClient.listeClients();
         ArrayList<ArticlesModel> articles = accessLocalArticles.listeArticles();
+
         if (!MesOutils.isDataPresent(clients,articles)){
             binding.btnexport.setVisibility(View.GONE);
-        }
-        if (MesOutils.getLicenceLevel(appKessModel.getApppkey()) != MesOutils.Level.FREE && !MesOutils.isDataPresent(clients,articles)){
             binding.btnimport.setVisibility(View.VISIBLE);
         }
     }

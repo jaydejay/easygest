@@ -1,15 +1,12 @@
 package com.jay.easygest.outils;
 
-import static com.jay.easygest.outils.VariablesStatique.TABLE_USEDKEY;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.jay.easygest.model.AppKessModel;
-import java.sql.Timestamp;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 public class AccessLocalAppKes {
 
@@ -61,7 +58,6 @@ public class AccessLocalAppKes {
 
     /**
      * permet de mettre a jour les infos generales sans la cle et app number
-     *
      * @param appKessModel Le model
      * @return true si reussi sinon faux
      */
@@ -87,32 +83,21 @@ public class AccessLocalAppKes {
 
     /**
      * permet de mettre a jour la cle d'activation du produit
-     *
      * @param appKessModel   gestIonnaire d'activation
-     * @param appcredentials Les credentials
      * @return boolean
      */
-    public boolean updateAppkesKey(AppKessModel appKessModel, String[] appcredentials) {
+    public boolean updateAppkesKey(AppKessModel appKessModel) {
         boolean success = false;
         bd = accessBD.getWritableDatabase();
         bd.beginTransaction();
         try {
 
             ContentValues appkey_cv = new ContentValues();
-            ContentValues usedkey_cv = new ContentValues();
-
-            Timestamp timestamp = new Timestamp(new Date().getTime());
-            long temp_restant = Long.parseLong(appcredentials[6]) - (new Date().getTime());
-            long duree_licence = MesOutils.getDureeLicence(appKessModel.getApppkey()) + temp_restant;
 
             appkey_cv.put(APPPKEY, appKessModel.getApppkey());
-            appkey_cv.put(DATELICENCE, timestamp.getTime());
-            appkey_cv.put(DUREELICENCE, duree_licence);
-            int rslt = bd.updateWithOnConflict(VariablesStatique.TABLE_APPPKES, appkey_cv, APPNUMBER + "= ?", new String[] {appcredentials[0]},1 );
+            int rslt = bd.updateWithOnConflict(VariablesStatique.TABLE_APPPKES, appkey_cv, APPNUMBER + "= ?", new String[] {String.valueOf(appKessModel.getAppnumber())},1 );
             if (rslt > 0) {
-                usedkey_cv.put("cle",appKessModel.getApppkey());
-                 bd.insertWithOnConflict(TABLE_USEDKEY,null,usedkey_cv,1);
-                 bd.setTransactionSuccessful();
+                bd.setTransactionSuccessful();
                 success = true;
 
             }
@@ -122,6 +107,33 @@ public class AccessLocalAppKes {
             if (bd.inTransaction()){
                 bd.endTransaction();
             }
+        }
+        return success;
+    }
+
+
+    /**
+     * creer une agence
+     *
+     * @param appKessModel   gestIonnaire d'activation
+     * @return boolean
+     */
+    public boolean createAgence(AppKessModel appKessModel) {
+        boolean success = false;
+        bd = accessBD.getWritableDatabase();
+        try {
+
+        ContentValues appkey_cv = new ContentValues();
+        appkey_cv.put(OWNER, appKessModel.getOwner());
+        appkey_cv.put(BASECODE, appKessModel.getBasecode());
+        appkey_cv.put(TELEPHONE, appKessModel.getTelephone());
+        appkey_cv.put(ADRESSEELECTRO, appKessModel.getAdresseelectro());
+        int rslt = bd.updateWithOnConflict(VariablesStatique.TABLE_APPPKES, appkey_cv, APPNUMBER + "= ?", new String[] {String.valueOf(appKessModel.getAppnumber())},1 );
+        if (rslt > 0){
+            success = true;
+        }
+        } catch (Exception e) {
+            return false;
         }
         return success;
     }

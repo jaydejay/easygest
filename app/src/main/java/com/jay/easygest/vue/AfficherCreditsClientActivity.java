@@ -47,6 +47,9 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         sessionManagement = new SessionManagement(this);
         com.jay.easygest.databinding.ActivityAfficherCreditsClientBinding binding = ActivityAfficherCreditsClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
         accountcontroller = Accountcontroller.getAccountcontrolleurInstance(this);
@@ -156,6 +159,12 @@ public class AfficherCreditsClientActivity extends AppCompatActivity {
         creditcontrolleur.setCredit(creditModel);
         Intent intent = new Intent(this, AffichercreditActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
 

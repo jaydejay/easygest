@@ -5,18 +5,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <EditText
-        android:id="@+id/edit_articles_modif"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_edit_articles_modif"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:autofillHints="@string/designation"
-        android:hint="@string/designation"
-        android:ems="10"
-        android:inputType="textPersonName"
+        app:counterMaxLength="30"
+        app:placeholderText="@string/designation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_articles_modif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minEms="8"
+            android:minWidth="200dp"
+            android:autofillHints="@string/designation"
+            android:hint="@string/designation"
+            android:ems="10"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

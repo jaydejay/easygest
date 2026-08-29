@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
-import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 
 import java.util.Date;
@@ -54,15 +54,7 @@ public class AccessLocal {
             cv.put(ACTIF,user.isActif());
             cv.put(COMPTEUR,user.getCompteur());
 
-//            appkess_cv.put(OWNER,appKessModel.getOwner());
-//            appkess_cv.put(BASECODE,appKessModel.getBasecode());
-//            appkess_cv.put(TELEPHONE,appKessModel.getTelephone());
-//            appkess_cv.put(ADRESSEELECTRO,appKessModel.getAdresseelectro());
-//            appkess_cv.put(APPPKEY,appKessModel.getApppkey());
-
-
             long rslt = bd.insert(UTILISATEUR,null,cv);
-//            bd.updateWithOnConflict("APPPKES",appkess_cv, APPNUMBER+"= ?", new String[] { String.valueOf(appKessModel.getAppnumber())},1);
            if (rslt != -1){
                success = true;
            }
@@ -105,7 +97,7 @@ public class AccessLocal {
             String password = cursor.getString(2);
             long dateInscription = cursor.getLong(3);
             int status = cursor.getInt(4);
-            boolean actif = cursor.getInt(5)==1?true:false;
+            boolean actif = cursor.getInt(5) == 1;
             int compteur = cursor.getInt(6);
             utilisateur = new UserModel(id,username,password,new Date(dateInscription),status,actif,compteur);
         }
@@ -133,7 +125,7 @@ public class AccessLocal {
     public boolean isAuthenticated(String username, String password){
         boolean authenticated = false;
         UserModel proprietaire = this.recupProprietaire();
-
+        Log.d("TAG", "isAuthenticated: " + proprietaire);
         if (passwordHascher.verifyHashingPass(password,proprietaire.getPassword())){
             if(proprietaire.getUsername().equals(username)){
                 authenticated = true;
@@ -211,9 +203,10 @@ public class AccessLocal {
                         cursor.getString(cursor.getColumnIndexOrThrow(OWNER)),
                         cursor.getString(cursor.getColumnIndexOrThrow(BASECODE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(TELEPHONE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DATELICENCE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DUREELICENCE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO))};
+//                        cursor.getString(cursor.getColumnIndexOrThrow(DATELICENCE)),
+//                        cursor.getString(cursor.getColumnIndexOrThrow(DUREELICENCE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO))
+                };
 
             }
             cursor.close();

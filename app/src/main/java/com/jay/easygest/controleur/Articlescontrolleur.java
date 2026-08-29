@@ -53,14 +53,6 @@ public class Articlescontrolleur {
         return marticlescredit;
     }
 
-//    public MutableLiveData<ArrayList<ArticlesModel>> getAdaptermarticles() {
-//        return adaptermarticles;
-//    }
-//
-//    public void setAdaptermarticles(ArrayList<ArticlesModel> articles) {
-//        this.adaptermarticles.setValue(articles);
-//    }
-
     public ArticlesModel insertArticle(ArticlesModel article){
         return accessLocalArticles.insertArticle(article);
 

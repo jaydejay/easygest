@@ -38,6 +38,9 @@ public class ModifierClientActivity extends AppCompatActivity {
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         client = clientViewModel.getClient().getValue();
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         init();
         modifierclient();
     }
@@ -122,5 +125,11 @@ public class ModifierClientActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         sessionManagement.removeSession();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

@@ -15,11 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jay.easygest.R;
 import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.databinding.FragmentArticlesBinding;
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.vue.ArticlesActivity;
-import com.jay.easygest.vue.ActiverProduitActivity;
 
 import java.util.ArrayList;
 
@@ -28,6 +28,7 @@ public class ArticlesFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private FragmentArticlesBinding binding;
+    private boolean showingInStock = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,17 +53,30 @@ public class ArticlesFragment extends Fragment {
 
         creerliste();
         getArticles();
-        getArticleInStock();
-        getArticleOutStock();
+        setupStockToggle();
         rechercherArticle();
         redirectToArticleActivity();
         return binding.getRoot() ;
     }
 
+    private void setupStockToggle() {
+        binding.btnArticleStockToggle.setOnClickListener(view -> {
+            if (showingInStock) {
+                articlesViewModel.getArticleOutStocklivedatas();
+                binding.btnArticleStockToggle.setText(R.string.article_out_stock);
+                binding.btnArticleStockToggle.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(android.R.color.holo_green_light)));
+            } else {
+                articlesViewModel.getArticlesInStocklivedatas();
+                binding.btnArticleStockToggle.setText(R.string.article_en_stock);
+                binding.btnArticleStockToggle.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.teal_200)));
+            }
+            showingInStock = !showingInStock;
+        });
+    }
+
  public void redirectToArticleActivity(){
         binding.btnRedirectToAricle.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(),ArticlesActivity.class);
-//            Intent intent = new Intent(getActivity(), DriveKeyValidatorActivity.class);
             int itemid = binding.btnRedirectToAricle.getId();
             intent.putExtra("itemclickedId",itemid);
             startActivity(intent);
@@ -75,7 +89,6 @@ public class ArticlesFragment extends Fragment {
                    adapter = new RecycleViewArticleAdapter(getContext(),articlesAdapterModels);
                    recyclerView.setAdapter(adapter);
                });
-
         } catch (Exception e) {
             Toast.makeText(getContext(), "un probleme rencontré", Toast.LENGTH_SHORT).show();
         }
@@ -86,13 +99,10 @@ public class ArticlesFragment extends Fragment {
     public  ArrayList<ArticlesModel> getFilter(String mtext){
         ArrayList<ArticlesModel> filteredliste = new ArrayList<>();
         try {
-
             articlesViewModel.getArticleAdapterlivedatas().observe(getViewLifecycleOwner(),articlesModels -> {
                 for (ArticlesModel article : articlesModels) {
-                    if (article.getId() != null){
-                        if (article.getDesignation().contains(mtext) ){
-                            filteredliste.add(article);
-                        }
+                    if (article.getDesignation().contains(mtext) ){
+                        filteredliste.add(article);
                     }
                 }
             });
@@ -140,28 +150,21 @@ public class ArticlesFragment extends Fragment {
      * afficher les articles en stock
      */
     public void getArticleInStock(){
-        binding.btnArticleStock.setOnClickListener(view -> articlesViewModel.getArticlesInStocklivedatas());
+        // Handled by setupStockToggle
     }
 
     /**
      * afficher les articles hors stock
      */
     public void getArticleOutStock(){
-//        binding.btnArticleHorsStock.setOnClickListener(view -> articlesViewModel.getArticleOutStocklivedatas());
-        binding.btnArticleHorsStock.setOnClickListener(view -> {
-//            articlesViewModel.getArticleOutStocklivedatas();
-            Intent intent = new Intent(getContext(), ActiverProduitActivity.class);
-            startActivity(intent);
-        });
-
+        // Handled by setupStockToggle
     }
 
     @Override
     public void onResume() {
         super.onResume();
         creerliste();
-//        getArticleInStock();
-        getArticleOutStock();
+        setupStockToggle();
     }
 
     @Override

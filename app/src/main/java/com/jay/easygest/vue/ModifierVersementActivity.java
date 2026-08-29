@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +40,8 @@ public class ModifierVersementActivity extends AppCompatActivity {
     private SmsSender smsSender;
     Button bouton_modifier;
     TextView EDTcodeclient ;
-    EditText EDTsomme ;
-    EditText EDTdatecredit;
+    TextInputEditText EDTsomme ;
+    TextInputEditText EDTdatecredit;
     TextView title;
     private Versementcontrolleur versementcontrolleur;
     private Creditcontrolleur creditcontrolleur;
@@ -79,7 +79,9 @@ public class ModifierVersementActivity extends AppCompatActivity {
         title =  findViewById(R.id.txtmodifversementtitle);
         init();
         modifierVersement();
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public void init(){
@@ -195,6 +197,12 @@ public class ModifierVersementActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         sessionManagement.removeSession();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

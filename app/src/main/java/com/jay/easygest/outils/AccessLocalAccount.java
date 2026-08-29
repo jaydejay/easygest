@@ -83,6 +83,7 @@ public class AccessLocalAccount {
     public AccountModel creerCompteAccount(AccountModel premieraccount, String telephone, Map<String, Object> newdata) {
         bd = accessBD.getWritableDatabase();
         accessLocalVersementacc = new AccessLocalVersementacc(contexte);
+
         ContentValues client_cv = accessLocalClient.ajoutClientContentValue(premieraccount.getCodeclient(), premieraccount.getNomclient(),premieraccount.getPrenomsclient(),telephone,0,0,1,premieraccount.getSommeaccount());
         ContentValues article1_cv = new ContentValues();
         ArticlesModel article1 = (ArticlesModel) newdata.get("article1");
@@ -164,6 +165,10 @@ public class AccessLocalAccount {
 
         }catch (Exception e){
             accountModel = null;
+        }finally {
+            if (bd.inTransaction()){
+                bd.endTransaction();
+            }
         }
         return accountModel;
     }
@@ -378,6 +383,32 @@ public class AccessLocalAccount {
 
     /**
      *
+     * @return la liste de tous les accounts en cours
+     */
+
+    public ArrayList<AccountModel> listeAccountsSoldes(){
+        ArrayList<AccountModel> accounts = new ArrayList<>();
+        bd = accessBD.getReadableDatabase();
+        try {
+            String req = "select * from account where reste = 0 ";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToFirst();
+            do {
+                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
+                AccountModel account = getAccountModelfromCursor(cursor,client);
+                account.setSoldedat(cursor.getLong(9));
+                accounts.add(account);
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+        }catch(Exception e){
+            return accounts;
+        }
+        return accounts;
+    }
+
+    /**
+     *
      * @param client le client
      * @return retourne la liste des accounts en cours du client
      */
@@ -461,6 +492,43 @@ public class AccessLocalAccount {
         cursor.close();
 
         return totalreste;
+    }
+
+
+    /**
+     *
+     * @return retourne le total des accounts en cour
+     */
+    public int getRecapTaccount(){
+        bd = accessBD.getReadableDatabase();
+        String req  = "select SUM(sommeaccount) AS t_account from account where reste != 0";
+        Cursor cursor = bd.rawQuery(req,null);
+        cursor.moveToFirst();
+        int totalaccount = cursor.getInt(cursor.getColumnIndexOrThrow("t_account"));
+        cursor.close();
+        return totalaccount;
+    }
+
+    /**
+     *
+     * @return retourne le total des versements des accounts en cour
+     */
+    public int getRecapTversement(){
+        bd = accessBD.getReadableDatabase();
+        String req  = "select SUM(versements) AS t_versement from account where reste != 0";
+        Cursor cursor = bd.rawQuery(req,null);
+        cursor.moveToFirst();
+        int totalversement = cursor.getInt(cursor.getColumnIndexOrThrow("t_versement"));
+        cursor.close();
+        return totalversement;
+    }
+
+    /**
+     *
+     * @return retourne le total du reste des accounts en cour
+     */
+    public int getRecapTreste(){
+        return this.getRecapTaccount() - this.getRecapTversement();
     }
 
 

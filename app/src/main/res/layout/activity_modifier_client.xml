@@ -23,131 +23,166 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editmodifierclientnom"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientnom"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:autofillHints="@string/nom"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/nom"
-                android:inputType="textPersonName"
-                android:maxLength="25"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
 
-            <EditText
-                android:id="@+id/editmodifierclientprenoms"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientnom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/nom"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/nom"
+                    android:inputType="textPersonName"
+                    android:maxLength="25" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientprenoms"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/prenoms"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/prenoms"
-                android:inputType="textPersonName"
-                android:maxLength="50"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientnom" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
-            <EditText
-                android:id="@+id/editmodifierclienttelephone"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientprenoms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/prenoms"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/prenoms"
+                    android:inputType="textPersonName"
+                    android:maxLength="50" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclienttelephone"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/telephone"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/telephone"
-                android:inputType="phone"
-                android:maxLength="10"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientprenoms" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
-            <EditText
-                android:id="@+id/editmodifierclientemail"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclienttelephone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/telephone"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/telephone"
+                    android:inputType="phone"
+                    android:maxLength="10" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientemail"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/email"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:maxLength="60"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclienttelephone" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
-            <EditText
-                android:id="@+id/editmodifierclientresidence"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientemail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/email"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="60" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientresidence"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/residence"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/residence"
-                android:inputType="textPersonName"
-                android:maxLength="30"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientemail" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
-            <EditText
-                android:id="@+id/editmodifierclientcni"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientresidence"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/residence"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/residence"
+                    android:inputType="textPersonName"
+                    android:maxLength="30" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientcni"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/cni"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/cni"
-                android:inputType="textPersonName"
-                android:maxLength="20"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientresidence" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientcni"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/cni"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/cni"
+                    android:inputType="textPersonName"
+                    android:maxLength="20" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editmodifierclientpermis"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientpermis"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/permis"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/permis"
-                android:inputType="textPersonName"
-                android:maxLength="19"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientcni" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
-            <EditText
-                android:id="@+id/editmodifierclientpassport"
-                android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/passport"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/passport"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientpermis" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientpermis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/permis"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/permis"
+                    android:inputType="textPersonName"
+                    android:maxLength="19" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editmodifierclientsociete"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientpassport"
                 android:layout_width="228dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="5dp"
-                android:autofillHints="@string/societe"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/societe"
-                android:inputType="textPersonName"
-                android:maxLength="25"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editmodifierclientpassport" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientpassport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/passport"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/passport"
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editmodifierclientsociete"
+                android:layout_width="228dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editmodifierclientsociete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/societe"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/societe"
+                    android:inputType="textPersonName"
+                    android:maxLength="25" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnmodifierclient"

@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -30,6 +31,7 @@ import com.jay.easygest.controleur.Accountcontroller;
 import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.controleur.Clientcontrolleur;
 import com.jay.easygest.controleur.Creditcontrolleur;
+import com.jay.easygest.controleur.SmsSendercontrolleur;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.controleur.Versementcontrolleur;
 import com.jay.easygest.databinding.ActivityGestionBinding;
@@ -37,16 +39,23 @@ import com.jay.easygest.model.AccountModel;
 import com.jay.easygest.model.ArticlesModel;
 import com.jay.easygest.model.ClientModel;
 import com.jay.easygest.model.CreditModel;
+import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.model.VersementsModel;
+import com.jay.easygest.outils.AccessLocalAccount;
+import com.jay.easygest.outils.AccessLocalCredit;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.SessionManagement;
+import com.jay.easygest.outils.SmsreSender;
 import com.jay.easygest.outils.VariablesStatique;
+import com.jay.easygest.vue.ui.account.AccountViewModel;
 import com.jay.easygest.vue.ui.clients.ClientViewModel;
 import com.jay.easygest.vue.ui.credit.CreditViewModel;
 import com.jay.easygest.vue.ui.versement.VersementViewModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class GestionActivity extends AppCompatActivity {
     private ActivityGestionBinding binding;
@@ -56,12 +65,16 @@ public class GestionActivity extends AppCompatActivity {
     private Accountcontroller accountcontrolleur;
     private Clientcontrolleur clientcontrolleur;
     private CreditViewModel creditViewModel;
+    private AccountViewModel accountViewModel;
     private ClientViewModel clientViewModel;
     private VersementViewModel versementViewModel;
-    EditText settingpassw;
+    TextInputEditText settingpassw;
     private SharedPreferences sharedPreferences;
     private PasswordHascher passwordHascher;
     private Usercontrolleur usercontrolleur ;
+    private int totalcredits;
+    private int totalversements;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,12 +91,13 @@ public class GestionActivity extends AppCompatActivity {
         versementViewModel = new ViewModelProvider(this).get(VersementViewModel.class);
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
         creditViewModel = new ViewModelProvider(this).get(CreditViewModel.class);
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         passwordHascher = new PasswordHascher();
         sharedPreferences = this.getSharedPreferences(VariablesStatique.SETTING_SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         try {
             ArrayList<ClientModel> listeClients = clientcontrolleur.listeClients();
-            ArrayList<CreditModel> credits =creditcontrolleur.listecredits();
+            ArrayList<CreditModel> credits = creditcontrolleur.listecredits();
             clientViewModel.getListeClients().setValue(listeClients);
             creditViewModel.getCredits().setValue(credits);
             versementViewModel.getMversements().setValue(versementcontrolleur.listeversements());
@@ -201,21 +215,48 @@ public class GestionActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    private void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.drawer_layout, fragment)
+                .commit();
+    }
+
     public void afficherecap(){
         creditViewModel.getTotalcredits().observe(this, integer -> {
-            TextView totalcredit = findViewById(R.id.totalcredit);
-            totalcredit.setText(String.valueOf(integer));
+            TextView total_credit = findViewById(R.id.totalcredit);
+            this.totalcredits = integer;
+            total_credit.setText(String.valueOf(integer));
         });
 
         creditViewModel.getTotalversements().observe(this, integer -> {
-            TextView totalversement = findViewById(R.id.totalversement);
-            totalversement.setText(String.valueOf(integer));
+            TextView total_versement = findViewById(R.id.totalversement);
+            total_versement.setText(String.valueOf(integer));
         });
 
         creditViewModel.getTotalrestes().observe(this, integer -> {
             TextView totalreste = findViewById(R.id.totalreste);
             totalreste.setText(String.valueOf(integer));
         });
+
+
+//        accountViewModel.getTotalaccounts().observe(this, integer -> {
+//            TextView total_credit = findViewById(R.id.totalcredit);
+//            total_credit.setText(String.valueOf(integer));
+//        });
+//
+//        accountViewModel.getTotalversements().observe(this, integer -> {
+//            TextView total_versement = findViewById(R.id.totalversement);
+//            this.totalversements = integer;
+//            total_versement.setText(String.valueOf(integer));
+//        });
+//
+//        accountViewModel.getTotalrestes().observe(this, integer -> {
+//            TextView totalreste = findViewById(R.id.totalreste);
+//            totalreste.setText(String.valueOf(integer));
+//        });
+
+
     }
 
 
@@ -236,7 +277,7 @@ public class GestionActivity extends AppCompatActivity {
      * @param credit le credit à détaillé
      */
     public void redirectToAfficherCreditActivity(CreditModel credit) {
-        Log.d("TAG3", "getView position3 : "+ credit);
+
         creditcontrolleur.setCredit(credit);
         Intent intent = new Intent(this, AffichercreditActivity.class);
         startActivity(intent);
@@ -322,12 +363,20 @@ public class GestionActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        sessionManagement.removeSession();
+        Log.d("TAG", "onRestart invoked: ");
+//        sessionManagement.removeSession();
         creditViewModel.getCredits().setValue(creditcontrolleur.listecredits());
-
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("smssentmessge") != null){
             Toast.makeText(this, getIntent().getExtras().getString("smssentmessge"), Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        supprimerCreditsSoldes();
+        supprimerAccounttsSoldes();
+        smsresender();
     }
 
     @Override
@@ -346,4 +395,46 @@ public class GestionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GestionActivity.class);
         startActivity(intent);
     }
+
+    public void supprimerAccounttsSoldes() {
+        AccessLocalAccount accessLocalAccount = new AccessLocalAccount(this);
+        ArrayList<AccountModel> accounts = accessLocalAccount.listeAccountsSoldes();
+        long now = new Date().getTime();
+        new Thread(() -> {
+            if (!accounts.isEmpty()){
+                for (AccountModel account : accounts) {
+                    if (MesOutils.getSppressionDate2(account.getSoldedat()) <= now){
+                        accountcontrolleur.supprimerAccountsSoldes(account);
+                    }
+                }
+            }
+        });
+    }
+    public void supprimerCreditsSoldes() {
+        AccessLocalCredit accessLocalCredit = new AccessLocalCredit(this);
+        ArrayList<CreditModel> credits = accessLocalCredit.listeCreditsSoldes();
+        long now = new Date().getTime();
+        new Thread(() -> {
+            if (!credits.isEmpty()){
+                for (CreditModel credit : credits) {
+                    if (MesOutils.getSppressionDate2(credit.getSoldedat()) <= now){
+                        creditcontrolleur.supprimeCreditSoldes(credit);
+                    }
+                }
+            }
+        });
+    }
+
+    private void smsresender() {
+        new Thread(() -> {
+            SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(GestionActivity.this);
+            SmsreSender smsreSender = new SmsreSender(GestionActivity.this, GestionActivity.this);
+            ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
+            if (!sms_no_Sents.isEmpty()){
+                smsreSender.sendingUnSentMsg(sms_no_Sents);
+            }
+
+        }).start();
+    }
+
 }

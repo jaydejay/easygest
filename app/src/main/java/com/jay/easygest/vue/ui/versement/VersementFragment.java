@@ -108,7 +108,7 @@ public class VersementFragment extends Fragment {
 
                                             int total_reste_credit = creditViewModel.getTotalrestesclient().getValue();
 
-                                        String destinationAdress = "+225"+client.getTelephone();
+                                            String destinationAdress = "+225"+client.getTelephone();
 //                                            String destinationAdress = "5556";
                                             String nomDestinataire = client.getNom();
                                             String prenomsDestinataire = client.getPrenoms();

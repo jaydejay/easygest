@@ -164,7 +164,7 @@ public class CreditFragment extends Fragment {
      */
     public void creerPremierCredit(){
         binding.btncreercredit.setOnClickListener(v -> {
-//            try{
+            try{
                 binding.btncreercredit.setEnabled(false);
                 String nomclient = binding.edittxtcreernom.getText().toString().trim();
                 String prenomsclient = binding.edittxtcreerprenoms.getText().toString().trim();
@@ -296,10 +296,10 @@ public class CreditFragment extends Fragment {
                     }
 
                 }
-//            }catch (Exception e){
-//                Toast.makeText(getContext(), "probleme interne innattendu", Toast.LENGTH_SHORT).show();
-//                binding.btncreercredit.setEnabled(true);
-//            }
+            }catch (Exception e){
+                Toast.makeText(getContext(), "probleme interne innattendu", Toast.LENGTH_SHORT).show();
+                binding.btncreercredit.setEnabled(true);
+            }
         });
     }
 

@@ -9,26 +9,24 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jay.easygest.R;
-import com.jay.easygest.controleur.SmsSendercontrolleur;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityMainBinding;
-import com.jay.easygest.model.SmsnoSentModel;
+import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
-import com.jay.easygest.outils.SmsreSender;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String CODE_MSG = "code_msg";
     private ActivityMainBinding binding;
     private SessionManagement sessionManagement;
     private Usercontrolleur usercontrolleur;
     private UserModel user;
-    private String[] appcredentials;
+
    private  AlertDialog.Builder builder ;
 
     @Override
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         user = usercontrolleur.getUser();
-        appcredentials = usercontrolleur.getAppCredentials();
+//        appcredentials = usercontrolleur.getAppCredentials();
         sessionManagement = new SessionManagement(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         builder = new AlertDialog.Builder(this);
@@ -46,48 +44,56 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, getIntent().getExtras().getString("msgactivation"), Toast.LENGTH_LONG).show();
         }
 
-        if (MesOutils.isLicenceExpired(appcredentials)){
-           sessionManagement.saveLicenceExpiredStatus(true);
-        }
-
-        if (sessionManagement.getLicenceExpiredStatus()){
-            Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra("appcredentials",appcredentials);
-            intent.putExtra("code_msg",1);
-            startActivity(intent);
-            finish();
-        }
-
         boolean  is_key_activated = sessionManagement.getkeyActivated();
-        boolean  is_free_key_activated = sessionManagement.getFreekeyActivated();
-            if (is_key_activated && !sessionManagement.getUtilisateurCreated() || is_free_key_activated && !sessionManagement.getUtilisateurCreated()){
-                Intent intent = new Intent(MainActivity.this, CreercompteActivity.class);
-                intent.putExtra("msgactivation","félicitation licence activée creer un compte utilisateur");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }else {
-                boolean is_authenticated = sessionManagement.getSession();
-                if (is_authenticated){
-                    Intent intent = new Intent(MainActivity.this, GestionActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
+
+            if (is_key_activated){
+                AppKessModel appKessModel = usercontrolleur.getAppCredentials2();
+                String appnumber = String.valueOf(appKessModel.getAppnumber());
+                String appowner = appKessModel.getOwner();
+                String appkey = appKessModel.getApppkey();
+//                if (MesOutils.isKeyvalide(appkey, appnumber)){
+                    boolean is_agence_created = sessionManagement.getAgenceCreated();
+                    if (is_agence_created){
+                        boolean  is_utilisateur_created = sessionManagement.getUtilisateurCreated();
+                        if (is_utilisateur_created){
+                            boolean is_authenticated = sessionManagement.getSession();
+                            if (is_authenticated){
+                                Intent intent = new Intent(MainActivity.this, GestionActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }else {
+                            Intent intent = new Intent(MainActivity.this, CreercompteActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }else {
+                        Intent intent = new Intent(MainActivity.this, AgenceActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+//                }else {
+//                    sessionManagement.removeLicenceExpiredStatus();
+//                    Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
+//                    String[] credentials = new String[]{appnumber,appowner};
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    intent.putExtra(CODE_MSG,1);
+//                    intent.putExtra("credentials",credentials);
+//                    startActivity(intent);
+//                    finish();
+//                }
+
             }
+//
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         init();
-        SmsSendercontrolleur smsSendercontrolleur = SmsSendercontrolleur.getSmsSendercotrolleurInstance(this);
-        SmsreSender smsreSender = new SmsreSender(this, this);
-        ArrayList<SmsnoSentModel> sms_no_Sents = smsSendercontrolleur.getSmsnoSentList();
-        if (!sms_no_Sents.isEmpty()){
-            smsreSender.sendingUnSentMsg(sms_no_Sents);
-        }
         authentification();
         redirectToAppActivation();
         redirectToInitMdp();
@@ -95,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         fillTxtVConnectionError();
-        desactivatetxtCreation();
+        deactivationsTextCreation();
         desactiverbtnAuthInit();
         parametres();
         hideInitMdpText();
@@ -193,9 +199,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void activerProduit() {
         try {
-
-            String apppnumber = appcredentials[0];
-            String apppowner = appcredentials[2];
+           AppKessModel appKessModel = usercontrolleur.getAppCredentials2();
+            String apppnumber = String.valueOf(appKessModel.getAppnumber());
+            String apppowner = String.valueOf(appKessModel.getOwner());
+            String[] credentials = new String[]{apppnumber,apppowner};
 
             builder.setTitle("cle d'activation");
             builder.setMessage("les donnees d'activations sont necessaires pour l'activation de votre produit, il est fortement recommendé de les noter." +"\n"
@@ -204,8 +211,8 @@ public class MainActivity extends AppCompatActivity {
 
             builder.setPositiveButton("ok", (dialog, which) -> {
                 Intent intent = new Intent(this, ActiverProduitActivity.class);
-                intent.putExtra("appcredentials", appcredentials);
-                intent.putExtra("code_msg",2);
+                intent.putExtra("credentials", credentials);
+                intent.putExtra(CODE_MSG,2);
                 startActivity(intent);
             });
 
@@ -218,9 +225,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
-
 
     /**
      * affichage du texte d'erreur
@@ -254,8 +258,8 @@ public class MainActivity extends AppCompatActivity {
      * desavtive la creation de compte utilisateur
      * le nbr d'utilisateur est limité a 1 par application
      */
-    private void desactivatetxtCreation(){
-        if (sessionManagement.getkeyActivated() || sessionManagement.getFreekeyActivated() ){
+    private void deactivationsTextCreation(){
+        if (sessionManagement.getkeyActivated() || sessionManagement.getAgenceCreated() || sessionManagement.getUtilisateurCreated() ){
             binding.txtCreateCompte.setVisibility(View.GONE);
         }
     }

@@ -37,16 +37,14 @@
                     android:textAllCaps="true"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditarticle_designation"
-                    android:layout_width="200dp"
-                    android:layout_height="0dp"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="2"
                     android:hint="@string/designation"
-                    android:inputType="textPersonName"
                     app:counterEnabled="true"
                     app:counterMaxLength="30"
                     app:endIconMode="clear_text"
@@ -85,11 +83,9 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditarticle_quantite"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_weight="2"
                     android:hint="@string/quantite"
-                    android:inputType="number"
                     app:counterEnabled="true"
                     app:counterMaxLength="16"
                     app:endIconMode="clear_text"
@@ -104,17 +100,23 @@
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/editarticles_description"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_editarticles_description"
                     android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/description"
-                    android:importantForAutofill="no"
-                    android:inputType="textMultiLine"
-                    android:minHeight="48dp"
-                    android:textColor="@color/black" />
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editarticles_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:hint="@string/description"
+                        android:importantForAutofill="no"
+                        android:inputType="textMultiLine"
+                        android:minHeight="48dp"
+                        android:textColor="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -133,8 +135,8 @@
 
                 <ImageView
                     android:id="@+id/article_imageView_face"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
@@ -142,8 +144,8 @@
 
                 <ImageView
                     android:id="@+id/article_imageView_left"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
@@ -151,8 +153,8 @@
 
                 <ImageView
                     android:id="@+id/article_imageView_right"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
@@ -160,8 +162,8 @@
 
                 <ImageView
                     android:id="@+id/article_imageView_back"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@string/article_image"
                     android:scaleType="centerCrop"
@@ -175,7 +177,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="@string/enreg_image" />
+                android:text="@string/enreg_image"
+            />
 
 
             <TextView

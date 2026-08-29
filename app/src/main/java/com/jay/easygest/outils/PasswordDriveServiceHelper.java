@@ -38,8 +38,11 @@ public class PasswordDriveServiceHelper {
                     }
                 }
                 listener.onSuccess(cle_retenu);
-                listener.onError(error);
+                if (cle_retenu == null) {
+                    listener.onError(error);
+                }
             } catch (Exception e) {
+                android.util.Log.e("DriveService", "Error reading drive file", e);
                 error = "impossible d'effectuer l'operation";
                 listener.onError(error);
             }

@@ -51,6 +51,9 @@ public class SettingsActivity extends AppCompatActivity {
         settingsViewModel.getSetting_password().setValue(getIntent().getExtras().get("mdp").toString());
 
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
     }
 
@@ -331,6 +334,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         sessionManagement.removeSession();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

@@ -313,6 +313,33 @@ public class AccessLocalCredit {
 
     /**
      *
+     * @return la liste de tous les credits en cours
+     */
+
+    public ArrayList<CreditModel> listeCreditsSoldes(){
+        bd = accessBD.getReadableDatabase();
+        ArrayList<CreditModel> credits = new ArrayList<>();
+        try {
+            String req = "select * from credit where reste = 0 ";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToFirst();
+            do {
+                ClientModel client = accessLocalClient.recupUnClient(cursor.getInt(1));
+                CreditModel credit = getCreditModelfromCursor(cursor,client);
+                credit.setSoldedat(cursor.getLong(9));
+                credits.add(credit);
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+        }catch(Exception e){
+            return credits;
+        }
+        return credits;
+
+    }
+
+    /**
+     *
      * @param client le client
      * @return liste des credits en cours du client
      */
@@ -492,19 +519,28 @@ public class AccessLocalCredit {
         return totalversement;
     }
 
+//    /**
+//     *
+//     * @return retourne le total du reste des credits en cour
+//     */
+//    public int getRecapTreste(){
+//            bd = accessBD.getReadableDatabase();
+//            String req  = "select SUM(reste) AS t_reste from credit where reste != 0";
+//            Cursor cursor = bd.rawQuery(req,null);
+//            cursor.moveToFirst();
+//            int totalreste = cursor.getInt(cursor.getColumnIndexOrThrow("t_reste"));
+//            cursor.close();
+//            return totalreste;
+//    }
+
+
     /**
      *
      * @return retourne le total du reste des credits en cour
      */
     public int getRecapTreste(){
-            bd = accessBD.getReadableDatabase();
-            String req  = "select SUM(reste) AS t_reste from credit where reste != 0";
-            Cursor cursor = bd.rawQuery(req,null);
-            cursor.moveToFirst();
-            int totalreste = cursor.getInt(cursor.getColumnIndexOrThrow("t_reste"));
-            cursor.close();
-            return totalreste;
-        }
+        return this.getRecapTcredit() - this.getRecapTversement();
+    }
 
 
     /**
@@ -538,19 +574,29 @@ public class AccessLocalCredit {
         return totalversement;
     }
 
+//    /**
+//     *
+//     * @param client le client
+//     * @return total du reste des credits a payer d'un client
+//     */
+//    public int getRecapTresteClient(ClientModel client){
+//        bd = accessBD.getReadableDatabase();
+//        String req = "select SUM(reste) AS t_reste from credit where  reste != 0 and clientid ='" + client.getId()+"'";
+//        Cursor cursor = bd.rawQuery(req,null);
+//        cursor.moveToFirst();
+//        int totalreste = cursor.getInt(cursor.getColumnIndexOrThrow("t_reste"));
+//        cursor.close();
+//        return totalreste;
+//    }
+
+
     /**
      *
      * @param client le client
      * @return total du reste des credits a payer d'un client
      */
     public int getRecapTresteClient(ClientModel client){
-        bd = accessBD.getReadableDatabase();
-        String req = "select SUM(reste) AS t_reste from credit where  reste != 0 and clientid ='" + client.getId()+"'";
-        Cursor cursor = bd.rawQuery(req,null);
-        cursor.moveToFirst();
-        int totalreste = cursor.getInt(cursor.getColumnIndexOrThrow("t_reste"));
-        cursor.close();
-        return totalreste;
+        return this.getRecapTcreditClient(client) - this.getRecapTversementClient(client);
     }
 
 

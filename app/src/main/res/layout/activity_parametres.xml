@@ -6,33 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".vue.ParametresActivity">
 
-    <EditText
-        android:id="@+id/editAppowner"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_editAppowner"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:autofillHints="@string/app_owner"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="@string/app_owner"
-        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/editAppKey"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editAppowner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/app_owner"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/app_owner"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_editAppKey"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:autofillHints="@string/appkey"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="@string/appkey"
-        android:inputType="textPersonName"
-        android:maxLength="17"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAppowner" />
+        app:layout_constraintTop_toBottomOf="@+id/tl_editAppowner">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editAppKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/appkey"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/appkey"
+            android:inputType="textPersonName"
+            android:maxLength="17" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnApikey"
@@ -42,6 +54,6 @@
         app:cornerRadius="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAppKey" />
+        app:layout_constraintTop_toBottomOf="@+id/tl_editAppKey" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

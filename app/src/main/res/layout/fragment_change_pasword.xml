@@ -25,57 +25,84 @@
             android:padding="10dp"
             android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editchangerpasswordusername"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_editchangerpasswordusername"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_weight="1"
-        android:autofillHints="@string/username"
-        android:ems="8"
-        android:gravity="center"
-        android:hint="@string/username"
-        android:inputType="textPersonName"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top">
 
-            <EditText
-                android:id="@+id/editchangerpasswordpassword"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editchangerpasswordusername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/username"
+            android:minWidth="250dp"
+            android:ems="8"
+            android:gravity="center"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editchangerpasswordpassword"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:autofillHints="@string/password" />
+                app:passwordToggleEnabled="true">
 
-            <EditText
-                android:id="@+id/editchangerpasswordnouveaupassword"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editchangerpasswordpassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="250dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:autofillHints="@string/password" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editchangerpasswordnouveaupassword"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/nouveau_password"
-                android:inputType="textPassword"
-                android:autofillHints="@string/nouveau_password" />
+                app:passwordToggleEnabled="true">
 
-            <EditText
-                android:id="@+id/editchangerpassword_renouveaupassword"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editchangerpasswordnouveaupassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="250dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/nouveau_password"
+                    android:inputType="textPassword"
+                    android:autofillHints="@string/nouveau_password" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editchangerpassword_renouveaupassword"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/repeat_nouveau_password"
-                android:inputType="textPassword"
-                android:autofillHints="@string/repeat_nouveau_password" />
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editchangerpassword_renouveaupassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="250dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/repeat_nouveau_password"
+                    android:inputType="textPassword"
+                    android:autofillHints="@string/repeat_nouveau_password" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnchangepassword"

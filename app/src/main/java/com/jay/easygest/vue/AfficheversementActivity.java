@@ -77,7 +77,9 @@ public class AfficheversementActivity extends AppCompatActivity {
         annullerversement();
         redirectTolisteCredits();
         redirectToClient();
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public void afficherVersement(){
@@ -204,6 +206,10 @@ public class AfficheversementActivity extends AppCompatActivity {
         sessionManagement.removeSession();
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }

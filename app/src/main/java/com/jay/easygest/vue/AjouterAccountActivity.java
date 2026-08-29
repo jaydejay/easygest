@@ -76,15 +76,17 @@ public class AjouterAccountActivity extends AppCompatActivity {
         init();
         ajouterAccount();
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public  void init(){
         chargerArticlesDeBqd();
         getSelectedArticle1();
         getSelectedArticle2();
-        binding.ajoutaccnom.setText(client.getNom());
-        binding.ajoutacccodeclt.setText(client.getCodeclient());
-        binding.ajoutaccprenoms.setText(client.getPrenoms());
+        String ref_client = client.getNom() + " " + client.getPrenoms() + " " + client.getCodeclient();
+        binding.ajoutaccclientref.setText(ref_client);
     }
 
     private void chargerArticlesDeBqd() {
@@ -301,4 +303,9 @@ public class AjouterAccountActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

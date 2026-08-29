@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,8 +48,8 @@ public class ModifierVersementaccActivity extends AppCompatActivity {
     private VersementsaccModel versement;
     private ClientModel client;
    TextView EDTcodeclient;
-   EditText EDTsomme;
-   EditText EDTdateaccount;
+   TextInputEditText EDTsomme;
+   TextInputEditText EDTdateaccount;
    Button bouton_modifier;
 
     @Override

@@ -51,11 +51,11 @@ public class VersementaccAdapter extends BaseAdapter{
 
         if (view == null){
             holder = new VersementaccHolder();
-            view = inflater.inflate(R.layout.layout_liste_versementacc,null);
-            holder.listevsmtaccdate = view.findViewById(R.id.listevsmtaccdate);
-            holder.listevsmtaccsomme = view.findViewById(R.id.listevsmtaccsomme);
-            holder.listevsmtaccnacc = view.findViewById(R.id.listevsmtaccnacc);
-            holder.llayoutlistevsmtacc = view.findViewById(R.id.llayoutlistevsmtacc);
+            view = inflater.inflate(R.layout.layout_liste_versement,null);
+            holder.listevsmtaccdate = view.findViewById(R.id.txtlisteversementdate);
+            holder.listevsmtaccsomme = view.findViewById(R.id.txtlisteversementsomme);
+            holder.listevsmtaccnacc = view.findViewById(R.id.txtlisteversementnum);
+            holder.llayoutlistevsmtacc = view.findViewById(R.id.llayouteversement);
             view.setTag(holder);
         }else {
 

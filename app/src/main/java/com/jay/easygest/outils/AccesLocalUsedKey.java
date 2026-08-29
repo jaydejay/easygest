@@ -41,18 +41,18 @@ public class AccesLocalUsedKey {
     }
 
 
-    public boolean isPermanentKey(String cle){
-        boolean is_permanent_key ;
-        try {
-             is_permanent_key = MesOutils.getLicenceLevel(cle) == MesOutils.Level.PERMANENT;
-
-        } catch (Exception e) {
-            is_permanent_key = false;
-        }
-
-        return is_permanent_key;
-
-    }
+//    public boolean isPermanentKey(String cle){
+//        boolean is_permanent_key ;
+//        try {
+//             is_permanent_key = MesOutils.getLicenceLevel(cle) == MesOutils.Level.PERMANENT;
+//
+//        } catch (Exception e) {
+//            is_permanent_key = false;
+//        }
+//
+//        return is_permanent_key;
+//
+//    }
 
     public long ajouterCle(String cle){
       ContentValues cle_cv = new ContentValues();

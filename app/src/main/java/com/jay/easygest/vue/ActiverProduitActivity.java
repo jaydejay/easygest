@@ -1,299 +1,140 @@
 package com.jay.easygest.vue;
 
-import android.Manifest;
-import android.app.PendingIntent;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.auth.api.identity.AuthorizationRequest;
-import com.google.android.gms.auth.api.identity.AuthorizationResult;
-import com.google.android.gms.auth.api.identity.Identity;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.Scope;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-import com.jay.easygest.BuildConfig;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Usercontrolleur;
-import com.jay.easygest.databinding.ActivityDriveKeyValidatorBinding;
+import com.jay.easygest.databinding.ActivityActiverProduitBinding;
 import com.jay.easygest.model.AppKessModel;
-import com.jay.easygest.model.DriveKeyModel;
-import com.jay.easygest.outils.AccessLocal;
+import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
-import com.jay.easygest.outils.PasswordDriveServiceHelper;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 
-
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 public class ActiverProduitActivity extends AppCompatActivity {
-
-    private static final int MY_PERMISSIONS_REQUEST_READ_DRIVE_FILE = 17;
-    private ActivityDriveKeyValidatorBinding binding;
-    private ActivityResultLauncher<IntentSenderRequest> activityResultLauncher;
-    private static final GsonFactory JSON_FACTORY = new GsonFactory();
-    private NetHttpTransport transport;
-    private PasswordDriveServiceHelper passwordDriveServiceHelper;
-
-   private DriveKeyModel cle_fournie;
-    private String basecode;
+    private ActivityActiverProduitBinding binding;
     private String[] credentials;
-
+    private Usercontrolleur usercontrolleur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        binding = ActivityDriveKeyValidatorBinding.inflate(getLayoutInflater());
-        transport = new NetHttpTransport();
-        AccessLocal accessLocal = new AccessLocal(this);
-       credentials = accessLocal.appCredential();
-       getFreeAccount();
-        verifyKey();
-        activityLauncherlistener();
+        credentials = (String[]) getIntent().getExtras().get("credentials");
+        binding = ActivityActiverProduitBinding.inflate(getLayoutInflater());
+        usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-    }
-
-    public void verifyKey(){
-        binding.btnValidatorKey.setOnClickListener(v -> {
-            binding.btnValidatorKey.setEnabled(false);
-            String cle= binding.edtValidatorKey.getText().toString().trim();
-            String owner = binding.edtValidatorOwner.getText().toString().trim();
-            String telephone = binding.edtValidatorPhone.getText().toString().trim();
-            String email = binding.edtValidatorEmail.getText().toString().trim();
-             basecode = binding.edtValidatorBasecode.getText().toString().trim();
-            if (cle.isEmpty() || owner.isEmpty() || email.isEmpty() || telephone.isEmpty()){
-                Toast.makeText(this, "remplir tous les champs", Toast.LENGTH_SHORT).show();
-                binding.btnValidatorKey.setEnabled(true);
-            }else {
-                if (basecode.length() != 4  ) {
-                    Toast.makeText(this, "base code 4 lettres atendues", Toast.LENGTH_SHORT).show();
-                    binding.btnValidatorKey.setEnabled(true);
-                }else {
-                    if (owner.length() < 5 || owner.length() > 25) {
-                        Toast.makeText(this, "5 lettres minimum et 25 lettres maximum", Toast.LENGTH_SHORT).show();
-                        binding.btnValidatorKey.setEnabled(true);
-                    }else {
-                        if (telephone.length() != 10) {
-                            Toast.makeText(this, "10 chiffres attendu", Toast.LENGTH_SHORT).show();
-                            binding.btnValidatorKey.setEnabled(true);
-                        }else {
-                            cle_fournie = new DriveKeyModel(owner,telephone,email,cle);
-                            launchsignInIntent();
-                        }
-                    }
-
-                }
-            }
-
-        });
-    }
-
-    public void launchsignInIntent(){
-            if (
-                ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.GET_ACCOUNTS) !=
-                        PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{ Manifest.permission.GET_ACCOUNTS},
-                        MY_PERMISSIONS_REQUEST_READ_DRIVE_FILE);
-                binding.btnValidatorKey.setEnabled(true);
-            }else {
-                requestGoogleDriveAuthorization();
-            }
-    }
-
-    public void requestGoogleDriveAuthorization(){
-        List<Scope> requestedScopes = Collections.singletonList(new Scope(DriveScopes.DRIVE_READONLY));
-        AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
-                .setRequestedScopes(requestedScopes)
-                .build();
-        Identity.getAuthorizationClient(this)
-                .authorize(authorizationRequest)
-                .addOnSuccessListener(
-                        authorizationResult -> {
-                            if (authorizationResult.hasResolution()) {
-                                // Access needs to be granted by the user
-                                PendingIntent pendingIntent = authorizationResult.getPendingIntent();
-                                try {
-                                    if (pendingIntent != null) {
-                                        IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(pendingIntent).build();
-                                        activityResultLauncher.launch(intentSenderRequest);
-                                    }
-                                } catch (Exception e) {
-                                     binding.btnValidatorKey.setEnabled(true);
-                                }
-                            } else {
-                                // Access already granted, continue with user action
-                                try {
-                                    saveToDriveAppFolder(authorizationResult);
-                                } catch (IOException e) {
-                                    binding.btnValidatorKey.setEnabled(true);
-                                }
-                            }
-                        })
-                .addOnFailureListener(e -> Toast.makeText(this, "echec de l'autorisation", Toast.LENGTH_SHORT).show());
-    }
-
-
-    public void activityLauncherlistener(){
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result ->{
-            if (result.getData() != null && result.getResultCode() == RESULT_OK){
-                try {
-                    AuthorizationResult authorizationResult = Identity.getAuthorizationClient(this).getAuthorizationResultFromIntent(result.getData());
-                    saveToDriveAppFolder(authorizationResult);
-                } catch (ApiException | IOException e) {
-                    binding.btnValidatorKey.setEnabled(true);
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-    }
-
-
-    private void saveToDriveAppFolder(AuthorizationResult authorizationResult) throws IOException  {
-
-        if (authorizationResult.toGoogleSignInAccount() != null){
-            GoogleCredential credentials  =  new GoogleCredential.Builder()
-                    .setJsonFactory(JSON_FACTORY)
-                    .setTransport(transport)
-                    .build()
-                    .setAccessToken(authorizationResult.getAccessToken()) ;
-
-            Drive driveService = new Drive.Builder(transport, JSON_FACTORY, credentials)
-                    .setApplicationName("easygest")
-                    .build();
-            passwordDriveServiceHelper = new PasswordDriveServiceHelper(driveService);
-
-            try {
-                    readFileToDrive(cle_fournie);
-            }catch (Exception e){
-                binding.btnValidatorKey.setEnabled(true);
-                Toast.makeText(this, "echec de la lecture : "+e.getMessage(), Toast.LENGTH_LONG).show() ;}
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-    }
-    private void readFileToDrive( DriveKeyModel cle_fournie) {
-        passwordDriveServiceHelper.readDriveFile(BuildConfig.MY_KEY,cle_fournie, new PasswordDriveServiceHelper.OnFileReadListener() {
-            @Override
-            public void onSuccess(DriveKeyModel content) {
-                onSuccessFunction(content);
-            }
-
-            @Override
-            public void onError(String error) {
-                errorFunction(error);
-            }
-        });
+        init();
+        activerproduit();
     }
 
-    private void onSuccessFunction(DriveKeyModel content) {
-        if (content != null){
-            Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
-          boolean success = usercontrolleur.saveAppkeys(content.getOwner(), content.getLicence(), content.getEmail(), content.getTelephone(),basecode,credentials[0]);
-
-          if (success){
-              SessionManagement sessionManagement = new SessionManagement(this);
-              sessionManagement.savekeyActivated(true);
-              sessionManagement.saveLicenceExpiredStatus(false);
-              Intent intent = new Intent(this,CreercompteActivity.class);
-              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-              startActivity(intent);
-              finish();
-          }
-
+    private void init(){
+        int  code_msg =  getIntent().getExtras().getInt("code_msg");
+        String msg_expire = "votre licence a expirer contacter le proprietaire pour la renouveller";
+        String activation_texte = "ACTIVATION DU PRODUIT";
+        if (code_msg == 1 ){
+            binding.txtMsgExpired.setText(msg_expire);
+        }else {
+            binding.txtMsgExpired.setText(activation_texte);
+            binding.txtMsgExpired.setTextColor(getColor(R.color.bleue_brillant) );
         }
 
-    }
-
-    private void errorFunction(String error) {
-        runOnUiThread(() -> {
-            // Your UI code or Handler creation goes here
-            if (!error.isEmpty()){
-                Toast.makeText(ActiverProduitActivity.this,  error , Toast.LENGTH_LONG).show();
-                binding.btnValidatorKey.setEnabled(true);
-            }
-
-        });
+        binding.txtCompteFree.setVisibility(View.GONE);
 
     }
 
-    public void getFreeAccount(){
-        binding.txtCompteFree.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("CLE DU PRODUIT");
-            builder.setMessage("noter la cle elle vous sera utile"+"\n"
-                    +" cle : "+credentials[1] );
-            builder.setPositiveButton("ok",(dialog, which) -> {
+    public void activerproduit(){
+        binding.btnactiverproduit.setOnClickListener(v -> {
+            binding.btnactiverproduit.setEnabled(false);
+           try {
+               String proprietaire = binding.editactiverproduitAppowner.getText().toString().trim();
+               String cleproduit = binding.editactiverproduitAppKey.getText().toString().trim();
+               String applinumber = binding.editactiverproduitAppnuber.getText().toString().trim();
 
-                String owner = binding.edtValidatorOwner.getText().toString().trim();
-                String telephone = binding.edtValidatorPhone.getText().toString().trim();
-                String email = binding.edtValidatorEmail.getText().toString().trim();
-                basecode = binding.edtValidatorBasecode.getText().toString().trim();
+               String appnumber = credentials[0];
+               String apppowner = credentials[1];
 
-                if (basecode.isEmpty() || owner.isEmpty() || email.isEmpty() || telephone.isEmpty()){
-                    Toast.makeText(this, "remplir tous les champs", Toast.LENGTH_SHORT).show();
-                    binding.btnValidatorKey.setEnabled(true);
-                }else {
-                     if (basecode.length() != 4  ) {
-                         Toast.makeText(this, "base code 4 lettres atendues", Toast.LENGTH_SHORT).show();
-                        binding.btnValidatorKey.setEnabled(true);
-                    }else {
-                          if (owner.length() < 5 || owner.length() > 25) {
-                             Toast.makeText(this, "5 lettres minimum et 25 lettres maximum", Toast.LENGTH_SHORT).show();
-                             binding.btnValidatorKey.setEnabled(true);
-                         }else {
-                               if (telephone.length() != 10) {
-                                   Toast.makeText(this, "10 chiffres attendu", Toast.LENGTH_SHORT).show();
-                                    binding.btnValidatorKey.setEnabled(true);
-                              }else {
-                                   AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
-                                   AppKessModel appKessModel = new AppKessModel(Integer.parseInt(credentials[0]),credentials[1],owner,basecode,telephone,email);
-                                   boolean rslt = accessLocalAppKes.updateAppkes(appKessModel);
-                                   if (rslt){
-                                       SessionManagement sessionManagement = new SessionManagement(this);
-                                       sessionManagement.saveFreekeyActivated(true);
-                                       Intent intent = new Intent(ActiverProduitActivity.this, CreercompteActivity.class);
-                                       intent.putExtra("msgactivation","félicitation et bienvenu(e)");
-                                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                       startActivity(intent);
-                                       finish();
-                                   }
+               if (!proprietaire.isEmpty() && !cleproduit.isEmpty() && !applinumber.isEmpty()) {
+                   if (apppowner.equals(proprietaire)) {
+                       if (appnumber.equals(applinumber)){
+                           if (MesOutils.isKeyvalide(cleproduit,appnumber) ){
+                               boolean success = isupdatekeySuccessfull(cleproduit);
+                               if (success){
+                                   SessionManagement sessionManagement = new SessionManagement(this);
+                                   sessionManagement.savekeyActivated(true);
+                                   UserModel user = usercontrolleur.recupProprietaire();
+                                   Intent intent = getIntent(user);
+                                   startActivity(intent);
+                                   finish();
+
+                               }else {
+                                   Toast.makeText(ActiverProduitActivity.this, "echec de l'activation", Toast.LENGTH_SHORT).show();
+                                   binding.btnactiverproduit.setEnabled(true);
                                }
+                           }else {
+                               Toast.makeText(ActiverProduitActivity.this, "cle incorrecte", Toast.LENGTH_SHORT).show();
+                               binding.btnactiverproduit.setEnabled(true);
+                           }
+                       }else {
+                           Toast.makeText(ActiverProduitActivity.this, "numero app incorrect", Toast.LENGTH_SHORT).show();
+                           binding.btnactiverproduit.setEnabled(true);
+                       }
 
-                          }
-                     }
-
-                }
-            });
-            builder.create().show();
-
+                   } else {
+                       Toast.makeText(ActiverProduitActivity.this, "propritaire incorrect", Toast.LENGTH_SHORT).show();
+                       binding.btnactiverproduit.setEnabled(true);
+                   }
+               } else {
+                   Toast.makeText(ActiverProduitActivity.this, "champs obligatoire", Toast.LENGTH_SHORT).show();
+                   binding.btnactiverproduit.setEnabled(true);
+               }
+           }catch (Exception e){
+               Toast.makeText(ActiverProduitActivity.this, "un probleme est survenu si cela persiste contacter l'editeur", Toast.LENGTH_LONG).show();
+               binding.btnactiverproduit.setEnabled(true);
+           }
         });
+    }
 
+    @NonNull
+    private Intent getIntent(UserModel user) {
+        Intent intent;
+        if (user != null){
+            intent = new Intent(ActiverProduitActivity.this, MainActivity.class);
+            intent.putExtra("msgactivation","félicitation licence activée");
+        }else {
+            intent = new Intent(ActiverProduitActivity.this, AgenceActivity.class);
+            intent.putExtra("msgactivation","félicitation licence activée");
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        return intent;
+    }
+
+    private boolean isupdatekeySuccessfull(String cleproduit) {
+        AppKessModel appKess_Model = usercontrolleur.getAppCredentials2();
+        AppKessModel appKessModel = new AppKessModel(
+                appKess_Model.getAppnumber(),
+                cleproduit,
+                appKess_Model.getOwner(),
+                appKess_Model.getBasecode(),
+                appKess_Model.getTelephone(),
+                appKess_Model.getAdresseelectro());
+        AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
+        return accessLocalAppKes.updateAppkesKey(appKessModel);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

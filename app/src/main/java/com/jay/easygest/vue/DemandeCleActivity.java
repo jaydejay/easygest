@@ -22,6 +22,7 @@ import com.jay.easygest.databinding.ActivityDemandeCleBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.SmsnoSentModel;
 import com.jay.easygest.outils.AccessLocalAppKes;
+import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SmsSender;
 import com.jay.easygest.outils.VariablesStatique;
 
@@ -39,6 +40,9 @@ public class DemandeCleActivity extends AppCompatActivity {
 
         executeIntent();
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -63,20 +67,16 @@ public class DemandeCleActivity extends AppCompatActivity {
 //            String destinationAdress = VariablesStatique.EMULATEUR_2_TELEPHONE;
             String destinationAdress = VariablesStatique.DEVELOPER_PHONE;
 
-            if (ActivityCompat.checkSelfPermission(this,
-                    android.Manifest.permission.SEND_SMS) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.SEND_SMS},
-                        MY_PERMISSIONS_REQUEST_SEND_SMS_2);
-                binding.btnDemandeKey.setEnabled(true);
-            }else {
+            MesOutils.grantSmsPermission(this);
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                 SmsnoSentModel smsnoSentModel = new SmsnoSentModel(1,messageBody);
                 SmsSender smsSender = new SmsSender(this,this);
                 Intent intent = new Intent(DemandeCleActivity.this,GestionActivity.class);
 
                 smsSender.smsSendwithInnerClass(messageBody, destinationAdress,smsnoSentModel.getSmsid() );
                 smsSender.sentReiceiverGeneric(smsnoSentModel,intent);
+            } else {
+                binding.btnDemandeKey.setEnabled(true);
             }
 
 
@@ -109,5 +109,11 @@ public class DemandeCleActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         executeIntent();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

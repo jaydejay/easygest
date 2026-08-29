@@ -19,45 +19,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="350dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal"
+
+            <TextView
+                android:id="@+id/ajoutacctitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:textSize="15sp"
+                android:textAllCaps="true"
+                android:text="@string/ajouter_un_account"
+                android:textStyle="bold"
+                />
 
-                <TextView
-                    android:id="@+id/ajoutaccnom"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"/>
+            <TextView
+                android:id="@+id/ajoutaccclientref"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textSize="12sp"
+                android:textAllCaps="true"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+            />
 
-
-                <TextView
-                    android:id="@+id/ajoutaccprenoms"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"/>
-
-                <TextView
-                    android:id="@+id/ajoutacccodeclt"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="center" />
-            </LinearLayout>
             <Spinner
                 android:id="@+id/spinnerajoutaccountArticle1"
                 android:layout_width="250dp"
@@ -69,36 +55,48 @@
 
             <LinearLayout
                 android:id="@+id/llayoutajoutaccarticle1"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center_horizontal"
+                android:baselineAligned="false"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+            >
 
-                <EditText
-                    android:id="@+id/ajoutaccarticle1prix"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/prix_article1"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/prix_article1"
-                    android:inputType="number" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutaccarticle1prix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                >
 
-                <EditText
-                    android:id="@+id/ajoutaccNbrarticle1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/quantite1"
-                    android:ems="10"
-                    android:hint="@string/quantite1"
-                    android:inputType="number" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutaccarticle1prix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="200dp"
+                        android:autofillHints="@string/prix_article1"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/prix_article1"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutaccNbrarticle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutaccNbrarticle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="50dp"
+                        android:autofillHints="@string/quantite1"
+                        android:ems="10"
+                        android:hint="@string/quantite1"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -112,71 +110,88 @@
                 android:spinnerMode="dropdown" />
 
             <LinearLayout
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center_horizontal"
+                android:baselineAligned="false"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+            >
 
-                <EditText
-                    android:id="@+id/ajoutaccarticle2prix"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/prix_article2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/prix_article2"
-                    android:inputType="number" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutaccarticle2prix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                >
 
-                <EditText
-                    android:id="@+id/ajoutaccNbrarticle2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/quantite1"
-                    android:ems="10"
-                    android:hint="@string/quantite1"
-                    android:inputType="number" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutaccarticle2prix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="200dp"
+                        android:autofillHints="@string/prix_article2"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/prix_article2"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_ajoutaccNbrarticle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ajoutaccNbrarticle2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="50dp"
+                        android:autofillHints="@string/quantite2"
+                        android:ems="10"
+                        android:hint="@string/quantite2"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llayoutajoutaccdate"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="25dp"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
 
-                <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_ajoutaccDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+            >
+
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ajoutaccDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="250dp"
                     android:autofillHints="@string/date"
                     android:ems="10"
                     android:gravity="center_horizontal|center_vertical"
                     android:hint="@string/date"
                     android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_ajoutaccversement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+            >
+
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ajoutaccversement"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="250dp"
                     android:autofillHints="@string/versement"
                     android:ems="10"
                     android:gravity="center_horizontal|center_vertical"
                     android:hint="@string/versement"
                     android:inputType="number" />
-            </LinearLayout>
-
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnajoutaccount"

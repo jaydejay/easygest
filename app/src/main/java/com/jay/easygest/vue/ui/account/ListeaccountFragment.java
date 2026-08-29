@@ -24,7 +24,6 @@ public class ListeaccountFragment extends Fragment {
 
     private FragmentListeaccountBinding binding;
     private AccountViewModel accountViewModel;
-    private Accountcontroller accountcontroller;
     private ArrayList<AccountModel> accounts;
     private ListeaccountAdapter adapter;
 
@@ -33,10 +32,9 @@ public class ListeaccountFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        accountcontroller = Accountcontroller.getAccountcontrolleurInstance(getContext());
+        Accountcontroller accountcontroller = Accountcontroller.getAccountcontrolleurInstance(getContext());
         accountcontroller.listeaccounts();
         accounts = accountViewModel.getAccounts().getValue();
-
     }
 
     @Override

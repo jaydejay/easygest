@@ -25,55 +25,81 @@
         android:padding="10dp"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editchangerusernameusername"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tl_editchangerusernameusername"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal|top"
-            android:layout_weight="1"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/username"
-            android:inputType="textPersonName"
-            android:autofillHints="@string/username" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top">
 
-        <EditText
-            android:id="@+id/editchangerusernamenouveauusername"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/nouveau_username"
-            android:inputType="textPersonName"
-            android:autofillHints="@string/nouveau_username" />
-        <EditText
-            android:id="@+id/editchangerusername_renouveau_username"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/repeat_nouveau_username"
-            android:inputType="textPersonName"
-            android:autofillHints="@string/repeat_nouveau_username" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editchangerusernameusername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="250dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/username"
+                android:inputType="textPersonName"
+                android:autofillHints="@string/username" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editchangerusernamepassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tl_editchangerusernamenouveauusername"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editchangerusernamenouveauusername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="250dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/nouveau_username"
+                android:inputType="textPersonName"
+                android:autofillHints="@string/nouveau_username" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tl_editchangerusername_renouveau_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editchangerusername_renouveau_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="250dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/repeat_nouveau_username"
+                android:inputType="textPersonName"
+                android:autofillHints="@string/repeat_nouveau_username" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tl_editchangerusernamepassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:autofillHints="@string/password" />
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editchangerusernamepassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="250dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:autofillHints="@string/password" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnchangeusername"
@@ -82,7 +108,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"
             android:layout_marginTop="5dp"
-            android:layout_weight="1"
             android:text="@string/modifier"/>
     </LinearLayout>
 

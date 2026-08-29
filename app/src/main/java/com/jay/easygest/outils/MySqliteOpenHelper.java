@@ -163,6 +163,13 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                     + "datelicence Long not null,"
                     + "dureelicence Long not null,"
                     + "adresseelectro Text)";
+//            String createTable_apppkes = "create table " + TABLE_APPPKES + " ("
+//                    + "appnumber Integer primary key,"
+//                    + "apppkey Text,"
+//                    + "owner Text,"
+//                    + "basecode Text,"
+//                    + "telephone Text,"
+//                    + "adresseelectro Text)";
             sqLiteDatabase.execSQL(createTable_apppkes);
             String createTable_info = "create table " + TABLE_INFO + " ("
                     + "appnumber Integer primary key,"
@@ -193,7 +200,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             sqLiteDatabase.insert(TABLE_ARTICLE,null, articleVideContentValue());
             sqLiteDatabase.insert(TABLE_APPPKES,null,apppPersitence());
             sqLiteDatabase.insert(TABLE_INFO,null,creeeinfo());
-            sqLiteDatabase.insert(TABLE_USEDKEY,null,getUsedkeyCv(appkey));
+//            sqLiteDatabase.insert(TABLE_USEDKEY,null,getUsedkeyCv(appkey));
 
             sqLiteDatabase.setTransactionSuccessful();
 
@@ -209,19 +216,25 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.beginTransaction();
 
         try {
-                if (oldversion == 1 ){
-                    version1To2(sqLiteDatabase);
-                    version2To3(sqLiteDatabase);
-                    version3To4(sqLiteDatabase);
-                }
-
-            if (oldversion == 2 ){
-                version2To3(sqLiteDatabase);
+//                if (oldversion == 1 ){
+//                    version1To2(sqLiteDatabase);
+//                    version2To3(sqLiteDatabase);
+//                    version3To4(sqLiteDatabase);
+//                   version4To5(sqLiteDatabase);
+//                }
+//
+//            if (oldversion == 2 ){
+//                version2To3(sqLiteDatabase);
+//                version3To4(sqLiteDatabase);
+//                version4To5(sqLiteDatabase);
+//            }
+            if (oldversion == 1 || oldversion == 2 || oldversion == 3  ){
                 version3To4(sqLiteDatabase);
+//               version4To5(sqLiteDatabase);
             }
-            if (oldversion == 3 ){
-                version3To4(sqLiteDatabase);
-            }
+//            if (oldversion == 4 ){
+//                version4To5(sqLiteDatabase);
+//            }
 
             sqLiteDatabase.setTransactionSuccessful();
 
@@ -235,18 +248,18 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
     public void version1To2(SQLiteDatabase sqLiteDatabase){
 
-        sqLiteDatabase.execSQL("alter table APPPKES add datelicence Long not null default 1000");
-        sqLiteDatabase.execSQL("alter table APPPKES add dureelicence Long not null default 1000");
-
-        Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
-        if (cursor.moveToFirst()){
-            String app_number = String.valueOf(cursor.getInt(0)) ;
+//        sqLiteDatabase.execSQL("alter table APPPKES add datelicence Long not null default 1000");
+//        sqLiteDatabase.execSQL("alter table APPPKES add dureelicence Long not null default 1000");
+//
+//        Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
+//        if (cursor.moveToFirst()){
+//            String app_number = String.valueOf(cursor.getInt(0)) ;
 //            appkey = MesOutils.apppkeygenerator(app_number);
-             appkey = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
-            sqLiteDatabase.update(TABLE_APPPKES,apppUpdateCv(),"appnumber =?",new String[]{app_number});
-
-        }
-        cursor.close();
+//            appkey = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
+//            sqLiteDatabase.update(TABLE_APPPKES,apppUpdateCv(),"appnumber =?",new String[]{app_number});
+//
+//        }
+//        cursor.close();
         sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
     }
 
@@ -262,7 +275,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             String cle = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
             ContentValues usedkey_cv = getUsedkeyCv(cle);
             sqLiteDatabase.insert(TABLE_USEDKEY,null,usedkey_cv);
-
         }
         cursor.close();
 
@@ -298,6 +310,48 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
             cursor.close();
             sqLiteDatabase.execSQL("drop table articlesold");
+            sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
+
+
+        }
+    }
+
+    public void version4To5(SQLiteDatabase sqLiteDatabase){
+        //renommage de la table articles
+        sqLiteDatabase.execSQL("ALTER TABLE APPPKES RENAME TO APPPKESold");
+        //creation d'une nouvelle table articles
+        String createTable_apppkes = "create table " + TABLE_APPPKES + " ("
+                + "appnumber Integer primary key,"
+                + "apppkey Text,"
+                + "owner Text,"
+                + "basecode Text,"
+                + "telephone Text,"
+                + "adresseelectro Text)";
+
+        sqLiteDatabase.execSQL(createTable_apppkes);
+        //recuperer les donnees de la table APPPKESold et les inserer dans la nouvelle table
+        Cursor cursor = sqLiteDatabase.query("APPPKESold",null,null,null,null,null,null);
+        if (cursor.moveToFirst()){
+            do {
+                int appnumber = cursor.getInt(cursor.getColumnIndexOrThrow("appnumber"));
+                String apppkey =  cursor.getString(cursor.getColumnIndexOrThrow("apppkey"));
+                String owner = cursor.getString(cursor.getColumnIndexOrThrow("owner"));
+                String basecode = cursor.getString(cursor.getColumnIndexOrThrow("basecode"));
+                String telephone = cursor.getString(cursor.getColumnIndexOrThrow("telephone"));
+                String adresseelectro = cursor.getString(cursor.getColumnIndexOrThrow("adresseelectro"));
+                ContentValues cv = new ContentValues();
+                cv.put("appnumber",appnumber);
+                cv.put("apppkey",apppkey);
+                cv.put("owner",owner);
+                cv.put("basecode",basecode);
+                cv.put("telephone",telephone);
+                cv.put("adresseelectro",adresseelectro);
+
+                sqLiteDatabase.insert(TABLE_APPPKES,null,cv);
+            }while (cursor.moveToNext());
+            cursor.close();
+            sqLiteDatabase.execSQL("drop table APPPKESold");
+            sqLiteDatabase.execSQL("drop table usedkey");
         }
     }
 
@@ -314,7 +368,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         long duree_licence = MesOutils.getDureeLicence(appkey);
         ContentValues cv = new ContentValues();
         cv.put(APPNUMBER,apppnumber);
-        cv.put(APPPKEY,appkey);
+        cv.put(APPPKEY,"");
         cv.put(OWNER, NAME_OWNER);
         cv.put(TELEPHONE,"");
         cv.put(ADRESSEELECTRO,"");

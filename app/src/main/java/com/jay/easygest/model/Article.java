@@ -42,10 +42,6 @@ public class Article {
         this.somme = somme;
     }
 
-    @NonNull
-    public String toString2() {
-        return  designation + ": " + somme;
-    }
 
     @NonNull
     @Override

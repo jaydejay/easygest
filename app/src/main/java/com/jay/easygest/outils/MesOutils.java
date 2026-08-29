@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Button;
 
@@ -20,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,9 +71,6 @@ public abstract  class MesOutils {
         if (ladate.contains(separator1)){
             la_date = ladate;
         }
-
-        Log.d("TAG", "convertStringToDate: "+la_date);
-
         String dateFormat = "dd-MM-yyyy";
         SimpleDateFormat dateFormater = new SimpleDateFormat(dateFormat, Locale.FRANCE);
         Date date ;
@@ -124,13 +123,38 @@ public abstract  class MesOutils {
         return Integer.parseInt(numletter);
     }
 
+//    public static String apppnumbergenerator(){
+//        Random random = new Random();
+//        int[] intergers = {1,2,3,4,5,6,7,8,9};
+//        int pos = random.nextInt(intergers.length);
+//        int chif1 = intergers[pos];
+//        int chif2 = random.nextInt(10);
+//        int chif3 = random.nextInt(10);
+//        int chif4 = random.nextInt(10);
+//        return chif1+""+chif2+chif3+chif4;
+//    }
+
     public static String apppnumbergenerator(){
         Random random = new Random();
-        int chif1 = random.nextInt(10);
-        int chif2 = random.nextInt(10);
-        int chif3 = random.nextInt(10);
-        int chif4 = random.nextInt(10);
-        return chif1+""+chif2+chif3+chif4;
+        String intergers = "123456789";
+        StringBuilder appnumber = new StringBuilder(4);
+        for (int i = 0; i < 4; i++) {
+            int index = (int)(intergers.length() * Math.random());
+            appnumber.append(intergers.charAt(index));
+        }
+        return appnumber.toString();
+
+//        for (int i = 0; i < 4; i++) {
+//            int index = (int)(intergers.length() * Math.random());
+//            appnumber.append(intergers.charAt(random.nextInt(intergers.length() + 1)));
+//        }
+
+
+//        String chif1 = String.valueOf(intergers.charAt(random.nextInt(intergers.length() + 1)));
+//        String chif2 = String.valueOf(intergers.charAt(random.nextInt(intergers.length() + 1)));
+//        String chif3 = String.valueOf(intergers.charAt(random.nextInt(intergers.length() + 1)));
+//        String chif4 = String.valueOf(intergers.charAt(random.nextInt(intergers.length() + 1)));
+//        return chif1+chif2+chif3+chif4;
     }
 
 
@@ -156,7 +180,7 @@ public abstract  class MesOutils {
         stringBuilder1.append(VariablesStatique.STR.charAt(c1+17));
 
         // generation de la deuxieme zone
-        // la deuxieme lettre est determiner par l'index du premeier number appnuber plus  deuxieme number appnuber  le redte aleatoire
+        // la deuxieme lettre est determiner par l'index du premeier number appnuber plus deuxieme number appnuber  le redte aleatoire
 
         stringBuilder2.append(VariablesStatique.STR.charAt(c2+8));
         stringBuilder2.append(VariablesStatique.STR.charAt(c1+c2));
@@ -165,7 +189,7 @@ public abstract  class MesOutils {
         stringBuilder2.append("3");
 
         // generation de la troisieme zone
-        // la qutrieme lettre est determiner par l'index du 2  plus  3 number appnuber
+        // la quatrieme lettre est determiner par l'index du 2  plus  3 number appnuber
 
         stringBuilder3.append(VariablesStatique.STR.charAt(c3+26));
         stringBuilder3.append(VariablesStatique.STR.charAt(c3+5));
@@ -174,6 +198,42 @@ public abstract  class MesOutils {
         stringBuilder3.append(VariablesStatique.STR.charAt(c3+23));
 
         return stringBuilder1+"-"+stringBuilder2+"-"+stringBuilder3;
+    }
+
+    public static boolean retrieveAppNumber(String appKey, String appnumber){
+
+        boolean is_app_number_same = false;
+
+        try{
+
+            int app_number1 = Integer.parseInt(String.valueOf(appnumber.charAt(0)));
+            int app_number2 = Integer.parseInt(String.valueOf(appnumber.charAt(1)));
+            int app_number3 = Integer.parseInt(String.valueOf(appnumber.charAt(2)));
+            int app_number4 = Integer.parseInt(String.valueOf(appnumber.charAt(3)));
+
+            String[] zone_array = appKey.split("-");
+            String zone1 = zone_array[0];
+            int c1 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
+
+            String zone2 = zone_array[1];
+            int c2 = VariablesStatique.STR.indexOf(zone2.charAt(1))-c1 ;
+
+            String zone3 = zone_array[2];
+            int c3 = VariablesStatique.STR.indexOf(zone3.charAt(3));
+
+            if (c1 == app_number1 ){
+                if (c2 == app_number2 ){
+                    if (c3  == app_number3 + app_number4){
+                        is_app_number_same = true;
+                    }
+                }
+            }
+
+        }catch (Exception e){
+            // do nothing
+        }
+
+        return is_app_number_same;
     }
 
     public static String mdpgenerator(){
@@ -202,45 +262,17 @@ public abstract  class MesOutils {
         calendar.add(Calendar.MONTH,6);
         return convertStringToDate(datef.format(calendar.getTime())).getTime();
     }
-
-    public static boolean retrieveAppNumber(String appKey, String appnumber){
-
-        boolean is_app_number_same = false;
-
-        try{
-
-        int app_number1 = Integer.parseInt(String.valueOf(appnumber.charAt(0)));
-        int app_number2 = Integer.parseInt(String.valueOf(appnumber.charAt(1)));
-        int app_number3 = Integer.parseInt(String.valueOf(appnumber.charAt(2)));
-        int app_number4 = Integer.parseInt(String.valueOf(appnumber.charAt(3)));
-
-        String[] zone_array = appKey.split("-");
-        String zone1 = zone_array[0];
-        int c1 = VariablesStatique.STR.indexOf(zone1.charAt(0)) ;
-
-        String zone2 = zone_array[1];
-        int c2 = VariablesStatique.STR.indexOf(zone2.charAt(1))-c1 ;
-
-        String zone3 = zone_array[2];
-        int c3 = VariablesStatique.STR.indexOf(zone3.charAt(3));
-
-        if (c1 == app_number1  ){
-
-            if (c2 == app_number2 ){
-
-                if (c3  == app_number3 + app_number4){
-                    is_app_number_same = true;
-                }
-            }
+    public  static long getSppressionDate2(long value){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDate ladate = LocalDate.ofEpochDay(value);
+            LocalDate date = ladate.plusMonths(12);
+            return date.toEpochDay();
+        }else {
+            return getSppressionDate(value);
         }
-
-        }catch (Exception e){
-            // do nothing
-        }
-
-
-        return is_app_number_same;
     }
+
+
 
     public static long getDureeLicence(String key ){
         Level level = getLicenceLevel(key);
@@ -369,7 +401,7 @@ public abstract  class MesOutils {
                 int z24 = VariablesStatique.STR.indexOf(zone2.charAt(3)) ;
                 int z25 = 3 ;
 
-                if (z21 == c2+8 && z22 == c1+c2 && z23 == c2+15 && z24 == c2+22 && z25 == 3){
+                if (z21 == c2+8 && z22 == c1+c2 && z23 == c2+15 && z24 == c2+22 && z25 == 3 ){
 
                     int z31 = VariablesStatique.STR.indexOf(zone3.charAt(0)) ;
                     int z32 = VariablesStatique.STR.indexOf(zone3.charAt(1)) ;
@@ -584,15 +616,19 @@ public abstract  class MesOutils {
         return is_appkey_high;
     }
 
-
     public static boolean verifyApppkeyPermanent(String appkey, String appnumber){
         boolean is_appkey_permanent = false;
+        Log.d("TAG", "verifyApppkeyPermanent appnumber: "+ appnumber);
         try{
 
             String[] zone_array = appkey.split("-");
             String zone1 = zone_array[0];
             String zone2 = zone_array[1];
             String zone3 = zone_array[2];
+            Log.d("TAG", "verifyApppkeyPermanent zone1: "+ zone1);
+            Log.d("TAG", "verifyApppkeyPermanent zone2: "+ zone2);
+            Log.d("TAG", "verifyApppkeyPermanent zone3: "+ zone3);
+
 
             if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
                 int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
@@ -632,44 +668,62 @@ public abstract  class MesOutils {
             }
         } catch (NumberFormatException e) {
             // do nothing
+            return false;
         }
-
         return is_appkey_permanent;
     }
 
+//    public static boolean isKeyvalide(String appkey, String appnumber){
+//
+//      Level level =  MesOutils.getLicenceLevel(appkey);
+//      boolean success ;
+//        try{
+//            switch(level) {
+//                case LOW:
+//                    success =  verifyApppkeyLow(appkey,appnumber);
+//                    break;
+//                case MEDIUM:
+//                    // code block 6 mois
+//                    success = verifyApppkeyMedium(appkey,appnumber);
+//                    break;
+//                case HIGH:
+//                    // code block 12 mois
+//                    success = verifyApppkeyHigh(appkey,appnumber);
+//                    break;
+//                case PERMANENT:
+//                    // code block 49 ans
+//                    success = verifyApppkeyPermanent(appkey,appnumber);
+//                    break;
+//                case FREE:
+//                    // code block 10 jours
+//                    success = verifyApppkeyFree(appkey,appnumber);
+//                    break;
+//                default:
+//                    // code block
+//                    success = false ;
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//
+//        return success;
+//    }
+
+
+
     public static boolean isKeyvalide(String appkey, String appnumber){
 
-      Level level =  MesOutils.getLicenceLevel(appkey);
-      boolean success ;
+        Level level =  MesOutils.getLicenceLevel(appkey);
+        boolean success = false;
         try{
-            switch(level) {
-                case LOW:
-                    success =  verifyApppkeyLow(appkey,appnumber);
-                    break;
-                case MEDIUM:
-                    // code block 6 mois
-                    success = verifyApppkeyMedium(appkey,appnumber);
-                    break;
-                case HIGH:
-                    // code block 12 mois
-                    success = verifyApppkeyHigh(appkey,appnumber);
-                    break;
-                case PERMANENT:
-                    // code block 49 ans
-                    success = verifyApppkeyPermanent(appkey,appnumber);
-                    break;
-                case FREE:
-                    // code block 10 jours
-                    success = verifyApppkeyFree(appkey,appnumber);
-                    break;
-                default:
-                    // code block
-                    success = false ;
+            if (level == Level.PERMANENT){
+                success = verifyApppkeyPermanent(appkey,appnumber);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
+        } catch (Exception e) {
+           return false;
+        }
 
         return success;
     }
@@ -677,14 +731,14 @@ public abstract  class MesOutils {
     public static boolean isDataPresent(ArrayList<ClientModel> clients, ArrayList<ArticlesModel> articles){
         boolean is_data_present = false;
         try{
-            if (clients != null || articles != null){
-                if (!clients.isEmpty() || !articles.isEmpty()){
-                    is_data_present = true;
-                }
+            if (clients != null && !clients.isEmpty() || articles != null && !articles.isEmpty()){
+
+                is_data_present = true;
+
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+           return false ;
         }
 
         return is_data_present;
@@ -695,6 +749,10 @@ public abstract  class MesOutils {
     }
 
     public static void checkSelfSmsPermission(Context context) {
+        grantSmsPermission(context);
+    }
+
+    public static void grantSmsPermission(Context context) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions((Activity) context,
                     new String[]{Manifest.permission.SEND_SMS},
@@ -702,15 +760,7 @@ public abstract  class MesOutils {
         }
     }
 
-    public static void grantSmsPermissin(Context context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{Manifest.permission.SEND_SMS},
-                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-        }
-    }
-
-    public static void grantStorageAndAccountPermissin(Context context,int requestcode) {
+    public static void grantStorageAndAccountPermission(Context context,int requestcode) {
         if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED ||
@@ -736,8 +786,24 @@ public abstract  class MesOutils {
         button.setEnabled(false);
     }
 
+    public static boolean isValidEmail(String email) {
+        // Regex RFC 5322
+        String regex =
+                "^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+" +
+                        "(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*" +
+                        "|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]" +
+                        "|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")" +
+                "@" +
+                "(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+" +
+                "[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?" +
+                "|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
+        "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|" +
+                "[a-zA-Z0-9-]*[a-zA-Z0-9]:" +
+                "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]" +
+                "|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$";
 
-
-
+        return Pattern.matches(regex, email);
+    }
+    
 
 }

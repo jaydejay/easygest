@@ -220,6 +220,18 @@
 
                 </LinearLayout>
             </LinearLayout>
+            <TextView
+                android:id="@+id/article_detail_to_liste_articles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="@string/liste_articles"
+                android:textColor="@color/link"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

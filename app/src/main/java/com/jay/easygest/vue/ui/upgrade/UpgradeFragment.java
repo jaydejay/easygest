@@ -20,6 +20,8 @@ public class UpgradeFragment extends Fragment {
 
     private FragmentUpgradeBinding binding;
     private String[] appcredentials;
+    private AppKessModel appKessModel;
+    private AccessLocalAppKes accessLocalAppKes;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -27,7 +29,9 @@ public class UpgradeFragment extends Fragment {
 
         binding = FragmentUpgradeBinding.inflate(inflater, container, false);
         Usercontrolleur usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(requireContext());
-        appcredentials = usercontrolleur.getAppCredentials();
+//        appcredentials = usercontrolleur.getAppCredentials();
+         accessLocalAppKes = new AccessLocalAppKes(getContext());
+         appKessModel = accessLocalAppKes.getAppkes();
         upgradeAppli();
         return  binding.getRoot();
     }
@@ -36,13 +40,13 @@ public class UpgradeFragment extends Fragment {
         binding.btnValidateKey.setOnClickListener(v -> {
             binding.btnValidateKey.setEnabled(false);
             String cleproduit = binding.editKey.getText().toString().trim();
-            String appnumber = appcredentials[0];
+            String appnumber = String.valueOf(appKessModel.getAppnumber());
             if (cleproduit.isEmpty()){
                 Toast.makeText(getContext(), "champ obligatoire", Toast.LENGTH_SHORT).show();
                 binding.btnValidateKey.setEnabled(true);
             }else {
-                boolean is_appnuber_right = MesOutils.retrieveAppNumber(cleproduit,appnumber);
-                if (is_appnuber_right){
+//                boolean is_appnuber_right = MesOutils.retrieveAppNumber(cleproduit,appnumber);
+                if (MesOutils.isKeyvalide(cleproduit,appnumber)){
                     AccesLocalUsedKey accesLocalUsedKey = new AccesLocalUsedKey(getContext());
                     if (!accesLocalUsedKey.iscleExiste(cleproduit)){
                         getUpgrade(cleproduit, appnumber);
@@ -67,21 +71,22 @@ public class UpgradeFragment extends Fragment {
     private void getUpgrade(String cleproduit, String _appnumber) {
         if ( MesOutils.isKeyvalide(cleproduit, _appnumber)){
 
-            AppKessModel appKessModel = new AppKessModel(
-                    Integer.parseInt(_appnumber),
-                    cleproduit,
-                    appcredentials[2],
-                    appcredentials[3],
-                    appcredentials[4],
-                    appcredentials[7]);
+//            AppKessModel appKessModel = new AppKessModel(
+//                    Integer.parseInt(_appnumber),
+//                    cleproduit,
+//                    appcredentials[2],
+//                    appcredentials[3],
+//                    appcredentials[4],
+//                    appcredentials[7]
+//            );
 
-            AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
-            boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel, appcredentials);
-
+//            AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(getContext());
+//            AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+            boolean success =  accessLocalAppKes.updateAppkesKey(appKessModel);
             if (success){
                 binding.editKey.setText("");
                 binding.btnValidateKey.setEnabled(true);
-                Toast.makeText(getContext(), "félicitation licence "+MesOutils.getLicenceLevel(cleproduit)+ " activée", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "félicitation licence activée", Toast.LENGTH_SHORT).show();
 
             }else {
                 Toast.makeText(getContext(), "un probleme est survenue", Toast.LENGTH_SHORT).show();

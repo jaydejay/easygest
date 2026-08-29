@@ -15,8 +15,15 @@ public class AccountViewModel extends ViewModel {
     private final MutableLiveData<Integer> totalaccountsclient ;
     private final MutableLiveData<Integer> totalrestesclient ;
 
+    private  MutableLiveData<Integer> totalaccounts ;
+    private  MutableLiveData<Integer> totalversements ;
+    private  MutableLiveData<Integer> totalrestes ;
+
     public AccountViewModel() {
         Accountcontroller accountcontroller = Accountcontroller.getAccountcontrolleurInstance(null);
+        totalaccounts = accountcontroller.getRecapTaccount();
+        totalversements = accountcontroller.getRecapTversement();
+        totalrestes = accountcontroller.getRecapTreste();
         this.accounts = accountcontroller.getMaccounts();
         this.account = accountcontroller.getMaccount();
         totalaccountsclient = accountcontroller.getRecapTaccountClient();
@@ -49,5 +56,14 @@ public class AccountViewModel extends ViewModel {
 
     public MutableLiveData<Integer> getTotalrestesclient() {
         return totalrestesclient;
+    }
+
+
+    public MutableLiveData<Integer> getTotalaccounts() {return totalaccounts;}
+    public MutableLiveData<Integer> getTotalversements() {
+        return totalversements;
+    }
+    public MutableLiveData<Integer> getTotalrestes() {
+        return totalrestes;
     }
 }

@@ -33,45 +33,35 @@
         <Button
             android:id="@+id/btn_redirect_to_aricle"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="75dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
             android:backgroundTint="@color/purple_700"
             android:text="@string/article_ajouter"
             android:textColor="@color/design_default_color_background"
-            android:textSize="9sp"/>
+            android:textSize="14sp"/>
 
         <Button
             android:id="@+id/btn_liste_aricles"
-            android:layout_width="77dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="1dp"
             android:backgroundTint="@android:color/holo_blue_bright"
             android:text="@string/articles"
             android:textColor="@color/design_default_color_primary_dark"
-            android:textSize="9sp"/>
+            android:textSize="14sp"/>
         <Button
-            android:id="@+id/btn_article_stock"
+            android:id="@+id/btn_article_stock_toggle"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="75dp"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="1dp"
             android:backgroundTint="?attr/colorSecondary"
             android:text="@string/article_en_stock"
-            android:textColor="@color/black"
-            android:textSize="9sp" />
-        <Button
-            android:id="@+id/btn_article_hors_stock"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:backgroundTint="@android:color/holo_green_light"
-            android:text="@string/article_out_stock"
-            android:textColor="@color/design_default_color_primary_dark"
-            android:textSize="9sp"/>
+            android:textColor="@color/design_default_color_background"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -79,7 +69,7 @@
         android:id="@+id/article_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="120dp"
         android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

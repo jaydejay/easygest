@@ -28,11 +28,9 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/lleditarticle_modif_designation"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_weight="2"
                 android:hint="@string/designation"
-                android:inputType="textPersonName"
                 app:counterEnabled="true"
                 app:counterMaxLength="30"
                 app:endIconMode="clear_text"
@@ -70,11 +68,9 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/lleditarticle_modif_quantite"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_weight="2"
                 android:hint="@string/quantite"
-                android:inputType="number"
                 app:counterEnabled="true"
                 app:counterMaxLength="16"
                 app:endIconMode="clear_text"
@@ -88,17 +84,23 @@
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editarticles_modif_description"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_editarticles_modif_description"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:ems="10"
-                android:textColor="@color/black"
-                android:importantForAutofill="no"
-                android:hint="@string/description"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"/>
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editarticles_modif_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:ems="10"
+                    android:textColor="@color/black"
+                    android:importantForAutofill="no"
+                    android:hint="@string/description"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <Button

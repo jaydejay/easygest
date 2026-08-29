@@ -6,8 +6,8 @@
    See https://developer.android.com/about/versions/12/backup-restore
 -->
 <full-backup-content>
-    <include domain="database" path="."/>
-    <!--
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+    <include domain="database" path="gestioncredit.db"/>
+    <include domain="sharedpref" path="auth_shared.xml"/>
+    <include domain="sharedpref" path="setting_shared.xml"/>
+<!--    <exclude domain="sharedpref" path="device.xml"/>-->
 </full-backup-content>

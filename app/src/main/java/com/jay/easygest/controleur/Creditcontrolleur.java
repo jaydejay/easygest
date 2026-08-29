@@ -95,7 +95,6 @@ public final class Creditcontrolleur {
 
         CreditModel credit = accessLocalcredit.creerCompteCredit(premiercredit,data);
         if (credit != null){
-//             accessLocalInfo.updateTableInfosWhenCreateOrAddCredit(credit.getSommecredit());
             credits.add(premiercredit);
             this.setCredits(credits);
             this.setCredit(credit);
@@ -113,7 +112,7 @@ public final class Creditcontrolleur {
         ClientModel client = (ClientModel)data.get("client");
         String versement = (String) data.get("versement");
         long datecredit = (long) data.get("datecredit");
-        int sommecredit =  (int) data.get("sommecredit");
+
 
         int nbr_articles1_restant = article1.getQuantite() - article1_vendu.getNbrarticle();
         int nbr_articles2_restant = article2.getQuantite() - article2_vendu.getNbrarticle();

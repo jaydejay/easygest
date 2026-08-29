@@ -36,6 +36,9 @@ public class CreercompteActivity extends AppCompatActivity {
         binding = ActivityCreercompteBinding.inflate(getLayoutInflater());
         passwordHascher = new PasswordHascher();
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
 //        recupererIntent();
         init();
@@ -59,7 +62,7 @@ public class CreercompteActivity extends AppCompatActivity {
                 binding.btncreercompte.setEnabled(true);
             }
             else{
-                if (username.length() >= 6 && password.length() >= 8 && repassword.length() >= 8){
+                if (username.length() >= 6 && password.length() >= 8 ){
                     if (MesOutils.asDigit(password)){
                         if (repassword.equals(password)){
                             try {
@@ -121,5 +124,10 @@ public class CreercompteActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }

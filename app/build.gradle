@@ -11,12 +11,13 @@ android {
     defaultConfig {
         applicationId "com.jay.easygest"
         minSdk 23
-        targetSdk 34
+        targetSdk 35
         versionCode 4
         versionName "2.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "MY_KEY", "\"${localProperties['MY_KEY']}\""
         buildConfigField "String", "MY_SALT", "\"${localProperties['MY_SALT']}\""
+        buildConfigField "String", "DEV_TEL", "\"${localProperties['DEV_TEL']}\""
     }
 
     signingConfigs {
@@ -37,8 +38,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     packagingOptions {
         resources {
@@ -73,8 +74,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 
-    implementation 'com.google.android.gms:play-services-auth:21.5.0'
-    implementation 'com.google.api-client:google-api-client-android:1.31.5'
-    implementation'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
-    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation 'com.google.android.gms:play-services-auth:21.6.0'
+    implementation 'com.google.api-client:google-api-client-android:2.9.0'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev20230822-2.0.0'
+    implementation 'com.google.http-client:google-http-client-gson:1.46.0'
 }

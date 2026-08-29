@@ -99,9 +99,9 @@ public class CreditModel {
         this.sommecredit = article1.getSomme() + article2.getSomme();
     }
 
-    public void setSommecredit(Integer sommecredit) {
-        this.sommecredit = sommecredit;
-    }
+//    public void setSommecredit(Integer sommecredit) {
+//        this.sommecredit = sommecredit;
+//    }
 
 
     public Integer getSommecredit() {
@@ -112,9 +112,9 @@ public class CreditModel {
         this.reste = sommecredit - versement;
     }
 
-    public void setReste(Integer reste) {
-        this.reste = reste;
-    }
+//    public void setReste(Integer reste) {
+//        this.reste = reste;
+//    }
 
 
     public Integer getReste() {

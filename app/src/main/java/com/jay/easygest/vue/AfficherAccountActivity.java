@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -57,8 +57,8 @@ public class AfficherAccountActivity extends AppCompatActivity {
     private  AccountModel account;
 
     private Spinner spinnerArt;
-    private EditText editModifCreditArticle;
-    private EditText editModifCreditqte;
+    private TextInputEditText editModifCreditArticle;
+    private TextInputEditText editModifCreditqte;
     private Article c_article1;
     private Article c_article2;
     private ArticlesModel article;
@@ -89,6 +89,9 @@ public class AfficherAccountActivity extends AppCompatActivity {
         redirectListeArticles();
         desactiverButtum();
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
     }
 
@@ -206,7 +209,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
                                 AccountModel accountModel = accountcontroller.modifierArticledunAccount(account,articleprix,articleqte,article_a_modifier,article);
                                 if (accountModel != null){
                                     accountViewModel.getAccount().setValue(accountModel);
-                                    grantSmsPermissin();
+                                    MesOutils.grantSmsPermission(this);
                                     ClientModel client = account.getClient();
                                     this.messageSender(client,accountModel,MesOutils.convertDateToString(new Date()));
                                 }
@@ -237,13 +240,6 @@ public class AfficherAccountActivity extends AppCompatActivity {
         smsSender.sentReiceiverGeneric(smsnoSentModel,intent);
     }
 
-    private void grantSmsPermissin() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.SEND_SMS},
-                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-        }
-    }
     private void chargerArticlesDeBqd(ArticlesModel articleModel) {
         articlesViewModel.getLesArticleInstocklivedatascredit().observe(this, articles -> {
             listeArticles.clear();
@@ -328,7 +324,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
             builder.setView(view);
 
             builder.setPositiveButton("oui", (dialog, which) -> {
-               EditText editModifCreditdate = view.findViewById(R.id.update_credit_date);
+               TextInputEditText editModifCreditdate = view.findViewById(R.id.update_credit_date);
                 String date = editModifCreditdate.getText().toString().trim();
                 if (date.isEmpty()){
                     Toast.makeText(this, "renseignez la date", Toast.LENGTH_SHORT).show();
@@ -417,6 +413,12 @@ public class AfficherAccountActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

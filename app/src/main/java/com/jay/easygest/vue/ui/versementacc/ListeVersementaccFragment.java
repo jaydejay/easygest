@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.jay.easygest.databinding.FragmentListeVersementaccBinding;
 import com.jay.easygest.model.VersementsaccModel;
+import com.jay.easygest.vue.ui.listeversement.ListeversementAdapter;
 
 import java.util.ArrayList;
 
@@ -55,6 +56,8 @@ public class  ListeVersementaccFragment extends Fragment {
 
     public void creerliste(){
         VersementaccAdapter adapter = new VersementaccAdapter(versements, getContext());
+//        VersementaccAdapter adapter = new ListeversementAdapter(versements, getContext());
+
         binding.lstviewversementacc.setAdapter(adapter);
 
     }

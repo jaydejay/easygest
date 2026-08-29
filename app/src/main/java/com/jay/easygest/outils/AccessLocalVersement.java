@@ -160,7 +160,7 @@ public class AccessLocalVersement {
 
         ContentValues credit_cv = new ContentValues();
                         credit_cv.put(VERSEMENTS,totalVersements);
-                        credit_cv.put(RESTE,credit.getReste());
+                        credit_cv.put(RESTE,credit.getSommecredit() - totalVersements);
                         credit_cv.put(SOLDEDAT,credit.getSoldedat());
         return credit_cv;
     }
@@ -182,7 +182,7 @@ public class AccessLocalVersement {
             cv_versement.put(DATEVERSEMENT,dateversement);
             credit.setSoldedat(dateversement);
             credit_cv.put(VERSEMENTS,nouveau_total_versement);
-            credit_cv.put(RESTE,credit.getReste());
+            credit_cv.put(RESTE,credit.getSommecredit() - nouveau_total_versement);
             credit_cv.put(SOLDEDAT,credit.getSoldedat());
 
             bd.updateWithOnConflict(TABLE_VERSEMENT, cv_versement, ID + "=?", new String[] {String.valueOf(versement_a_modifier.getId())},1 );
@@ -209,7 +209,7 @@ public class AccessLocalVersement {
         credit.setSoldedat(0L);
         ContentValues credit_cv = new ContentValues();
         credit_cv.put(VERSEMENTS,nouveau_versement_du_credit);
-        credit_cv.put(RESTE,credit.getReste());
+        credit_cv.put(RESTE,credit.getSommecredit() - nouveau_versement_du_credit);
         credit_cv.put(SOLDEDAT,credit.getSoldedat());
 
         bd.beginTransaction();

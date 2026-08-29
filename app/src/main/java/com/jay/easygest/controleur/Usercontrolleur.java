@@ -5,6 +5,7 @@ import android.content.Context;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
 import com.jay.easygest.outils.AccessLocal;
+import com.jay.easygest.outils.AccessLocalAppKes;
 import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.PasswordHascher;
 import com.jay.easygest.outils.VariablesStatique;
@@ -14,6 +15,7 @@ import java.util.Date;
 public final class Usercontrolleur {
 
     private static  Usercontrolleur usercontrolleurInstance = null;
+    private static AccessLocalAppKes accessLocalAppKess;
     private UserModel user;
     private static AccessLocal accessLocal;
 
@@ -31,6 +33,7 @@ public final class Usercontrolleur {
         if(Usercontrolleur.usercontrolleurInstance == null){
             Usercontrolleur.usercontrolleurInstance = new Usercontrolleur();
             accessLocal = new AccessLocal(contexte);
+            accessLocalAppKess = new AccessLocalAppKes(contexte);
         }
         return usercontrolleurInstance;
     }
@@ -87,7 +90,7 @@ public final class Usercontrolleur {
     }
 
     /**
-     * permet de d'authentifier l'application pour degele
+     * Permet d'authentifier l'application pour degele
      * @param proprietaire le proprietaire
      * @param cleproduit la cle du produit
      * @return vrai si authentification reussi sinon faux
@@ -100,13 +103,9 @@ public final class Usercontrolleur {
         return accessLocal.authapp(proprietaire,cleproduit);
     }
 
-    public String[] getAppCredentials(){
-        return accessLocal.appCredential();
+    public AppKessModel getAppCredentials2(){
+        return accessLocalAppKess.getAppkes();
     }
 
 
-    public boolean saveAppkeys(String owner, String licence, String email, String telephone, String basecode, String appnumber) {
-        long dureelicence = MesOutils.getDureeLicence(licence);
-      return accessLocal.saveAppkey( owner, licence, email, telephone, basecode,appnumber,dureelicence);
-    }
 }

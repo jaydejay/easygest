@@ -146,12 +146,15 @@ public class ArticlesActivity extends AppCompatActivity {
         });
 
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getArticleFaceImage();
         getArticleLeftImage();
         getArticleRigthImage();
         getArticleBackImage();
         creerArticle();
-        redirectTolisteCredits();
+        redirectTolisteArticles();
 
     }
 
@@ -305,6 +308,10 @@ public class ArticlesActivity extends AppCompatActivity {
                 binding.lleditarticleQuantite.setError("16 maximum");
                 binding.btnArticleEnreg.setEnabled(true);
 
+            }else if (Integer.parseInt(string_quantite) < 0 ) {
+                binding.lleditarticleQuantite.setError("renseigner un nombre positif");
+                binding.btnArticleEnreg.setEnabled(true);
+
             }else if (string_description.isEmpty() ) {
                 Toast.makeText(this, "vous devez decrire l'article", Toast.LENGTH_LONG).show();
                 binding.btnArticleEnreg.setEnabled(true);
@@ -325,12 +332,18 @@ public class ArticlesActivity extends AppCompatActivity {
         });
     }
 
-    public void redirectTolisteCredits(){
+    public void redirectTolisteArticles(){
         binding.ajoutArticleToListeArticles.setOnClickListener(view -> {
             Intent intent = new Intent(ArticlesActivity.this, GestionActivity.class);
             startActivity(intent);
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

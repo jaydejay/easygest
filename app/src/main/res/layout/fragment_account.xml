@@ -24,14 +24,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
 
             <TextView
 
-                android:layout_width="250dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
@@ -41,8 +41,8 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp"
@@ -50,39 +50,51 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <EditText
-                    android:id="@+id/edittxtcreeaccrnom"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/nom_client"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/nom_client"
-                    android:inputType="textPersonName"
-                    android:maxLength="20" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_edittxtcreeaccrnom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittxtcreeaccrnom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="180dp"
+                        android:autofillHints="@string/nom_client"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/nom_client"
+                        android:inputType="textPersonName"
+                        android:maxLength="20" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/txtcreeracccodeclt"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
+                    android:minWidth="70dp"
                     android:gravity="center" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/edittxtcreeraccprenoms"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:autofillHints="@string/prenoms"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_edittxtcreeraccprenoms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:ems="10"
-                android:gravity="center_horizontal|center_vertical"
-                android:layout_gravity="center_horizontal"
-                android:hint="@string/prenoms_client"
-                android:inputType="textPersonName"
-                android:maxLength="20" />
+                android:layout_gravity="center_horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edittxtcreeraccprenoms"
+                    android:layout_width="wrap_content"
+                    android:minWidth="250dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/prenoms"
+                    android:ems="10"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:hint="@string/prenoms_client"
+                    android:inputType="textPersonName"
+                    android:maxLength="20" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
                 android:id="@+id/spinneraccArticle1"
@@ -95,34 +107,46 @@
 
 
             <LinearLayout
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <EditText
-                    android:id="@+id/edittxtcreeraccarticle1prix"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/somme_article2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/somme_article2"
-                    android:inputType="number" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_edittxtcreeraccarticle1prix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/edittxtcreeraccNbrarticle1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/quantite1"
-                    android:ems="10"
-                    android:hint="@string/quantite1"
-                    android:inputType="number" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittxtcreeraccarticle1prix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="200dp"
+                        android:autofillHints="@string/prix_article1"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/prix_article1"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_edittxtcreeraccNbrarticle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittxtcreeraccNbrarticle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="50dp"
+                        android:autofillHints="@string/quantite1"
+                        android:ems="10"
+                        android:hint="@string/quantite1"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -136,81 +160,102 @@
                 android:spinnerMode="dropdown" />
 
             <LinearLayout
-                android:layout_width="250dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <EditText
-                    android:id="@+id/edittxtcreeraccarticle2prix"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:autofillHints="@string/somme_article2"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/somme_article2"
-                    android:inputType="number" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_edittxtcreeraccarticle2prix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/edittxtcreeraccNbrarticle2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/quantite1"
-                    android:ems="10"
-                    android:hint="@string/quantite1"
-                    android:inputType="number" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittxtcreeraccarticle2prix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="180dp"
+                        android:autofillHints="@string/prix_article2"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/prix_article2"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_edittxtcreeraccNbrarticle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittxtcreeraccNbrarticle2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="70dp"
+                        android:autofillHints="@string/quantite2"
+                        android:ems="10"
+                        android:hint="@string/quantite2"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:layout_marginTop="25dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
 
-                <EditText
-                    android:id="@+id/editTextaccDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/date"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_editTextaccDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextaccDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="250dp"
+                        android:autofillHints="@string/date"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/date"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_edittxtcreeraccversement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittxtcreeraccversement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="250dp"
+                        android:autofillHints="@string/versement"
+                        android:ems="10"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:hint="@string/versement"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_edittxtcreeracctelephone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edittxtcreeracctelephone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="250dp"
+                    android:gravity="center_horizontal"
+                    android:autofillHints="@string/telephone"
                     android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/date"
-                    android:inputType="textPersonName" />
-
-                <EditText
-                    android:id="@+id/edittxtcreeraccversement"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:autofillHints="@string/versement"
-                    android:ems="10"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:hint="@string/versement"
-                    android:inputType="number" />
-
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/edittxtcreeracctelephone"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:autofillHints="@string/telephone"
-                android:ems="10"
-                android:hint="@string/telephone"
-                android:inputType="phone"
-                android:maxLength="10" />
+                    android:hint="@string/telephone"
+                    android:inputType="phone"
+                    android:maxLength="10" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btncreeraccount"

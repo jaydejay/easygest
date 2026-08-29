@@ -35,9 +35,7 @@ public class  CreditViewModel extends ViewModel {
 
     }
 
-    public MutableLiveData<Integer> getTotalcredits() {
-        return totalcredits;
-    }
+    public MutableLiveData<Integer> getTotalcredits() {return totalcredits;}
     public MutableLiveData<Integer> getTotalversements() {
         return totalversements;
     }

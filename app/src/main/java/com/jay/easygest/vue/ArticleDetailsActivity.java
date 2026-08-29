@@ -187,6 +187,9 @@ public class ArticleDetailsActivity extends AppCompatActivity {
             }
         });
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         initDetails();
         showArticlesPhotos(article.getImages());
         showArticlesPhotoclick();
@@ -199,6 +202,7 @@ public class ArticleDetailsActivity extends AppCompatActivity {
         getActivityResultLancherLeft();
         getActivityResultLancherRight();
         getActivityResultLancherBack();
+        redirectTolisteArticles();
 
     }
     public void getActivityResultLancherFace(){
@@ -391,5 +395,19 @@ public class ArticleDetailsActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void redirectTolisteArticles(){
+        binding.articleDetailToListeArticles.setOnClickListener(view -> {
+            Intent intent = new Intent(ArticleDetailsActivity.this, GestionActivity.class);
+            startActivity(intent);
+        });
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

@@ -63,7 +63,7 @@ public class AjouterVersementaccFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sessionManagement = new SessionManagement(getContext());
+        sessionManagement = new SessionManagement(requireContext());
         versementacccontrolleur = Versementacccontrolleur.getVersementacccontrolleurInstance(getActivity());
 
         smsSender = new SmsSender(getContext(), getActivity());
@@ -99,7 +99,7 @@ public class AjouterVersementaccFragment extends Fragment {
 
             } else {
 
-                try {
+//                try {
                     if (Objects.equals(client.getCodeclient(), binding.ajoutervrsmtacccodeclt.getText().toString().trim())){
 
                         int somme_total_account = accountViewModel.getTotalaccountsclient().getValue();
@@ -158,10 +158,10 @@ public class AjouterVersementaccFragment extends Fragment {
                         binding.btnversementacc.setEnabled(true);
                     }
 
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
-                    binding.btnversementacc.setEnabled(true);
-                }
+//                } catch (Exception e) {
+//                    Toast.makeText(getContext(), "erreur versement avorté", Toast.LENGTH_SHORT).show();
+//                    binding.btnversementacc.setEnabled(true);
+//                }
             }
         });
     }

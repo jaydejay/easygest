@@ -18,35 +18,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editModifCreditArticleprix"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_editModifCreditArticleprix"
         android:layout_width="175dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
-        android:autofillHints="@string/prix"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        android:hint="@string/prix"
-        android:ems="10"
-        android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnermodifcreditArticle" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnermodifcreditArticle">
 
-    <EditText
-        android:id="@+id/editModifCreditqte"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editModifCreditArticleprix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/prix"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:hint="@string/prix"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_editModifCreditqte"
         android:layout_width="50dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="4dp"
-        android:autofillHints="@string/quantite2"
-        android:hint="@string/quantite2"
-        android:gravity="center"
-        android:ems="10"
-        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.727"
-        app:layout_constraintStart_toEndOf="@id/editModifCreditArticleprix"
-        app:layout_constraintTop_toBottomOf="@+id/spinnermodifcreditArticle"/>
+        app:layout_constraintStart_toEndOf="@id/tl_editModifCreditArticleprix"
+        app:layout_constraintTop_toBottomOf="@+id/spinnermodifcreditArticle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editModifCreditqte"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/quantite"
+            android:hint="@string/quantite"
+            android:gravity="center"
+            android:ems="10"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

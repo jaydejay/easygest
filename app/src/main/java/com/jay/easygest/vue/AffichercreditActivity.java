@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -70,9 +70,9 @@ public class AffichercreditActivity extends AppCompatActivity {
     private final ArrayList<ArticlesModel> listeArticles = new ArrayList<>();
 
     private Spinner spinnerArt;
-    private EditText editModifCreditArticle;
-    private  EditText editModifCreditqte;
-    private  EditText editModifCreditdate;
+    private TextInputEditText editModifCreditArticle;
+    private  TextInputEditText editModifCreditqte;
+    private  TextInputEditText editModifCreditdate;
     private ArticlesModel article;
     private Article c_article1;
     private Article c_article2;
@@ -103,8 +103,6 @@ public class AffichercreditActivity extends AppCompatActivity {
         cardaffichercreditversement = findViewById(R.id.cardaffichercreditverement);
         btnmodifarticle1 = findViewById(R.id.btnmodifarticle1);
         btnmodifarticle2 = findViewById(R.id.btnmodifarticle2);
-
-
 
         affichercredit();
         annullerCredit();
@@ -214,8 +212,8 @@ public class AffichercreditActivity extends AppCompatActivity {
         builder.setPositiveButton(positiveButtonText, (dialog, which)->{
            try {
                getSelectedArticle();
-               String articleprix = editModifCreditArticle.getText().toString().trim() ;
-               String articleqte = editModifCreditqte.getText().toString().trim() ;
+               String articleprix = Objects.requireNonNull(editModifCreditArticle.getText()).toString().trim() ;
+               String articleqte = Objects.requireNonNull(editModifCreditqte.getText()).toString().trim() ;
                if (article.getDesignation().equals("Choisir un article") || c_article1 == null ){
                    Toast.makeText(AffichercreditActivity.this, "article obligatoire", Toast.LENGTH_SHORT).show();
                }else {
@@ -232,7 +230,7 @@ public class AffichercreditActivity extends AppCompatActivity {
                                CreditModel creditModel = creditcontrolleur.modifierArticledunCredit(credit,articleprix,articleqte,nom_article_a_modifier,article);
                                if (creditModel != null){
                                    creditViewModel.getCredit().setValue(creditModel);
-                                  MesOutils.grantSmsPermissin(this);
+                                   MesOutils.grantSmsPermission(this);
                                    ClientModel client = credit.getClient();
                                    messageSender(client,creditModel,MesOutils.convertDateToString(new Date()));
                                    affichercredit();
@@ -242,7 +240,9 @@ public class AffichercreditActivity extends AppCompatActivity {
                        }
                    }
                }
-           } catch (Exception e) {
+           }catch (NullPointerException ex){
+               Toast.makeText(this, "impossible de trouver la resource", Toast.LENGTH_SHORT).show();
+           }catch (Exception e) {
                Toast.makeText(this, "une erreur est survenue verifie les donnees", Toast.LENGTH_SHORT).show();
            }
         });
@@ -251,14 +251,6 @@ public class AffichercreditActivity extends AppCompatActivity {
         builder.setNegativeButton(negativeeButtonText, (dialog, which)-> Toast.makeText(this, "modification annuler", Toast.LENGTH_SHORT).show());
         return builder;
 
-    }
-
-    private void grantSmsPermissin() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-            new String[]{Manifest.permission.SEND_SMS},
-            MY_PERMISSIONS_REQUEST_SEND_SMS);
-        }
     }
 
     private void chargerArticlesDeBqd(ArticlesModel articleModel) {
@@ -332,17 +324,22 @@ public class AffichercreditActivity extends AppCompatActivity {
             builder.setView(view);
 
             builder.setPositiveButton("oui", (dialog, which) -> {
-                editModifCreditdate = view.findViewById(R.id.update_credit_date);
-                String date = editModifCreditdate.getText().toString().trim();
-                if (date.isEmpty()){
-                    Toast.makeText(this, "renseignez la date", Toast.LENGTH_SHORT).show();
-                }else {
-                    CreditModel creditModel = creditcontrolleur.modifierDateCredit(credit,date);
-                    if (creditModel != null){
-                        creditViewModel.getCredit().setValue(creditModel);
-                        affichercredit();
-                    }
-                }
+               try {
+                   editModifCreditdate = view.findViewById(R.id.update_credit_date);
+                   String date = Objects.requireNonNull(editModifCreditdate.getText()).toString().trim();
+                   if (date.isEmpty()){
+                       Toast.makeText(this, "renseignez la date", Toast.LENGTH_SHORT).show();
+                   }else {
+                       CreditModel creditModel = creditcontrolleur.modifierDateCredit(credit,date);
+                       if (creditModel != null){
+                           creditViewModel.getCredit().setValue(creditModel);
+                           affichercredit();
+                       }
+                   }
+               }catch (NullPointerException e){
+                   Toast.makeText(this, "impossible de trouver la resource", Toast.LENGTH_SHORT).show();
+               }
+
             });
             builder.setNegativeButton("non", (dialog, which) -> Toast.makeText(this, "modification avortée", Toast.LENGTH_SHORT).show());
             builder.create().show();
@@ -384,7 +381,7 @@ public class AffichercreditActivity extends AppCompatActivity {
                         +"de la somme du credit");
 
                 builder.setPositiveButton("oui", (dialog, which) -> {
-                        this.grantSmsPermissin();
+                        MesOutils.grantSmsPermission(this);
                         boolean success = creditcontrolleur.annullerCredit(credit);
                         if (success){
                             creditcontrolleur.setRecapTresteClient(client);
@@ -453,7 +450,7 @@ public class AffichercreditActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        sessionManagement.removeSession();
+//        sessionManagement.removeSession();
     }
 
     @Override

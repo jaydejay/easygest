@@ -22,6 +22,9 @@ public class ModifierArticleActivity extends AppCompatActivity {
         Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
         articlesModel = articlescontrolleur.getMarticle().getValue();
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         initA();
         updateArtice();
@@ -100,6 +103,12 @@ public class ModifierArticleActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

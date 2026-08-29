@@ -29,6 +29,9 @@ public class Accountcontroller {
     private final  MutableLiveData<Integer> mtotalaccountClient = new MutableLiveData<>();
 
     private static AccessLocalVersementacc accessLocalVersementacc;
+    private final MutableLiveData<Integer> mtotalaccount = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mtotalversement = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mtotalreste = new MutableLiveData<>();
 
     public Accountcontroller() {
         super();
@@ -214,6 +217,38 @@ public class Accountcontroller {
 
     public MutableLiveData<Integer> getRecapTresteClient(){
         return mtotalresteaccountclient;
+    }
+
+
+    public  void setRecapTaccount(){
+        int totalaccount   = accessLocalAccount.getRecapTaccount();
+        mtotalaccount.setValue(totalaccount);
+    }
+
+    public  void setRecapTversement( ){
+        int totalversement = accessLocalAccount.getRecapTversement();
+        mtotalversement.setValue(totalversement);
+    }
+
+    public  void setRecapTreste(){
+        int totalreste = accessLocalAccount.getRecapTreste();
+        mtotalreste.setValue(totalreste);
+    }
+
+
+    public MutableLiveData<Integer> getRecapTaccount(){
+        setRecapTaccount();
+        return mtotalaccount;
+    }
+
+    public MutableLiveData<Integer> getRecapTversement(){
+        setRecapTversement();
+        return mtotalversement;
+    }
+
+    public MutableLiveData<Integer> getRecapTreste(){
+        setRecapTreste();
+        return mtotalreste;
     }
 
 

@@ -40,7 +40,6 @@ public class AproposFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAproposBinding.inflate(inflater, container, false);
-
         View root = binding.getRoot();
         init();
         return root;
@@ -50,7 +49,6 @@ public class AproposFragment extends Fragment {
         PackageInfo packageInfo;
         try {
             packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
