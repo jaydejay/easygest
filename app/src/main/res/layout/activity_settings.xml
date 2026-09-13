@@ -27,12 +27,12 @@
 
             <TextView
                 android:id="@+id/text_setting_appnumber"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" />
             <TextView
                 android:id="@+id/text_setting_appkey"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" />
 
@@ -71,18 +71,18 @@
 
             <LinearLayout
                 android:id="@+id/llsetting_owner_edit"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditsetting_owner"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:hint="@string/owner"
                     android:inputType="textPersonName"
                     app:counterEnabled="true"
@@ -94,8 +94,9 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editsetting_owner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="250dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -136,18 +137,18 @@
 
             <LinearLayout
                 android:id="@+id/llsetting_base_code_edit"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditsetting_base_code"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/base_code"
                     android:inputType="textPersonName"
@@ -159,8 +160,9 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editsetting_base_code"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="250dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -168,7 +170,6 @@
                     style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/ok"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -179,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -209,18 +211,18 @@
 
             <LinearLayout
                 android:id="@+id/llsetting_telephone_edit"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditsetting_telephone"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/telephone"
                     android:inputType="textPersonName"
@@ -232,8 +234,9 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editsetting_telephone"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="250dp"
                         android:inputType="phone"
                         android:textColor="#101010" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -285,18 +288,18 @@
 
             <LinearLayout
                 android:id="@+id/llsetting_mail_edit"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditsetting_mail"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
@@ -306,8 +309,9 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editsetting_mail"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="250dp"
                         android:inputType="textWebEmailAddress"
                         android:textColor="#0B0909" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -358,18 +362,18 @@
 
             <LinearLayout
                 android:id="@+id/llsetting_password_edit"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lleditsetting_password"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/password"
                     android:inputType="textPersonName"
@@ -379,8 +383,9 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editsetting_password"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="250dp"
                         android:inputType="textPersonName"
                         android:textColor="#0B0909" />
                 </com.google.android.material.textfield.TextInputLayout>

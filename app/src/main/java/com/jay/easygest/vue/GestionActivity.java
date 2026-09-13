@@ -79,7 +79,7 @@ public class GestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityGestionBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+
         sessionManagement = new SessionManagement(this);
 
         creditcontrolleur = Creditcontrolleur.getCreditcontrolleurInstance(this);
@@ -105,7 +105,7 @@ public class GestionActivity extends AppCompatActivity {
         }catch (Exception e){
             //
         }
-
+        setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarGestion.toolbar);
         DrawerLayout drawer = binding.drawerLayout;
@@ -363,7 +363,6 @@ public class GestionActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("TAG", "onRestart invoked: ");
 //        sessionManagement.removeSession();
         creditViewModel.getCredits().setValue(creditcontrolleur.listecredits());
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("smssentmessge") != null){

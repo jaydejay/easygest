@@ -233,11 +233,11 @@ public class AjouterCreditActivity extends AppCompatActivity {
                                                         }else {
                                                             long date_credit = MesOutils.convertStringToDate(date).getTime();
                                                             Article article2_vendu ;
-                                                            Article article1_vendu = new Article(article1.getDesignation(),Integer.parseInt(article1prix),Integer.parseInt(article1qte));
+                                                            Article article1_vendu = new Article(String.valueOf(article1.getId()),Integer.parseInt(article1prix),Integer.parseInt(article1qte));
 
                                                             article2_vendu = (article2.getDesignation() != null && !article2.getDescription().equals("Choisir un article")) ?
-                                                                    new Article(article2.getDesignation(),prixarticle2,nbrarticle2) :
-                                                                    new Article(article2.getDesignation(),0,0);
+                                                                    new Article(String.valueOf(article2.getId()),prixarticle2,nbrarticle2) :
+                                                                    new Article(String.valueOf(article2.getId()),0,0);
 
                                                             int sommecredit  = article1_vendu.getSomme() + article2_vendu.getSomme();
                                                             if (Integer.parseInt(versement) < sommecredit){

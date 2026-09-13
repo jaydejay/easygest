@@ -4,13 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.jay.easygest.R;
 import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityAgenceBinding;
 import com.jay.easygest.model.AppKessModel;
@@ -65,7 +60,7 @@ public class AgenceActivity extends AppCompatActivity {
                         }else {
 
                             if (MesOutils.isValidEmail(email)){
-                                boolean success = iscreateAgenceSuccessfull();
+                                boolean success = iscreateAgenceSuccessfull(owner,basecode,telephone,email);
                                 if (success){
                                     SessionManagement sessionManagement = new SessionManagement(this);
                                     sessionManagement.saveAgenceCreated(true);
@@ -99,16 +94,17 @@ public class AgenceActivity extends AppCompatActivity {
         });
     }
 
-    private boolean iscreateAgenceSuccessfull() {
+    private boolean iscreateAgenceSuccessfull(String owner, String basecode, String telephone, String email) {
         AccessLocalAppKes accessLocalAppKes = new AccessLocalAppKes(this);
-//                                AppKessModel appKessModel = new AppKessModel(
-//                                        Integer.parseInt(appcredentials[0]),
-//                                        appcredentials[1],
-//                                        owner,
-//                                        basecode,
-//                                        telephone,
-//                                        email);
-        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
+        AppKessModel appKess_Model = accessLocalAppKes.getAppkes();
+                                AppKessModel appKessModel = new AppKessModel(
+                                        appKess_Model.getAppnumber(),
+                                        appKess_Model.getApppkey(),
+                                        owner,
+                                        basecode,
+                                        telephone,
+                                        email);
+//        AppKessModel appKessModel = accessLocalAppKes.getAppkes();
         boolean success =  accessLocalAppKes.createAgence(appKessModel);
         return success;
     }

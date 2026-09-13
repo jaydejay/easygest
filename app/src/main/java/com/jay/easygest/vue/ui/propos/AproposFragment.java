@@ -53,7 +53,8 @@ public class AproposFragment extends Fragment {
             throw new RuntimeException(e);
         }
         String versionName = packageInfo.versionName;
-        String version ="EasyGest version : " + versionName;
+        String versionCode = String.valueOf(packageInfo.versionCode);
+        String version ="EasyGest version : " + versionName +"\n"+"database version :" + versionCode;
         binding.txteasygestversion.setText(version);
     }
 }

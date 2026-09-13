@@ -736,4 +736,28 @@ public class AccessLocalCredit {
 
         return new CreditModel(creditId, client, article1, article2, versement, datecredit, nbrcredit);
     }
+
+    public ArrayList<CreditModel> obtenirlescreditsContenansArticle1(String designation){
+        ArrayList<CreditModel> credits = new ArrayList<>();
+        ArrayList<CreditModel> listeCredits = this.listeCredits();
+        for (CreditModel credit : listeCredits) {
+            if (credit.getArticle1().getDesignation().equals(designation)){
+                credits.add(credit);
+            }
+        }
+        return credits;
+    }
+
+    public ArrayList<CreditModel> obtenirlescreditsContenansArticle2(String designation){
+        ArrayList<CreditModel> credits = new ArrayList<>();
+        ArrayList<CreditModel> listeCredits = this.listeCredits();
+        for (CreditModel credit : listeCredits) {
+            if ( credit.getArticle2().getDesignation().equals(designation)){
+                credits.add(credit);
+            }
+        }
+        return credits;
+    }
+
+
 }

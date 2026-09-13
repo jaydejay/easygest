@@ -16,9 +16,6 @@ public class AccessLocalAppKes {
     public static final String BASECODE = "basecode";
     public static final String TELEPHONE = "telephone";
     public static final String ADRESSEELECTRO = "adresseelectro";
-
-    public static final String DATELICENCE = "datelicence";
-    public static final String DUREELICENCE = "dureelicence";
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
 
@@ -83,7 +80,7 @@ public class AccessLocalAppKes {
 
     /**
      * permet de mettre a jour la cle d'activation du produit
-     * @param appKessModel   gestIonnaire d'activation
+     * @param appKessModel gestIonnaire d'activation
      * @return boolean
      */
     public boolean updateAppkesKey(AppKessModel appKessModel) {

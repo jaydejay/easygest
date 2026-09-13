@@ -23,9 +23,6 @@ public class  ParametresActivity extends AppCompatActivity {
         binding = ActivityParametresBinding.inflate(getLayoutInflater());
         usercontrolleur = Usercontrolleur.getUsercontrolleurInstance(this);
         setContentView(binding.getRoot());
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
         debloqueapp();
 
     }
@@ -88,9 +85,4 @@ public class  ParametresActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 }

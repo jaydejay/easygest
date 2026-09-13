@@ -7,13 +7,12 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 android {
     namespace 'com.jay.easygest'
     compileSdk 36
-
     defaultConfig {
         applicationId "com.jay.easygest"
         minSdk 23
         targetSdk 35
-        versionCode 4
-        versionName "2.1.0"
+        versionCode 5
+        versionName "2.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "MY_KEY", "\"${localProperties['MY_KEY']}\""
         buildConfigField "String", "MY_SALT", "\"${localProperties['MY_SALT']}\""

@@ -13,7 +13,6 @@ import com.jay.easygest.controleur.Usercontrolleur;
 import com.jay.easygest.databinding.ActivityMainBinding;
 import com.jay.easygest.model.AppKessModel;
 import com.jay.easygest.model.UserModel;
-import com.jay.easygest.outils.MesOutils;
 import com.jay.easygest.outils.SessionManagement;
 
 import java.util.Objects;
@@ -47,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
         boolean  is_key_activated = sessionManagement.getkeyActivated();
 
             if (is_key_activated){
-                AppKessModel appKessModel = usercontrolleur.getAppCredentials2();
-                String appnumber = String.valueOf(appKessModel.getAppnumber());
-                String appowner = appKessModel.getOwner();
-                String appkey = appKessModel.getApppkey();
-//                if (MesOutils.isKeyvalide(appkey, appnumber)){
                     boolean is_agence_created = sessionManagement.getAgenceCreated();
                     if (is_agence_created){
                         boolean  is_utilisateur_created = sessionManagement.getUtilisateurCreated();
@@ -75,19 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
-//                }else {
-//                    sessionManagement.removeLicenceExpiredStatus();
-//                    Intent intent = new Intent(MainActivity.this, ActiverProduitActivity.class);
-//                    String[] credentials = new String[]{appnumber,appowner};
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    intent.putExtra(CODE_MSG,1);
-//                    intent.putExtra("credentials",credentials);
-//                    startActivity(intent);
-//                    finish();
-//                }
-
             }
-//
     }
 
     @Override
@@ -108,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * hide le bouton d'initialisation du mdp
+     * Masque le bouton d'initialisation du mdp
      */
     private void hideInitMdpText() {
 
@@ -186,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * redirection pour activer le produit
+     * Redirection pour activer le produit
      */
     private void redirectToAppActivation() {
         binding.txtCreateCompte.setOnClickListener(view -> activerProduit());
@@ -195,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * affiche les donnees pour activer le produit
+     * Afficher les donnees pour activer le produit
      */
     private void activerProduit() {
         try {
@@ -227,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * affichage du texte d'erreur
+     * Affichager du texte d'erreur
      * apres 3 tentatives de connection
      */
     public void fillTxtVConnectionError(){
@@ -266,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * desactive le bouton d'authentification increment le compteur
+     * Desactive le bouton d'authentification increment le compteur
      * @param userModel l'utilisateur
      */
     private void desactiverbtnAuth(UserModel userModel){

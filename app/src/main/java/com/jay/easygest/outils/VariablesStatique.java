@@ -9,6 +9,8 @@ public abstract class VariablesStatique {
     public static final String APPNUMBER = "appnumber";
 
     public static final String name = "gestioncredit.db";
+    public static final int databaseversion = 5;
+
     public static final String TABLE_UTILISATEUR = "utilisateur";
     public static final String TABLE_APPPKES = "APPPKES";
     public static final String TABLE_VERSEMENT = "versement";

@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -248,27 +249,23 @@ public abstract  class MesOutils {
     }
 
     public  static long getSppressionDate(long value){
-        SimpleDateFormat anneef = new SimpleDateFormat("yyyy",Locale.FRANCE);
-        SimpleDateFormat moisf = new SimpleDateFormat("MM",Locale.FRANCE);
-        SimpleDateFormat jourf = new SimpleDateFormat("dd",Locale.FRANCE);
-        SimpleDateFormat datef = new SimpleDateFormat("dd-MM-yyyy",Locale.FRANCE);
-        Date date = new Date(value);
-        String annee = anneef.format(date);
-        String mois = moisf.format(date);
-        String jour = jourf.format(date);
-
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Integer.parseInt(annee),Integer.parseInt(mois),Integer.parseInt(jour));
+        calendar.setTimeInMillis(value);
         calendar.add(Calendar.MONTH,6);
-        return convertStringToDate(datef.format(calendar.getTime())).getTime();
+        return calendar.getTimeInMillis();
     }
     public  static long getSppressionDate2(long value){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalDate ladate = LocalDate.ofEpochDay(value);
-            LocalDate date = ladate.plusMonths(12);
-            return date.toEpochDay();
+            java.time.Instant instant = java.time.Instant.ofEpochMilli(value);
+            java.time.LocalDate ladate = instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+//            java.time.LocalDate date = ladate.plusMonths(12);
+            java.time.LocalDate date = ladate.plusDays(1);
+            return date.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
         }else {
-            return getSppressionDate(value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(value);
+            calendar.add(Calendar.HOUR,24);
+            return calendar.getTimeInMillis();
         }
     }
 
@@ -618,18 +615,12 @@ public abstract  class MesOutils {
 
     public static boolean verifyApppkeyPermanent(String appkey, String appnumber){
         boolean is_appkey_permanent = false;
-        Log.d("TAG", "verifyApppkeyPermanent appnumber: "+ appnumber);
         try{
 
             String[] zone_array = appkey.split("-");
             String zone1 = zone_array[0];
             String zone2 = zone_array[1];
             String zone3 = zone_array[2];
-            Log.d("TAG", "verifyApppkeyPermanent zone1: "+ zone1);
-            Log.d("TAG", "verifyApppkeyPermanent zone2: "+ zone2);
-            Log.d("TAG", "verifyApppkeyPermanent zone3: "+ zone3);
-
-
             if (zone1.length() == 5 && zone2.length() == 5 && zone3.length() == 5  ){
                 int c1 =Integer.parseInt(String.valueOf(appnumber.charAt(0)));
                 int c2 =Integer.parseInt(String.valueOf(appnumber.charAt(1)));

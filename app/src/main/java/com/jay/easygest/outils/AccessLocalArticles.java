@@ -1,5 +1,8 @@
 package com.jay.easygest.outils;
 
+import static com.jay.easygest.outils.VariablesStatique.ARTICLE_1;
+import static com.jay.easygest.outils.VariablesStatique.ARTICLE_2;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +11,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.jay.easygest.model.Article;
 import com.jay.easygest.model.ArticlesModel;
+import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.model.Image;
 
 import java.util.ArrayList;
@@ -16,14 +22,18 @@ import java.util.ArrayList;
 public class AccessLocalArticles {
 
     public static final String TABLE_ARTICLES = "articles";
+    public static final String TABLE_IMAGE = "image";
+    public static final String TABLE_CREDIT = "credit";
+
     public static final String ID = "id";
     public static final String DESIGNATION = "designation";
     public static final String PRIX = "prix";
     public static final String QUANTITE = "quantite";
-    public static final String TABLE_IMAGE = "image";
     public static final String IMAGE = "image";
     public static final String ARTICLEID = "articleid";
     public static final String DESCRIPTION = "description";
+    private static final String ARTICLE1 = "article1";
+
     private final Context contexte;
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
@@ -160,7 +170,7 @@ public class AccessLocalArticles {
     }
 
 
-    public ArticlesModel getArticle(String designation){
+    public ArticlesModel getArticleByDesignation(String designation){
         bd = accessBD.getReadableDatabase();
         ArticlesModel articlesModel = null;
         try {
@@ -178,6 +188,22 @@ public class AccessLocalArticles {
         return articlesModel;
     }
 
+    public ArticlesModel getArticleById(int id) {
+        bd = accessBD.getReadableDatabase();
+        try {
+            String req = "select * from articles where " + ID + "='"+id+"'";
+            Cursor cursor = bd.rawQuery(req, null);
+            cursor.moveToLast();
+            if (!cursor.isAfterLast()) {
+                return new ArticlesModel(cursor.getInt(0),cursor.getString(1), cursor.getInt(2),cursor.getInt(3), cursor.getString(4));
+            }
+            cursor.close();
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
     public int updateArticleStandard(ArticlesModel article, String champ, String valeur, String itemId) {
         bd = accessBD.getWritableDatabase();
         int rslt;
@@ -186,6 +212,7 @@ public class AccessLocalArticles {
             if (itemId.equals("article_popup_ajout_stock")){
                 int quantite = article.getQuantite()  + Integer.parseInt(valeur);
                 articles_cv.put(champ,quantite);
+
             }
 
             if (itemId.equals("article_popup_enlever_stock")){
@@ -194,12 +221,15 @@ public class AccessLocalArticles {
             }
             if (itemId.equals("article_popup_modifier_prix")){
                 articles_cv.put(champ,Integer.parseInt(valeur));
+
             }
             if (itemId.equals("article_popup_modifier_designation")){
                 articles_cv.put(champ,valeur);
+
             }
 
             rslt = bd.update(TABLE_ARTICLES, articles_cv, ID+ "= ?", new String[] {String.valueOf(article.getId())});
+
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -208,4 +238,6 @@ public class AccessLocalArticles {
         }
         return rslt;
     }
+
+
 }

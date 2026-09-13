@@ -291,18 +291,25 @@ public final class Creditcontrolleur {
         Article nouvel_article = null;
         if (nomarticleAModifier.equals("article1") ){
              ancien_article = anciencredit.getArticle1();
-             nouvel_article = new Article(articleselectione.getDesignation(),Integer.parseInt(nouveauprixarticle),Integer.parseInt(nouvelleqtearticle));
+             nouvel_article = new Article(String.valueOf(articleselectione.getId()),Integer.parseInt(nouveauprixarticle),Integer.parseInt(nouvelleqtearticle));
             nouveau_credit = new CreditModel(anciencredit.getId(),client,nouvel_article,anciencredit.getArticle2(),anciencredit.getVersement(),anciencredit.getDatecredit(),anciencredit.getNumerocredit());
         }
         if (nomarticleAModifier.equals("article2") ){
             ancien_article = anciencredit.getArticle2() ;
-            nouvel_article = new Article(articleselectione.getDesignation(),Integer.parseInt(nouveauprixarticle),Integer.parseInt(nouvelleqtearticle));
+            nouvel_article = new Article(String.valueOf(articleselectione.getId()),Integer.parseInt(nouveauprixarticle),Integer.parseInt(nouvelleqtearticle));
             nouveau_credit = new CreditModel(anciencredit.getId(),client,anciencredit.getArticle1(),nouvel_article,anciencredit.getVersement(),anciencredit.getDatecredit(),anciencredit.getNumerocredit());
         }
       return  accessLocalcredit.modifierArticledunCredit(nouveau_credit,anciencredit,client,nouvel_article,ancien_article);
     }
     public CreditModel modifierDateCredit(CreditModel credit, String date) {
         return accessLocalcredit.modifierDateCredit(credit, MesOutils.convertStringToDate(date).getTime());
+    }
+
+    public ArrayList<CreditModel> obtenirlescreditsContenansArticle1(String designation){
+        return accessLocalcredit.obtenirlescreditsContenansArticle1(designation);
+    }
+    public ArrayList<CreditModel> obtenirlescreditsContenansArticle2(String designation){
+        return accessLocalcredit.obtenirlescreditsContenansArticle2(designation);
     }
 }
 

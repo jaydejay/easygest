@@ -120,8 +120,12 @@ public class AffichercreditActivity extends AppCompatActivity {
         assert credit != null;
         c_article1 = credit.getArticle1();
          c_article2 = credit.getArticle2();
-        String article1 = "ARTICLE 1  "+c_article1.getDesignation() +"\n "+" quantite : "+c_article1.getNbrarticle()+"\n "+"somme : "+c_article1.getSomme();
-        String article2 = "ARTICLE 2  "+c_article2.getDesignation() +"\n "+" quantite : "+c_article2.getNbrarticle()+"\n "+"somme : "+c_article2.getSomme();
+        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+        ArticlesModel articlesModel1 = articlescontrolleur.getArticleById(Integer.parseInt(c_article1.getDesignation()));
+        ArticlesModel articlesModel2 = articlescontrolleur.getArticleById(Integer.parseInt(c_article2.getDesignation()));
+
+        String article1 = "ARTICLE 1  "+articlesModel1.getDesignation() +"\n "+" quantite : "+c_article1.getNbrarticle()+"\n "+"somme : "+c_article1.getSomme();
+        String article2 = "ARTICLE 2  "+articlesModel2.getDesignation() +"\n "+" quantite : "+c_article2.getNbrarticle()+"\n "+"somme : "+c_article2.getSomme();
         String credt = "CREDIT : "+credit.getSommecredit();
         String versement ="VERSEMENT : "+credit.getVersement();
         String reste ="RESTE : "+credit.getReste();
@@ -156,7 +160,7 @@ public class AffichercreditActivity extends AppCompatActivity {
             editModifCreditqte.setText(String.valueOf(c_article1.getNbrarticle()));
 
             Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(AffichercreditActivity.this);
-            ArticlesModel articlesModel = articlescontrolleur.getArticleByDesignation(c_article1.getDesignation());
+            ArticlesModel articlesModel = articlescontrolleur.getArticleById(Integer.parseInt(c_article1.getDesignation()));
 
             chargerArticlesDeBqd(articlesModel);
             getSelectedArticle();
@@ -185,7 +189,7 @@ public class AffichercreditActivity extends AppCompatActivity {
             editModifCreditqte.setText(String.valueOf(c_article2.getNbrarticle()));
 
             Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(AffichercreditActivity.this);
-            ArticlesModel articlesModel = articlescontrolleur.getArticleByDesignation(c_article2.getDesignation());
+            ArticlesModel articlesModel = articlescontrolleur.getArticleById(Integer.parseInt(c_article2.getDesignation()));
             chargerArticlesDeBqd(articlesModel);
             getSelectedArticle();
 

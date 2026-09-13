@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.jay.easygest.model.UserModel;
 
@@ -19,14 +18,7 @@ public class AccessLocal {
     private static final String ACTIF = "actif";
     private static final String COMPTEUR = "compteur";
     private static final String UTILISATEUR = "utilisateur";
-    public static final String APPNUMBER = "appnumber";
-    public static final String APPPKEY = "apppkey";
-    public static final String OWNER = "owner";
-    public static final String TELEPHONE = "telephone";
-    public static final String ADRESSEELECTRO = "adresseelectro";
-    public static final String BASECODE = "basecode";
-    public static final String DATELICENCE = "datelicence";
-    public static final String DUREELICENCE = "dureelicence";
+
     private final MySqliteOpenHelper accessBD;
     private SQLiteDatabase bd;
     private final PasswordHascher passwordHascher;
@@ -125,7 +117,6 @@ public class AccessLocal {
     public boolean isAuthenticated(String username, String password){
         boolean authenticated = false;
         UserModel proprietaire = this.recupProprietaire();
-        Log.d("TAG", "isAuthenticated: " + proprietaire);
         if (passwordHascher.verifyHashingPass(password,proprietaire.getPassword())){
             if(proprietaire.getUsername().equals(username)){
                 authenticated = true;
@@ -188,53 +179,5 @@ public class AccessLocal {
       return success;
     }
 
-
-    public String[] appCredential(){
-        bd = accessBD.getReadableDatabase();
-        String[] credentials =null;
-        try{
-            String req ="select * from APPPKES";
-            Cursor cursor = bd.rawQuery(req,null);
-            cursor.moveToFirst();
-            if (!cursor.isBeforeFirst()){
-                credentials = new String[]{
-                        cursor.getString(cursor.getColumnIndexOrThrow(APPNUMBER)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(OWNER)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(BASECODE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(TELEPHONE)),
-//                        cursor.getString(cursor.getColumnIndexOrThrow(DATELICENCE)),
-//                        cursor.getString(cursor.getColumnIndexOrThrow(DUREELICENCE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(ADRESSEELECTRO))
-                };
-
-            }
-            cursor.close();
-        } catch (Exception e) {
-            // do nothing
-        }
-        return credentials;
-    }
-
-    public boolean saveAppkey(String owner, String licence, String email, String telephone, String basecode, String appnumber, long dureelicence) {
-        bd = accessBD.getReadableDatabase();
-        try{
-
-           ContentValues app_cv = new ContentValues();
-           app_cv.put(OWNER,owner);
-           app_cv.put(BASECODE,basecode);
-           app_cv.put(TELEPHONE,telephone);
-           app_cv.put(ADRESSEELECTRO,email);
-           app_cv.put(DATELICENCE,new Date().getTime());
-           app_cv.put(DUREELICENCE,dureelicence);
-           app_cv.put(APPPKEY,licence);
-
-          int rslt = bd.update("APPPKES",app_cv, APPNUMBER+"= ?", new String[] { String.valueOf(appnumber)});
-            return rslt > 0;
-
-        }catch (Exception e) {
-            return false;
-        }
-    }
 
 }

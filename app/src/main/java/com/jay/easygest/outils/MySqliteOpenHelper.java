@@ -16,7 +16,6 @@ import static com.jay.easygest.outils.VariablesStatique.TABLE_SMSFAILLED;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_UTILISATEUR;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_VERSEMENT;
 import static com.jay.easygest.outils.VariablesStatique.TABLE_VERSEMENTACC;
-import static com.jay.easygest.outils.VariablesStatique.TABLE_USEDKEY;
 import static com.jay.easygest.outils.VariablesStatique.name;
 
 import android.content.ContentValues;
@@ -24,18 +23,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.jay.easygest.model.Article;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 
 public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
 
-    public static final int version = 4;
+    public static final int version = VariablesStatique.databaseversion ;
     public static final String APPNUMBER = "appnumber";
     public static final String APPPKEY = "apppkey";
     public static final String OWNER = "owner";
@@ -48,12 +51,9 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     public static final String ADRESSEELECTRO = "adresseelectro";
     public static final String BASECODE = "basecode";
     public static final String NAME_OWNER = "solaris";
-    public static final String DATELICENCE = "datelicence";
-    public static final String DUREELICENCE = "dureelicence";
     private static MySqliteOpenHelper sInstance = null;
-
-    private  String appkey ;
     private String apppnumber ;
+    private final Gson gson = new Gson();
 
 
 
@@ -73,7 +73,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         apppnumber = MesOutils.apppnumbergenerator();
-        appkey = MesOutils.apppkeygenerator(apppnumber);
         sqLiteDatabase.beginTransaction();
 
         try {
@@ -154,22 +153,22 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                     + "foreign key(creditid) references credit(id) on delete cascade,"
                     + "foreign key(clientid) references client(id) on delete cascade )";
             sqLiteDatabase.execSQL(createTable_versement);
-            String createTable_apppkes = "create table " + TABLE_APPPKES + " ("
-                    + "appnumber Integer primary key,"
-                    + "apppkey Text,"
-                    + "owner Text not null,"
-                    + "basecode Text,"
-                    + "telephone Text,"
-                    + "datelicence Long not null,"
-                    + "dureelicence Long not null,"
-                    + "adresseelectro Text)";
 //            String createTable_apppkes = "create table " + TABLE_APPPKES + " ("
 //                    + "appnumber Integer primary key,"
 //                    + "apppkey Text,"
-//                    + "owner Text,"
+//                    + "owner Text not null,"
 //                    + "basecode Text,"
 //                    + "telephone Text,"
+//                    + "datelicence Long not null,"
+//                    + "dureelicence Long not null,"
 //                    + "adresseelectro Text)";
+            String createTable_apppkes = "create table " + TABLE_APPPKES + " ("
+                    + "appnumber Integer primary key,"
+                    + "apppkey Text,"
+                    + "owner Text,"
+                    + "basecode Text,"
+                    + "telephone Text,"
+                    + "adresseelectro Text)";
             sqLiteDatabase.execSQL(createTable_apppkes);
             String createTable_info = "create table " + TABLE_INFO + " ("
                     + "appnumber Integer primary key,"
@@ -192,10 +191,10 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                     + "foreign key(articleid) references articles(id) on delete cascade)";
             sqLiteDatabase.execSQL(createTable_image);
 
-            String createTable_usedkey = "create table " + TABLE_USEDKEY + "("
-                    + "id Integer primary key,"
-                    + "cle Text not null unique)";
-            sqLiteDatabase.execSQL(createTable_usedkey);
+//            String createTable_usedkey = "create table " + TABLE_USEDKEY + "("
+//                    + "id Integer primary key,"
+//                    + "cle Text not null unique)";
+//            sqLiteDatabase.execSQL(createTable_usedkey);
 
             sqLiteDatabase.insert(TABLE_ARTICLE,null, articleVideContentValue());
             sqLiteDatabase.insert(TABLE_APPPKES,null,apppPersitence());
@@ -216,25 +215,11 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.beginTransaction();
 
         try {
-//                if (oldversion == 1 ){
-//                    version1To2(sqLiteDatabase);
-//                    version2To3(sqLiteDatabase);
-//                    version3To4(sqLiteDatabase);
-//                   version4To5(sqLiteDatabase);
-//                }
-//
-//            if (oldversion == 2 ){
-//                version2To3(sqLiteDatabase);
-//                version3To4(sqLiteDatabase);
-//                version4To5(sqLiteDatabase);
-//            }
-            if (oldversion == 1 || oldversion == 2 || oldversion == 3  ){
+
+            if ( oldversion == 1 || oldversion == 2 || oldversion == 3 || oldversion == 4 ){
                 version3To4(sqLiteDatabase);
-//               version4To5(sqLiteDatabase);
+                version4To5(sqLiteDatabase);
             }
-//            if (oldversion == 4 ){
-//                version4To5(sqLiteDatabase);
-//            }
 
             sqLiteDatabase.setTransactionSuccessful();
 
@@ -245,40 +230,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
 
     }
 
-
-    public void version1To2(SQLiteDatabase sqLiteDatabase){
-
-//        sqLiteDatabase.execSQL("alter table APPPKES add datelicence Long not null default 1000");
-//        sqLiteDatabase.execSQL("alter table APPPKES add dureelicence Long not null default 1000");
-//
-//        Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
-//        if (cursor.moveToFirst()){
-//            String app_number = String.valueOf(cursor.getInt(0)) ;
-//            appkey = MesOutils.apppkeygenerator(app_number);
-//            appkey = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
-//            sqLiteDatabase.update(TABLE_APPPKES,apppUpdateCv(),"appnumber =?",new String[]{app_number});
-//
-//        }
-//        cursor.close();
-        sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
-    }
-
-    public void version2To3(SQLiteDatabase sqLiteDatabase){
-
-        String createTable_usedkey = "create table " + TABLE_USEDKEY + " ("
-                + "id Integer primary key,"
-                + "cle Text not null unique)";
-        sqLiteDatabase.execSQL(createTable_usedkey);
-
-        Cursor cursor = sqLiteDatabase.query(TABLE_APPPKES,null,null,null,null,null,null);
-        if (cursor.moveToFirst()){
-            String cle = cursor.getString(cursor.getColumnIndexOrThrow(APPPKEY)) ;
-            ContentValues usedkey_cv = getUsedkeyCv(cle);
-            sqLiteDatabase.insert(TABLE_USEDKEY,null,usedkey_cv);
-        }
-        cursor.close();
-
-    }
 
     public void version3To4(SQLiteDatabase sqLiteDatabase){
         //renommage de la table articles
@@ -292,34 +243,124 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
                 + "description Text not null)";
 
         sqLiteDatabase.execSQL(createTable_articles);
+        ArrayList<String> designation_liste = new ArrayList<>();
         sqLiteDatabase.insert(TABLE_ARTICLE,null, articleVideContentValue());
+        designation_liste.add(CHOISIR_UN_ARTICLE);
+        sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
         //recuperer les donnees de la table articlesold et les inserer dans la nouvelle table
         Cursor cursor = sqLiteDatabase.query("articlesold",null,null,null,"designation",null,null);
         if (cursor.moveToFirst()){
             do {
+
                 String designation = cursor.getString(cursor.getColumnIndexOrThrow("designation"));
                 String description =  cursor.getString(cursor.getColumnIndexOrThrow("description"));
                 int prix = cursor.getInt(cursor.getColumnIndexOrThrow("prix"));
                 int quantite = cursor.getInt(cursor.getColumnIndexOrThrow("quantite"));
-                ContentValues cv = new ContentValues();
-                cv.put("designation",designation);
-                cv.put("description",description);
-                cv.put("prix",prix);
-                cv.put("quantite",quantite);
-                sqLiteDatabase.insert(TABLE_ARTICLE,null,cv);
+                if (!description.equals(CHOISIR_UN_ARTICLE)){
+                    ContentValues cv = new ContentValues();
+                    cv.put("designation",designation);
+                    cv.put("description",description);
+                    cv.put("prix",prix);
+                    cv.put("quantite",quantite);
+                    sqLiteDatabase.insert(TABLE_ARTICLE,null,cv);
+                }
+
             }while (cursor.moveToNext());
             cursor.close();
-            sqLiteDatabase.execSQL("drop table articlesold");
-            sqLiteDatabase.delete(TABLE_UTILISATEUR,STATUS +"!=?",new String[]{String.valueOf(1)});
+            sqLiteDatabase.execSQL("drop table if exists articlesold");
 
+        }else {
+            // inserrer des articles à partir de la designation des credits et des accounts
+            Cursor creditsCuresor = sqLiteDatabase.query(TABLE_CREDIT,null,null,null,null,null,null);
+            Cursor accountsCuresor = sqLiteDatabase.query(TABLE_ACCOUNT,null,null,null,null,null,null);
+            Type articletype = new TypeToken<Article>(){}.getType() ;
+            if (creditsCuresor.moveToFirst()){
 
+                do {
+                    String article1 = creditsCuresor.getString(creditsCuresor.getColumnIndexOrThrow("article1"));
+                    String article2 = creditsCuresor.getString(creditsCuresor.getColumnIndexOrThrow("article2"));
+
+                    Article article_1 = gson.fromJson(article1,articletype);
+                    Article article_2 = gson.fromJson(article2,articletype);
+                    Log.d("TAG", "version3To4: designation liste 1" + designation_liste);
+                    if (!designation_liste.contains(article_1.getDesignation())){
+                        designation_liste.add(article_1.getDesignation());
+                        Log.d("TAG", "version3To4: designation liste 2" + designation_liste);
+                        ContentValues cv1 = new ContentValues();
+                        cv1.put("designation",article_1.getDesignation());
+                        cv1.put("prix",article_1.getPrix());
+                        cv1.put("quantite",article_1.getNbrarticle());
+                        cv1.put("description",article_1.getDesignation());
+                        sqLiteDatabase.insert(TABLE_ARTICLE,null,cv1);
+                    }
+                    Log.d("TAG", "version3To4: designation liste 3" + designation_liste);
+                    if (!designation_liste.contains(article_2.getDesignation())){
+                        designation_liste.add(article_2.getDesignation());
+                        Log.d("TAG", "version3To4: designation liste 4" + designation_liste);
+                        ContentValues cv2 = new ContentValues();
+                        cv2.put("designation",article_2.getDesignation());
+                        cv2.put("prix",article_2.getPrix());
+                        cv2.put("quantite",article_2.getNbrarticle());
+                          cv2.put("description",article_2.getDesignation());
+                        sqLiteDatabase.insert(TABLE_ARTICLE,null,cv2);
+                    }
+
+                }while (creditsCuresor.moveToNext());
+
+                creditsCuresor.close();
+
+            }
+            Log.d("TAG", "version3To4: designation liste 5" + designation_liste);
+            if (accountsCuresor.moveToFirst()){
+                do {
+                    Log.d("TAG", "version3To4: designation liste 52" + designation_liste);
+                    String article1 = accountsCuresor.getString(accountsCuresor.getColumnIndexOrThrow("article1"));
+                    String article2 = accountsCuresor.getString(accountsCuresor.getColumnIndexOrThrow("article2"));
+
+                    Article article_1 = gson.fromJson(article1,articletype);
+                    Article article_2 = gson.fromJson(article2,articletype);
+                    if (!designation_liste.contains(article_1.getDesignation())){
+                        designation_liste.add(article_1.getDesignation());
+                        Log.d("TAG", "version3To4: designation liste 7" + designation_liste);
+                        ContentValues cv3 = new ContentValues();
+                        cv3.put("designation",article_1.getDesignation());
+                        cv3.put("prix",article_1.getPrix());
+                        cv3.put("quantite",article_1.getNbrarticle());
+                        cv3.put("description",article_1.getDesignation());
+                        sqLiteDatabase.insert(TABLE_ARTICLE,null,cv3);
+                    }
+                    Log.d("TAG", "version3To4: designation liste 8" + designation_liste);
+                    if (!designation_liste.contains(article_2.getDesignation())){
+                        designation_liste.add(article_2.getDesignation());
+                        Log.d("TAG", "version3To4: designation liste 9" + designation_liste);
+                        ContentValues cv4 = new ContentValues();
+                        cv4.put("designation",article_2.getDesignation());
+                        cv4.put("prix",article_2.getPrix());
+                        cv4.put("quantite",article_2.getNbrarticle());
+                        cv4.put("description",article_2.getDesignation());
+                        sqLiteDatabase.insert(TABLE_ARTICLE,null,cv4);
+                    }
+
+                }while (accountsCuresor.moveToNext());
+                accountsCuresor.close();
+            }
         }
     }
 
+    /**
+     * mise a jour de la version de la base de donnees
+     * suppression des colonnes datelicence et dureelicence
+     * @param sqLiteDatabase objet de manupulation de la base de donnees
+     */
+
+
     public void version4To5(SQLiteDatabase sqLiteDatabase){
+        // Try to drop columns if supported (API 31+), otherwise we might have to ignore or use a more complex migration.
+        // For simplicity and compatibility, we check if they exist or just try-catch.
+
         //renommage de la table articles
         sqLiteDatabase.execSQL("ALTER TABLE APPPKES RENAME TO APPPKESold");
-        //creation d'une nouvelle table articles
+//        //creation d'une nouvelle table articles
         String createTable_apppkes = "create table " + TABLE_APPPKES + " ("
                 + "appnumber Integer primary key,"
                 + "apppkey Text,"
@@ -334,7 +375,7 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){
             do {
                 int appnumber = cursor.getInt(cursor.getColumnIndexOrThrow("appnumber"));
-                String apppkey =  cursor.getString(cursor.getColumnIndexOrThrow("apppkey"));
+                String apppkey = cursor.getString(cursor.getColumnIndexOrThrow("apppkey"));
                 String owner = cursor.getString(cursor.getColumnIndexOrThrow("owner"));
                 String basecode = cursor.getString(cursor.getColumnIndexOrThrow("basecode"));
                 String telephone = cursor.getString(cursor.getColumnIndexOrThrow("telephone"));
@@ -351,21 +392,97 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
             cursor.close();
             sqLiteDatabase.execSQL("drop table APPPKESold");
-            sqLiteDatabase.execSQL("drop table usedkey");
+            sqLiteDatabase.execSQL("drop table if exists usedkey");
         }
-    }
 
-    @NonNull
-    private ContentValues getUsedkeyCv(String cle) {
-        ContentValues usedkey_cv = new ContentValues();
-        usedkey_cv.put("cle", cle);
-        return usedkey_cv;
+        Cursor cursor_de_credits = sqLiteDatabase.query(TABLE_CREDIT,null,null,null,null,null,null);
+        ArrayList<ContentValues> credits_cv = new ArrayList<>();
+        if (cursor_de_credits.moveToFirst()){
+            do {
+                int creditid = cursor_de_credits.getInt(cursor_de_credits.getColumnIndexOrThrow("id"));
+                String article1 = cursor_de_credits.getString(cursor_de_credits.getColumnIndexOrThrow("article1"));
+                String article2 = cursor_de_credits.getString(cursor_de_credits.getColumnIndexOrThrow("article2"));
+                Article article_12;
+                Article article_22;
+                ContentValues credit_cv = new ContentValues();
+
+                Type articletype = new TypeToken<Article>(){}.getType();
+                Article article_1 = gson.fromJson(article1,articletype);
+                if (article_1 != null) {
+                    Cursor articleModel1Cursor = sqLiteDatabase.query(TABLE_ARTICLE, null, "designation =?", new String[]{article_1.getDesignation()}, null, null, null);
+                    if (articleModel1Cursor.moveToFirst()) {
+                        article_12 = new Article(String.valueOf(articleModel1Cursor.getInt(articleModel1Cursor.getColumnIndexOrThrow("id"))), article_1.getPrix(), article_1.getNbrarticle());
+                        credit_cv.put("article1", gson.toJson(article_12));
+                    }
+                    articleModel1Cursor.close();
+                }
+
+                Article article_2 = gson.fromJson(article2,articletype);
+                if (article_2 != null) {
+                    Cursor articleModel2Cursor = sqLiteDatabase.query(TABLE_ARTICLE, null, "designation =?", new String[]{article_2.getDesignation()}, null, null, null);
+                    if (articleModel2Cursor.moveToFirst()) {
+                        article_22 = new Article(String.valueOf(articleModel2Cursor.getInt(articleModel2Cursor.getColumnIndexOrThrow("id"))), article_2.getPrix(), article_2.getNbrarticle());
+                        credit_cv.put("article2", gson.toJson(article_22));
+                    }
+                    articleModel2Cursor.close();
+                }
+                credit_cv.put("id",creditid);
+                credits_cv.add(credit_cv);
+
+            }while (cursor_de_credits.moveToNext());
+            cursor_de_credits.close();
+            for (ContentValues cv : credits_cv){
+                sqLiteDatabase.update(TABLE_CREDIT,cv,"id =?",new String[]{String.valueOf(cv.get("id"))});
+            }
+        }
+
+        Cursor cursor_de_accounts = sqLiteDatabase.query(TABLE_ACCOUNT,null,null,null,null,null,null);
+        ArrayList<ContentValues> accounts_cv = new ArrayList<>();
+        if (cursor_de_accounts.moveToFirst()){
+            do {
+                int accountid = cursor_de_accounts.getInt(cursor_de_accounts.getColumnIndexOrThrow("id"));
+                String article1 = cursor_de_accounts.getString(cursor_de_accounts.getColumnIndexOrThrow("article1"));
+                String article2 = cursor_de_accounts.getString(cursor_de_accounts.getColumnIndexOrThrow("article2"));
+
+                Article article_22;
+                Article article_12;
+                ContentValues account_cv = new ContentValues();
+
+                Type articletype = new TypeToken<Article>(){}.getType() ;
+                Article article_1 = gson.fromJson(article1,articletype);
+                if (article_1 != null) {
+                    Cursor articleModel1Cursor = sqLiteDatabase.query(TABLE_ARTICLE, null, "designation =?", new String[]{article_1.getDesignation()}, null, null, null);
+                    if (articleModel1Cursor.moveToFirst()) {
+                        article_12 = new Article(String.valueOf(articleModel1Cursor.getInt(articleModel1Cursor.getColumnIndexOrThrow("id"))), article_1.getPrix(), article_1.getNbrarticle());
+                        account_cv.put("article1", gson.toJson(article_12));
+                    }
+                    articleModel1Cursor.close();
+                }
+
+                Article article_2 = gson.fromJson(article2,articletype);
+                if (article_2 != null) {
+                    Cursor articleModel2Cursor = sqLiteDatabase.query(TABLE_ARTICLE, null, "designation =?", new String[]{article_2.getDesignation()}, null, null, null);
+                    if (articleModel2Cursor.moveToFirst()) {
+                        article_22 = new Article(String.valueOf(articleModel2Cursor.getInt(articleModel2Cursor.getColumnIndexOrThrow("id"))), article_2.getPrix(), article_2.getNbrarticle());
+                        account_cv.put("article2", gson.toJson(article_22));
+                    }
+                    articleModel2Cursor.close();
+                }
+                account_cv.put("id",accountid);
+                accounts_cv.add(account_cv);
+
+            }while (cursor_de_accounts.moveToNext());
+            cursor_de_accounts.close();
+
+            for (ContentValues cv : accounts_cv){
+                sqLiteDatabase.update(TABLE_ACCOUNT,cv,"id =?",new String[]{String.valueOf(cv.get("id"))});
+            }
+        }
+
+
     }
 
     public ContentValues apppPersitence(){
-        Date ladate = new Date();
-        Timestamp timestamp = new Timestamp(ladate.getTime());
-        long duree_licence = MesOutils.getDureeLicence(appkey);
         ContentValues cv = new ContentValues();
         cv.put(APPNUMBER,apppnumber);
         cv.put(APPPKEY,"");
@@ -373,8 +490,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         cv.put(TELEPHONE,"");
         cv.put(ADRESSEELECTRO,"");
         cv.put(BASECODE,"clt");
-        cv.put(DATELICENCE, timestamp.getTime());
-        cv.put(DUREELICENCE,duree_licence);
 
         return cv;
     }
@@ -388,17 +503,6 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         return article_cv;
     }
 
-    public ContentValues apppUpdateCv(){
-        Date ladate = new Date();
-        Timestamp timestamp = new Timestamp(ladate.getTime());
-        long duree_licence = MesOutils.getDureeLicence(appkey);
-        ContentValues cv = new ContentValues();
-        cv.put(APPPKEY,appkey);
-        cv.put(DATELICENCE, timestamp.getTime());
-        cv.put(DUREELICENCE,duree_licence);
-
-        return cv;
-    }
 
     public ContentValues creeeinfo(){
         ContentValues cv = new ContentValues();
@@ -409,6 +513,8 @@ public class MySqliteOpenHelper extends SQLiteOpenHelper {
         cv.put(TOTAL_ACCOUNT,0);
         return cv;
     }
+
+
 
 
 

@@ -166,16 +166,16 @@ public class CreditFragment extends Fragment {
         binding.btncreercredit.setOnClickListener(v -> {
             try{
                 binding.btncreercredit.setEnabled(false);
-                String nomclient = binding.edittxtcreernom.getText().toString().trim();
-                String prenomsclient = binding.edittxtcreerprenoms.getText().toString().trim();
-                String article1prix = binding.edittxtcreerarticle1prix.getText().toString().trim();
-                String article1qte = binding.edittxtcreerNbrarticle1.getText().toString().trim();
-                String article2prix  = binding.edittxtcreerarticle2prix.getText().toString().trim();
-                String article2qte = binding.edittxtcreerNbrarticle2.getText().toString().trim();
+                String nomclient = Objects.requireNonNull(binding.edittxtcreernom.getText()).toString().trim();
+                String prenomsclient = Objects.requireNonNull(binding.edittxtcreerprenoms.getText()).toString().trim();
+                String article1prix = Objects.requireNonNull(binding.edittxtcreerarticle1prix.getText()).toString().trim();
+                String article1qte = Objects.requireNonNull(binding.edittxtcreerNbrarticle1.getText()).toString().trim();
+                String article2prix  = Objects.requireNonNull(binding.edittxtcreerarticle2prix.getText()).toString().trim();
+                String article2qte = Objects.requireNonNull(binding.edittxtcreerNbrarticle2.getText()).toString().trim();
 
-                String telephone =  binding.edittxtcreertelephone.getText().toString().trim();
-                String versement = binding.edittxtcreerversement.getText().toString().trim();
-                String date = binding.editTextDate.getText().toString().trim();
+                String telephone =  Objects.requireNonNull(binding.edittxtcreertelephone.getText()).toString().trim();
+                String versement = Objects.requireNonNull(binding.edittxtcreerversement.getText()).toString().trim();
+                String date = Objects.requireNonNull(binding.editTextDate.getText()).toString().trim();
 
                 if (nomclient.isEmpty()  || prenomsclient.isEmpty() || date.isEmpty() || telephone.isEmpty() || versement.isEmpty()) {
                     Toast.makeText(getContext(), "nom prenoms date telephone et versement  obligatoires", Toast.LENGTH_SHORT).show();
@@ -229,13 +229,14 @@ public class CreditFragment extends Fragment {
                                                             }else {
                                                                 long dateouverture =  MesOutils.convertStringToDate(date).getTime();
                                                                 String codeclient = binding.txtcreercodeclt.getText().toString();
-                                                                Article article1_vendu = new Article(article1.getDesignation(),Integer.parseInt(article1prix),Integer.parseInt(article1qte));
+//                                                                Article article1_vendu = new Article(article1.getDesignation(),Integer.parseInt(article1prix),Integer.parseInt(article1qte));
+                                                                Article article1_vendu = new Article(String.valueOf(article1.getId()),Integer.parseInt(article1prix),Integer.parseInt(article1qte));
 
                                                                 Article article2_vendu = (article2 != null && !article2.getDescription().equals(CHOISIR_UN_ARTICLE)) ?
-                                                                        new Article(article2.getDesignation(),prixarticle2,nbrarticle2) :
-                                                                        new Article(article2.getDesignation(),0,0);
+                                                                        new Article(String.valueOf(article2.getId()),prixarticle2,nbrarticle2) :
+                                                                        new Article(String.valueOf(article2.getId()),0,0);
 
-                                                                int sommecredit  = article1_vendu.getSomme() + article2_vendu.getSomme();
+                                                                int sommecredit = article1_vendu.getSomme() + article2_vendu.getSomme();
                                                                 if (Integer.parseInt(versement) < sommecredit){
 
                                                                     if (ActivityCompat.checkSelfPermission(requireContext(),
@@ -296,7 +297,11 @@ public class CreditFragment extends Fragment {
                     }
 
                 }
-            }catch (Exception e){
+            }catch (NullPointerException e){
+                Toast.makeText(getContext(), "champs vide", Toast.LENGTH_SHORT).show();
+                binding.btncreercredit.setEnabled(true);
+            }
+            catch (Exception e){
                 Toast.makeText(getContext(), "probleme interne innattendu", Toast.LENGTH_SHORT).show();
                 binding.btncreercredit.setEnabled(true);
             }

@@ -20,7 +20,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tl_editModifCreditArticleprix"
-        android:layout_width="175dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
@@ -29,8 +29,10 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editModifCreditArticleprix"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="175dp"
+            android:gravity="center_horizontal"
             android:autofillHints="@string/prix"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"
@@ -41,7 +43,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tl_editModifCreditqte"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="4dp"
@@ -52,8 +54,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editModifCreditqte"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="50dp"
             android:autofillHints="@string/quantite"
             android:hint="@string/quantite"
             android:gravity="center"

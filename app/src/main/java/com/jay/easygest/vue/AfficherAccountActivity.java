@@ -100,8 +100,13 @@ public class AfficherAccountActivity extends AppCompatActivity {
         assert account != null;
         c_article1 = account.getArticle1();
          c_article2 = account.getArticle2();
-        String article1 = "ARTICLE 1  "+c_article1.getDesignation() +"\n "+" quantite : "+c_article1.getNbrarticle()+"\n "+"somme : "+c_article1.getSomme();
-        String article2 = "ARTICLE 2  "+c_article2.getDesignation() +"\n "+" quantite : "+c_article2.getNbrarticle()+"\n "+"somme : "+c_article2.getSomme();
+
+        Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(this);
+        ArticlesModel articlesModel1 = articlescontrolleur.getArticleById(Integer.parseInt(c_article1.getDesignation()));
+        ArticlesModel articlesModel2 = articlescontrolleur.getArticleById(Integer.parseInt(c_article2.getDesignation()));
+
+        String article1 = "ARTICLE 1  "+articlesModel1.getDesignation() +"\n "+" quantite : "+c_article1.getNbrarticle()+"\n "+"somme : "+c_article1.getSomme();
+        String article2 = "ARTICLE 2  "+articlesModel2.getDesignation() +"\n "+" quantite : "+c_article2.getNbrarticle()+"\n "+"somme : "+c_article2.getSomme();
         String account1 = "ACCOUNT: "+account.getSommeaccount();
         String versement ="VERSEMENT : "+account.getVersement();
         String reste ="RESTE : "+account.getReste();
@@ -133,7 +138,9 @@ public class AfficherAccountActivity extends AppCompatActivity {
             editModifCreditqte.setText(String.valueOf(c_article1.getNbrarticle()));
 
             Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(AfficherAccountActivity.this);
-            ArticlesModel articlesModel = articlescontrolleur.getArticleByDesignation(c_article1.getDesignation());
+//            ArticlesModel articlesModel = articlescontrolleur.getArticleByDesignation(c_article1.getDesignation());
+            ArticlesModel articlesModel = articlescontrolleur.getArticleById(Integer.parseInt(c_article1.getDesignation()));
+
 
             chargerArticlesDeBqd(articlesModel);
             getSelectedArticle();
@@ -160,7 +167,7 @@ public class AfficherAccountActivity extends AppCompatActivity {
             editModifCreditArticle.setText(String.valueOf(c_article2.getPrix()));
             editModifCreditqte.setText(String.valueOf(c_article2.getNbrarticle()));
             Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(AfficherAccountActivity.this);
-            ArticlesModel articlesModel = articlescontrolleur.getArticleByDesignation(c_article2.getDesignation());
+            ArticlesModel articlesModel = articlescontrolleur.getArticleById(Integer.parseInt(c_article2.getDesignation()));
             chargerArticlesDeBqd(articlesModel);
             getSelectedArticle();
 

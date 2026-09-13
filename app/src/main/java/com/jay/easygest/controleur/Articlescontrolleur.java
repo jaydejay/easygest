@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
 import com.jay.easygest.model.ArticlesModel;
+import com.jay.easygest.model.CreditModel;
 import com.jay.easygest.outils.AccessLocalArticles;
 
 import java.util.ArrayList;
@@ -79,7 +80,10 @@ public class Articlescontrolleur {
     }
 
     public ArticlesModel getArticleByDesignation(String designation){
-      return   accessLocalArticles.getArticle(designation);
+      return   accessLocalArticles.getArticleByDesignation(designation);
+    }
+    public ArticlesModel getArticleById(int id){
+        return   accessLocalArticles.getArticleById(id);
     }
 
     public int modifierArticle(ArticlesModel article, String champ, String valeur, String itemId) {

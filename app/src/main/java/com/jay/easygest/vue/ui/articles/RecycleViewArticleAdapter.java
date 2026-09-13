@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.google.android.material.textfield.TextInputEditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.jay.easygest.R;
 import com.jay.easygest.controleur.Articlescontrolleur;
 import com.jay.easygest.model.ArticlesModel;
@@ -77,6 +77,7 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
                     articles.get(position).setImages(images);
                     ((GestionActivity)contexte).redirectToArticleDetailsActivity(articles.get(position));
                 }
+
                 if (item.getItemId()== R.id.article_popup_modifier_designation ){
                     String title = "modifier l'article";
                     String message = "voulez vous modifier la designation";
@@ -84,14 +85,14 @@ public class RecycleViewArticleAdapter extends RecyclerView.Adapter<RecycleViewA
                     AlertDialog.Builder builder = getArticleModifierBuilder(title, message,R.layout.layout_article_modifier_designation);
                     edt_article_modifer.setText(String.valueOf( articles.get(position).getDesignation()));
                     builder.setPositiveButton("oui", (dialog, which) -> {
-                        String string_prix = edt_article_modifer.getText().toString().trim();
-                        if (string_prix.isEmpty() ) {
+                        String valeur_champ = edt_article_modifer.getText().toString().trim();
+                        if (valeur_champ.isEmpty() ) {
                             Toast.makeText(contexte, "champ obligatoire", Toast.LENGTH_SHORT).show();
                         }else {
                             Articlescontrolleur articlescontrolleur = Articlescontrolleur.getArticlescontrolleurInstance(null);
                             ArticlesModel article = articles.get(position);
                             String champ = VariablesStatique.DESIGNATION;
-                            int rslt =  articlescontrolleur.modifierArticle(article,champ,string_prix,itemId);
+                            int rslt =  articlescontrolleur.modifierArticle(article,champ,valeur_champ,itemId);
                             if (rslt > 0){
                                 ((GestionActivity)contexte).refreshPage();
                             }
